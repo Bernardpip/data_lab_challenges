@@ -12,6 +12,14 @@ __pycache__/
 # (cf. scripts/faire_zip.py d'un défi)
 *.zip
 
+# ...mais un zip DÉPOSÉ dans un dossier de données est une ressource source,
+# pas un livrable : il vient du portail et ne se régénère pas. La règle
+# ci-dessus a écarté fsi-brut-geotiff.zip (76 Mo) au premier commit — un
+# corpus amputé sans que rien ne le signale, exactement ce qu'un `.gitignore`
+# large fait de pire.
+!**/datasets/*.zip
+!**/data/*.zip
+
 # Systèmes de fichiers
 .DS_Store
 Thumbs.db
