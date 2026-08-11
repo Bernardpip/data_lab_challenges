@@ -1,0 +1,30 @@
+{
+  "organisation": {
+    "fr": "République togolaise",
+    "en": "Republic of Togo"
+  },
+  "marque": {
+    "fr": "Eau & Assainissement",
+    "en": "Water & Sanitation"
+  },
+  "aucun_resultat": {
+    "fr": "Aucun canton ne correspond à la sélection.",
+    "en": "No canton matches the current selection."
+  },
+  "aucune_mesure": {
+    "fr": "Aucune mesure sur l'intervalle retenu.",
+    "en": "No measurement within the selected range."
+  },
+  "aucun_point_localise": {
+    "fr": "Aucun ouvrage géolocalisé dans la sélection.",
+    "en": "No geolocated facility in the selection."
+  },
+  "pas_assez_de_points": {
+    "fr": "Moins de trois observations : aucune relation n'est lisible. Élargissez la sélection.",
+    "en": "Fewer than three observations: no relationship can be read. Widen the selection."
+  },
+  "reinitialiser": {
+    "fr": "Réinitialiser",
+    "en": "Reset"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "diagnostic": {"fr": "Diagnostic", "en": "Diagnosis"},
+  "limites": {"fr": "Ce que nous ne pouvons pas dire", "en": "What we cannot claim"},
+
+  "fri_carto": {"fr": "Cartographie", "en": "Mapping"},
+  "fri_facteurs": {"fr": "Composantes du risque", "en": "Risk components"},
+
+  "tde": {"fr": "Forages TdE", "en": "TdE boreholes"},
+  "coso": {"fr": "Microprojets COSO", "en": "COSO sub-projects"},
+  "technique": {"fr": "Caractéristiques techniques", "en": "Technical characteristics"},
+
+  "pression": {"fr": "Population et équipement", "en": "Population and provision"},
+  "ventes": {"fr": "Consommation nationale", "en": "National consumption"},
+
+  "ouvrages_risque": {"fr": "Ouvrages et risque", "en": "Facilities and risk"},
+  "maintenance": {"fr": "Entretien du parc", "en": "Facility upkeep"},
+
+  "priorites": {"fr": "Priorités territoriales", "en": "Territorial priorities"},
+  "leviers": {"fr": "Leviers", "en": "Levers"},
+
+  "fichiers": {"fr": "Fichiers", "en": "Files"},
+  "recettes": {"fr": "Croisements déclarés", "en": "Declared cross-analyses"},
+  "perimetre": {"fr": "Périmètre", "en": "Scope"},
+
+  "sources": {"fr": "Sources", "en": "Sources"},
+  "methodologie": {"fr": "Méthodologie", "en": "Method"},
+  "affichage": {"fr": "Affichage", "en": "Display"}
+}

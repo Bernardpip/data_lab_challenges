@@ -1,0 +1,6 @@
+{
+  "ing_cantons": {"fr": "Référentiel des 388 cantons (ISRI-TG)", "en": "388-canton reference layer (ISRI-TG)"},
+  "ing_tde": {"fr": "Forages et châteaux d'eau TdE (DCEF-TG)", "en": "TdE boreholes and water towers (DCEF-TG)"},
+  "ing_coso": {"fr": "Microprojets COSO (PCIAEPH-TG)", "en": "COSO sub-projects (PCIAEPH-TG)"},
+  "cle_canton": {"fr": "nom de canton normalisé", "en": "normalised canton name"}
+}

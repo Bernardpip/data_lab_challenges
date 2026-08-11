@@ -547,3 +547,222 @@ def heatmap(matrix, unit="", height=None):
     fig.update_yaxes(**_category_axis(), autorange="reversed")
 
     _show(fig)
+
+
+def sucette_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None,
+              decimals=0):
+    """Barres-sucettes horizontales — MAGNITUDE sur beaucoup de catégories.
+
+    Même job que `bar_h`, mais lisible bien au-delà : à vingt lignes, une barre
+    pleine sature la carte d'encre et les libellés s'écrasent contre la masse.
+    La sucette ne garde que ce qui porte l'information — la LONGUEUR de la tige
+    et la position du point — et rend la valeur au bout, en clair.
+
+    Une seule teinte, comme pour toute magnitude sur catégories nominales : la
+    couleur ne re-encode jamais ce que la longueur dit déjà.
+    """
+
+    data = df[[cat, val]].dropna().sort_values(val, ascending=True)
+
+    if max_rows:
+        data = data.tail(max_rows)
+
+    labels = data[cat].astype(str).tolist()
+    values = data[val].tolist()
+    hauteur = height or max(len(labels) * 26 + 40, 140)
+
+    # La tige est un trait fin en teinte atténuée : elle guide l'œil du libellé
+    # au point sans peser autant qu'une barre.
+    teintes = [
+        SERIES[0] if (highlight is None or nom == highlight) else INK["deemphasis"]
+        for nom in labels
+    ]
+    pleines = [
+        SERIES[0] if (highlight is None or nom == highlight) else INK["muted"]
+        for nom in labels
+    ]
+
+    fig = go.Figure()
+
+    for index, (nom, valeur) in enumerate(zip(labels, values)):
+        fig.add_shape(
+            type="line", x0=0, x1=valeur, y0=index, y1=index,
+            line=dict(color=teintes[index], width=2.5),
+            layer="below",
+        )
+
+    fig.add_trace(go.Scatter(
+        x=values, y=list(range(len(labels))),
+        mode="markers+text",
+        marker=dict(size=11, color=pleines,
+                    line=dict(color=INK["surface"], width=2)),
+        text=[f"  {_fr(v, decimals)}{unit}" for v in values],
+        textposition="middle right",
+        textfont=dict(size=11, color=INK["secondary"]),
+        hovertemplate="%{customdata}<br><b>%{x:,}</b>" + unit + "<extra></extra>",
+        customdata=labels,
+        cliponaxis=False,
+    ))
+
+    fig.update_layout(
+        **_base_layout(hauteur),
+        # De la place à droite pour l'étiquette de valeur, sinon elle sort du
+        # cadre sur la ligne la plus longue.
+        xaxis=dict(**_axis(show_grid=False), range=[0, max(values) * 1.22],
+                   visible=False),
+        yaxis=dict(
+            tickmode="array",
+            tickvals=list(range(len(labels))),
+            ticktext=labels,
+            tickfont=dict(size=11, color=INK["secondary"]),
+            showgrid=False, zeroline=False, showline=False,
+            range=[-0.7, len(labels) - 0.3],
+        ),
+    )
+
+    _show(fig)
+
+
+def pentes_appariees(df, entite, gauche, droite, titre_gauche="",
+                     titre_droite="", unit_gauche="", unit_droite="",
+                     max_rows=16, height=None, decimals=1, highlight=None):
+    """Deux classements reliés — RELATION entre deux ordres.
+
+    À gauche un rang, à droite un autre, et une courbe par entité. La forme dit
+    en un regard ce que deux graphes côte à côte ne disent jamais : QUI change
+    de place, et de combien. Un croisement plat signale deux classements
+    identiques ; un faisceau croisé, deux critères qui se contredisent.
+
+    C'est la forme du tableau de bord « Searching for a hospital » : population
+    d'un côté, équipements pour 10 000 habitants de l'autre. Elle n'a pas
+    d'équivalent en barres, parce qu'aucune barre ne relie deux échelles.
+
+    Les deux colonnes portent des UNITÉS différentes : on ne compare donc que
+    des RANGS, jamais les valeurs entre elles. Les valeurs restent écrites de
+    chaque côté pour que rien ne se lise dans la seule pente.
+    """
+
+    data = df[[entite, gauche, droite]].dropna()
+
+    if data.empty:
+        return
+
+    data = data.sort_values(gauche, ascending=False).head(max_rows)
+
+    rang_g = data[gauche].rank(ascending=False, method="first")
+    rang_d = data[droite].rank(ascending=False, method="first")
+
+    noms = data[entite].astype(str).tolist()
+    hauteur = height or max(len(noms) * 30 + 70, 260)
+
+    fig = go.Figure()
+
+    for index, nom in enumerate(noms):
+        y0 = float(rang_g.iloc[index])
+        y1 = float(rang_d.iloc[index])
+        vedette = highlight is not None and nom == highlight
+        couleur = SERIES[0] if vedette or highlight is None else INK["deemphasis"]
+
+        # Courbe de Bézier plutôt qu'un segment : à seize entités, seize
+        # droites forment un moiré illisible là où des courbes se suivent.
+        fig.add_shape(
+            type="path",
+            path=f"M 0,{y0} C 0.38,{y0} 0.62,{y1} 1,{y1}",
+            line=dict(color=couleur, width=2.4 if vedette else 1.6),
+            opacity=1 if (highlight is None or vedette) else 0.5,
+            layer="below",
+        )
+
+    for cote, x, rangs, valeurs, unite, ancrage in (
+        ("g", 0.0, rang_g, data[gauche], unit_gauche, "right"),
+        ("d", 1.0, rang_d, data[droite], unit_droite, "left"),
+    ):
+        fig.add_trace(go.Scatter(
+            x=[x] * len(noms), y=rangs.tolist(),
+            mode="markers+text",
+            marker=dict(size=9, color=SERIES[0],
+                        line=dict(color=INK["surface"], width=2)),
+            text=[
+                (f"{nom}  {_fr(v, decimals)}{unite}" if cote == "g"
+                 else f"{_fr(v, decimals)}{unite}  {nom}")
+                for nom, v in zip(noms, valeurs)
+            ],
+            textposition="middle left" if cote == "g" else "middle right",
+            textfont=dict(size=11, color=INK["secondary"]),
+            hoverinfo="skip",
+            cliponaxis=False,
+        ))
+
+    fig.update_layout(
+        **_base_layout(hauteur, margin_l=8),
+        xaxis=dict(range=[-0.62, 1.62], visible=False, fixedrange=True),
+        # Le rang 1 en HAUT : un classement se lit de haut en bas.
+        yaxis=dict(range=[len(noms) + 0.6, 0.4], visible=False, fixedrange=True),
+        annotations=[
+            dict(x=0, y=0.42, xref="x", yref="paper", text=titre_gauche,
+                 showarrow=False, xanchor="center",
+                 font=dict(size=11, color=INK["muted"])),
+            dict(x=1, y=0.42, xref="x", yref="paper", text=titre_droite,
+                 showarrow=False, xanchor="center",
+                 font=dict(size=11, color=INK["muted"])),
+        ],
+    )
+
+    _show(fig)
+
+
+def petits_multiples(series, colonnes=3, height=150, unit="", decimals=0):
+    """Une grille de mini-courbes à ÉCHELLE PARTAGÉE — comparaison de formes.
+
+    L'échelle commune est ce qui fait la forme : sans elle, chaque vignette
+    s'auto-normalise et deux séries d'ordres de grandeur opposés paraissent
+    identiques. La première et la dernière valeur sont écrites, pour qu'aucune
+    lecture ne dépende de l'œil sur un axe de 150 pixels.
+
+    `series` : [{name, x, y}] — même forme que `line_series`.
+    """
+
+    if not series:
+        return
+
+    toutes = [v for serie in series for v in serie["y"] if v is not None]
+
+    if not toutes:
+        return
+
+    bas, haut = min(toutes), max(toutes)
+    marge = (haut - bas) * 0.18 or (abs(haut) * 0.1 or 1)
+
+    for depart in range(0, len(series), colonnes):
+        cols = st.columns(colonnes, gap="small")
+
+        for col, serie in zip(cols, series[depart:depart + colonnes]):
+            with col:
+                fig = go.Figure()
+
+                fig.add_trace(go.Scatter(
+                    x=list(serie["x"]), y=list(serie["y"]),
+                    mode="lines+markers",
+                    line=dict(color=SERIES[0], width=2),
+                    marker=dict(size=4, color=SERIES[0]),
+                    hovertemplate="%{x}<br><b>%{y:,}</b>" + unit + "<extra></extra>",
+                ))
+
+                fig.update_layout(
+                    **_base_layout(height),
+                    title=dict(text=serie["name"], x=0, xanchor="left",
+                               font=dict(size=11, color=INK["secondary"])),
+                    margin=dict(l=0, r=28, t=26, b=18),
+                    xaxis=dict(**_axis(show_grid=False, show_line=True),
+                               tickfont=dict(size=9)),
+                    yaxis=dict(**_axis(show_grid=True), range=[bas - marge, haut + marge],
+                               showticklabels=False),
+                    annotations=[
+                        dict(x=serie["x"][-1], y=serie["y"][-1], xref="x", yref="y",
+                             text=f" {_fr(serie['y'][-1], decimals)}{unit}",
+                             showarrow=False, xanchor="left",
+                             font=dict(size=10, color=INK["primary"])),
+                    ],
+                )
+
+                _show(fig, key=f"pm_{serie['name']}")

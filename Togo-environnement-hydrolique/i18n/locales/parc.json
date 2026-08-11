@@ -1,0 +1,74 @@
+{
+  "tde_tuile_total": {"fr": "Ouvrages TdE", "en": "TdE facilities"},
+  "tde_tuile_total_detail": {"fr": "répartis sur {cantons} cantons", "en": "across {cantons} cantons"},
+  "tde_tuile_situes": {"fr": "Ouvrages géolocalisés", "en": "Geolocated facilities"},
+  "tde_tuile_situes_detail": {"fr": "coordonnées présentes sur la totalité du fichier", "en": "coordinates present throughout the file"},
+  "tde_tuile_maritime": {"fr": "Part en Maritime", "en": "Share in Maritime"},
+  "tde_tuile_maritime_detail": {"fr": "ce fichier ne couvre pas le pays", "en": "this file does not cover the country"},
+  "tde_tuile_champs": {"fr": "Champs publiés", "en": "Published fields"},
+  "tde_tuile_champs_detail": {"fr": "sur 33 décrits par le dictionnaire", "en": "of 33 described by the dictionary"},
+
+  "tde_carte_titre": {"fr": "Implantation des forages et châteaux d'eau", "en": "Location of boreholes and water towers"},
+  "tde_carte_sous_titre": {"fr": "Une teinte unique : l'identité passe par le filtre et l'infobulle, pas par la couleur", "en": "A single hue: identity comes from the filter and the tooltip, not from colour"},
+  "tde_note_carte": {"fr": "{total} ouvrages situés, sur {cantons} cantons. La couverture s'arrête au périmètre d'exploitation de la TdE — l'absence d'un point ne signifie pas l'absence d'ouvrage.", "en": "{total} located facilities across {cantons} cantons. Coverage stops at TdE's operating perimeter — a missing dot does not mean a missing facility."},
+
+  "tde_carte_nature_titre": {"fr": "Nature des ouvrages", "en": "Kind of facility"},
+  "tde_carte_nature_sous_titre": {"fr": "Forage, château d'eau, ou nom non renseigné", "en": "Borehole, water tower, or unnamed"},
+  "tde_note_nature": {"fr": "<b>{nsp}</b> ouvrages sur {total} n'ont pas de nom exploitable — la sentinelle « Nsp » du fichier source. Ils restent comptés : les écarter laisserait croire à un parc entièrement identifié.", "en": "<b>{nsp}</b> facilities out of {total} carry no usable name — the source file's “Nsp” sentinel. They stay counted: dropping them would suggest a fully identified stock."},
+
+  "tde_carte_regions_titre": {"fr": "Répartition par région", "en": "Breakdown by region"},
+  "tde_carte_regions_sous_titre": {"fr": "Trois régions sur cinq, et l'une écrase les deux autres", "en": "Three regions out of five, one dwarfing the others"},
+
+  "coso_tuile_total": {"fr": "Microprojets", "en": "Sub-projects"},
+  "coso_tuile_total_detail": {"fr": "répartis sur {cantons} cantons du Nord", "en": "across {cantons} northern cantons"},
+  "coso_tuile_situes": {"fr": "Ouvrages localisés", "en": "Located facilities"},
+  "coso_tuile_situes_detail": {"fr": "{part} % seulement portent une position exploitable", "en": "only {part} % carry a usable position"},
+  "coso_tuile_sans_plan": {"fr": "Sans plan de maintenance", "en": "Without maintenance plan"},
+  "coso_tuile_sans_plan_detail": {"fr": "{part} % du parc — le levier le plus direct", "en": "{part} % of the stock — the most direct lever"},
+  "coso_tuile_beneficiaires": {"fr": "Population desservie", "en": "Population served"},
+  "coso_tuile_beneficiaires_detail": {"fr": "renseignée pour {renseignes} ouvrages", "en": "reported for {renseignes} facilities"},
+
+  "coso_carte_titre": {"fr": "Implantation des microprojets COSO", "en": "Location of COSO sub-projects"},
+  "coso_carte_sous_titre": {"fr": "Seuls les ouvrages porteurs d'une position réelle sont tracés", "en": "Only facilities carrying a real position are plotted"},
+  "coso_note_carte": {"fr": "La carte montre <b>{situes}</b> ouvrages sur {total} : <b>{absents}</b> n'ont pas de coordonnée exploitable, la plupart encodées en zéro dans le fichier source. Leur canton reste connu — ils comptent dans tous les graphes de cette page, mais pas sur cette carte.", "en": "The map shows <b>{situes}</b> facilities out of {total}: <b>{absents}</b> carry no usable coordinate, most encoded as zero in the source file. Their canton is still known — they count in every chart on this page, just not on this map."},
+
+  "coso_carte_type_titre": {"fr": "Type d'ouvrage", "en": "Facility type"},
+  "coso_carte_type_sous_titre": {"fr": "Tous photovoltaïques, mais pour des usages distincts", "en": "All solar-powered, but for distinct uses"},
+  "coso_note_type": {"fr": "<b>{premier}</b> représente {part} % du parc. Le programme mêle eau de boisson, maraîchage et écoles — trois usages qui n'appellent ni le même débit ni le même entretien.", "en": "<b>{premier}</b> accounts for {part} % of the stock. The programme mixes drinking water, market gardening and schools — three uses calling for neither the same flow nor the same upkeep."},
+
+  "coso_carte_avancement_titre": {"fr": "Avancement des chantiers", "en": "Site progress"},
+  "coso_carte_avancement_sous_titre": {"fr": "Statut de RÉCEPTION, à ne pas confondre avec un état de fonctionnement", "en": "ACCEPTANCE status — not to be confused with operating condition"},
+
+  "tech_carte_nuage_titre": {"fr": "Débit et profondeur des forages", "en": "Borehole flow and depth"},
+  "tech_carte_nuage_sous_titre": {"fr": "Le seul lien technique que le corpus autorise à examiner", "en": "The only technical relationship the corpus allows examining"},
+  "tech_note_nuage": {"fr": "{n} forages sur {total} portent les DEUX mesures. La droite ne vaut que sur cette plage : au-delà, rien n'est observé.", "en": "{n} boreholes out of {total} carry BOTH measurements. The line holds only over that range: beyond it, nothing is observed."},
+  "axe_profondeur": {"fr": "Profondeur du forage (m)", "en": "Borehole depth (m)"},
+  "axe_debit": {"fr": "Débit (m³/h)", "en": "Flow rate (m³/h)"},
+
+  "tech_carte_completude_titre": {"fr": "Ce que le fichier renseigne vraiment", "en": "What the file actually reports"},
+  "tech_carte_completude_sous_titre": {"fr": "Part des ouvrages pour lesquels chaque champ est disponible", "en": "Share of facilities for which each field is available"},
+  "tech_note_completude": {"fr": "Le champ le moins renseigné est <b>{moins}</b>, disponible sur {part} % des ouvrages. Un indicateur bâti dessus ne décrirait qu'une fraction du parc, et il faut le dire avant de le tracer.", "en": "The least reported field is <b>{moins}</b>, available for {part} % of facilities. An indicator built on it would describe only a fraction of the stock, and that must be said before plotting it."},
+
+  "champ_situe": {"fr": "Position géographique", "en": "Geographic position"},
+  "champ_debit": {"fr": "Débit du forage", "en": "Borehole flow rate"},
+  "champ_profondeur": {"fr": "Profondeur", "en": "Depth"},
+  "champ_population_desservie": {"fr": "Population desservie", "en": "Population served"},
+  "champ_cout_estime": {"fr": "Coût estimé", "en": "Estimated cost"},
+  "champ_fonds_entretien": {"fr": "Fonds d'entretien", "en": "Upkeep fund"},
+  "champ_plan_maintenance": {"fr": "Plan de maintenance", "en": "Maintenance plan"},
+
+  "col_nature": {"fr": "Nature", "en": "Kind"},
+  "col_ouvrages": {"fr": "Ouvrages", "en": "Facilities"},
+  "col_region": {"fr": "Région", "en": "Region"},
+  "col_canton": {"fr": "Canton", "en": "Canton"},
+  "col_type": {"fr": "Type", "en": "Type"},
+  "col_avancement": {"fr": "Avancement", "en": "Progress"},
+  "col_localite": {"fr": "Localité", "en": "Locality"},
+  "col_profondeur": {"fr": "Profondeur (m)", "en": "Depth (m)"},
+  "col_debit": {"fr": "Débit (m³/h)", "en": "Flow (m³/h)"},
+  "col_champ": {"fr": "Champ", "en": "Field"},
+  "col_renseignes": {"fr": "Renseignés", "en": "Reported"},
+  "col_total": {"fr": "Total", "en": "Total"},
+  "col_part": {"fr": "Part (%)", "en": "Share (%)"},
+  "unite_ouvrages": {"fr": " ouvrages", "en": " facilities"}
+}

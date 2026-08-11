@@ -1,0 +1,73 @@
+{
+  "filtre_producteur": {"fr": "Producteur", "en": "Producer"},
+  "voir_sur_portail": {"fr": "Consulter la ressource sur opendata.gouv.tg", "en": "View the resource on opendata.gouv.tg"},
+
+  "source_DCEF_titre": {"fr": "Châteaux d'eau et forages — TdE", "en": "Water towers and boreholes — TdE"},
+  "source_DCEF_sous_titre": {"fr": "67 ouvrages géolocalisés, accompagnés de leur dictionnaire de champs", "en": "67 geolocated facilities, with their field dictionary"},
+  "source_DCEF_corps": {"fr": "Produit par {producteur}. Deux ressources : le fichier diffusé (8 colonnes) et le dictionnaire qui en décrit 33. L'écart entre les deux est le constat central de ce travail.", "en": "Produced by {producteur}. Two resources: the released file (8 columns) and the dictionary describing 33. The gap between them is this work's central finding."},
+
+  "source_PCIAEPH_titre": {"fr": "Projet COSO — infrastructures hydrauliques", "en": "COSO project — water infrastructure"},
+  "source_PCIAEPH_sous_titre": {"fr": "218 microprojets sur 40 cantons du Nord-Togo", "en": "218 sub-projects across 40 northern cantons"},
+  "source_PCIAEPH_corps": {"fr": "Produit par {producteur}, financement Banque mondiale. Publié en CSV et en GeoJSON — les deux portent les mêmes 218 lignes, seul le second a la géométrie.", "en": "Produced by {producteur}, World Bank funded. Released as CSV and GeoJSON — both carry the same 218 rows, only the latter has geometry."},
+
+  "source_ISRI_titre": {"fr": "Indices de susceptibilité et de risque d'inondation", "en": "Flood susceptibility and risk indices"},
+  "source_ISRI_sous_titre": {"fr": "388 cantons, plus deux grilles et un raster cités mais non chargés", "en": "388 cantons, plus two grids and a raster cited but not loaded"},
+  "source_ISRI_corps": {"fr": "Produit par {producteur}. C'est le pivot de ce tableau de bord : la seule ressource qui couvre le pays entier à une maille fine, et la seule à porter à la fois le risque et la population.", "en": "Produced by {producteur}. It is this dashboard's pivot: the only resource covering the whole country at a fine mesh, and the only one carrying both risk and population."},
+
+  "source_DVECA_titre": {"fr": "Ventes d'eau par catégorie d'abonnés", "en": "Water sales by subscriber category"},
+  "source_DVECA_sous_titre": {"fr": "Volumes en m³, 2018-2022, niveau national uniquement", "en": "Volumes in m³, 2018-2022, national level only"},
+  "source_DVECA_corps": {"fr": "Produit par {producteur}. Aucune maille territoriale : ces volumes n'entrent dans aucun croisement de ce tableau de bord.", "en": "Produced by {producteur}. No territorial mesh: these volumes enter no cross-analysis in this dashboard."},
+
+  "source_DPSSA_titre": {"fr": "Population par subdivision administrative", "en": "Population by administrative subdivision"},
+  "source_DPSSA_sous_titre": {"fr": "Recensement 2010 — 555 libellés de niveaux incomparables", "en": "2010 census — 555 labels of incomparable levels"},
+  "source_DPSSA_corps": {"fr": "Produit par {producteur}. Les libellés mêlent pays, villes, arrondissements et quartiers sans colonne de niveau : aucun total partiel ne peut en être recomposé sans double compte.", "en": "Produced by {producteur}. Labels mix country, cities, boroughs and neighbourhoods with no level column: no partial total can be recomposed without double counting."},
+
+  "contexte_titre": {"fr": "Repères externes", "en": "External benchmarks"},
+  "contexte_sous_titre": {"fr": "Sourcés, jamais recalculés, jamais mêlés aux données du portail", "en": "Sourced, never recomputed, never mixed with portal data"},
+  "repere_victimes": {"fr": "personnes affectées", "en": "people affected"},
+  "repere_victimes_detail": {"fr": "cumul des inondations recensées depuis 1966 (relevé {annee})", "en": "cumulative recorded floods since 1966 (as of {annee})"},
+  "repere_deces": {"fr": "décès recensés", "en": "recorded deaths"},
+  "repere_deces_detail": {"fr": "sur la même période, plus 171 blessés (relevé {annee})", "en": "over the same period, plus 171 injured (as of {annee})"},
+  "repere_pertes_agricoles": {"fr": "de pertes agricoles", "en": "in farm losses"},
+  "repere_pertes_agricoles_detail": {"fr": "productivité agricole perdue en {annee}, environ 40 M US$", "en": "farm productivity lost in {annee}, about US$ 40 M"},
+  "repere_pauvrete_savanes": {"fr": "de pauvreté rurale", "en": "rural poverty"},
+  "repere_pauvrete_savanes_detail": {"fr": "région des Savanes, indicateur de vulnérabilité ({annee})", "en": "Savanes region, vulnerability indicator ({annee})"},
+  "repere_auc_modele": {"fr": "d'aire sous la courbe", "en": "area under the curve"},
+  "repere_auc_modele_detail": {"fr": "validation ROC du modèle de susceptibilité ({annee})", "en": "ROC validation of the susceptibility model ({annee})"},
+
+  "methode_chaine_titre": {"fr": "La chaîne de données, à sens unique", "en": "The one-way data chain"},
+  "methode_chaine_sous_titre": {"fr": "Ce qui garantit que le rapport et l'écran portent les mêmes chiffres", "en": "What guarantees the report and the screen carry the same figures"},
+  "methode_chaine_corps": {"fr": "Les fichiers sont lus bruts, nettoyés une fois, puis mis en cache derrière un point d'entrée unique. **Les vues ne calculent rien et les graphes ne calculent rien** : toute agrégation vit dans un module dédié, réutilisé tel quel par le générateur du rapport PowerPoint. Un chiffre recalculé à deux endroits finit toujours par diverger.", "en": "Files are read raw, cleaned once, then cached behind a single entry point. **Views compute nothing and charts compute nothing**: every aggregation lives in a dedicated module, reused as is by the PowerPoint generator. A figure recomputed in two places always ends up diverging."},
+
+  "methode_regles_titre": {"fr": "Les cinq règles tenues dans tout le tableau de bord", "en": "The five rules held throughout the dashboard"},
+  "methode_regles_sous_titre": {"fr": "Elles expliquent les absences autant que les présences", "en": "They explain the absences as much as the presences"},
+  "regle_1_titre": {"fr": "1. Aucune donnée fabriquée", "en": "1. No manufactured data"},
+  "regle_1_corps": {"fr": "Aucune interpolation, aucune coordonnée devinée depuis un nom de village, aucune année recousue dans une série lacunaire. Les non-réponses restent visibles sous « Non renseigné » : les supprimer embellirait chaque répartition.", "en": "No interpolation, no coordinate guessed from a village name, no year stitched into a gappy series. Non-responses stay visible under “Not reported”: removing them would flatter every distribution."},
+  "regle_2_titre": {"fr": "2. Aucun croisement que les données n'autorisent pas", "en": "2. No cross-analysis the data does not allow"},
+  "regle_2_corps": {"fr": "Les ventes d'eau sont nationales et le recensement 2010 mêle des niveaux incomparables : ni l'un ni l'autre n'entre dans un croisement territorial. Les faire descendre au canton fabriquerait une répartition que les sources ne portent pas.", "en": "Water sales are national and the 2010 census mixes incomparable levels: neither enters a territorial cross-analysis. Pushing them down to canton level would manufacture a split the sources do not carry."},
+  "regle_3_titre": {"fr": "3. Ce qui ne conclut pas est affiché comme tel", "en": "3. What does not conclude is shown as such"},
+  "regle_3_corps": {"fr": "Une relation observée sur moins de trois points n'est pas tracée, et le nombre d'observations accompagne chaque nuage. Masquer un résultat faible donnerait au reste une solidité qu'il n'a pas.", "en": "A relationship observed on fewer than three points is not plotted, and the observation count accompanies every scatter. Hiding a weak result would lend the rest a robustness it lacks."},
+  "regle_4_titre": {"fr": "4. Chaque croisement déclare ses ingrédients", "en": "4. Every cross-analysis declares its ingredients"},
+  "regle_4_corps": {"fr": "Ingrédients, clé de jointure, nombre d'observations et seuil de solidité sont affichés AVANT le graphe, dans l'onglet Croisements déclarés. Le seuil est propre à chaque croisement.", "en": "Ingredients, join key, observation count and robustness threshold are shown BEFORE the chart, in the Declared cross-analyses tab. The threshold is specific to each analysis."},
+  "regle_5_titre": {"fr": "5. Le contexte externe reste séparé du corpus", "en": "5. External context stays separate from the corpus"},
+  "regle_5_corps": {"fr": "Les repères d'inondation proviennent d'EM-DAT et des bilans nationaux, cités par la documentation du producteur. Ils s'affichent dans un visuel distinct, avec leur source, et n'entrent dans aucun graphe.", "en": "Flood benchmarks come from EM-DAT and national assessments, cited by the producer's documentation. They appear in a distinct visual, with their source, and enter no chart."},
+
+  "methode_jointure_titre": {"fr": "La jointure au canton", "en": "The canton join"},
+  "methode_jointure_sous_titre": {"fr": "Le seul niveau où les trois jeux exploitables se rencontrent", "en": "The only level where the three usable datasets meet"},
+  "methode_jointure_corps": {"fr": "Les noms de cantons s'écrivent différemment d'un fichier à l'autre — « Agoè-Nyivé » au référentiel, « AGOE NYIVE » ailleurs. Ils sont donc normalisés en majuscules sans accents ni ponctuation, uniquement pour APPARIER ; l'affichage garde toujours la graphie d'origine.", "en": "Canton names are spelled differently across files — “Agoè-Nyivé” in the reference layer, “AGOE NYIVE” elsewhere. They are therefore normalised to unaccented, unpunctuated uppercase, solely to MATCH; display always keeps the original spelling."},
+  "methode_jointure_note": {"fr": "La jointure est INTERNE : un ouvrage dont le canton ne figure pas au référentiel disparaît du croisement plutôt que d'être rattaché au hasard. Deux cantons du référentiel portent le même nom : leur identifiant reste la seule clé sûre à l'intérieur du référentiel.", "en": "The join is INNER: a facility whose canton is absent from the reference layer drops out rather than being matched at random. Two cantons share a name in the reference layer: their identifier remains the only safe key within it."},
+
+  "methode_classes_titre": {"fr": "Les classes des cartes choroplèthes", "en": "Choropleth map classes"},
+  "methode_classes_sous_titre": {"fr": "Pourquoi des quantiles et non des tranches d'égale largeur", "en": "Why quantiles rather than equal-width bands"},
+  "methode_classes_corps": {"fr": "Les cantons sont répartis en cinq classes de même EFFECTIF. La distribution du risque est très dissymétrique : sa médiane vaut 7,9 points pour un maximum de 64,5. Avec des tranches d'égale largeur, 316 cantons sur 388 tomberaient dans la teinte la plus claire et la carte conclurait à un pays uniformément sûr.", "en": "Cantons are split into five classes of equal SIZE. The risk distribution is heavily skewed: its median is 7.9 points against a 64.5 maximum. With equal-width bands, 316 of 388 cantons would fall into the lightest hue and the map would suggest a uniformly safe country."},
+  "methode_classes_note": {"fr": "En contrepartie, une carte en quantiles montre un CLASSEMENT, pas une intensité absolue. Les bornes de chaque classe sont donc affichées sous la carte.", "en": "In exchange, a quantile map shows a RANKING, not an absolute intensity. Each class's bounds are therefore displayed beneath the map."},
+
+  "affichage_titre": {"fr": "Pour une lecture correcte", "en": "For correct reading"},
+  "affichage_sous_titre": {"fr": "Conditions dans lesquelles la mise en page a été mesurée", "en": "Conditions under which the layout was measured"},
+  "affichage_corps": {"fr": "Navigateur Chrome, Firefox ou Safari récent · largeur d'écran 1 280 px ou plus · zoom 100 % · thème clair, forcé par l'application. La mise en page a été vérifiée de 1 920 à 760 px : sous 1 280 px, les vues en deux colonnes se resserrent sans devenir illisibles.", "en": "Recent Chrome, Firefox or Safari · screen width 1,280 px or more · 100 % zoom · light theme, enforced by the application. The layout was checked from 1,920 down to 760 px: below 1,280 px, two-column views tighten without becoming unreadable."},
+
+  "affichage_couleur_titre": {"fr": "Couleur et accessibilité", "en": "Colour and accessibility"},
+  "affichage_couleur_sous_titre": {"fr": "Aucune valeur n'est accessible par la seule teinte", "en": "No value is reachable through hue alone"},
+  "affichage_couleur_corps": {"fr": "La palette est validée pour les déficiences de vision des couleurs. Les magnitudes sur catégories nominales n'utilisent qu'une seule teinte — la longueur de la barre porte l'information. Les cartes et les nuages sont plafonnés à trois teintes, parce que deux marques quelconques peuvent s'y toucher.", "en": "The palette is validated for colour vision deficiencies. Magnitudes over nominal categories use a single hue — bar length carries the information. Maps and scatters are capped at three hues, because any two marks may touch there."},
+  "affichage_couleur_note": {"fr": "Chaque graphe est doublé d'une vue tableau dépliable : la valeur exacte reste atteignable sans distinguer aucune couleur.", "en": "Every chart is paired with a foldable table view: the exact value stays reachable without distinguishing any colour."}
+}

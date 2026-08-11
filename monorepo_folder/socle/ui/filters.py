@@ -25,7 +25,10 @@ l'autre. C'est au défi de réutiliser la même `cle` d'une vue à la suivante.
 
 # pyrefly: ignore [missing-import]
 import streamlit as st
+from contextlib import contextmanager
 
+from socle.design.icons import icon
+from socle.design.tokens import COLORS
 from socle.ui.cards import note
 
 
@@ -68,7 +71,7 @@ def _options(cadre, colonne):
     return sorted(cadre[colonne].dropna().unique().tolist())
 
 
-def territoriale(cadre, champs, intervalle=None):
+def territoriale(cadre, champs, intervalle=None, reliquat=True):
     """Barre d'un fichier d'entités : N listes de modalités + un intervalle.
 
     `champs` — liste de specs, une par liste déroulante, dans l'ordre
@@ -99,12 +102,20 @@ def territoriale(cadre, champs, intervalle=None):
     mécaniquement, et il vaut mieux le dire que laisser croire à un écart de
     couverture. Renvoyer None n'affiche rien.
 
+    `reliquat` — garder la colonne d'appui qui absorbe la largeur restante.
+    À laisser vraie sur une page pleine largeur. À passer FAUSSE dans un
+    conteneur étroit : sous ~1100 px, une colonne de 8 unités sur 12 réclame
+    plus de place qu'il n'en reste, la grille se replie et la colonne vide
+    tombe sur une deuxième ligne — un blanc sous les champs, sans rien
+    dedans. Les filtres se répartissent alors la largeur à parts égales.
+
     Renvoie {nom de colonne: sélection}, la colonne de l'intervalle portant
     (début, fin) ou None à pleine amplitude — forme directement consommable
     par `apply_filters`.
     """
 
-    colonnes = _colonnes(len(champs) + (1 if intervalle else 0))
+    colonnes = _colonnes(len(champs) + (1 if intervalle else 0),
+                         reliquat=reliquat)
 
     resultat = {}
     portee = {}       # cle -> cadre dans lequel ce champ puise ses modalités
@@ -292,3 +303,104 @@ def retenu(selection, valeur):
     """Une modalité passe-t-elle le filtre ? (sélection vide = tout retenu)"""
 
     return not selection or valeur in selection
+
+
+@contextmanager
+def zone(cle, titre=None, sous_titre=None, cles_session=(), libelle_reset=None,
+         icone="search", fond=None):
+    """Surface qui contient une barre de filtres — l'objet « Filtres ».
+
+    Les barres posées à nu sur la page ne se distinguaient de rien : trois
+    listes déroulantes flottaient au-dessus du premier graphe, sans dire
+    qu'elles formaient un ensemble ni qu'elles cadraient tout ce qui suit.
+
+    Cette zone leur donne une surface, un nom, et surtout DEUX retours que la
+    barre nue ne donnait pas :
+
+      · le nombre de filtres réellement actifs, lisible sans ouvrir les
+        listes — un filtre oublié explique la moitié des « la page ne montre
+        rien » ;
+      · un bouton de remise à zéro, qui n'apparaît que s'il a quelque chose à
+        remettre. Sans lui, revenir au corpus entier demandait de décocher
+        chaque modalité une par une.
+
+    `cles_session` : les clés de widget que le bouton vide. C'est l'appelant
+    qui les connaît — le socle ne devine pas quelles specs la barre a posées.
+    """
+
+    actifs = sum(
+        1 for k in cles_session
+        if st.session_state.get(k) not in (None, [], (), "")
+    )
+
+    nom = f"kgzonefiltres_{cle}"
+    surface = fond or COLORS["surface"]
+
+    st.markdown(
+        f"<style>"
+        # Rembourrage IDENTIQUE à celui de `card` : la zone est une carte
+        # comme les autres, et un écart de 2 px sur le bord gauche se voit
+        # dès que les deux se suivent.
+f".st-key-{nom} {{ background: {surface}; padding: 14px 16px 12px;"
+        f" border: 1px solid {COLORS['borderLight']};"
+        f" border-radius: var(--kg-radius-lg, 12px); }}"
+        # Étiquettes de champ : discrètes et serrées. Par défaut Streamlit
+        # leur donne le corps du texte courant, ce qui les met au même niveau
+        # que les titres de cartes — l'œil ne sait plus ce qui est un contrôle.
+        f'.st-key-{nom} [data-testid="stWidgetLabel"] p {{ font-size: 11px;'
+        f" font-weight: 600; letter-spacing: .04em; text-transform: uppercase;"
+        f" color: {COLORS['textMuted']}; margin-bottom: 2px; }}"
+        # Le CONTRÔLE lui-même n'est pas retouché — ni son fond, ni sa
+        # bordure, ni la couleur de ses pastilles. Une première version les
+        # reprenait, et le champ ne ressemblait plus à celui des autres pages
+        # du tableau de bord : une zone qui ENCADRE des filtres n'a pas à
+        # redéfinir à quoi ressemble un filtre. Elle apporte la surface, le
+        # titre, le décompte et la remise à zéro ; le reste appartient au
+        # thème, et change au même endroit pour toute l'application.
+        # Le bouton de remise à zéro : un lien, pas un bouton d'action. Il
+        # défait, il ne lance rien.
+        f'.st-key-{nom} [data-testid="stBaseButton-secondary"] {{'
+        f" background: transparent; border: none; padding: 2px 6px;"
+        f" color: {COLORS['textSecondary']}; font-size: 12px; }}"
+        f'.st-key-{nom} [data-testid="stBaseButton-secondary"]:hover {{'
+        f" color: {COLORS['primary']}; }}"
+        f"</style>",
+        unsafe_allow_html=True,
+    )
+
+    boite = st.container(key=nom)
+
+    with boite:
+        if titre:
+            gauche, droite = st.columns([8, 2], vertical_alignment="center")
+
+            with gauche:
+                compteur = (
+                    f'<span style="margin-left:8px;padding:1px 8px;'
+                    f'border-radius:999px;font-size:11px;font-weight:600;'
+                    f'background:{COLORS["primaryLight"]};'
+                    f'color:{COLORS["primaryDark"]};">{actifs}</span>'
+                    if actifs else ""
+                )
+                st.markdown(
+                    f'<div style="display:flex;align-items:center;gap:8px;'
+                    f'margin-bottom:2px;">{icon(icone, 15)}'
+                    f'<span style="font-size:13px;font-weight:600;'
+                    f'color:{COLORS["text"]};">{titre}</span>{compteur}</div>'
+                    + (f'<div style="font-size:12px;'
+                       f'color:{COLORS["textMuted"]};margin-bottom:4px;">'
+                       f'{sous_titre}</div>' if sous_titre else ""),
+                    unsafe_allow_html=True,
+                )
+
+            with droite:
+                # Rien à défaire, rien à proposer : un bouton grisé en
+                # permanence est du bruit.
+                if actifs and libelle_reset:
+                    if st.button(libelle_reset, key=f"{cle}_reset",
+                                 use_container_width=True):
+                        for k in cles_session:
+                            st.session_state.pop(k, None)
+                        st.rerun()
+
+        yield boite

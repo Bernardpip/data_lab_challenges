@@ -15,6 +15,7 @@ Règles dures portées ici, et qu'il ne faut pas défaire :
 """
 
 from socle.shell.app_shell import render_shell
+from socle.shell.affiche import render_affiche
 from socle.shell.nav import find_section, find_item, verifier_nav
 
-__all__ = ["render_shell", "find_section", "find_item", "verifier_nav"]
+__all__ = ["render_shell", "render_affiche", "find_section", "find_item", "verifier_nav"]

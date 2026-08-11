@@ -1,0 +1,81 @@
+{
+  "tuile_cantons": {"fr": "Cantons classés", "en": "Ranked cantons"},
+  "tuile_cantons_detail": {"fr": "la totalité du référentiel, équipés ou non", "en": "the whole reference layer, provided or not"},
+  "tuile_equipes": {"fr": "Cantons avec ouvrage recensé", "en": "Cantons with a recorded facility"},
+  "tuile_equipes_detail": {"fr": "{part} % — le reste n'est pas inventorié", "en": "{part} % — the rest is not inventoried"},
+  "tuile_premier": {"fr": "Premier du classement", "en": "Top of the ranking"},
+  "tuile_premier_detail": {"fr": "score {score} sur 1", "en": "score {score} out of 1"},
+
+  "carte_methode_titre": {"fr": "Comment ce score est construit", "en": "How this score is built"},
+  "carte_methode_sous_titre": {"fr": "À lire avant le classement, pas après", "en": "To be read before the ranking, not after"},
+  "note_methode": {"fr": "Le score est la moyenne de <b>trois rangs</b>, pondérés à parts égales : le risque d'inondation du canton, sa population, et son déficit d'ouvrages recensés pour 10 000 habitants. Les trois viennent de la même maille — le canton — et aucun indicateur national n'y entre.", "en": "The score is the mean of <b>three ranks</b>, equally weighted: the canton's flood risk, its population, and its deficit of recorded facilities per 10,000 inhabitants. All three come from the same mesh — the canton — and no national indicator enters it."},
+  "note_methode_limite": {"fr": "Ce n'est <b>pas un modèle</b> : aucune relation n'est estimée, aucune variable n'est expliquée. C'est un ordre de lecture, et les trois composantes restent visibles dans la table pour qu'il puisse être contesté. Le déficit se lit par ailleurs sur un corpus incomplet : un canton mal classé n'est pas nécessairement démuni, il peut simplement ne pas avoir été recensé.", "en": "This is <b>not a model</b>: no relationship is estimated, no variable explained. It is a reading order, and the three components stay visible in the table so it can be challenged. The deficit is also read on an incomplete corpus: a poorly ranked canton is not necessarily unprovided — it may simply not have been recorded."},
+
+  "carte_score_titre": {"fr": "Les vingt cantons prioritaires", "en": "The twenty priority cantons"},
+  "carte_score_sous_titre": {"fr": "Score décroissant — risque, population et déficit combinés", "en": "Decreasing score — risk, population and deficit combined"},
+  "note_score": {"fr": "<b>{premier}</b> ({region}) arrive en tête : {risque} points de risque, {population} habitants, et <b>{ouvrages}</b> ouvrage recensé. Ce zéro dit d'abord l'absence d'inventaire — une zone urbaine dense n'est pas sans équipement, elle est sans donnée publiée.", "en": "<b>{premier}</b> ({region}) tops the list: {risque} risk points, {population} inhabitants, and <b>{ouvrages}</b> recorded facility. That zero speaks first of a missing inventory — a dense urban area is not without infrastructure, it is without published data."},
+
+  "carte_composantes_titre": {"fr": "Ce qui compose le score, canton par canton", "en": "What makes up the score, canton by canton"},
+  "carte_composantes_sous_titre": {"fr": "Les trois rangs empilés — chacun vaut au plus un tiers du total", "en": "The three ranks stacked — each worth at most a third of the total"},
+  "note_composantes": {"fr": "Un canton peut arriver en tête pour trois raisons différentes. Empiler les composantes permet de voir laquelle domine, et donc quelle décision elle appelle : inspecter un parc existant, ou en créer un.", "en": "A canton can top the list for three different reasons. Stacking the components shows which one dominates, and therefore which decision it calls for: inspecting an existing stock, or creating one."},
+
+  "tuile_absents": {"fr": "Champs non publiés", "en": "Unpublished fields"},
+  "tuile_absents_detail": {"fr": "sur {decrits} décrits par le producteur lui-même", "en": "of {decrits} described by the producer itself"},
+  "tuile_sans_plan": {"fr": "Ouvrages sans plan d'entretien", "en": "Facilities without an upkeep plan"},
+  "tuile_sans_plan_detail": {"fr": "action possible sans donnée supplémentaire", "en": "actionable without any further data"},
+  "tuile_sans_position": {"fr": "Ouvrages sans position", "en": "Facilities without a position"},
+  "tuile_sans_position_detail": {"fr": "coordonnées encodées en zéro à la saisie", "en": "coordinates encoded as zero at entry"},
+
+  "carte_leviers_titre": {"fr": "Cinq leviers, classés par ce qu'ils coûtent", "en": "Five levers, ranked by what they cost"},
+  "carte_leviers_sous_titre": {"fr": "Republier ne coûte pas ce que coûte enquêter", "en": "Republishing does not cost what surveying costs"},
+
+  "levier_republier_titre": {"fr": "1. Republier ce qui est déjà collecté", "en": "1. Republish what is already collected"},
+  "levier_republier_pastille": {"fr": "Coût quasi nul", "en": "Near-zero cost"},
+  "levier_republier_pastille_kind": {"fr": "good", "en": "good"},
+  "levier_republier_corps": {"fr": "Le dictionnaire TdE décrit {decrits} champs ; {absents} ne sont pas diffusés, dont l'état de fonctionnement, le débit et la profondeur. Ces champs existent chez le producteur — les publier rendrait l'objectif n°2 du cahier des charges immédiatement atteignable.", "en": "The TdE dictionary describes {decrits} fields; {absents} are not released, including operating status, flow rate and depth. These fields exist at the producer — releasing them would make the brief's objective 2 immediately reachable."},
+  "levier_republier_note": {"fr": "C'est le seul levier qui transforme un objectif impossible en objectif honoré sans collecter une seule donnée nouvelle.", "en": "This is the only lever turning an unreachable objective into a met one without collecting a single new data point."},
+
+  "levier_inventorier_titre": {"fr": "2. Constituer un inventaire national des points d'eau", "en": "2. Build a national inventory of water points"},
+  "levier_inventorier_pastille": {"fr": "Structurel", "en": "Structural"},
+  "levier_inventorier_pastille_kind": {"fr": "warning", "en": "warning"},
+  "levier_inventorier_corps": {"fr": "Le corpus réunit deux inventaires partiels et disjoints : la TdE au sud, le projet COSO au nord. Sur {cantons} cantons, aucune source ne permet de dire combien de points d'eau existent réellement.", "en": "The corpus gathers two partial, disjoint inventories: TdE in the south, the COSO project in the north. Across {cantons} cantons, no source can say how many water points actually exist."},
+  "levier_inventorier_note": {"fr": "Sans cet inventaire, tout ratio d'équipement reste un ratio sur les ouvrages CONNUS, et non sur les ouvrages existants.", "en": "Without this inventory, any provision ratio remains a ratio over KNOWN facilities, not existing ones."},
+
+  "levier_entretenir_titre": {"fr": "3. Doter chaque ouvrage d'un plan d'entretien", "en": "3. Give every facility an upkeep plan"},
+  "levier_entretenir_pastille": {"fr": "Immédiat", "en": "Immediate"},
+  "levier_entretenir_pastille_kind": {"fr": "good", "en": "good"},
+  "levier_entretenir_corps": {"fr": "{sans_plan} microprojets COSO n'ont pas de plan de maintenance. Ce sont des ouvrages neufs, réceptionnés entre 2023 et 2025 : les doter maintenant coûte infiniment moins que les réhabiliter dans cinq ans.", "en": "{sans_plan} COSO sub-projects have no maintenance plan. These are new facilities, accepted between 2023 and 2025: equipping them now costs far less than rehabilitating them in five years."},
+  "levier_entretenir_note": {"fr": "Priorité aux ouvrages situés dans les cantons les plus exposés : l'inondation abrège la vie d'un forage mal entretenu.", "en": "Priority to facilities in the most exposed cantons: flooding shortens the life of a poorly maintained borehole."},
+
+  "levier_prioriser_titre": {"fr": "4. Prioriser les créations par le risque et la population", "en": "4. Prioritise construction by risk and population"},
+  "levier_prioriser_pastille": {"fr": "Aide à la décision", "en": "Decision support"},
+  "levier_prioriser_pastille_kind": {"fr": "neutral", "en": "neutral"},
+  "levier_prioriser_corps": {"fr": "Le classement de l'onglet précédent ordonne les {cantons} cantons du pays selon trois critères mesurés. Il ne remplace pas une étude de terrain — il indique par où la commencer.", "en": "The ranking in the previous tab orders the country's {cantons} cantons on three measured criteria. It does not replace a field study — it indicates where to begin one."},
+  "levier_prioriser_note": {"fr": "Un score construit sur un inventaire incomplet doit être relu après chaque republication de données.", "en": "A score built on an incomplete inventory must be revisited after every data release."},
+
+  "levier_geolocaliser_titre": {"fr": "5. Corriger les coordonnées encodées en zéro", "en": "5. Fix coordinates encoded as zero"},
+  "levier_geolocaliser_pastille": {"fr": "Correctif de saisie", "en": "Data-entry fix"},
+  "levier_geolocaliser_pastille_kind": {"fr": "warning", "en": "warning"},
+  "levier_geolocaliser_corps": {"fr": "{sans_position} microprojets portent une position nulle — l'équateur, au large du Ghana. Leur canton étant connu, la correction est traçable : elle ne demande qu'une reprise de saisie, pas une nouvelle campagne GPS.", "en": "{sans_position} sub-projects carry a null position — the equator, off the coast of Ghana. Since their canton is known, the fix is traceable: it needs a data-entry review, not a new GPS campaign."},
+  "levier_geolocaliser_note": {"fr": "Une coordonnée nulle est plus dangereuse qu'une coordonnée absente : elle passe les contrôles de complétude et fausse tous les cadrages de carte.", "en": "A null coordinate is more dangerous than a missing one: it passes completeness checks and distorts every map framing."},
+
+  "carte_verdicts_titre": {"fr": "Rappel des objectifs non atteints", "en": "Reminder of unmet objectives"},
+  "carte_verdicts_sous_titre": {"fr": "Et de la cause exacte du manque", "en": "And of the exact cause of the gap"},
+  "obj1_rappel": {"fr": "Objectif 1 — répartition établie, état des ouvrages introuvable", "en": "Objective 1 — distribution established, facility condition not found"},
+  "obj2_rappel": {"fr": "Objectif 2 — taux de fonctionnalité, pannes et abandons", "en": "Objective 2 — functionality rates, breakdowns and abandonment"},
+  "cause_collecte_non_publie": {"fr": "Cause : <b>collecté mais non publié</b>. La recommandation est une republication, pas une enquête.", "en": "Cause: <b>collected but unpublished</b>. The recommendation is republication, not a survey."},
+  "cause_hors_maille": {"fr": "Cause : <b>inexistant à cette granularité</b>.", "en": "Cause: <b>absent at this granularity</b>."},
+  "cause_hors_corpus": {"fr": "Cause : <b>hors corpus</b>.", "en": "Cause: <b>outside the corpus</b>."},
+
+  "col_canton": {"fr": "Canton", "en": "Canton"},
+  "col_prefecture": {"fr": "Préfecture", "en": "Prefecture"},
+  "col_region": {"fr": "Région", "en": "Region"},
+  "col_risque": {"fr": "Risque (pts)", "en": "Risk (pts)"},
+  "col_population": {"fr": "Population", "en": "Population"},
+  "col_ouvrages": {"fr": "Ouvrages", "en": "Facilities"},
+  "col_pour_10k": {"fr": "Pour 10 000 hab.", "en": "Per 10,000 inh."},
+  "col_score": {"fr": "Score", "en": "Score"},
+  "col_rang_risque": {"fr": "Rang risque", "en": "Risk rank"},
+  "col_rang_population": {"fr": "Rang population", "en": "Population rank"},
+  "col_rang_deficit": {"fr": "Rang déficit", "en": "Deficit rank"}
+}

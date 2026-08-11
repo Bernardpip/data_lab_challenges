@@ -23,6 +23,9 @@ La forme découle du JOB, jamais de l'envie :
 """
 
 from socle.charts.figures import (
+    petits_multiples,
+    pentes_appariees,
+    sucette_h,
     table_twin,
     bar_h,
     column_series,
@@ -35,6 +38,9 @@ from socle.charts.figures import (
 )
 
 __all__ = [
+    "petits_multiples",
+    "pentes_appariees",
+    "sucette_h",
     "table_twin",
     "bar_h",
     "column_series",

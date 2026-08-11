@@ -1,0 +1,54 @@
+{
+  "region": {
+    "fr": "Région",
+    "en": "Region"
+  },
+  "prefecture": {
+    "fr": "Préfecture",
+    "en": "Prefecture"
+  },
+  "commune": {
+    "fr": "Commune",
+    "en": "Municipality"
+  },
+  "canton": {
+    "fr": "Canton",
+    "en": "Canton"
+  },
+  "nature": {
+    "fr": "Nature",
+    "en": "Kind"
+  },
+  "type_ouvrage": {
+    "fr": "Type d'ouvrage",
+    "en": "Facility type"
+  },
+  "travaux": {
+    "fr": "Travaux",
+    "en": "Works"
+  },
+  "annee_achevement": {
+    "fr": "Année d'achèvement",
+    "en": "Completion year"
+  },
+  "periode": {
+    "fr": "Période",
+    "en": "Period"
+  },
+  "mesures_retenues": {
+    "fr": "Mesures retenues :",
+    "en": "Measurements kept:"
+  },
+  "restreint_au_parent": {
+    "fr": "Limité aux valeurs contenues dans la sélection du dessus.",
+    "en": "Restricted to values within the selection above."
+  },
+  "intervalle_exclut": {
+    "fr": "L'intervalle {debut}-{fin} exclut également les {nombre} ouvrages dont {champ} n'est pas renseignée.",
+    "en": "The {debut}-{fin} range also excludes the {nombre} facilities whose {champ} is not reported."
+  },
+  "zone_titre": {
+    "fr": "Filtres",
+    "en": "Filters"
+  }
+}

@@ -194,6 +194,27 @@ ORDINAL = ["#86b6ef", "#5598e7", "#2a78d6", "#1c5cab", "#104281"]
 # Divergent : deux pôles chaud/froid + gris neutre au milieu.
 DIVERGING = {"neg": "#e34948", "mid": "#f0efec", "pos": "#2a78d6"}
 
+# ─── Rampes de PRODUCTEUR ────────────────────────────────────────────────────
+# Certaines institutions publient leurs cartes avec une rampe imposée. La
+# reprendre n'est pas une coquetterie : un tableau de bord qui recolore une
+# carte officielle oblige son lecteur à réapprendre une lecture qu'il connaît
+# déjà, et fait douter qu'il s'agisse bien de la même donnée.
+#
+# RISQUE — ColorBrewer RdYlGn à 5 classes, inversée. Relevée au pixel sur les
+# cartes publiées avec les indices FSI/FRI du Togo (opendata.gouv.tg).
+#
+# ⚠ Cette rampe est ROUGE-VERT : ses deux extrémités sont indistinguables pour
+# une deutéranopie ou une protanopie, soit environ 8 % des hommes. Elle n'est
+# donc admise que là où la valeur reste atteignable AUTREMENT — infobulle et
+# `table_twin()` obligatoires, ce que le socle impose déjà pour toute carte.
+# Ne jamais l'employer comme palette catégorielle : elle encode un ORDRE.
+RISQUE_OFFICIEL = ["#1a9641", "#a6d96a", "#ffffc0", "#fdae61", "#d7191c"]
+
+# Le fond noir des cartes du producteur. Le tableau de bord reste en thème
+# clair : seul le liseré entre polygones s'en inspire, pour que les classes
+# claires ne fusionnent pas avec la surface de la page.
+RISQUE_CONTOUR = "#232323"
+
 # Statut (réservé, jamais réutilisé comme série ; toujours icône + libellé).
 STATUS = {
     "good": "#0ca30c",

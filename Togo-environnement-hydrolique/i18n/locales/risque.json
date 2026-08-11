@@ -1,0 +1,206 @@
+{
+  "tuile_cantons": {
+    "fr": "Cantons retenus",
+    "en": "Cantons selected"
+  },
+  "tuile_cantons_detail": {
+    "fr": "sur {regions} régions",
+    "en": "across {regions} regions"
+  },
+  "tuile_median": {
+    "fr": "Risque médian",
+    "en": "Median risk"
+  },
+  "tuile_median_detail": {
+    "fr": "médiane, non moyenne : la distribution est très dissymétrique",
+    "en": "median, not mean: the distribution is heavily skewed"
+  },
+  "tuile_max": {
+    "fr": "Risque maximal",
+    "en": "Peak risk"
+  },
+  "tuile_population": {
+    "fr": "Population concernée",
+    "en": "Population concerned"
+  },
+  "tuile_population_detail": {
+    "fr": "somme des cantons retenus (estimation 2022)",
+    "en": "sum over selected cantons (2022 estimate)"
+  },
+  "carte_titre": {
+    "fr": "Indice de risque d'inondation par canton",
+    "en": "Flood risk index by canton"
+  },
+  "carte_sous_titre": {
+    "fr": "Le FRI combine l'aléa physique, l'exposition humaine et la vulnérabilité socio-économique",
+    "en": "The FRI combines physical hazard, human exposure and socio-economic vulnerability"
+  },
+  "note_classes": {
+    "fr": "La carte découpe les cantons en {nombre} classes de même effectif, de {bas} à {haut} points. La dernière commence à <b>{coupure} points</b> : c'est un classement relatif, pas une échelle absolue de danger.",
+    "en": "The map splits cantons into {nombre} equal-sized classes, from {bas} to {haut} points. The last one starts at <b>{coupure} points</b>: this is a relative ranking, not an absolute danger scale."
+  },
+  "carte_top_titre": {
+    "fr": "Les quinze cantons les plus exposés",
+    "en": "The fifteen most exposed cantons"
+  },
+  "carte_top_sous_titre": {
+    "fr": "Classés par indice de risque décroissant",
+    "en": "Ranked by decreasing risk index"
+  },
+  "note_top": {
+    "fr": "<b>{premier}</b> atteint {risque} points, soit <b>{rapport} fois</b> la médiane de la sélection. L'écart entre le sommet et le corps de la distribution est ce qui rend une moyenne trompeuse ici.",
+    "en": "<b>{premier}</b> reaches {risque} points, i.e. <b>{rapport} times</b> the selection's median. That gap between the peak and the bulk of the distribution is what makes an average misleading here."
+  },
+  "carte_regions_titre": {
+    "fr": "Risque médian par région",
+    "en": "Median risk by region"
+  },
+  "carte_regions_sous_titre": {
+    "fr": "Une région n'est pas homogène : la médiane résume, elle ne décrit pas",
+    "en": "A region is not homogeneous: the median summarises, it does not describe"
+  },
+  "note_regions": {
+    "fr": "<b>{tete}</b> mène avec {median} points de médiane, devant <b>{queue}</b> à {median_queue}. L'écart entre régions reste faible au regard de l'écart entre cantons d'une même région.",
+    "en": "<b>{tete}</b> leads with a {median} median, ahead of <b>{queue}</b> at {median_queue}. The gap between regions stays small compared with the gap between cantons within one region."
+  },
+  "carte_composantes_titre": {
+    "fr": "Ce qui compose le risque",
+    "en": "What makes up the risk"
+  },
+  "carte_composantes_sous_titre": {
+    "fr": "Moyenne des cinq variables normalisées par le producteur, sur la sélection",
+    "en": "Mean of the five variables normalised by the producer, over the selection"
+  },
+  "note_composantes": {
+    "fr": "<b>{forte}</b> pèse le plus lourd ({valeur}). Les cinq variables sont normalisées entre 0 et 1 par le producteur : elles se comparent entre elles, jamais en valeur absolue.",
+    "en": "<b>{forte}</b> weighs heaviest ({valeur}). The five variables are normalised between 0 and 1 by the producer: they compare with each other, never in absolute terms."
+  },
+  "composante_alea": {
+    "fr": "Aléa physique (FSI)",
+    "en": "Physical hazard (FSI)"
+  },
+  "composante_population": {
+    "fr": "Densité de population",
+    "en": "Population density"
+  },
+  "composante_urbanisation": {
+    "fr": "Urbanisation",
+    "en": "Urbanisation"
+  },
+  "composante_bati": {
+    "fr": "Densité de bâti",
+    "en": "Building density"
+  },
+  "composante_vulnerabilite": {
+    "fr": "Vulnérabilité économique",
+    "en": "Economic vulnerability"
+  },
+  "carte_nuage_titre": {
+    "fr": "Aléa physique et risque réel",
+    "en": "Physical hazard versus real risk"
+  },
+  "carte_nuage_sous_titre": {
+    "fr": "Un canton peut être physiquement exposé sans être à risque, s'il n'y vit personne",
+    "en": "A canton can be physically exposed yet not at risk, if nobody lives there"
+  },
+  "note_nuage": {
+    "fr": "{n} cantons portent les deux indices. Les points qui s'écartent de la droite sont ceux où la population, et non le terrain, fait le risque.",
+    "en": "{n} cantons carry both indices. Points off the line are those where population, not terrain, creates the risk."
+  },
+  "axe_susceptibilite": {
+    "fr": "Susceptibilité physique (FSI)",
+    "en": "Physical susceptibility (FSI)"
+  },
+  "axe_risque": {
+    "fr": "Risque (points)",
+    "en": "Risk (points)"
+  },
+  "carte_population_titre": {
+    "fr": "Population par classe de risque",
+    "en": "Population by risk class"
+  },
+  "carte_population_sous_titre": {
+    "fr": "Combien d'habitants vivent dans les cantons les plus exposés",
+    "en": "How many people live in the most exposed cantons"
+  },
+  "note_population": {
+    "fr": "<b>{haute}</b> habitants vivent dans la classe la plus exposée, soit <b>{part} %</b> de la population de la sélection.",
+    "en": "<b>{haute}</b> people live in the most exposed class, i.e. <b>{part} %</b> of the selection's population."
+  },
+  "unite_habitants": {
+    "fr": " habitants",
+    "en": " inhabitants"
+  },
+  "classe_1": {
+    "fr": "Très faible",
+    "en": "Very low"
+  },
+  "classe_2": {
+    "fr": "Faible",
+    "en": "Low"
+  },
+  "classe_3": {
+    "fr": "Moyen",
+    "en": "Medium"
+  },
+  "classe_4": {
+    "fr": "Élevé",
+    "en": "High"
+  },
+  "classe_5": {
+    "fr": "Très élevé",
+    "en": "Very high"
+  },
+  "col_canton": {
+    "fr": "Canton",
+    "en": "Canton"
+  },
+  "col_prefecture": {
+    "fr": "Préfecture",
+    "en": "Prefecture"
+  },
+  "col_region": {
+    "fr": "Région",
+    "en": "Region"
+  },
+  "col_risque": {
+    "fr": "Risque (pts)",
+    "en": "Risk (pts)"
+  },
+  "col_risque_median": {
+    "fr": "Risque médian",
+    "en": "Median risk"
+  },
+  "col_risque_max": {
+    "fr": "Risque max",
+    "en": "Peak risk"
+  },
+  "col_population": {
+    "fr": "Population",
+    "en": "Population"
+  },
+  "col_cantons": {
+    "fr": "Cantons",
+    "en": "Cantons"
+  },
+  "col_classe": {
+    "fr": "Classe",
+    "en": "Class"
+  },
+  "col_composante": {
+    "fr": "Composante",
+    "en": "Component"
+  },
+  "col_valeur_normalisee": {
+    "fr": "Valeur normalisée",
+    "en": "Normalised value"
+  },
+  "col_susceptibilite": {
+    "fr": "Susceptibilité",
+    "en": "Susceptibility"
+  },
+  "legende_titre": {
+    "fr": "Indice de risque, par classe de même effectif",
+    "en": "Risk index, by equal-sized class"
+  }
+}

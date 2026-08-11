@@ -1,0 +1,178 @@
+{
+  "tuile_population": {
+    "fr": "Population des cantons retenus",
+    "en": "Population of selected cantons"
+  },
+  "tuile_population_detail": {
+    "fr": "sur {cantons} cantons — estimation 2022",
+    "en": "over {cantons} cantons — 2022 estimate"
+  },
+  "tuile_rgph": {
+    "fr": "Recensement 2010",
+    "en": "2010 census"
+  },
+  "tuile_rgph_detail": {
+    "fr": "total national déclaré par le RGPH",
+    "en": "national total declared by the census"
+  },
+  "tuile_ecart": {
+    "fr": "Écart entre les deux comptages",
+    "en": "Gap between the two counts"
+  },
+  "tuile_ecart_detail": {
+    "fr": "douze ans et deux méthodes séparent ces chiffres",
+    "en": "twelve years and two methods separate these figures"
+  },
+  "carte_population_titre": {
+    "fr": "Population par canton",
+    "en": "Population by canton"
+  },
+  "carte_population_sous_titre": {
+    "fr": "Estimation 2022 portée par le référentiel ISRI-TG, classes de quantiles",
+    "en": "2022 estimate carried by the ISRI-TG reference layer, quantile classes"
+  },
+  "note_population": {
+    "fr": "<b>{premier}</b> est le canton le plus peuplé de la sélection avec <b>{habitants}</b> habitants. Cette estimation ne se compare pas au recensement 2010 : les deux ne partagent ni la méthode, ni le millésime, ni la maille.",
+    "en": "<b>{premier}</b> is the most populated canton in the selection with <b>{habitants}</b> inhabitants. This estimate is not comparable to the 2010 census: the two share neither method, nor vintage, nor mesh."
+  },
+  "carte_densite_titre": {
+    "fr": "Ouvrages recensés pour 10 000 habitants",
+    "en": "Recorded facilities per 10,000 inhabitants"
+  },
+  "carte_densite_sous_titre": {
+    "fr": "Les vingt cantons les moins bien dotés parmi ceux qui portent au moins un ouvrage",
+    "en": "The twenty least-provided cantons among those carrying at least one facility"
+  },
+  "note_densite": {
+    "fr": "Croisement sur <b>{observations}</b> cantons (seuil de solidité : {seuil}). <b>{faible}</b> ferme la marche avec {valeur} ouvrage pour 10 000 habitants. Ce ratio ne porte que sur les cantons DÉJÀ recensés : les autres n'apparaissent pas, faute d'inventaire.",
+    "en": "Cross-analysis over <b>{observations}</b> cantons (robustness threshold: {seuil}). <b>{faible}</b> comes last with {valeur} facility per 10,000 inhabitants. This ratio covers only ALREADY recorded cantons: the others are absent for lack of an inventory."
+  },
+  "note_densite_insuffisante": {
+    "fr": "Trop peu de cantons croisés pour publier ce ratio.",
+    "en": "Too few cross-matched cantons to publish this ratio."
+  },
+  "serie_ventes": {
+    "fr": "Ventes d'eau",
+    "en": "Water sales"
+  },
+  "aide_periode": {
+    "fr": "Les catégories d'abonnés ne sont pas toutes renseignées chaque année.",
+    "en": "Subscriber categories are not all reported every year."
+  },
+  "tuile_volume": {
+    "fr": "Volume vendu",
+    "en": "Volume sold"
+  },
+  "tuile_volume_detail": {
+    "fr": "cumul {debut}-{fin}, tous abonnés",
+    "en": "{debut}-{fin} total, all subscribers"
+  },
+  "tuile_categories": {
+    "fr": "Catégories d'abonnés",
+    "en": "Subscriber categories"
+  },
+  "tuile_categories_detail": {
+    "fr": "présentes sur l'intervalle retenu",
+    "en": "present over the selected range"
+  },
+  "tuile_derniere": {
+    "fr": "Catégories au dernier millésime",
+    "en": "Categories in the latest year"
+  },
+  "tuile_derniere_detail": {
+    "fr": "renseignées en {annee}",
+    "en": "reported in {annee}"
+  },
+  "carte_series_titre": {
+    "fr": "Ventes d'eau par catégorie d'abonnés",
+    "en": "Water sales by subscriber category"
+  },
+  "carte_series_sous_titre": {
+    "fr": "En mètres cubes — une courbe interrompue signale une année non renseignée, jamais un zéro",
+    "en": "In cubic metres — a broken line marks an unreported year, never a zero"
+  },
+  "note_series": {
+    "fr": "<b>{premier}</b> domine avec {volume} m³ cumulés sur {categories} catégories. Les courbes ne sont pas recousues : les trous sont des absences de collecte, et les combler inventerait des volumes.",
+    "en": "<b>{premier}</b> leads with {volume} m³ across {categories} categories. Lines are not stitched: gaps are collection gaps, and filling them would invent volumes."
+  },
+  "axe_annee": {
+    "fr": "Année",
+    "en": "Year"
+  },
+  "carte_derniere_titre": {
+    "fr": "Répartition au dernier millésime",
+    "en": "Breakdown in the latest year"
+  },
+  "carte_derniere_sous_titre": {
+    "fr": "Poids de chaque catégorie d'abonnés",
+    "en": "Weight of each subscriber category"
+  },
+  "note_national": {
+    "fr": "Ces volumes sont publiés au niveau <b>national uniquement</b>. Ils n'entrent dans aucun croisement territorial de ce tableau de bord : les répartir par région reviendrait à fabriquer la répartition.",
+    "en": "These volumes are published at <b>national level only</b>. They enter no territorial cross-analysis in this dashboard: splitting them by region would mean manufacturing the split."
+  },
+  "col_canton": {
+    "fr": "Canton",
+    "en": "Canton"
+  },
+  "col_prefecture": {
+    "fr": "Préfecture",
+    "en": "Prefecture"
+  },
+  "col_region": {
+    "fr": "Région",
+    "en": "Region"
+  },
+  "col_population": {
+    "fr": "Population",
+    "en": "Population"
+  },
+  "col_risque": {
+    "fr": "Risque (pts)",
+    "en": "Risk (pts)"
+  },
+  "col_ouvrages": {
+    "fr": "Ouvrages",
+    "en": "Facilities"
+  },
+  "col_pour_10k": {
+    "fr": "Pour 10 000 hab.",
+    "en": "Per 10,000 inh."
+  },
+  "col_categorie": {
+    "fr": "Catégorie",
+    "en": "Category"
+  },
+  "col_annee": {
+    "fr": "Année",
+    "en": "Year"
+  },
+  "col_volume": {
+    "fr": "Volume (m³)",
+    "en": "Volume (m³)"
+  },
+  "unite_pour_10k": {
+    "fr": " / 10 000 hab.",
+    "en": " / 10,000 inh."
+  },
+  "carte_pentes_titre": {
+    "fr": "Population et équipement : deux classements qui se contredisent",
+    "en": "Population and provision: two rankings that contradict each other"
+  },
+  "carte_pentes_sous_titre": {
+    "fr": "À gauche les cantons les plus peuplés, à droite les mieux dotés — une courbe par canton",
+    "en": "Left, the most populated cantons; right, the best provided — one curve per canton"
+  },
+  "pentes_gauche": {
+    "fr": "Population",
+    "en": "Population"
+  },
+  "pentes_droite": {
+    "fr": "Ouvrages / 10 000 hab.",
+    "en": "Facilities / 10,000 inh."
+  },
+  "note_pentes": {
+    "fr": "Les courbes se croisent : les cantons les plus peuplés ne sont pas les mieux dotés. <b>{croisement}</b> des {observations} cantons croisés perdent au moins cinq places entre les deux classements. Attention toutefois — ce classement ne porte que sur les ouvrages RECENSÉS.",
+    "en": "The curves cross: the most populated cantons are not the best provided. <b>{croisement}</b> of the {observations} cross-matched cantons drop at least five places between the two rankings. Note, though — this ranking covers RECORDED facilities only."
+  }
+}

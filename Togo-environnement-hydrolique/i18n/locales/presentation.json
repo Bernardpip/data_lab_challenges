@@ -1,0 +1,11 @@
+{
+  "fichier": {"fr": "Rapport_hydro-gabarit", "en": "Report_hydro-gabarit"},
+  "pied": {"fr": "Accès à l'eau potable au Togo · page {page}", "en": "Access to drinking water in Togo · page {page}"},
+
+  "p1_titre": {"fr": "Accès à l'eau potable au Togo", "en": "Access to drinking water in Togo"},
+  "p1_sous_titre": {"fr": "Données ouvertes — opendata.gouv.tg", "en": "Open data — opendata.gouv.tg"},
+  "p1_auteur": {"fr": "Kokou PIPI", "en": "Kokou PIPI"},
+
+  "p2_titre": {"fr": "Données, nettoyage et démarche", "en": "Data, cleaning and method"},
+  "p2_sous_titre": {"fr": "Ce que le corpus permet, et ce qu'il ne permet pas", "en": "What the corpus allows, and what it does not"}
+}

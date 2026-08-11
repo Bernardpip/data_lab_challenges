@@ -1,0 +1,28 @@
+# Déploiement Railway — configuration lue au premier déploiement.
+#
+# Railway exécute un CONTENEUR, pas une fonction : le processus Streamlit
+# reste vivant, le WebSocket tient, et le cache `@st.cache_data` survit d'une
+# visite à l'autre. C'est ce qui manquait à Vercel.
+
+[build]
+# Nixpacks détecte Python via requirements.txt et lit .python-version.
+builder = "NIXPACKS"
+
+[deploy]
+# $PORT est imposé par Railway et change à chaque démarrage : il ne peut pas
+# être figé dans .streamlit/config.toml. L'adresse 0.0.0.0 est indispensable —
+# sur 127.0.0.1, le conteneur ne serait joignable que depuis lui-même.
+startCommand = "streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.fileWatcherType none"
+
+# Railway interroge cette route avant de basculer le trafic sur la nouvelle
+# version : un déploiement raté ne remplace jamais un déploiement qui marche.
+healthcheckPath = "/_stcore/health"
+healthcheckTimeout = 120
+
+# Streamlit ne plante pas de lui-même ; ce filet ne sert qu'aux incidents
+# d'infrastructure. Trois tentatives, puis on laisse tomber plutôt que de
+# boucler indéfiniment sur une erreur de code.
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+numReplicas = 1

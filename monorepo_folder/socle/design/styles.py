@@ -157,6 +157,26 @@ footer { display: none !important; }
   white-space: nowrap;
 }
 
+/* ── Anneau de focus ───────────────────────────────────────────────────────
+   Le champ à choix multiples garde un <input> de DEUX PIXELS de large tant
+   qu'on n'y a rien tapé — il ne sert qu'à la saisie, la valeur vit dans les
+   pastilles. L'anneau de focus dessiné dessus se réduisait donc à ses deux
+   côtés verticaux : deux petits traits violets collés au bord gauche du
+   champ, sans rapport visible avec quoi que ce soit. Ses côtés haut et bas
+   existaient bien, mais longs de deux pixels.
+
+   L'anneau est déplacé sur la surface VISIBLE du contrôle. Il n'est pas
+   supprimé : sans lui, un parcours au clavier ne montrerait plus où il en
+   est. */
+[data-testid="stMultiSelect"] input:focus,
+[data-testid="stMultiSelect"] input:focus-visible { outline: none; }
+
+[data-testid="stMultiSelect"] [data-baseweb="select"] > div:focus-within {
+  border-color: var(--kg-color-border-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb,
+              var(--kg-color-border-focus) 18%, transparent);
+}
+
 /* Sécurité indépendante du gap flex parent (qu'une structure de colonnes
    imbriquée peut réduire) : chaque carte porte aussi sa propre marge. */
 .kg-card,
@@ -859,4 +879,284 @@ def load_styles(sidebar_width=None):
     st.markdown(
         "<style>" + _vars(width) + _CSS + "</style>",
         unsafe_allow_html=True
+    )
+
+
+# ─── Gabarit « affiche » ─────────────────────────────────────────────────────
+# Une page d'affiche n'a pas de sidebar : le menu haut porte la navigation, et
+# la surface entière revient au propos. Ces règles ne sont chargées QUE par
+# `socle.shell.affiche` — les charger partout ferait disparaître la sidebar du
+# tableau de bord ordinaire.
+
+_CSS_AFFICHE = """
+/* La sidebar de Streamlit n'existe pas sur une affiche. `display:none` plutôt
+   que `width:0` : à zéro, son bouton de repli reste cliquable et rouvre un
+   panneau vide par-dessus le contenu. */
+[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"] {
+  display: none !important;
+}
+
+/* Le conteneur principal reprend toute la largeur. Le padding par défaut de
+   Streamlit (6rem en haut) creuserait un vide au-dessus du menu épinglé. */
+[data-testid="stMain"] .block-container {
+  padding: 0 !important;
+  max-width: 100% !important;
+}
+
+/* ── Menu haut ─────────────────────────────────────────────────────────── */
+/* Streamlit pose la classe `st-key-<cle>` sur un conteneur nommé : c'est le
+   seul point d'accroche stable pour styler un VRAI bloc de widgets, qu'un
+   simple <div> markdown ne pourrait pas envelopper. */
+
+/* Le menu est une CARTE POSÉE, pas un bandeau collé au bord : la marge et le
+   rayon le détachent de la page, et l'ombre lui donne le plan supérieur qu'un
+   élément épinglé doit occuper quand le contenu défile dessous. */
+.st-key-kgaffmenu {
+  /* `width: calc(100% - 2*marge)` est indispensable : Streamlit impose
+     `width:100%` aux blocs de son conteneur vertical, et une marge s'y
+     AJOUTE au lieu de rétrécir l'élément — la carte débordait de 32 px et la
+     bascule de langue sortait de l'écran. */
+  margin: 14px auto 0;
+  /* 2 × 16 px : le menu s'aligne sur le bord des CARTES du contenu. Mesuré
+     avant correction, trois bords cohabitaient — boîte du menu à x=16, texte
+     du menu à x=37, contenu des colonnes à x=29 — et c'est ce désaccord de 8
+     à 13 px que l'œil lisait comme un défaut d'alignement sans pouvoir le
+     nommer. Son rembourrage latéral vaut celui d'une carte (16 px), si bien
+     que le titre du menu tombe sur le titre de la première carte. */
+  width: calc(100% - 32px);
+  box-sizing: border-box;
+  /* Rembourrage latéral IDENTIQUE à celui d'une carte (16 px) : le titre du
+     menu tombe alors exactement sur le titre de la première carte. */
+  padding: 14px 16px 20px;
+  background: var(--kg-color-surface);
+  border: 1px solid var(--kg-color-border);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 20px rgba(15,23,42,.06);
+  /* `fixed`, pas `sticky`, pour la même raison que le pied : Streamlit
+     enveloppe chaque élément dans un conteneur ajusté à sa taille, où un
+     élément collant n'a aucune place pour glisser — mesuré, le menu partait
+     à y=-314 après 500 px de défilement. */
+  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+}
+
+/* Logo et titres sur une seule ligne, alignés au centre : la silhouette est
+   une marque, pas une vignette posée au-dessus du texte. */
+.kg-aff-identite { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.kg-aff-logo {
+  flex: 0 0 auto; display: flex; align-items: center;
+  padding-right: 16px; border-right: 1px solid var(--kg-color-border);
+}
+.kg-aff-menu-id { min-width: 0; }
+
+.kg-aff-titre {
+  font-size: 25px; font-weight: 700; letter-spacing: -0.015em;
+  line-height: 1.15; color: var(--kg-color-text); margin: 0;
+}
+.kg-aff-sous-titre {
+  font-size: 13px; color: var(--kg-color-text-secondary);
+  margin-top: 5px; font-variant-numeric: tabular-nums;
+}
+.kg-aff-surtitre {
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--kg-color-primary); margin-bottom: 6px;
+}
+
+/* Le rail des boutons de vue : les boutons Streamlit sont posés dans une
+   colonne, on ne fait que resserrer leur gouttière et retirer leur marge. */
+/* Streamlit empile les colonnes imbriquées dès que la place manque. On force
+   la rangée d'actions à rester UNE ligne, alignée à droite : le menu doit
+   garder une hauteur constante quelle que soit la largeur de fenêtre. */
+.st-key-kgaffactions > [data-testid="stVerticalBlock"] > [data-testid="stHorizontalBlock"],
+.st-key-kgaffactions [data-testid="stHorizontalBlock"] {
+  flex-wrap: nowrap !important;
+  align-items: center;
+  justify-content: flex-end;
+}
+.st-key-kgaffactions [data-testid="stColumn"] { flex: 0 1 auto; min-width: 0; }
+
+/* La bascule de langue ne s'étire pas : elle vaut deux fois 44 px, pas une
+   fraction de la rangée. Sans cette largeur imposée, Streamlit lui donne la
+   part de grille de son `st.columns` parent et elle traverse l'écran. */
+.st-key-kgafflang { flex: 0 0 auto !important; width: 88px; margin-left: 10px; }
+.st-key-kgafflang [data-testid="stColumn"] { flex: 1 1 46px !important; }
+
+
+/* ── Boutons de vue : effet ENFONCÉ ─────────────────────────────────────
+   Au repos, le bouton est légèrement soulevé (ombre portée + filet clair en
+   haut). Actif ou pressé, il s'enfonce : l'ombre passe à l'INTÉRIEUR et le
+   bouton descend d'un pixel. C'est le seul retour tactile qu'un écran sait
+   donner, et il rend l'état actif lisible sans dépendre de la seule couleur. */
+.st-key-kgaffactions [data-testid="stButton"] > button {
+  font-size: 12.5px; font-weight: 560; letter-spacing: .01em;
+  padding: 7px 14px; min-height: 36px; white-space: nowrap;
+  border: 1px solid var(--kg-color-border);
+  transition: box-shadow .12s ease, transform .08s ease, background .12s ease;
+  border-radius: 9px;
+  background: var(--kg-color-surface);
+  color: var(--kg-color-text-secondary);
+  box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 1px 2px rgba(15,23,42,.07);
+}
+.st-key-kgaffactions [data-testid="stButton"] > button:hover {
+  background: var(--kg-color-surface-hover);
+  color: var(--kg-color-text);
+  border-color: var(--kg-color-border-hover);
+}
+/* Pression réelle du doigt ou de la souris. */
+.st-key-kgaffactions [data-testid="stButton"] > button:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 5px rgba(15,23,42,.16);
+}
+/* État ACTIF — le bouton reste enfoncé tant que la vue est la sienne. */
+.st-key-kgaffactions [data-testid="stButton"] > button[kind="primary"] {
+  background: var(--kg-color-primary);
+  color: var(--kg-color-text-on-primary);
+  border-color: var(--kg-color-primary-dark);
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.28), inset 0 -1px 0 rgba(255,255,255,.12);
+}
+.st-key-kgaffactions [data-testid="stButton"] > button[kind="primary"]:hover {
+  background: var(--kg-color-primary-hover);
+  color: var(--kg-color-text-on-primary);
+}
+
+/* ── Bascule de langue : un seul objet, deux moitiés ────────────────────
+   Les deux boutons sont SOUDÉS — gouttière annulée, rayons portés par les
+   extrémités du groupe. Une bascule se lit comme un interrupteur, pas comme
+   deux boutons indépendants qui se trouveraient côte à côte. */
+.st-key-kgafflang [data-testid="stHorizontalBlock"] { gap: 0 !important; }
+.st-key-kgafflang [data-testid="stColumn"] { min-width: 0; }
+
+.st-key-kgafflang [data-testid="stButton"] > button {
+  border-radius: 0; padding: 7px 6px; font-weight: 650; font-size: 11.5px;
+  letter-spacing: .06em;
+  background: var(--kg-color-surface-secondary);
+  color: var(--kg-color-text-muted);
+  box-shadow: inset 0 1px 3px rgba(15,23,42,.07);
+}
+.st-key-kgafflang [data-testid="stColumn"]:first-child button {
+  border-radius: 9px 0 0 9px;
+}
+.st-key-kgafflang [data-testid="stColumn"]:last-child button {
+  border-radius: 0 9px 9px 0; border-left-width: 0;
+}
+.st-key-kgafflang [data-testid="stButton"] > button:hover {
+  color: var(--kg-color-text); background: var(--kg-color-surface-hover);
+}
+/* La langue active REMONTE : c'est la moitié en relief qui est choisie,
+   l'autre reste en creux. L'inverse des vues, et c'est voulu — une bascule
+   montre où l'on est, un onglet montre ce qu'on a enfoncé. */
+.st-key-kgafflang [data-testid="stButton"] > button[kind="primary"] {
+  background: var(--kg-color-surface);
+  color: var(--kg-color-primary);
+  border-color: var(--kg-color-primary);
+  box-shadow: 0 1px 3px rgba(15,23,42,.12);
+  position: relative; z-index: 1;
+}
+
+/* ── Corps en deux colonnes ────────────────────────────────────────────── */
+/* Le haut réserve la place du menu, qui est en `fixed` et ne pousse donc plus
+   rien : hauteur de la carte (variable, posée par la prop `hauteur_menu`)
+   plus sa marge haute et l'écart de respiration.
+   Écrit en RACCOURCI et non en `padding-top` séparé : un raccourci déclaré
+   plus loin dans la feuille écraserait la propriété isolée — c'est ce qui
+   est arrivé, et les colonnes passaient 98 px sous le header. */
+/* 15 px de côté, et non 16 : les colonnes portent elles-mêmes 12 px de
+   rembourrage plus 1 px de filet, si bien que la CARTE se pose à 15 + 13 =
+   28 px du bord — exactement la gouttière définie plus bas. Une marge de page
+   et une gouttière inégales (mesurées à 29 et 38 px) sont précisément ce qui
+   donne l'impression de séparations arbitraires. */
+/* UNE SEULE valeur de séparation sur toute la page — 16 px — entre le menu et
+   la première carte, entre deux cartes, entre les deux colonnes, et du bord de
+   la fenêtre. La réserve haute s'écrit comme la somme qu'elle est vraiment :
+
+       14 (marge haute du menu) + hauteur_menu + 16 (écart)
+       − 24 (rembourrage propre au conteneur principal de Streamlit)
+       − 1  (filet de la colonne, qui compte lui aussi)
+     = hauteur_menu + 5
+
+   Le « + 26 px » d'origine ignorait ces 24 px et les 12 px que portait alors
+   la colonne : le vide sous le menu atteignait 49 px. Les 15 px de côté
+   suivent la même règle — 15 + 1 de filet = 16. */
+.st-key-kgaffcorps { padding: calc(var(--kg-aff-menu-h, 116px) + 5px) 15px 8px; }
+
+/* L'écart vertical est une VARIABLE : le bandeau d'onglets doit pouvoir le
+   reprendre au pixel pour venir se coller à sa carte. */
+.st-key-kgaffcorps { --kg-aff-ecart: 16px; }
+
+/* Gouttière : les colonnes ne portent plus de rembourrage, l'écart entre les
+   cartes EST donc ce `gap` — 16 px, comme partout ailleurs.
+   `:has()` cible la SEULE rangée qui porte la colonne de gauche. Écrite sans
+   ce filtre, la règle s'appliquait à TOUS les blocs horizontaux du corps :
+   les quatre tuiles se retrouvaient collées à 2 px les unes des autres, et
+   les deux champs de la zone de filtres aussi. Une règle de mise en page qui
+   ne dit pas à QUOI elle s'applique finit toujours par s'appliquer à tout. */
+[data-testid="stHorizontalBlock"]:has(> div [class*="st-key-kgaffgauche"]) {
+  /* 14 et non 16 : les deux colonnes portent chacune un filet d'un pixel, qui
+     s'ajoute de part et d'autre de la gouttière. */
+  gap: 14px;
+}
+
+/* Rythme vertical UNIQUE. Avant : 10 px d'écart de bloc AUXQUELS s'ajoutait
+   la `margin-top: 8px` que toute carte porte — soit 18 px entre deux cartes,
+   mais 10 px seulement sous la zone de filtres, qui n'est pas une carte. Deux
+   espacements pour la même intention, et l'œil voyait le désaccord sans
+   pouvoir le nommer. La marge est neutralisée, l'écart devient la seule règle. */
+.st-key-kgaffcorps [data-testid="stVerticalBlock"] { gap: var(--kg-aff-ecart); }
+.st-key-kgaffcorps [class*="st-key-kgcard"] { margin-top: 0; }
+
+/* La colonne de droite se comporte comme un panneau : fond légèrement en
+   retrait, pour que la carte s'y détache sans cadre dessiné. */
+/* Les colonnes n'ont AUCUN décor par défaut : fond, bordure et filet sont
+   décidés par `render_affiche` (props `separation_colonnes`, `colonne_*`) et
+   injectés en surcouche. Une règle ici ferait double emploi et gagnerait
+   parfois, selon l'ordre d'injection. */
+
+/* Le pied est ÉPINGLÉ en bas, comme le menu l'est en haut : sur une affiche
+   dont les colonnes dépassent la hauteur de fenêtre, un pied en fin de flux
+   n'est jamais vu. La source et l'auteur doivent rester lisibles sans avoir
+   à faire défiler jusqu'au bout. */
+/* `fixed` et non `sticky` : Streamlit enveloppe CHAQUE élément dans un
+   conteneur ajusté à sa taille, si bien qu'un élément collant n'a aucune
+   place pour glisser dans son parent — il reste en fin de flux et ne colle
+   jamais. Seul `fixed`, qui sort du flux et se cale sur la fenêtre, tient. */
+.kg-aff-pied {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+  display: flex; justify-content: space-between; align-items: center;
+  /* Un pied ne porte qu'une source et une signature : il doit se faire
+     oublier. 6 px suffisent — au-delà, il prend la place d'un contenu. */
+  gap: 16px; padding: 6px 30px; line-height: 1.5;
+  border-top: 1px solid var(--kg-color-border);
+  /* Fond opaque obligatoire : le contenu défile SOUS le pied, et sans lui
+     les textes se superposeraient. */
+  background: var(--kg-color-background);
+  font-size: 11.5px; color: var(--kg-color-text-muted);
+}
+
+/* Le pied étant hors du flux, il recouvrirait la fin du contenu : on rend
+   sa hauteur au corps sous forme de marge basse. */
+.st-key-kgaffcorps { padding-bottom: 40px !important; }
+
+/* Sous 1 100 px, les deux colonnes ne tiennent plus côte à côte : Streamlit
+   les empile de lui-même, mais le panneau garderait sa hauteur de carte. */
+@media (max-width: 1100px) {
+  .st-key-kgaffmenu { position: static; margin: 10px auto 0;
+                      width: calc(100% - 20px);
+                      padding: 14px 16px 12px; }
+  .st-key-kgaffactions { justify-content: flex-start; }
+  .st-key-kgaffcorps { padding: calc(var(--kg-aff-menu-h, 116px) + 20px) 10px 8px; }
+}
+"""
+
+
+def load_styles_affiche():
+    """Feuille du tableau de bord + surcouche « affiche ».
+
+    Appelée à la place de `load_styles`, jamais en plus : les deux injectent
+    les mêmes variables, et un double chargement doublerait la feuille dans
+    le document à chaque rerun.
+    """
+
+    st.markdown(
+        "<style>" + _vars(0) + _CSS + _CSS_AFFICHE + "</style>",
+        unsafe_allow_html=True,
     )

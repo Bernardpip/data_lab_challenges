@@ -1,5 +1,36 @@
 
 
+
+## Le problème
+À partir des données ouvertes sur les infrastructures hydrauliques, l'assainissement, la consommation d'eau et la démographie, construisez un tableau de bord qui dresse un diagnostic clair de la situation de l'accès à l'eau potable au Togo, et proposez des recommandations stratégiques pour prioriser les futurs aménagements et l'entretien du parc.
+
+## Objectifs
+Cartographier la répartition spatiale et l'état des points d'eau au Togo.
+Analyser les taux de fonctionnalité (pannes, abandons) par région.
+Mettre en regard la pression démographique avec les infrastructures existantes.
+Croiser l'exposition au risque d'inondation avec la localisation des ouvrages hydrauliques.
+Proposer des recommandations ciblées pour la maintenance et la création de nouveaux forages.
+
+## Livrables attendus
+Un dashboard .zip (Power BI ou Python)
+Un rapport PowerPoint maximum 10 pages expliquant les analyses effectuées et les résultats obtenus.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Données Ouvertes sur les Ventes d’eau par catégorie d’abonnés (en m3) au Togo DVECA-TG
 Description
 ces données décrivent les indicateurs d'utilisation de l'eau par les différente couche de la société au Togo

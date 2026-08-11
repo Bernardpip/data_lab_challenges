@@ -1,0 +1,66 @@
+{
+  "sur_titre": {
+    "fr": "Data Challenge Environnement · Eau et hydraulique",
+    "en": "Environment Data Challenge · Water and hydraulics"
+  },
+  "titre": {
+    "fr": "L'eau que le Togo ne compte pas",
+    "en": "The water Togo does not count"
+  },
+  "sous_titre": {
+    "fr": "{cantons} cantons cartographiés · {ouvrages} ouvrages recensés · opendata.gouv.tg",
+    "en": "{cantons} cantons mapped · {ouvrages} facilities recorded · opendata.gouv.tg"
+  },
+  "vue_diagnostic": {
+    "fr": "Diagnostic",
+    "en": "Diagnosis"
+  },
+  "vue_risque": {
+    "fr": "Risque",
+    "en": "Risk"
+  },
+  "vue_parc": {
+    "fr": "Parc",
+    "en": "Facilities"
+  },
+  "vue_priorites": {
+    "fr": "Priorités",
+    "en": "Priorities"
+  },
+  "carte_diagnostic": {
+    "fr": "Risque d'inondation par canton",
+    "en": "Flood risk by canton"
+  },
+  "carte_risque": {
+    "fr": "Risque d'inondation par canton",
+    "en": "Flood risk by canton"
+  },
+  "carte_parc": {
+    "fr": "Implantation des ouvrages",
+    "en": "Facility locations"
+  },
+  "carte_priorites": {
+    "fr": "Score de priorisation par canton",
+    "en": "Priority score by canton"
+  },
+  "zone_gauche": {
+    "fr": "Colonne gauche · 62 %",
+    "en": "Left column · 62 %"
+  },
+  "zone_droite": {
+    "fr": "Colonne droite · 38 %",
+    "en": "Right column · 38 %"
+  },
+  "pied_source": {
+    "fr": "Données ouvertes — opendata.gouv.tg",
+    "en": "Open data — opendata.gouv.tg"
+  },
+  "pied_auteur": {
+    "fr": "Kokou PIPI · Data AI Lab",
+    "en": "Kokou PIPI · Data AI Lab"
+  },
+  "logo_alt": {
+    "fr": "Carte du Togo",
+    "en": "Map of Togo"
+  }
+}

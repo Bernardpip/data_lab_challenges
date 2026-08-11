@@ -1,0 +1,60 @@
+{
+  "tuile_cantons": {"fr": "Cantons croisés", "en": "Cross-matched cantons"},
+  "tuile_cantons_detail": {"fr": "seuil de solidité : {seuil} cantons", "en": "robustness threshold: {seuil} cantons"},
+  "tuile_ouvrages": {"fr": "Ouvrages rattachés", "en": "Matched facilities"},
+  "tuile_ouvrages_detail": {"fr": "les deux parcs réunis, chacun gardant sa provenance", "en": "both stocks combined, each keeping its origin"},
+  "tuile_sans": {"fr": "Cantons hors croisement", "en": "Cantons outside the match"},
+  "tuile_sans_detail": {"fr": "{part} % — aucun ouvrage recensé, pas nécessairement aucun ouvrage", "en": "{part} % — no recorded facility, not necessarily no facility"},
+
+  "carte_recette_titre": {"fr": "Ce que ce croisement déclare", "en": "What this cross-analysis declares"},
+  "carte_recette_sous_titre": {"fr": "Ingrédients, clé de jointure, observations et seuil — avant tout graphe", "en": "Ingredients, join key, observations and threshold — before any chart"},
+  "note_ingredients": {"fr": "Ingrédients : <b>{ingredients}</b>. Clé de jointure : <b>{cle}</b>. <b>{observations}</b> observations pour un seuil de {seuil}. La jointure est INTERNE : un ouvrage dont le canton ne figure pas au référentiel disparaît du croisement plutôt que d'être rattaché au hasard.", "en": "Ingredients: <b>{ingredients}</b>. Join key: <b>{cle}</b>. <b>{observations}</b> observations against a threshold of {seuil}. The join is INNER: a facility whose canton is absent from the reference layer drops out rather than being matched at random."},
+  "note_sous_seuil": {"fr": "Moins de {seuil} cantons croisés : ce croisement n'établit rien et n'est donc pas tracé.", "en": "Fewer than {seuil} cross-matched cantons: this analysis establishes nothing and is therefore not plotted."},
+
+  "carte_nuage_titre": {"fr": "Risque du canton et nombre d'ouvrages", "en": "Canton risk versus facility count"},
+  "carte_nuage_sous_titre": {"fr": "Les ouvrages ont-ils été implantés là où le risque est le plus fort ?", "en": "Were facilities built where risk is highest?"},
+  "note_nuage": {"fr": "{n} cantons croisés. La droite ne vaut que sur la plage observée — et sur un corpus qui ne recense pas tout, un canton sans point n'est pas un canton sans ouvrage.", "en": "{n} cross-matched cantons. The line holds only over the observed range — and on a corpus that does not record everything, a canton without a dot is not a canton without facilities."},
+  "axe_risque": {"fr": "Risque d'inondation (points)", "en": "Flood risk (points)"},
+  "axe_ouvrages": {"fr": "Ouvrages recensés", "en": "Recorded facilities"},
+
+  "carte_top_titre": {"fr": "Cantons équipés les plus exposés", "en": "Most exposed equipped cantons"},
+  "carte_top_sous_titre": {"fr": "Là où des ouvrages existent ET où le risque est élevé", "en": "Where facilities exist AND risk is high"},
+  "note_top": {"fr": "<b>{canton}</b> cumule {risque} points de risque et {ouvrages} ouvrages recensés. Ce sont ces cantons qui appellent une inspection avant la prochaine saison des pluies, pas une construction neuve.", "en": "<b>{canton}</b> combines {risque} risk points with {ouvrages} recorded facilities. These are the cantons calling for inspection before the next rainy season, not for new construction."},
+
+  "tuile_sans_plan": {"fr": "Ouvrages sans plan", "en": "Facilities without a plan"},
+  "tuile_sans_plan_detail": {"fr": "{part} % du parc COSO", "en": "{part} % of the COSO stock"},
+  "tuile_avec_plan": {"fr": "Ouvrages avec plan", "en": "Facilities with a plan"},
+  "tuile_avec_plan_detail": {"fr": "le seul champ d'entretien publié du corpus", "en": "the corpus's only published upkeep field"},
+  "tuile_fonds": {"fr": "Fonds d'entretien renseigné", "en": "Upkeep fund reported"},
+  "tuile_fonds_detail": {"fr": "sur {total} ouvrages", "en": "out of {total} facilities"},
+
+  "carte_plan_titre": {"fr": "Présence d'un plan de maintenance", "en": "Presence of a maintenance plan"},
+  "carte_plan_sous_titre": {"fr": "Variable publiée par le seul jeu COSO — le parc TdE n'en porte aucune", "en": "A field published only by the COSO dataset — the TdE stock carries none"},
+  "note_plan": {"fr": "<b>{sans}</b> ouvrages sur {total} n'ont pas de plan de maintenance, soit <b>{part} %</b>. C'est le levier le plus direct du corpus : il ne demande ni enquête ni construction.", "en": "<b>{sans}</b> facilities out of {total} have no maintenance plan, i.e. <b>{part} %</b>. It is the corpus's most direct lever: it requires neither survey nor construction."},
+  "plan_avec": {"fr": "Avec plan", "en": "With plan"},
+  "plan_sans": {"fr": "Sans plan", "en": "Without plan"},
+
+  "carte_fonds_titre": {"fr": "Fonds d'entretien et coût de l'ouvrage", "en": "Upkeep fund versus facility cost"},
+  "carte_fonds_sous_titre": {"fr": "Le montant provisionné suit-il l'investissement consenti ?", "en": "Does the provisioned amount follow the investment made?"},
+  "note_fonds": {"fr": "{n} ouvrages portent les deux montants, soit {part} % du parc. Sur une couverture aussi partielle, la relation s'observe mais ne se généralise pas.", "en": "{n} facilities carry both amounts, i.e. {part} % of the stock. On such partial coverage, the relationship can be observed but not generalised."},
+  "axe_cout": {"fr": "Coût estimé (FCFA)", "en": "Estimated cost (FCFA)"},
+  "axe_fonds": {"fr": "Fonds d'entretien (FCFA)", "en": "Upkeep fund (FCFA)"},
+
+  "carte_risque_titre": {"fr": "Ouvrages sans plan, dans les cantons les plus exposés", "en": "Facilities without a plan, in the most exposed cantons"},
+  "carte_risque_sous_titre": {"fr": "L'intersection qui appelle une décision", "en": "The intersection calling for a decision"},
+  "note_risque": {"fr": "{ouvrages} ouvrages sans plan répartis sur <b>{observations}</b> cantons (seuil {seuil}). <b>{canton}</b> arrive en tête avec {risque} points de risque : un ouvrage exposé et sans entretien programmé est celui qui tombera en premier.", "en": "{ouvrages} unplanned facilities across <b>{observations}</b> cantons (threshold {seuil}). <b>{canton}</b> tops the list at {risque} risk points: an exposed facility with no scheduled upkeep is the first to fail."},
+
+  "col_canton": {"fr": "Canton", "en": "Canton"},
+  "col_prefecture": {"fr": "Préfecture", "en": "Prefecture"},
+  "col_region": {"fr": "Région", "en": "Region"},
+  "col_risque": {"fr": "Risque (pts)", "en": "Risk (pts)"},
+  "col_population": {"fr": "Population", "en": "Population"},
+  "col_ouvrages": {"fr": "Ouvrages", "en": "Facilities"},
+  "col_parcs": {"fr": "Parcs", "en": "Stocks"},
+  "col_plan": {"fr": "Plan de maintenance", "en": "Maintenance plan"},
+  "col_localite": {"fr": "Localité", "en": "Locality"},
+  "col_cout": {"fr": "Coût estimé", "en": "Estimated cost"},
+  "col_fonds": {"fr": "Fonds d'entretien", "en": "Upkeep fund"},
+  "col_sans_plan": {"fr": "Ouvrages sans plan", "en": "Facilities without plan"},
+  "unite_ouvrages": {"fr": " ouvrages", "en": " facilities"}
+}

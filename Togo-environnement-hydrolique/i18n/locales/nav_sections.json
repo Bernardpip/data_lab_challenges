@@ -1,0 +1,10 @@
+{
+  "synthese": {"fr": "Vue d'ensemble", "en": "Overview"},
+  "risque": {"fr": "Risque d'inondation", "en": "Flood risk"},
+  "parc": {"fr": "Parc d'ouvrages", "en": "Water facilities"},
+  "demographie": {"fr": "Pression démographique", "en": "Population pressure"},
+  "croisements": {"fr": "Croisements", "en": "Cross-analyses"},
+  "recommandations": {"fr": "Recommandations", "en": "Recommendations"},
+  "donnees": {"fr": "Données", "en": "Data"},
+  "annexes": {"fr": "Annexes", "en": "Appendices"}
+}

@@ -14,6 +14,10 @@ et cite ses chiffres en paramètres i18n, pour qu'ils suivent les filtres.
 """
 
 from socle.ui.cards import (
+    onglets,
+    panneau,
+    stat_centrale,
+    accroche_editoriale,
     reset_cards,
     card,
     section_header,
@@ -27,6 +31,10 @@ from socle.ui.cards import (
 )
 
 __all__ = [
+    "onglets",
+    "panneau",
+    "stat_centrale",
+    "accroche_editoriale",
     "reset_cards",
     "card",
     "section_header",

@@ -1,0 +1,402 @@
+{
+  "tuile_cantons": {
+    "fr": "Cantons couverts",
+    "en": "Cantons covered"
+  },
+  "tuile_cantons_detail": {
+    "fr": "{regions} régions · maille nationale exhaustive",
+    "en": "{regions} regions · complete national mesh"
+  },
+  "tuile_population": {
+    "fr": "Population estimée",
+    "en": "Estimated population"
+  },
+  "tuile_population_detail": {
+    "fr": "estimation 2022 portée par les cantons",
+    "en": "2022 estimate carried by the cantons"
+  },
+  "tuile_risque": {
+    "fr": "Risque médian",
+    "en": "Median risk"
+  },
+  "tuile_risque_detail": {
+    "fr": "maximum {max} pts à {canton}",
+    "en": "peak {max} pts at {canton}"
+  },
+  "tuile_sans_ouvrage": {
+    "fr": "Cantons sans ouvrage recensé",
+    "en": "Cantons with no recorded facility"
+  },
+  "tuile_sans_ouvrage_detail": {
+    "fr": "{part} % du territoire — absence d'inventaire, pas d'équipement",
+    "en": "{part} % of the territory — missing inventory, not missing facilities"
+  },
+  "tuile_publies": {
+    "fr": "Champs publiés (TdE)",
+    "en": "Published fields (TdE)"
+  },
+  "tuile_publies_detail": {
+    "fr": "le dictionnaire en décrit 33",
+    "en": "the dictionary describes 33"
+  },
+  "carte_risque_titre": {
+    "fr": "Où le risque d'inondation se concentre",
+    "en": "Where flood risk concentrates"
+  },
+  "carte_risque_sous_titre": {
+    "fr": "Indice de risque par canton — classes de quantiles, plus la teinte est foncée plus le risque est élevé",
+    "en": "Risk index by canton — quantile classes, the darker the higher"
+  },
+  "note_risque": {
+    "fr": "Les cantons du dernier cinquième dépassent {seuil} points : ils sont <b>{cantons}</b> et abritent <b>{population}</b> habitants. Le risque n'est pas réparti, il est concentré.",
+    "en": "Cantons in the top fifth exceed {seuil} points: there are <b>{cantons}</b> of them, home to <b>{population}</b> people. Risk is not spread out — it is concentrated."
+  },
+  "carte_parcs_titre": {
+    "fr": "Deux parcs, deux territoires",
+    "en": "Two stocks, two territories"
+  },
+  "carte_parcs_sous_titre": {
+    "fr": "Ouvrages recensés par région, selon leur source",
+    "en": "Recorded facilities by region, by source"
+  },
+  "note_parcs": {
+    "fr": "Les deux inventaires ne se recouvrent pas : <b>{part_maritime} %</b> des {tde} ouvrages TdE sont en Maritime, quand les {coso} microprojets COSO sont au Nord. Les additionner produirait un total qui ne décrit aucun pays.",
+    "en": "The two inventories do not overlap: <b>{part_maritime} %</b> of the {tde} TdE facilities sit in Maritime, while the {coso} COSO sub-projects are all in the North. Adding them would produce a total describing no country at all."
+  },
+  "carte_publication_titre": {
+    "fr": "Collecté, mais non publié",
+    "en": "Collected, but not published"
+  },
+  "carte_publication_sous_titre": {
+    "fr": "Champs décrits par le dictionnaire TdE face aux champs réellement diffusés",
+    "en": "Fields described by the TdE dictionary versus fields actually released"
+  },
+  "note_publication": {
+    "fr": "Sur {decrits} champs décrits, {publies} sont publiés — soit <b>{part} %</b>. L'état de fonctionnement des ouvrages figure au dictionnaire : il est donc collecté, et simplement pas diffusé.",
+    "en": "Of {decrits} described fields, {publies} are released — <b>{part} %</b>. Facility operating status appears in the dictionary: it is collected, and simply not published."
+  },
+  "champs_publies": {
+    "fr": "Publiés",
+    "en": "Released"
+  },
+  "champs_absents": {
+    "fr": "Décrits, non publiés",
+    "en": "Described, unreleased"
+  },
+  "classe_1": {
+    "fr": "Très faible",
+    "en": "Very low"
+  },
+  "classe_2": {
+    "fr": "Faible",
+    "en": "Low"
+  },
+  "classe_3": {
+    "fr": "Moyen",
+    "en": "Medium"
+  },
+  "classe_4": {
+    "fr": "Élevé",
+    "en": "High"
+  },
+  "classe_5": {
+    "fr": "Très élevé",
+    "en": "Very high"
+  },
+  "col_canton": {
+    "fr": "Canton",
+    "en": "Canton"
+  },
+  "col_prefecture": {
+    "fr": "Préfecture",
+    "en": "Prefecture"
+  },
+  "col_region": {
+    "fr": "Région",
+    "en": "Region"
+  },
+  "col_risque": {
+    "fr": "Risque (pts)",
+    "en": "Risk (pts)"
+  },
+  "col_population": {
+    "fr": "Population",
+    "en": "Population"
+  },
+  "col_classe": {
+    "fr": "Classe",
+    "en": "Class"
+  },
+  "col_cantons": {
+    "fr": "Cantons",
+    "en": "Cantons"
+  },
+  "col_etat": {
+    "fr": "État",
+    "en": "Status"
+  },
+  "col_champs": {
+    "fr": "Champs",
+    "en": "Fields"
+  },
+  "unite_ouvrages": {
+    "fr": " ouvrages",
+    "en": " facilities"
+  },
+  "unite_champs": {
+    "fr": " champs",
+    "en": " fields"
+  },
+  "contexte_titre": {
+    "fr": "Ce que les inondations ont déjà coûté",
+    "en": "What floods have already cost"
+  },
+  "contexte_sous_titre": {
+    "fr": "Repères externes au corpus — sourcés, jamais recalculés ici",
+    "en": "Benchmarks external to the corpus — sourced, never recomputed here"
+  },
+  "repere_victimes": {
+    "fr": "personnes affectées",
+    "en": "people affected"
+  },
+  "repere_victimes_detail": {
+    "fr": "cumul des inondations recensées depuis 1966 (relevé {annee})",
+    "en": "cumulative recorded floods since 1966 (as of {annee})"
+  },
+  "repere_deces": {
+    "fr": "décès recensés",
+    "en": "recorded deaths"
+  },
+  "repere_deces_detail": {
+    "fr": "sur la même période, plus 171 blessés (relevé {annee})",
+    "en": "over the same period, plus 171 injured (as of {annee})"
+  },
+  "repere_pertes_agricoles": {
+    "fr": "de pertes agricoles",
+    "en": "in farm losses"
+  },
+  "repere_pertes_agricoles_detail": {
+    "fr": "productivité agricole perdue en {annee}, environ 40 M US$",
+    "en": "farm productivity lost in {annee}, about US$ 40 M"
+  },
+  "repere_pauvrete_savanes": {
+    "fr": "de pauvreté rurale",
+    "en": "rural poverty"
+  },
+  "repere_pauvrete_savanes_detail": {
+    "fr": "région des Savanes, indicateur de vulnérabilité ({annee})",
+    "en": "Savanes region, vulnerability indicator ({annee})"
+  },
+  "repere_auc_modele": {
+    "fr": "d'aire sous la courbe",
+    "en": "area under the curve"
+  },
+  "repere_auc_modele_detail": {
+    "fr": "validation ROC du modèle de susceptibilité ({annee})",
+    "en": "ROC validation of the susceptibility model ({annee})"
+  },
+  "tuile_honores": {
+    "fr": "Objectifs honorés",
+    "en": "Objectives met"
+  },
+  "tuile_honores_detail": {
+    "fr": "établis par les données publiées",
+    "en": "established from published data"
+  },
+  "tuile_partiels": {
+    "fr": "Objectifs partiels",
+    "en": "Partial objectives"
+  },
+  "tuile_partiels_detail": {
+    "fr": "une part seulement est atteignable",
+    "en": "only part is reachable"
+  },
+  "tuile_impossibles": {
+    "fr": "Objectifs impossibles",
+    "en": "Unreachable objectives"
+  },
+  "tuile_impossibles_detail": {
+    "fr": "aucune donnée publiée ne les porte",
+    "en": "no published data carries them"
+  },
+  "carte_limites_titre": {
+    "fr": "Les cinq objectifs de l'énoncé, verdict calculé",
+    "en": "The brief's five objectives, computed verdict"
+  },
+  "carte_limites_sous_titre": {
+    "fr": "Chaque verdict découle d'un balayage du corpus, pas d'une appréciation",
+    "en": "Each verdict follows a sweep of the corpus, not a judgement call"
+  },
+  "verdict_honore": {
+    "fr": "Honoré",
+    "en": "Met"
+  },
+  "verdict_partiel": {
+    "fr": "Partiel",
+    "en": "Partial"
+  },
+  "verdict_impossible": {
+    "fr": "Impossible",
+    "en": "Unreachable"
+  },
+  "obj1_titre": {
+    "fr": "1. Cartographier la répartition spatiale et l'état des points d'eau",
+    "en": "1. Map the spatial distribution and condition of water points"
+  },
+  "obj1_detail": {
+    "fr": "La répartition est établie sur {ouvrages} ouvrages, dont {situes} portent une position exploitable, répartis en {parcs} inventaires disjoints. L'ÉTAT, lui, n'est publié nulle part.",
+    "en": "Distribution is established over {ouvrages} facilities, {situes} of which carry a usable position, across {parcs} disjoint inventories. CONDITION, however, is published nowhere."
+  },
+  "obj2_titre": {
+    "fr": "2. Analyser les taux de fonctionnalité par région",
+    "en": "2. Analyse functionality rates by region"
+  },
+  "obj2_detail": {
+    "fr": "Le dictionnaire TdE décrit {decrits} champs, dont {champs_fonctionnement} sur l'état de fonctionnement. Le fichier diffusé en publie {publies}, soit {part_publiee} %. Aucun champ de panne, d'abandon ou de mise en service n'existe dans le corpus publié.",
+    "en": "The TdE dictionary describes {decrits} fields, {champs_fonctionnement} of them on operating status. The released file publishes {publies}, i.e. {part_publiee} %. No breakdown, abandonment or commissioning field exists in the published corpus."
+  },
+  "obj3_titre": {
+    "fr": "3. Mettre en regard pression démographique et infrastructures",
+    "en": "3. Compare population pressure with infrastructure"
+  },
+  "obj3_detail": {
+    "fr": "Établi sur les {cantons} cantons du référentiel, {population} habitants, dont {cantons_equipes} portent au moins un ouvrage recensé.",
+    "en": "Established over the {cantons} reference cantons, {population} inhabitants, of which {cantons_equipes} carry at least one recorded facility."
+  },
+  "obj4_titre": {
+    "fr": "4. Croiser risque d'inondation et localisation des ouvrages",
+    "en": "4. Cross flood risk with facility locations"
+  },
+  "obj4_detail": {
+    "fr": "{ouvrages_rattaches} ouvrages rattachés à un canton du référentiel, répartis sur {cantons_croises} cantons parmi {cantons}.",
+    "en": "{ouvrages_rattaches} facilities matched to a reference canton, spread over {cantons_croises} cantons out of {cantons}."
+  },
+  "obj5_titre": {
+    "fr": "5. Recommander des priorités de maintenance et de création",
+    "en": "5. Recommend maintenance and construction priorities"
+  },
+  "obj5_detail": {
+    "fr": "{sans_plan} ouvrages sans plan de maintenance, {cantons_sans_ouvrage} cantons sans ouvrage recensé, et un débit connu pour {debit_connu} forages seulement.",
+    "en": "{sans_plan} facilities without a maintenance plan, {cantons_sans_ouvrage} cantons with no recorded facility, and flow rate known for only {debit_connu} boreholes."
+  },
+  "cause_collecte_non_publie": {
+    "fr": "Cause : <b>collecté mais non publié</b>. La donnée existe chez le producteur — elle est décrite dans son propre dictionnaire. La recommandation est une <b>republication</b>, pas une enquête : le coût n'est pas le même.",
+    "en": "Cause: <b>collected but unpublished</b>. The data exists at the producer — it is described in their own dictionary. The recommendation is <b>republication</b>, not a survey: the cost is not comparable."
+  },
+  "cause_hors_maille": {
+    "fr": "Cause : <b>inexistant à cette granularité</b>. La donnée existe, mais à une maille qui interdit la comparaison territoriale demandée.",
+    "en": "Cause: <b>absent at this granularity</b>. The data exists, but at a mesh that forbids the requested territorial comparison."
+  },
+  "cause_hors_corpus": {
+    "fr": "Cause : <b>hors corpus</b>. Aucune ressource de l'énoncé ne porte cette information.",
+    "en": "Cause: <b>outside the corpus</b>. No resource in the brief carries this information."
+  },
+  "carte_refus_titre": {
+    "fr": "Quatre affirmations que ce tableau de bord se refuse",
+    "en": "Four claims this dashboard refuses to make"
+  },
+  "carte_refus_sous_titre": {
+    "fr": "Chacune serait tentante, et chacune serait fausse",
+    "en": "Each would be tempting, and each would be false"
+  },
+  "refus_1": {
+    "fr": "<b>« Le Togo compte 285 points d'eau. »</b> Non : le corpus réunit deux inventaires partiels et disjoints. Aucun recensement national des points d'eau n'y figure.",
+    "en": "<b>“Togo has 285 water points.”</b> No: the corpus gathers two partial, disjoint inventories. It contains no national census of water points."
+  },
+  "refus_2": {
+    "fr": "<b>« 85 % des cantons sont dépourvus d'ouvrage. »</b> Non : 85 % des cantons ne portent <i>aucun ouvrage recensé dans ce corpus</i>. C'est une lacune d'inventaire, pas un désert hydraulique.",
+    "en": "<b>“85 % of cantons have no facility.”</b> No: 85 % of cantons carry <i>no facility recorded in this corpus</i>. That is an inventory gap, not a hydraulic desert."
+  },
+  "refus_3": {
+    "fr": "<b>« Le taux de panne est de X %. »</b> Aucun taux ne peut être calculé : le champ d'état de fonctionnement n'est pas publié.",
+    "en": "<b>“The breakdown rate is X %.”</b> No rate can be computed: the operating-status field is not published."
+  },
+  "refus_4": {
+    "fr": "<b>« La consommation d'eau par région est de… »</b> Les ventes d'eau sont publiées au niveau national uniquement. Les répartir par territoire reviendrait à inventer la répartition.",
+    "en": "<b>“Water consumption by region is…”</b> Water sales are published at national level only. Splitting them by territory would mean inventing the split."
+  },
+  "legende_titre": {
+    "fr": "Indice de risque, par classe de même effectif",
+    "en": "Risk index, by equal-sized class"
+  },
+  "carte_couverture_titre": {
+    "fr": "Ce que le corpus couvre, et ce qu'il ne couvre pas",
+    "en": "What the corpus covers, and what it does not"
+  },
+  "carte_couverture_sous_titre": {
+    "fr": "Trois jeux, trois emprises — la même échelle pour les trois",
+    "en": "Three datasets, three footprints — same scale for all three"
+  },
+  "mini_cantons": {
+    "fr": "Référentiel national",
+    "en": "National reference"
+  },
+  "mini_cantons_detail": {
+    "fr": "cantons · risque et population",
+    "en": "cantons · risk and population"
+  },
+  "mini_tde": {
+    "fr": "Forages TdE",
+    "en": "TdE boreholes"
+  },
+  "mini_tde_detail": {
+    "fr": "tous géolocalisés, presque tous en Maritime",
+    "en": "all geolocated, nearly all in Maritime"
+  },
+  "mini_coso": {
+    "fr": "Microprojets COSO",
+    "en": "COSO sub-projects"
+  },
+  "mini_coso_detail": {
+    "fr": "dont {situes} localisés, au Nord",
+    "en": "of which {situes} located, in the North"
+  },
+  "note_couverture": {
+    "fr": "Les deux parcs occupent deux moitiés du pays sans se rencontrer : <b>{part_maritime} %</b> des ouvrages TdE sont en Maritime, les microprojets COSO sont tous au Nord. <b>{sans}</b> cantons n'apparaissent sur aucune des deux cartes — c'est l'absence d'inventaire national qui se voit ici, pas l'absence d'eau.",
+    "en": "The two stocks occupy two halves of the country without meeting: <b>{part_maritime} %</b> of TdE facilities sit in Maritime, all COSO sub-projects are in the North. <b>{sans}</b> cantons appear on neither map — what shows here is the absence of a national inventory, not the absence of water."
+  },
+  "limites_carte_titre": {
+    "fr": "L'angle mort de l'inventaire",
+    "en": "The inventory's blind spot"
+  },
+  "limites_carte_sous_titre": {
+    "fr": "En foncé, les cantons portant au moins un ouvrage recensé ; en clair, tous les autres — le pays entier",
+    "en": "Dark: cantons with at least one recorded facility; light: all the rest — the whole country"
+  },
+  "note_angle_mort": {
+    "fr": "<b>{couverts}</b> cantons portent au moins un ouvrage recensé ; <b>{sans}</b> — soit {part} % du pays — n'en portent aucun. Les zones claires ne sont pas des déserts hydrauliques : ce sont des absences d'inventaire, et c'est précisément ce que cette carte montre.",
+    "en": "<b>{couverts}</b> cantons carry at least one recorded facility; <b>{sans}</b> — {part} % of the country — carry none. The light areas are not hydraulic deserts: they are inventory gaps, and that is precisely what this map shows."
+  },
+  "col_ouvrages": {
+    "fr": "Ouvrages recensés",
+    "en": "Recorded facilities"
+  },
+  "parcs_carte_titre": {
+    "fr": "Deux inventaires, un seul pays",
+    "en": "Two inventories, one country"
+  },
+  "parcs_carte_sous_titre": {
+    "fr": "Les forages TdE et les microprojets COSO sur le même fond — le vide entre les deux est le sujet",
+    "en": "TdE boreholes and COSO micro-projects on one basemap — the gap between them is the point"
+  },
+  "legende_coso_situes": {
+    "fr": "{situes} localisés sur {total}",
+    "en": "{situes} located out of {total}"
+  },
+  "onglet_risque": {
+    "fr": "Risque",
+    "en": "Risk"
+  },
+  "onglet_parcs": {
+    "fr": "Ouvrages",
+    "en": "Facilities"
+  },
+  "onglet_angle_mort": {
+    "fr": "Angle mort",
+    "en": "Blind spot"
+  },
+  "onglets_cartes": {
+    "fr": "Choisir la carte",
+    "en": "Choose the map"
+  }
+}
