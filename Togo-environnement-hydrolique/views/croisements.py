@@ -11,6 +11,7 @@ plutôt que de dessiner une tendance sur trop peu de points.
 import streamlit as st
 
 from socle import ui, charts
+from socle.design.tokens import STATUS, INK
 from socle.i18n.traduction import t
 
 from utils.data import datasets, apply_filters
@@ -131,8 +132,25 @@ def render_maintenance():
                      "settings"):
             lisible = plans.assign(plan=plans["plan"].map(
                 lambda p: tr(f"plan_{p}")))
-            charts.bar_h(lisible, "plan", "ouvrages", unit=tr("unite_ouvrages"),
-                         highlight=tr("plan_sans"))
+
+            # Demi-anneau plutôt que deux barres : la question posée ici est
+            # une PART D'UN TOUT — quelle fraction du parc est sans plan —, et
+            # deux barres obligent à faire la somme de tête pour y répondre.
+            # Le demi-cercle laisse en outre son centre au chiffre qui compte.
+            ordre = [tr("plan_sans"), tr("plan_avec")]
+            valeurs = [int(lisible.loc[lisible["plan"] == nom, "ouvrages"].sum())
+                       for nom in ordre]
+
+            # « Sans plan » est un CONSTAT défavorable : il porte la teinte
+            # d'alerte de la charte, l'autre part restant en gris de retrait.
+            # La couleur devient ainsi un verdict, pas un code d'identité que
+            # la légende suffirait à donner.
+            charts.demi_anneau(
+                ordre, valeurs,
+                couleurs=[STATUS["critical"], INK["deemphasis"]],
+                centre=f'{ui.fr_number(100 * sans / len(coso), 0)} %',
+                sous_centre=tr("plan_sans"),
+            )
             ui.note(tr("note_plan", {
                 "sans": ui.fr_number(sans),
                 "total": ui.fr_number(len(coso)),

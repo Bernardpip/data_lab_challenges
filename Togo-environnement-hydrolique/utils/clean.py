@@ -214,9 +214,30 @@ def nettoyer_coso(brut, geo=None):
     # La hiérarchie est la vraie richesse du jeu : elle place 217 ouvrages sur
     # 218 dans la chaîne village → canton → commune → préfecture → région,
     # y compris ceux que la géolocalisation a perdus.
-    parts = cadre["hierarchy"].astype(str).str.split(" > ", expand=True)
-    for index, niveau in enumerate(NIVEAUX_COSO):
-        cadre[niveau] = normaliser_texte(parts[index]) if index < parts.shape[1] else pd.NA
+    # Découpage aligné par la DROITE, et c'est tout l'enjeu. Les niveaux les
+    # plus larges — région, préfecture — ferment la chaîne et ne manquent
+    # jamais ; c'est le village qui peut manquer, quand l'ouvrage se rattache
+    # directement au canton. Une ligne du corpus est dans ce cas :
+    #
+    #     ALEGBA > BALANKA > TCHAMBA 3 > TCHAMBA > CENTRALE   (217 lignes)
+    #     KABOLI > TCHAMBA 3 > TCHAMBA > CENTRALE             (1 ligne)
+    #
+    # Aligné par la gauche, ce village absent décalait TOUT d'un cran : le
+    # canton devenait le village, la région tombait hors du tableau, et
+    # l'ouvrage de Kaboli s'affichait en « Non renseigné » dans le graphe des
+    # parcs — alors que le fichier dit Centrale, préfecture de Tchamba. Aligné
+    # par la droite, un niveau manquant ne coûte que lui-même.
+    # L'alignement se fait LIGNE PAR LIGNE, et non colonne par colonne :
+    # `expand=True` range les morceaux à partir de la gauche et complète la fin
+    # par des vides, si bien qu'une colonne fixe ne désigne pas le même niveau
+    # d'une ligne à l'autre. On indexe donc depuis la fin de chaque chaîne.
+    listes = cadre["hierarchy"].astype(str).str.split(" > ")
+
+    for rang, niveau in enumerate(reversed(NIVEAUX_COSO)):
+        # `rang` compte depuis la fin : 0 = région, 1 = préfecture, etc.
+        cadre[niveau] = normaliser_texte(listes.map(
+            lambda parts, r=rang: parts[-1 - r] if len(parts) > r else None
+        ))
 
     # Les régions du COSO arrivent EN MAJUSCULES (« SAVANES ») quand le
     # référentiel écrit « Savanes » : sans normalisation, un graphe qui

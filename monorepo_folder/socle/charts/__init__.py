@@ -23,6 +23,8 @@ La forme découle du JOB, jamais de l'envie :
 """
 
 from socle.charts.figures import (
+    anneau,
+    demi_anneau,
     petits_multiples,
     pentes_appariees,
     sucette_h,
@@ -38,6 +40,8 @@ from socle.charts.figures import (
 )
 
 __all__ = [
+    "anneau",
+    "demi_anneau",
     "petits_multiples",
     "pentes_appariees",
     "sucette_h",

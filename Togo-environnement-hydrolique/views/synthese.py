@@ -47,7 +47,7 @@ def render_diagnostic():
          "delta": tr("tuile_sans_ouvrage_detail",
                      {"part": ui.fr_number(faits["part_sans_ouvrage"], 0)}),
          "good": False, "icon": "search"},
-        {"value": "8 / 33", "label": tr("tuile_publies"),
+        {"value": "7 / 33", "label": tr("tuile_publies"),
          "delta": tr("tuile_publies_detail"), "good": False, "icon": "table-2"},
     ])
 
@@ -108,14 +108,14 @@ def render_diagnostic():
                      tr("carte_publication_sous_titre"), "table-2"):
             ecart = perimetre.ecart_publication()
             cadre = pd.DataFrame([
-                {"etat": tr("champs_publies"), "champs": int(ecart["publies"])},
+                {"etat": tr("champs_publies"), "champs": int(ecart["communs"])},
                 {"etat": tr("champs_absents"), "champs": int(ecart["absents"])},
             ])
 
             charts.bar_h(cadre, "etat", "champs", unit=tr("unite_champs"),
                          highlight=tr("champs_absents"))
             ui.note(tr("note_publication", {
-                "decrits": ecart["decrits"], "publies": ecart["publies"],
+                "decrits": ecart["decrits"], "publies": ecart["communs"],
                 "part": ui.fr_number(ecart["part_publiee"], 0),
             }))
             charts.table_twin(cadre.rename(columns={

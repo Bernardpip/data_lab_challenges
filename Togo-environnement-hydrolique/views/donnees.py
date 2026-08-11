@@ -188,7 +188,7 @@ def render_perimetre():
         ])
         charts.bar_h(cadre, "famille", "champs", unit=tr("unite_champs"))
         ui.note(tr("note_dictionnaire", {
-            "decrits": ecart["decrits"], "publies": ecart["publies"],
+            "decrits": ecart["decrits"], "publies": ecart["communs"],
             "absents": ecart["absents"],
             "part": ui.fr_number(ecart["part_publiee"], 0),
         }))

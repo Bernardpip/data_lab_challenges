@@ -115,7 +115,7 @@ def audit():
             "cause": COLLECTE_NON_PUBLIE,
             "mesures": {
                 "decrits": ecart["decrits"],
-                "publies": ecart["publies"],
+                "publies": ecart["communs"],
                 "absents": ecart["absents"],
                 "part_publiee": ecart["part_publiee"],
                 "champs_fonctionnement": len(ecart["familles"]["fonctionnement"]),

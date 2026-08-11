@@ -40,7 +40,7 @@ def render_tde():
             100 * (filtre["region"] == "Maritime").sum() / len(filtre), 0),
          "unit": " %", "label": tr("tde_tuile_maritime"),
          "delta": tr("tde_tuile_maritime_detail"), "good": False, "icon": "flag"},
-        {"value": "8 / 33", "label": tr("tde_tuile_champs"),
+        {"value": "7 / 33", "label": tr("tde_tuile_champs"),
          "delta": tr("tde_tuile_champs_detail"), "good": False, "icon": "table-2"},
     ])
 

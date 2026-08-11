@@ -766,3 +766,207 @@ def petits_multiples(series, colonnes=3, height=150, unit="", decimals=0):
                 )
 
                 _show(fig, key=f"pm_{serie['name']}")
+
+
+def _legende_pastilles(labels, couleurs, decalage=0):
+    """Légende en pastilles, rendue en HTML plutôt que par plotly.
+
+    Nécessaire pour le demi-anneau : son demi-tour vide est un secteur comme
+    un autre pour plotly, qui l'inscrit dans sa légende avec sa valeur — on y
+    lisait une troisième catégorie sans nom. Aucun réglage ne masque un seul
+    secteur d'un camembert. Les deux anneaux partagent donc cette légende, ce
+    qui leur donne aussi la même apparence.
+    """
+
+    cases = "".join(
+        f'<span style="display:inline-flex;align-items:center;gap:7px;">'
+        f'<span style="width:11px;height:11px;border-radius:3px;'
+        f'background:{couleur};"></span>'
+        f'<span style="font-size:12px;color:{INK["secondary"]};">{libelle}</span>'
+        f"</span>"
+        for libelle, couleur in zip(labels, couleurs)
+    )
+
+    st.markdown(
+        f'<div style="display:flex;justify-content:center;flex-wrap:wrap;'
+        f'gap:6px 22px;margin:{decalage}px 0 4px;">{cases}</div>',
+        unsafe_allow_html=True,
+    )
+
+
+def _parts(valeurs):
+    """Parts en pourcentage, somme des valeurs — l'arithmétique d'un anneau."""
+
+    total = float(sum(valeurs))
+
+    if total <= 0:
+        return None, 0.0
+
+    return [100 * float(v) / total for v in valeurs], total
+
+
+def anneau(labels, valeurs, couleurs=None, mise_en_avant=0, height=300,
+           trou=0.62, decimals=1, unite="%", legende=True, centre=None,
+           sous_centre=None, cle=None, message_vide=None):
+    """Anneau — PART D'UN TOUT, et rien d'autre.
+
+    Un anneau ne se lit bien que sur DEUX parts, trois au plus : l'œil compare
+    des angles, ce qu'il fait mal, et il ne peut pas ordonner cinq secteurs
+    voisins. Au-delà, une barre empilée ou des barres simples disent la même
+    chose sans demander d'effort — la fonction laisse faire, mais le choix se
+    justifie à chaque fois.
+
+    Ce qui rend celui-ci lisible, et qui manque à la plupart :
+      · un seul secteur porte la couleur, les autres restent en gris de
+        retrait. `mise_en_avant` désigne son rang. La teinte devient alors un
+        VERDICT — « voilà la part qui pose problème » — au lieu d'un simple
+        code d'identité que la légende suffirait à donner ;
+      · les parts sont écrites en toutes lettres à l'extérieur, dans la
+        couleur de leur secteur : sans ça, un anneau se lit à la règle ;
+      · le centre est disponible pour le chiffre qui compte (`centre`), là où
+        l'œil va spontanément.
+
+    `couleurs` remplace entièrement la palette déduite : une liste de la même
+    longueur que `labels`.
+    """
+
+    parts, total = _parts(valeurs)
+
+    if parts is None:
+        st.info(message_vide or t("commun")("aucun_resultat"))
+        return
+
+    if couleurs:
+        teintes = list(couleurs)
+    else:
+        # Emphase : la part désignée en teinte de série, le reste en retrait.
+        teintes = [
+            SERIES[0] if index == mise_en_avant else INK["deemphasis"]
+            for index in range(len(labels))
+        ]
+
+    textes = [f"{_fr(p, decimals)}{unite}" for p in parts]
+
+    fig = go.Figure(
+        go.Pie(
+            labels=list(labels),
+            values=list(valeurs),
+            hole=trou,
+            marker=dict(colors=teintes, line=dict(color=INK["surface"], width=2)),
+            text=textes,
+            textinfo="text",
+            textposition="outside",
+            # Chaque étiquette prend la teinte de SON secteur : c'est ce qui
+            # dispense de suivre un trait de rappel jusqu'à la légende.
+            outsidetextfont=dict(size=13, family=_FONT, color=teintes),
+            sort=False,          # l'ordre reçu est un ordre de sens
+            direction="clockwise",
+            rotation=0,
+            hovertemplate="%{label} · %{value:,.0f} (%{percent})<extra></extra>",
+        )
+    )
+
+    if centre:
+        fig.add_annotation(
+            text=(f'<span style="font-size:26px;color:{INK["primary"]};">'
+                  f"<b>{centre}</b></span>"
+                  + (f'<br><span style="font-size:11px;'
+                     f'color:{INK["muted"]};">{sous_centre}</span>'
+                     if sous_centre else "")),
+            x=0.5, y=0.5, showarrow=False, font=dict(family=_FONT),
+        )
+
+    fig.update_layout(**_base_layout(height, show_legend=False))
+    fig.update_layout(margin=dict(l=44, r=44, t=12, b=12),
+                      uniformtext=dict(minsize=11, mode="hide"))
+
+    _show(fig, key=cle)
+
+    # La légende passe SOUS la figure : au-dessus, elle s'intercalait entre le
+    # titre de la carte et l'anneau, et se lisait comme un sous-titre.
+    if legende:
+        _legende_pastilles(labels, teintes)
+
+
+def demi_anneau(labels, valeurs, couleurs=None, mise_en_avant=0, height=210,
+                trou=0.62, decimals=1, unite="%", legende=True, centre=None,
+                sous_centre=None, cle=None, message_vide=None):
+    """Demi-anneau — même lecture, deux fois moins de hauteur.
+
+    Le demi-cercle n'est pas une variante décorative : à surface d'écran
+    égale, il donne un rayon plus grand, donc des secteurs plus lisibles, et
+    il laisse le centre libre pour le chiffre. C'est la forme qui convient
+    quand la figure doit tenir dans une bande — en tête de page, ou dans une
+    colonne déjà chargée.
+
+    Le demi-tour vide est obtenu par un secteur TRANSPARENT de même poids que
+    la somme des autres : plotly ne sait pas dessiner un demi-camembert, et
+    tourner la figure ne suffirait pas — il faut aussi que le vide n'apparaisse
+    ni dans la légende ni au survol.
+    """
+
+    parts, total = _parts(valeurs)
+
+    if parts is None:
+        st.info(message_vide or t("commun")("aucun_resultat"))
+        return
+
+    if couleurs:
+        teintes = list(couleurs)
+    else:
+        teintes = [
+            SERIES[0] if index == mise_en_avant else INK["deemphasis"]
+            for index in range(len(labels))
+        ]
+
+    textes = [f"{_fr(p, decimals)}{unite}" for p in parts]
+
+    fig = go.Figure(
+        go.Pie(
+            labels=[*labels, ""],
+            values=[*valeurs, total],
+            hole=trou,
+            marker=dict(
+                colors=[*teintes, "rgba(0,0,0,0)"],
+                line=dict(color=INK["surface"], width=2),
+            ),
+            text=[*textes, ""],
+            textinfo="text",
+            textposition="outside",
+            outsidetextfont=dict(size=13, family=_FONT,
+                                 color=[*teintes, "rgba(0,0,0,0)"]),
+            sort=False,
+            direction="clockwise",
+            # Le demi-tour vide commence à 9 h : les parts occupent alors la
+            # moitié HAUTE, celle que l'œil lit en premier.
+            rotation=270,
+            hovertemplate="%{label} · %{value:,.0f}<extra></extra>",
+        )
+    )
+
+    if centre:
+        fig.add_annotation(
+            text=(f'<span style="font-size:24px;color:{INK["primary"]};">'
+                  f"<b>{centre}</b></span>"
+                  + (f'<br><span style="font-size:11px;'
+                     f'color:{INK["muted"]};">{sous_centre}</span>'
+                     if sous_centre else "")),
+            # Le centre géométrique du camembert est au MILIEU de la figure ;
+            # comme seule la moitié haute est peinte, le chiffre se pose juste
+            # au-dessus de ce milieu, dans l'ouverture de l'anneau. Placé plus
+            # bas, il tombait sous l'arc et se confondait avec la légende.
+            x=0.5, y=0.46, yanchor="bottom", showarrow=False,
+            font=dict(family=_FONT),
+        )
+
+    fig.update_layout(**_base_layout(height, show_legend=False))
+    fig.update_layout(margin=dict(l=44, r=44, t=12, b=0),
+                      uniformtext=dict(minsize=11, mode="hide"))
+
+    _show(fig, key=cle)
+
+    if legende:
+        # Le camembert occupe un carré, dont seule la moitié haute est peinte :
+        # la moitié basse reste un blanc que rien ne remplit et qui repoussait
+        # la légende à 125 px de l'arc. On la remonte d'autant.
+        _legende_pastilles(labels, teintes, decalage=-int(height * 0.40))
