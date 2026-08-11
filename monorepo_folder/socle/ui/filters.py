@@ -115,6 +115,12 @@ def territoriale(cadre, champs, intervalle=None):
 
         options = _options(base, spec["colonne"])
 
+        reglages = {
+            "placeholder": spec.get("placeholder"),
+            "key": spec["cle"],
+            "help": spec.get("aide"),
+        }
+
         if parent:
             # Une modalité déjà cochée puis devenue hors périmètre doit être
             # retirée AVANT que le widget ne se peigne, sinon Streamlit lève
@@ -122,15 +128,16 @@ def territoriale(cadre, champs, intervalle=None):
             st.session_state[spec["cle"]] = [
                 v for v in st.session_state.get(spec["cle"], []) if v in options
             ]
+            # Et surtout AUCUN `default` ici : Streamlit avertit à l'écran dès
+            # qu'une clé est alimentée à la fois par la session et par un
+            # défaut — « was created with a default value but also had its
+            # value set via the Session State API ». C'est la session qui doit
+            # gagner, puisqu'elle porte l'élagage qu'on vient de faire.
+        else:
+            reglages["default"] = spec.get("defaut", [])
 
         with colonne_ui:
-            selection = st.multiselect(
-                spec["libelle"], options,
-                default=spec.get("defaut", []),
-                placeholder=spec.get("placeholder"),
-                key=spec["cle"],
-                help=spec.get("aide"),
-            )
+            selection = st.multiselect(spec["libelle"], options, **reglages)
 
         resultat[spec["colonne"]] = selection
 
