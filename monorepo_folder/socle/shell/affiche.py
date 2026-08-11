@@ -6,12 +6,18 @@ pose un constat et le prouve, et tout ce qui invite à le restreindre lui nuit.
 D'où une coquille distincte plutôt qu'un mode de `render_shell` : les deux
 gabarits n'ont ni la même navigation, ni le même contrat.
 
-    ┌──────────────────────────────────────────────────────────┐
-    │ MENU HAUT   titre · sous-titre        [vues]      FR │ EN │
-    ├───────────────────────────────┬──────────────────────────┤
-    │ COLONNE GAUCHE          62 %  │ COLONNE DROITE     38 %  │
-    │ le propos                     │ la carte                 │
+    ┌───────────────────────────────┬──────────────────────────┐
+    │ MENU  titre · [vues] · FR │ EN │                          │
+    ├───────────────────────────────┤ COLONNE DROITE     38 %  │
+    │ COLONNE GAUCHE          62 %  │ la carte                 │
+    │ le propos                     │                          │
     └───────────────────────────────┴──────────────────────────┘
+
+Le menu ne barre PAS la page : il tient dans la largeur de la colonne gauche,
+qu'il recouvre seule. La colonne droite lui passe à côté et démarre au ras du
+bord haut — elle gagne ainsi la hauteur entière du bandeau, que la carte
+prend. Un menu pleine largeur coûtait 130 px de hauteur à une carte qui en
+manque, pour porter un titre qui n'a jamais eu besoin de toute la page.
 
 La vue active vit dans l'URL (`?v=`), comme la route du tableau de bord : un
 lien partagé rouvre la page sur la bonne vue. Les boutons sont des
@@ -20,6 +26,8 @@ lien partagé rouvre la page sur la bonne vue. Les boutons sont des
 
 # pyrefly: ignore [missing-import]
 import streamlit as st
+# pyrefly: ignore [missing-import]
+import streamlit.components.v1 as components
 
 from socle.design.styles import load_styles_affiche
 from socle.i18n import LANGUES
@@ -28,6 +36,112 @@ from socle.ui.cards import reset_cards
 
 PARAM_VUE = "v"
 _CLE_VUE = "_affiche_vue"
+
+# ─── Hauteur de fenêtre ──────────────────────────────────────────────────────
+# La colonne droite ne défile pas : ce qu'on y met doit tenir dans la fenêtre,
+# à la hauteur près. Or une carte Leaflet calcule son zoom pour la hauteur en
+# PIXELS qu'on lui passe au rendu, côté Python — l'étirer en CSS après coup ne
+# la redessine pas, elle laisse une bande vide (vérifié à l'écran). Il faut
+# donc que Python connaisse la hauteur du navigateur.
+#
+# Elle passe par l'URL, comme la vue et la langue : c'est le seul canal que
+# Streamlit offre du navigateur vers le serveur sans composant sur mesure, et
+# c'est déjà là que vit l'état de cette page. Le prix est un rechargement au
+# premier affichage, et un autre à chaque redimensionnement notable.
+PARAM_HAUTEUR = "h"
+
+# La mesure est arrondie à ce pas, PAR DÉFAUT — jamais par excès. Sans pas,
+# chaque pixel gagné en tirant sur le coin de la fenêtre déclencherait un
+# rechargement ; arrondie vers le haut, la page se croirait plus grande
+# qu'elle n'est et rognerait le bas de la colonne droite, qui ne défile pas.
+# Au pas de 20, on perd au pire 23 px de hauteur de carte.
+PAS_HAUTEUR = 20
+
+# Hauteur supposée tant que le navigateur n'a pas répondu — celle du portable
+# de référence sur lequel l'échelle de la page a été réglée. Un premier rendu
+# trop grand se verrait le temps d'un rechargement ; trop petit, il passe.
+HAUTEUR_DEFAUT = 820
+
+# Ce que le corps prend en haut et en bas, hors colonnes : la marge haute
+# commune et la réserve du pied épinglé. Écrit ici parce que c'est la feuille
+# de style qui les pose (`--kg-aff-haut` et le rembourrage bas du corps), et
+# qu'une colonne calculée avec d'autres valeurs déborderait sans le dire.
+_RESERVE_CORPS = 54
+
+# Le script est POSÉ DANS LA PAGE, pas exécuté dans le cadre du composant.
+# Streamlit met ses cadres en bac à sable sans `allow-top-navigation` : une
+# tentative de rechargement depuis l'intérieur est refusée net — « the frame
+# attempting navigation of the top-level window is sandboxed ». Le cadre a en
+# revanche `allow-same-origin`, donc il peut écrire dans le document parent ;
+# le script qu'il y dépose s'exécute, lui, avec les droits de la page.
+_MESURE = """
+<script>
+(function () {
+  var page = window.parent;
+
+  // Le drapeau vit sur la fenêtre de la PAGE, qui survit aux reruns. Posé sur
+  // celle du composant, il serait perdu à chaque rendu et le script se
+  // redéposerait indéfiniment.
+  if (page.__kgAffMesure) return;
+
+  page.__kgAffMesure = true;
+
+  function mesure(pas, cle) {
+    function mesurer() {
+      var h = Math.floor(window.innerHeight / pas) * pas;
+      var u = new URL(window.location.href);
+
+      if (u.searchParams.get(cle) === String(h)) return;
+
+      u.searchParams.set(cle, h);
+      // `replace` et non `assign` : la mesure n'est pas une navigation, et
+      // elle n'a rien à faire dans l'historique du visiteur.
+      window.location.replace(u.href);
+    }
+
+    var t;
+    window.addEventListener("resize", function () {
+      clearTimeout(t);
+      t = setTimeout(mesurer, 400);
+    });
+
+    mesurer();
+  }
+
+  // La source de la fonction est recopiée telle quelle : l'écrire à la main
+  // dans une chaîne obligerait à échapper chaque guillemet, et une virgule
+  // oubliée dans un script injecté ne se voit nulle part.
+  var balise = page.document.createElement("script");
+  balise.textContent = "(" + mesure.toString() + ")(%(pas)d, '%(cle)s');";
+  page.document.head.appendChild(balise);
+})();
+</script>
+"""
+
+
+def hauteur_fenetre():
+    """Hauteur de la fenêtre en pixels, telle que le navigateur l'a rapportée.
+
+    Renvoie `HAUTEUR_DEFAUT` avant la première mesure — au tout premier
+    affichage, et si le paramètre a été effacé de l'URL à la main.
+    """
+
+    try:
+        return max(480, int(st.query_params.get(PARAM_HAUTEUR)))
+    except (TypeError, ValueError):
+        return HAUTEUR_DEFAUT
+
+
+def hauteur_colonne_droite(echelle=1):
+    """Hauteur utile d'une colonne de l'affiche, en pixels de mise en page.
+
+    C'est la hauteur que doit remplir ce qu'on pose dans la colonne droite —
+    la seule qui ne défile pas. Divisée par l'échelle : sous `zoom`, un pixel
+    de mise en page ne vaut plus un pixel d'écran, et une carte réglée sur les
+    pixels de l'écran serait 18 % trop courte.
+    """
+
+    return hauteur_fenetre() / (echelle or 1) - _RESERVE_CORPS
 
 
 def _encre(fond):
@@ -89,8 +203,10 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
                couleur_fond_menu, couleur_bordure_menu,
                marge_menu, ombre_menu, hauteur_menu,
                separation_colonnes, couleur_separation,
-               colonne_gauche_fond, colonne_gauche_bordure,
-               colonne_droite_fond, colonne_droite_bordure):
+               colonne_gauche_poids, colonne_gauche_fond,
+               colonne_gauche_bordure,
+               colonne_droite_poids, colonne_droite_fond,
+               colonne_droite_bordure):
     """Feuille de surcharge du menu — n'écrit QUE ce qui est demandé.
 
     Chaque règle absente laisse le token du socle s'appliquer : passer une
@@ -99,6 +215,18 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
     """
 
     regles = []
+
+    # Le menu ne couvre que la colonne gauche : il doit donc suivre le partage
+    # des colonnes. La part se déclare comme VARIABLE et non comme largeur
+    # calculée ici, parce que le repli sous 1 100 px doit pouvoir la reprendre
+    # — une largeur écrite en dur dans la surcouche l'emporterait sur la
+    # requête média, qui est déclarée avant elle.
+    total = (colonne_gauche_poids or 0) + (colonne_droite_poids or 0)
+
+    if total:
+        regles.append(
+            f":root {{ --kg-aff-part-gauche: {colonne_gauche_poids / total:.4f}; }}"
+        )
 
     if couleur_sur_titre:
         regles.append(f".kg-aff-surtitre {{ color: {couleur_sur_titre}; }}")
@@ -125,22 +253,23 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
 
     if couleur_vue_inactive:
         regles.append(
-            '.st-key-kgaffactions [data-testid="stButton"] > button {'
+            '.st-key-kgaffvues [data-testid="stButton"] > button {'
             f" background: {couleur_vue_inactive};"
             f" color: {_encre(couleur_vue_inactive)}; }}"
         )
 
     if couleur_vue_active:
         regles.append(
-            '.st-key-kgaffactions [data-testid="stButton"] > button[kind="primary"],'
-            '.st-key-kgaffactions [data-testid="stButton"] > button[kind="primary"]:hover {'
+            '.st-key-kgaffvues [data-testid="stButton"] > button[kind="primary"],'
+            '.st-key-kgaffvues [data-testid="stButton"] > button[kind="primary"]:hover {'
             f" background: {couleur_vue_active};"
             f" color: {_encre(couleur_vue_active)};"
             f" border-color: {couleur_vue_active}; }}"
         )
 
-    # La bascule passe APRÈS les vues : ses deux boutons vivent aussi dans la
-    # rangée d'actions, et sans cet ordre la règle des vues l'emporterait.
+    # La bascule garde son ordre après les vues : les deux rails ont beau être
+    # séparés depuis que les vues sont descendues d'une rangée, ils partagent
+    # encore leur mise en forme de base.
     if couleur_langue_inactive:
         regles.append(
             '.st-key-kgafflang [data-testid="stButton"] > button {'
@@ -158,12 +287,25 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
         )
 
     if not marge_menu:
-        # Sans marge, la carte devient un bandeau : elle reprend toute la
-        # largeur, perd son rayon et son ombre, et s'ancre au bord haut.
+        # Sans marge, la carte devient un bandeau : elle perd son rayon et son
+        # ombre et s'ancre au coin haut gauche, jusqu'à la gouttière. Elle ne
+        # reprend PAS toute la largeur — la colonne droite passe à côté, et un
+        # bandeau qui la recouvrirait rendrait la place qu'on vient de gagner.
+        #
+        # La marge haute passe à zéro pour les DEUX : le menu se colle au bord,
+        # la colonne droite aussi, et elles restent d'accord.
+        regles.append(":root { --kg-aff-haut: 0px; }")
         regles.append(
-            ".st-key-kgaffmenu { margin: 0; width: 100%; border-radius: 0;"
-            " border-left: 0; border-right: 0; border-top: 0; top: 0;"
-            " box-shadow: none; }"
+            ".st-key-kgaffmenu { left: 0; border-radius: 0;"
+            " border-left: 0; border-top: 0; top: 0; box-shadow: none; }"
+        )
+        # La largeur est bornée à la vue large. Sous 1 100 px les colonnes
+        # s'empilent et le menu reprend toute la place ; une largeur écrite
+        # ici, en surcouche, l'emporterait sur cette règle de repli — elle est
+        # déclarée avant. La requête média la remet à sa portée.
+        regles.append(
+            "@media (min-width: 1101px) { .st-key-kgaffmenu {"
+            " width: calc((100% - 44px) * var(--kg-aff-part-gauche) + 15px); } }"
         )
 
     # L'ombre est écrite EN DERNIER : demandée explicitement, elle doit
@@ -188,11 +330,16 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
         # Le filet est porté par la COLONNE et non par son contenu : il doit
         # courir sur toute la hauteur du corps, y compris là où le contenu
         # de droite s'arrête plus haut que celui de gauche.
+        #
+        # Le `:has()` nomme la SEULE rangée concernée. Sans lui, la règle
+        # frappait TOUS les blocs horizontaux du corps : la dernière tuile de
+        # la rangée de quatre et le dernier champ de filtre héritaient eux
+        # aussi d'un trait à gauche, sans que rien ne l'explique.
         teinte = couleur_separation or "var(--kg-color-border)"
         regles.append(
-            '.st-key-kgaffcorps [data-testid="stHorizontalBlock"]'
+            '[data-testid="stHorizontalBlock"]:has(> div [class*="st-key-kgaffgauche"])'
             ' > [data-testid="stColumn"]:last-child {'
-            f" border-left: 1px solid {teinte}; padding-left: 18px; }}"
+            f" border-left: 1px solid {teinte}; padding-left: 16px; }}"
         )
 
     for cle, fond, bordure in (
@@ -294,12 +441,21 @@ def aller_a(cle, premiere):
 
 
 def _menu(titre, sous_titre, sur_titre, vues, active, logo):
-    """Menu haut : identité à gauche, boutons de vue et langue à droite."""
+    """Menu haut : identité et langue sur une ligne, les vues en dessous.
+
+    Le menu ne fait plus toute la largeur de la page — il tient dans la colonne
+    gauche. Titre, quatre vues et bascule de langue sur une seule ligne s'y
+    écrasaient : les boutons descendent donc sur une SECONDE rangée, où ils se
+    partagent la largeur entière et se lisent comme le rail d'onglets qu'ils
+    sont. La bascule de langue reste en haut : elle n'est pas une vue, et la
+    ranger avec elles laisserait croire qu'on peut « aller » en anglais comme
+    on va au Risque.
+    """
 
     entete = st.container(key="kgaffmenu")
 
     with entete:
-        gauche, droite = st.columns([54, 46], gap="small", vertical_alignment="center")
+        gauche, droite = st.columns([78, 22], gap="small", vertical_alignment="center")
 
         with gauche:
             # Le logo et le bloc de titres forment UNE rangée : posés dans
@@ -322,50 +478,46 @@ def _menu(titre, sous_titre, sur_titre, vues, active, logo):
             actions = st.container(key="kgaffactions")
 
             with actions:
-                # UNE seule rangée de colonnes. Des `st.columns` imbriqués se
-                # replient dès que la colonne parente se resserre, et le menu
-                # doublait alors de hauteur.
-                #
-                # La dernière colonne accueille la bascule de langue : elle est
-                # étroite ici ET bornée en CSS, parce qu'une part de grille
-                # suffirait à la faire traverser l'écran sur un large moniteur.
-                cols = st.columns(
-                    [1] * len(vues) + [0.55],
-                    gap="small", vertical_alignment="center",
-                )
+                # Le conteneur nommé enveloppe RÉELLEMENT les deux boutons :
+                # c'est lui que la feuille cible pour les souder en une
+                # bascule. Un conteneur ouvert autour de colonnes créées
+                # ailleurs n'envelopperait rien.
+                bascule = st.container(key="kgafflang")
+                courante = langue()
 
-                for col, vue in zip(cols[:len(vues)], vues):
-                    with col:
-                        if st.button(
-                            vue["label"],
-                            key=f"affvue_{vue['key']}",
-                            use_container_width=True,
-                            type=("primary" if vue["key"] == active
-                                  else "tertiary"),
-                        ):
-                            aller_a(vue["key"], vues[0]["key"])
+                with bascule:
+                    for col, code in zip(
+                        st.columns(len(LANGUES), gap="small"), LANGUES
+                    ):
+                        with col:
+                            if st.button(
+                                code.upper(),
+                                key=f"afflang_{code}",
+                                use_container_width=True,
+                                type=("primary" if code == courante
+                                      else "tertiary"),
+                            ):
+                                definir_langue(code)
 
-                with cols[-1]:
-                    # Le conteneur nommé enveloppe RÉELLEMENT les deux boutons :
-                    # c'est lui que la feuille cible pour les souder en une
-                    # bascule. Un conteneur ouvert autour de colonnes créées
-                    # ailleurs n'envelopperait rien.
-                    bascule = st.container(key="kgafflang")
-                    courante = langue()
+        # Seconde rangée : le rail des vues, sur toute la largeur du menu. Les
+        # colonnes sont égales et les boutons s'y étirent — un rail dont les
+        # segments ont la même largeur se lit d'un coup, là où des boutons de
+        # largeur variable donnent au plus long l'air d'être le principal.
+        rail = st.container(key="kgaffvues")
 
-                    with bascule:
-                        for col, code in zip(
-                            st.columns(len(LANGUES), gap="small"), LANGUES
-                        ):
-                            with col:
-                                if st.button(
-                                    code.upper(),
-                                    key=f"afflang_{code}",
-                                    use_container_width=True,
-                                    type=("primary" if code == courante
-                                          else "tertiary"),
-                                ):
-                                    definir_langue(code)
+        with rail:
+            for col, vue in zip(
+                st.columns(len(vues), gap="small"), vues
+            ):
+                with col:
+                    if st.button(
+                        vue["label"],
+                        key=f"affvue_{vue['key']}",
+                        use_container_width=True,
+                        type=("primary" if vue["key"] == active
+                              else "tertiary"),
+                    ):
+                        aller_a(vue["key"], vues[0]["key"])
 
 
 def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
@@ -416,14 +568,20 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
         couleur_bordure_menu    trait de la carte de menu
         marge_menu              True : carte détachée · False : bandeau collé
         ombre_menu              0 à 3 (paliers), une valeur CSS, ou False
-        hauteur_menu            hauteur du bandeau, en px ou en CSS
+        hauteur_menu            hauteur du bandeau, en px ou en CSS. Elle est
+                                réservée sur la SEULE colonne gauche : le menu
+                                ne recouvre qu'elle, et l'élargir ne coûte
+                                donc rien à la carte de droite.
         logo                    balisage HTML/SVG posé à gauche du titre
                                 (cf. `socle.charts.maps.silhouette_svg`)
         separation_colonnes     « panneau » : la droite dans un cadre en
                                 retrait · True : un filet vertical ·
                                 False : rien, les colonnes coulent
         couleur_separation      teinte du filet vertical
-        colonne_gauche_poids    part de grille (62 par défaut)
+        colonne_gauche_poids    part de grille (62 par défaut). Elle commande
+                                aussi la LARGEUR DU MENU, qui tient dans cette
+                                colonne : élargir la droite rétrécit le menu
+                                d'autant, sans réglage de plus.
         colonne_gauche_fond     fond de la colonne gauche
         colonne_gauche_bordure  bordure de la colonne gauche
         colonne_droite_poids    part de grille (38 par défaut)
@@ -443,6 +601,11 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
     reset_cards()
     load_styles_affiche()
 
+    # La mesure de fenêtre se pose AVANT tout le reste, et hors du corps : un
+    # cadre de hauteur nulle glissé entre les colonnes en décalerait une.
+    components.html(_MESURE % {"pas": PAS_HAUTEUR, "cle": PARAM_HAUTEUR},
+                    height=0)
+
     # La surcouche vient APRÈS la feuille du socle : à spécificité égale, la
     # dernière règle déclarée l'emporte.
     surcouche = _surcouche(
@@ -452,8 +615,8 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
         couleur_fond_menu, couleur_bordure_menu,
         marge_menu, ombre_menu, hauteur_menu,
         separation_colonnes, couleur_separation,
-        colonne_gauche_fond, colonne_gauche_bordure,
-        colonne_droite_fond, colonne_droite_bordure,
+        colonne_gauche_poids, colonne_gauche_fond, colonne_gauche_bordure,
+        colonne_droite_poids, colonne_droite_fond, colonne_droite_bordure,
     )
 
     if surcouche:
@@ -472,9 +635,30 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
         # que 85 %, laissant une bande morte et tronquant la dernière carte.
         # Les unités de fenêtre ne suivent pas le facteur — il faut donc les
         # diviser par lui pour retrouver un plein écran.
+        #
+        # Le facteur porte sur le CONTENEUR D'APPLICATION, et sur les listes
+        # déroulantes séparément. Elles se peignent dans un portail accroché
+        # au `body`, donc hors du conteneur : non réduites, elles dépassaient
+        # de 18 % — soit 1/0,85 — la largeur du champ qu'elles prolongent.
+        #
+        # Poser le facteur à la racine corrigeait la largeur mais décalait la
+        # liste de cent pixels vers la gauche : la bibliothèque lit la
+        # position du champ en pixels VISUELS et l'écrit en pixels de mise en
+        # page, deux repères que le zoom sépare. On réduit donc le contenu du
+        # portail sans toucher à l'élément qui porte sa position.
         st.markdown(
             f"<style>"
             f'[data-testid="stAppViewContainer"] {{ zoom: {echelle}; }}'
+            f'[data-baseweb="popover"] > div {{ zoom: {echelle}; }}'
+            # La hauteur de fenêtre suit le même sort que celle du conteneur :
+            # le corps s'y cale pour tenir dans un écran sans le dépasser, et
+            # une valeur restée à 100vh l'aurait fait déborder de 18 % — soit
+            # 1/0,85 — en repoussant la colonne gauche sous le pied.
+            f":root {{ --kg-aff-vh: calc(100vh / {echelle}); }}"
+            # La hauteur doit être compensée, sinon la page est coupée en bas :
+            # les unités de fenêtre ne suivent pas le facteur, si bien qu'une
+            # fois réduit le conteneur n'en peint plus que 85 % et tronque la
+            # dernière carte.
             f'[data-testid="stAppViewContainer"],'
             f'[data-testid="stMain"] {{'
             f" height: calc(100vh / {echelle});"

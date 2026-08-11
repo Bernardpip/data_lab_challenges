@@ -38,6 +38,42 @@ from socle.i18n.traduction import t
 HAUTEUR_CARTE = 640
 HAUTEUR_PIED = 132        # bandeau légende + note, réservé même s'il est vide
 
+# Ce qu'un panneau de carte occupe HORS carte, mesuré à l'écran : le bloc
+# titre et sous-titre (44), les rembourrages haut et bas de la carte (26),
+# les deux écarts internes (32), le filet du cadre (6), la marge du panneau
+# (6), et le bandeau de légende. C'est ce qu'il faut retrancher d'une zone
+# pour savoir quelle hauteur donner à la carte elle-même.
+CHROME_CARTE = 114 + HAUTEUR_PIED
+
+# Zoom FRACTIONNAIRE. Leaflet cale son zoom sur des entiers : un cadrage qui
+# demanderait 7,95 retombe à 7, et le pays n'occupe plus que la moitié du
+# cadre. Le défaut ne se voyait pas tant que la hauteur des cartes était fixe
+# — elle avait été choisie sur un cadrage qui tombait juste. Depuis que la
+# carte prend la hauteur de la fenêtre, chaque écran retombe ailleurs, et il
+# fallait que le cadrage suive vraiment. Un pas de 0,25 n'étire jamais les
+# tuiles de plus de 19 %, ce qui reste net à l'œil.
+PAS_ZOOM = 0.25
+
+# Plancher de lisibilité. Sous cette hauteur, un pays étiré nord-sud n'est
+# plus qu'un trait : mieux vaut déborder d'une fenêtre trop courte que
+# prétendre y montrer une carte.
+HAUTEUR_MINIMALE = 360
+
+
+def hauteur_dans(zone, reserve=0):
+    """Hauteur de carte qui remplit exactement `zone`, panneau compris.
+
+    `zone`    : hauteur disponible, en pixels de mise en page.
+    `reserve` : ce que d'AUTRES éléments prennent dans la même zone — un rail
+                d'onglets au-dessus du panneau, par exemple.
+
+    Se calcule à la SOURCE et se passe à `carte(hauteur=...)`. Une carte
+    Leaflet fixe son zoom sur la hauteur reçue au rendu : l'étirer en CSS
+    ensuite laisse une bande vide sous une carte restée petite.
+    """
+
+    return max(HAUTEUR_MINIMALE, int(zone - CHROME_CARTE - reserve))
+
 # Simplification des contours AVANT envoi au navigateur. À l'échelle du pays
 # dans une colonne de ~530 px, un pixel vaut ≈ 400 m : un détail de 111 m
 # (0,001°) ne peut pas se voir. Mesuré sur les 388 cantons : 2,16 Mo → 0,57 Mo
@@ -166,7 +202,8 @@ def choroplethe(gdf, valeur, cle, champs=None, libelles=None, height=980,
                 return teintes[index]
         return teintes[-1]
 
-    carte = folium.Map(tiles="CartoDB positron", control_scale=True)
+    carte = folium.Map(tiles="CartoDB positron", control_scale=True,
+                       zoom_snap=PAS_ZOOM)
 
     ouest, sud, est, nord = situes.total_bounds
     carte.fit_bounds([[sud, ouest], [nord, est]], padding=(16, 16))
@@ -238,6 +275,7 @@ def points(df, cle, infobulle=None, lat="lat", lon="lon", height=980,
     carte = folium.Map(
         tiles="CartoDB positron",  # fond clair, cohérent avec la surface
         control_scale=True,
+        zoom_snap=PAS_ZOOM,
     )
 
     carte.fit_bounds([
@@ -290,7 +328,8 @@ def points_multi(couches, cle, fond=None, height=980, lat="lat", lon="lon",
         st.info(message_vide or t("commun")("aucun_point_localise"))
         return
 
-    carte = folium.Map(tiles="CartoDB positron", control_scale=True)
+    carte = folium.Map(tiles="CartoDB positron", control_scale=True,
+                       zoom_snap=PAS_ZOOM)
 
     if fond is not None and not fond.empty:
         limites = fond.total_bounds
@@ -410,7 +449,8 @@ def disques(df, valeur, cle, etiquette=None, infobulle=None,
         st.info(message_vide or t("commun")("aucun_point_localise"))
         return
 
-    carte = folium.Map(tiles="CartoDB positron", control_scale=True)
+    carte = folium.Map(tiles="CartoDB positron", control_scale=True,
+                       zoom_snap=PAS_ZOOM)
 
     # Cadrage sur TOUS les points situés, y compris ceux à zéro : le vide
     # d'une ville sans équipement fait partie de ce que la carte montre.

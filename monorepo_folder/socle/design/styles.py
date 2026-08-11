@@ -908,22 +908,44 @@ _CSS_AFFICHE = """
    seul point d'accroche stable pour styler un VRAI bloc de widgets, qu'un
    simple <div> markdown ne pourrait pas envelopper. */
 
+/* Les deux mesures qui commandent tout le gabarit, déclarées UNE fois.
+   `--kg-aff-haut`        marge haute commune au menu ET à la colonne droite —
+                          les deux commencent à la même ligne, et une seule
+                          valeur les tient d'accord.
+   `--kg-aff-part-gauche` part de grille de la colonne gauche, en fraction. Le
+                          menu ne couvre QUE cette colonne : il doit donc
+                          connaître son partage, que `render_affiche` réécrit
+                          en surcouche dès qu'il n'est pas celui par défaut.
+   `--kg-aff-vh`          hauteur de fenêtre utilisable. C'est `100vh`, sauf
+                          si la page est réduite par `echelle` : les unités de
+                          fenêtre ignorent le zoom, il faut donc les diviser
+                          par le facteur pour retrouver un plein écran.
+                          `render_affiche` la réécrit quand il y a un zoom. */
+:root { --kg-aff-haut: 14px; --kg-aff-part-gauche: .62; --kg-aff-vh: 100vh; }
+
 /* Le menu est une CARTE POSÉE, pas un bandeau collé au bord : la marge et le
    rayon le détachent de la page, et l'ombre lui donne le plan supérieur qu'un
-   élément épinglé doit occuper quand le contenu défile dessous. */
+   élément épinglé doit occuper quand le contenu défile dessous.
+
+   Il ne barre PAS la page : il tient dans la largeur de la colonne gauche, et
+   la colonne droite lui passe à côté pour démarrer tout en haut. Une carte
+   haute — c'est toujours une carte, à droite — y gagne la hauteur entière du
+   bandeau, soit 130 px qu'aucun réglage d'échelle ne rendait. */
 .st-key-kgaffmenu {
-  /* `width: calc(100% - 2*marge)` est indispensable : Streamlit impose
-     `width:100%` aux blocs de son conteneur vertical, et une marge s'y
-     AJOUTE au lieu de rétrécir l'élément — la carte débordait de 32 px et la
-     bascule de langue sortait de l'écran. */
-  margin: 14px auto 0;
-  /* 2 × 16 px : le menu s'aligne sur le bord des CARTES du contenu. Mesuré
-     avant correction, trois bords cohabitaient — boîte du menu à x=16, texte
-     du menu à x=37, contenu des colonnes à x=29 — et c'est ce désaccord de 8
-     à 13 px que l'œil lisait comme un défaut d'alignement sans pouvoir le
-     nommer. Son rembourrage latéral vaut celui d'une carte (16 px), si bien
-     que le titre du menu tombe sur le titre de la première carte. */
-  width: calc(100% - 32px);
+  /* `width: calc(...)` est indispensable : Streamlit impose `width:100%` aux
+     blocs de son conteneur vertical, et une marge s'y AJOUTE au lieu de
+     rétrécir l'élément — la carte débordait de 32 px et la bascule de langue
+     sortait de l'écran.
+
+     La largeur est celle de la colonne gauche, recalculée à l'identique :
+     100 % moins les 2 × 15 px de bord du corps et les 14 px de gouttière,
+     multiplié par la part de gauche. Le menu se cale alors sur le bord des
+     CARTES du contenu — mesuré avant correction, trois bords cohabitaient
+     (boîte du menu à x=16, texte du menu à x=37, contenu des colonnes à
+     x=29), et c'est ce désaccord de 8 à 13 px que l'œil lisait comme un
+     défaut d'alignement sans pouvoir le nommer. */
+  margin: var(--kg-aff-haut) 0 0;
+  width: calc((100% - 44px) * var(--kg-aff-part-gauche));
   box-sizing: border-box;
   /* Rembourrage latéral IDENTIQUE à celui d'une carte (16 px) : le titre du
      menu tombe alors exactement sur le titre de la première carte. */
@@ -936,7 +958,7 @@ _CSS_AFFICHE = """
      enveloppe chaque élément dans un conteneur ajusté à sa taille, où un
      élément collant n'a aucune place pour glisser — mesuré, le menu partait
      à y=-314 après 500 px de défilement. */
-  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+  position: fixed; top: 0; left: 16px; z-index: 40;
 }
 
 /* Logo et titres sur une seule ligne, alignés au centre : la silhouette est
@@ -961,24 +983,39 @@ _CSS_AFFICHE = """
   color: var(--kg-color-primary); margin-bottom: 6px;
 }
 
-/* Le rail des boutons de vue : les boutons Streamlit sont posés dans une
-   colonne, on ne fait que resserrer leur gouttière et retirer leur marge. */
 /* Streamlit empile les colonnes imbriquées dès que la place manque. On force
-   la rangée d'actions à rester UNE ligne, alignée à droite : le menu doit
-   garder une hauteur constante quelle que soit la largeur de fenêtre. */
+   les deux rangées à rester UNE ligne : le menu doit garder une hauteur
+   constante quelle que soit la largeur de fenêtre. */
 .st-key-kgaffactions > [data-testid="stVerticalBlock"] > [data-testid="stHorizontalBlock"],
-.st-key-kgaffactions [data-testid="stHorizontalBlock"] {
+.st-key-kgaffactions [data-testid="stHorizontalBlock"],
+.st-key-kgaffvues [data-testid="stHorizontalBlock"] {
   flex-wrap: nowrap !important;
   align-items: center;
-  justify-content: flex-end;
 }
+.st-key-kgaffactions [data-testid="stHorizontalBlock"] { justify-content: flex-end; }
 .st-key-kgaffactions [data-testid="stColumn"] { flex: 0 1 auto; min-width: 0; }
+
+/* La bascule de langue se range au bord DROIT du menu. Son conteneur est un
+   bloc vertical : c'est donc `align-items` — l'axe secondaire — qui la
+   pousse, pas `justify-content`. */
+.st-key-kgaffactions { align-items: flex-end; }
 
 /* La bascule de langue ne s'étire pas : elle vaut deux fois 44 px, pas une
    fraction de la rangée. Sans cette largeur imposée, Streamlit lui donne la
    part de grille de son `st.columns` parent et elle traverse l'écran. */
-.st-key-kgafflang { flex: 0 0 auto !important; width: 88px; margin-left: 10px; }
+/* `margin-left: auto` et non `align-items` sur le parent : Streamlit
+   intercale un enveloppeur en pleine largeur entre les deux, si bien qu'un
+   alignement demandé au conteneur ne descend pas jusqu'à la bascule. La marge
+   automatique, elle, la pousse au bord depuis l'intérieur. */
+.st-key-kgafflang { flex: 0 0 auto !important; width: 88px; margin-left: auto; }
 .st-key-kgafflang [data-testid="stColumn"] { flex: 1 1 46px !important; }
+
+/* ── Rail des vues, seconde rangée ──────────────────────────────────────
+   Les quatre boutons se partagent la largeur du menu à parts égales. Le rail
+   se colle au bloc de titres — 12 px, l'écart d'un titre à son contenu, et
+   non les 16 px qui séparent deux cartes : le menu est UN objet. */
+.st-key-kgaffvues { margin-top: 12px; }
+.st-key-kgaffvues [data-testid="stColumn"] { min-width: 0; }
 
 
 /* ── Boutons de vue : effet ENFONCÉ ─────────────────────────────────────
@@ -986,7 +1023,8 @@ _CSS_AFFICHE = """
    haut). Actif ou pressé, il s'enfonce : l'ombre passe à l'INTÉRIEUR et le
    bouton descend d'un pixel. C'est le seul retour tactile qu'un écran sait
    donner, et il rend l'état actif lisible sans dépendre de la seule couleur. */
-.st-key-kgaffactions [data-testid="stButton"] > button {
+.st-key-kgaffactions [data-testid="stButton"] > button,
+.st-key-kgaffvues [data-testid="stButton"] > button {
   font-size: 12.5px; font-weight: 560; letter-spacing: .01em;
   padding: 7px 14px; min-height: 36px; white-space: nowrap;
   border: 1px solid var(--kg-color-border);
@@ -996,25 +1034,27 @@ _CSS_AFFICHE = """
   color: var(--kg-color-text-secondary);
   box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 1px 2px rgba(15,23,42,.07);
 }
-.st-key-kgaffactions [data-testid="stButton"] > button:hover {
+.st-key-kgaffactions [data-testid="stButton"] > button:hover,
+.st-key-kgaffvues [data-testid="stButton"] > button:hover {
   background: var(--kg-color-surface-hover);
   color: var(--kg-color-text);
   border-color: var(--kg-color-border-hover);
 }
 /* Pression réelle du doigt ou de la souris. */
-.st-key-kgaffactions [data-testid="stButton"] > button:active {
+.st-key-kgaffactions [data-testid="stButton"] > button:active,
+.st-key-kgaffvues [data-testid="stButton"] > button:active {
   transform: translateY(1px);
   box-shadow: inset 0 2px 5px rgba(15,23,42,.16);
 }
 /* État ACTIF — le bouton reste enfoncé tant que la vue est la sienne. */
-.st-key-kgaffactions [data-testid="stButton"] > button[kind="primary"] {
+.st-key-kgaffvues [data-testid="stButton"] > button[kind="primary"] {
   background: var(--kg-color-primary);
   color: var(--kg-color-text-on-primary);
   border-color: var(--kg-color-primary-dark);
   transform: translateY(1px);
   box-shadow: inset 0 2px 6px rgba(0,0,0,.28), inset 0 -1px 0 rgba(255,255,255,.12);
 }
-.st-key-kgaffactions [data-testid="stButton"] > button[kind="primary"]:hover {
+.st-key-kgaffvues [data-testid="stButton"] > button[kind="primary"]:hover {
   background: var(--kg-color-primary-hover);
   color: var(--kg-color-text-on-primary);
 }
@@ -1054,30 +1094,30 @@ _CSS_AFFICHE = """
 }
 
 /* ── Corps en deux colonnes ────────────────────────────────────────────── */
-/* Le haut réserve la place du menu, qui est en `fixed` et ne pousse donc plus
-   rien : hauteur de la carte (variable, posée par la prop `hauteur_menu`)
-   plus sa marge haute et l'écart de respiration.
-   Écrit en RACCOURCI et non en `padding-top` séparé : un raccourci déclaré
-   plus loin dans la feuille écraserait la propriété isolée — c'est ce qui
-   est arrivé, et les colonnes passaient 98 px sous le header. */
-/* 15 px de côté, et non 16 : les colonnes portent elles-mêmes 12 px de
-   rembourrage plus 1 px de filet, si bien que la CARTE se pose à 15 + 13 =
-   28 px du bord — exactement la gouttière définie plus bas. Une marge de page
-   et une gouttière inégales (mesurées à 29 et 38 px) sont précisément ce qui
+/* Le corps commence VRAIMENT en haut. Streamlit intercale 24 px entre les
+   blocs de son conteneur principal, et c'est cet écart — invisible, hérité —
+   qui décalait le corps de la fenêtre. On l'annule à la source plutôt que de
+   le compenser par une marge négative : une valeur à retrancher ailleurs se
+   déphase du jour où le nombre de blocs change. Le `:has()` nomme la SEULE
+   rangée concernée, celle qui porte le corps de l'affiche. */
+[data-testid="stVerticalBlock"]:has(> [data-testid="stLayoutWrapper"]
+                                    > .st-key-kgaffcorps) { gap: 0; }
+
+/* 15 px de côté, et non 16 : les colonnes portent elles-mêmes 1 px de filet,
+   si bien que la CARTE se pose à 15 + 1 = 16 px du bord. Une marge de page et
+   une gouttière inégales (mesurées à 29 et 38 px) sont précisément ce qui
    donne l'impression de séparations arbitraires. */
-/* UNE SEULE valeur de séparation sur toute la page — 16 px — entre le menu et
+.st-key-kgaffcorps { padding: var(--kg-aff-haut) 15px 8px; }
+
+/* La réserve du menu ne porte plus que sur la colonne GAUCHE — c'est elle
+   seule qu'il recouvre. La droite démarre à `--kg-aff-haut`, au ras du menu.
+
+   UNE SEULE valeur de séparation sur toute la page — 16 px — entre le menu et
    la première carte, entre deux cartes, entre les deux colonnes, et du bord de
-   la fenêtre. La réserve haute s'écrit comme la somme qu'elle est vraiment :
-
-       14 (marge haute du menu) + hauteur_menu + 16 (écart)
-       − 24 (rembourrage propre au conteneur principal de Streamlit)
-       − 1  (filet de la colonne, qui compte lui aussi)
-     = hauteur_menu + 5
-
-   Le « + 26 px » d'origine ignorait ces 24 px et les 12 px que portait alors
-   la colonne : le vide sous le menu atteignait 49 px. Les 15 px de côté
-   suivent la même règle — 15 + 1 de filet = 16. */
-.st-key-kgaffcorps { padding: calc(var(--kg-aff-menu-h, 116px) + 5px) 15px 8px; }
+   la fenêtre. La réserve s'écrit donc comme la somme qu'elle est vraiment :
+   hauteur du menu (posée par la prop `hauteur_menu`) plus l'écart. Sa marge
+   haute est déjà celle du corps, elle ne se compte pas deux fois. */
+.st-key-kgaffgauche { margin-top: calc(var(--kg-aff-menu-h, 116px) + 16px); }
 
 /* L'écart vertical est une VARIABLE : le bandeau d'onglets doit pouvoir le
    reprendre au pixel pour venir se coller à sa carte. */
@@ -1095,6 +1135,101 @@ _CSS_AFFICHE = """
      s'ajoute de part et d'autre de la gouttière. */
   gap: 14px;
 }
+
+/* Les deux moitiés tiennent TOUTE la hauteur de la rangée, celle de la plus
+   haute des deux. Sans cela, la teinte de la colonne droite s'arrêtait sous
+   sa dernière carte : elle ne partageait plus l'écran, elle soulignait un
+   contenu, et la moitié cessait d'exister à mi-page.
+
+   Streamlit empile trois enveloppeurs entre la colonne et le conteneur
+   nommé, tous en hauteur automatique — une hauteur en pourcentage ne peut
+   pas traverser ça. On les met donc en colonne flexible et on laisse chacun
+   prendre la place restante. */
+/* `height: 100%` et pas seulement l'étirement de la rangée : mesurée, la
+   colonne gardait la hauteur de son contenu — 1 290 px dans une rangée qui
+   n'en fait que 1 201 — et débordait par le bas. La hauteur demandée, elle,
+   est suivie. */
+[data-testid="stHorizontalBlock"]:has(> div [class*="st-key-kgaffgauche"])
+  > [data-testid="stColumn"] {
+  display: flex; flex-direction: column; height: 100%;
+}
+[data-testid="stHorizontalBlock"]:has(> div [class*="st-key-kgaffgauche"])
+  > [data-testid="stColumn"] > [data-testid="stVerticalBlock"],
+[data-testid="stHorizontalBlock"]:has(> div [class*="st-key-kgaffgauche"])
+  > [data-testid="stColumn"] > [data-testid="stVerticalBlock"]
+  > [data-testid="stLayoutWrapper"] { flex: 1 1 auto; }
+.st-key-kgaffgauche, .st-key-kgaffdroite { flex: 1 1 auto; }
+
+/* ── Une seule chose défile : la colonne gauche ──────────────────────────
+   La PAGE ne défile plus. Elle tient exactement dans la fenêtre, et c'est la
+   colonne gauche qui défile dans son propre cadre. La carte de droite doit
+   rester sous les yeux pendant qu'on lit le propos : c'est tout l'objet
+   d'une affiche en deux moitiés, et la faire disparaître au premier coup de
+   molette revenait à la ranger en bas d'une page longue. */
+/* La contrainte vient d'EN HAUT, et c'est le seul endroit où elle tient.
+   Streamlit donne `flex: 1 1 0` à chaque bloc de sa pile, dans des parents
+   en hauteur AUTOMATIQUE : demander une hauteur au corps ne servait à rien —
+   mesuré, il gardait ses 1 344 px de contenu et la fenêtre en coupait le bas
+   sans qu'aucune barre ne permette d'y descendre. On borne donc la fenêtre
+   applicative elle-même, puis on laisse chaque étage rétrécir. */
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"],
+[data-testid="stMain"] .block-container { height: var(--kg-aff-vh, 100vh); }
+/* Et il faut le dire en FLEX. Le conteneur de bloc est un `display: block` :
+   sa hauteur avait beau être bornée, son unique enfant — à qui Streamlit
+   donne `flex: 1 1 0` — restait un bloc ordinaire en hauteur automatique et
+   débordait sans rien déclencher. Une hauteur ne se transmet qu'à travers
+   une colonne flexible. */
+[data-testid="stMain"] .block-container {
+  min-height: 0; display: flex; flex-direction: column;
+}
+
+/* La pile racine, elle aussi, doit accepter de rétrécir : sa taille minimale
+   automatique valait celle de son contenu, et elle débordait de son parent
+   pourtant borné sans qu'aucune barre n'apparaisse. */
+.stMainBlockContainer > [data-testid="stVerticalBlock"] { min-height: 0; }
+
+/* Le seul enveloppeur qui doit prendre la place restante est celui du corps.
+   La même règle appliquée à tous ses frères ferait grandir les blocs de
+   style — invisibles mais bien présents dans la pile — et le corps
+   n'hériterait que d'une fraction de la fenêtre. */
+.stMainBlockContainer > [data-testid="stVerticalBlock"]
+  > [data-testid="stLayoutWrapper"]:has(> .st-key-kgaffcorps) {
+  flex: 1 1 auto; min-height: 0;
+}
+.st-key-kgaffcorps { min-height: 0; box-sizing: border-box; }
+
+/* Chaque étage de la pile doit accepter de RÉTRÉCIR. Par défaut un élément
+   flexible ne descend pas sous la hauteur de son contenu : sans `min-height:
+   0`, la colonne garde sa hauteur naturelle, le cadre défilant ne se forme
+   nulle part, et le débordement ressort en bas de page — exactement ce qu'on
+   cherche à supprimer. */
+.st-key-kgaffcorps > [data-testid="stLayoutWrapper"],
+[data-testid="stHorizontalBlock"]:has(> div [class*="st-key-kgaffgauche"]),
+[data-testid="stHorizontalBlock"]:has(> div [class*="st-key-kgaffgauche"])
+  > [data-testid="stColumn"],
+[data-testid="stHorizontalBlock"]:has(> div [class*="st-key-kgaffgauche"])
+  > [data-testid="stColumn"] > [data-testid="stVerticalBlock"],
+[data-testid="stHorizontalBlock"]:has(> div [class*="st-key-kgaffgauche"])
+  > [data-testid="stColumn"] > [data-testid="stVerticalBlock"]
+  > [data-testid="stLayoutWrapper"],
+.st-key-kgaffgauche, .st-key-kgaffdroite { min-height: 0; }
+
+.st-key-kgaffcorps > [data-testid="stLayoutWrapper"] { flex: 1 1 auto; }
+
+/* `overflow-y: auto` et non `scroll` : pas de barre grise permanente quand le
+   contenu tient. Le rembourrage droit rend à la dernière carte la place que
+   la barre lui prend, sinon elle se colle au filet dès qu'elle apparaît. */
+.st-key-kgaffgauche { overflow-y: auto; scrollbar-width: thin; padding-right: 2px; }
+
+/* La droite ne défile pas, et ne doit pas non plus pousser la page : ce qui
+   dépasse est rogné plutôt que reporté en bas de fenêtre. */
+.st-key-kgaffdroite { overflow: hidden; }
+
+/* Le conteneur principal ne défile plus : sa hauteur est celle du corps. Une
+   barre de défilement de page à côté d'une barre de colonne donnerait deux
+   commandes pour un seul mouvement. */
+[data-testid="stMain"] { overflow: hidden; }
 
 /* Rythme vertical UNIQUE. Avant : 10 px d'écart de bloc AUXQUELS s'ajoutait
    la `margin-top: 8px` que toute carte porte — soit 18 px entre deux cartes,
@@ -1137,13 +1272,23 @@ _CSS_AFFICHE = """
 .st-key-kgaffcorps { padding-bottom: 40px !important; }
 
 /* Sous 1 100 px, les deux colonnes ne tiennent plus côte à côte : Streamlit
-   les empile de lui-même, mais le panneau garderait sa hauteur de carte. */
+   les empile de lui-même, mais le panneau garderait sa hauteur de carte.
+   Le menu rentre alors dans le flux et reprend toute la largeur : une carte de
+   62 % au-dessus d'une colonne qui en fait 100 ne recouvrirait plus rien, et
+   la réserve haute de la colonne gauche n'aurait plus d'objet. */
 @media (max-width: 1100px) {
   .st-key-kgaffmenu { position: static; margin: 10px auto 0;
-                      width: calc(100% - 20px);
+                      width: calc(100% - 20px); left: auto;
                       padding: 14px 16px 12px; }
   .st-key-kgaffactions { justify-content: flex-start; }
-  .st-key-kgaffcorps { padding: calc(var(--kg-aff-menu-h, 116px) + 20px) 10px 8px; }
+  .st-key-kgaffcorps { padding: 10px 10px 8px; height: auto; }
+  .st-key-kgaffgauche { margin-top: 0; overflow-y: visible; }
+  /* Colonnes empilées : c'est la PAGE qui reprend le défilement. Deux cadres
+     défilants l'un sous l'autre s'attraperaient la molette à tour de rôle.
+     Le conteneur de bloc redevient un bloc ordinaire en hauteur libre —
+     laissé borné à la fenêtre, il aurait rogné la seconde colonne. */
+  [data-testid="stMain"] { overflow: auto; }
+  [data-testid="stMain"] .block-container { height: auto; display: block; }
 }
 """
 

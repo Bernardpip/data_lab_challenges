@@ -17,6 +17,7 @@ from socle.charts import maps
 from socle.charts.maps import silhouette_svg
 from socle.design.tokens import RISQUE_OFFICIEL, RISQUE_CONTOUR, SERIES
 from socle.shell import render_affiche
+from socle.shell.affiche import hauteur_colonne_droite
 from socle.i18n.traduction import t
 
 from utils.data import datasets, apply_filters
@@ -35,7 +36,29 @@ VERT_TOGO = "#006A4E"
 # proches mais distinctes se voient — l'œil lit un défaut d'alignement là où
 # il n'y a qu'une inattention.
 FOND = "#FFFFFF"                      # le menu seul
-TEINTE_COLONNES = "#F0F0F0"           # fond ET bordure des colonnes
+TEINTE_COLONNES = "#F0F0F0"           # fond ET bordure de la colonne gauche
+
+# La colonne droite est une AUTRE moitié, pas la suite de la première : elle
+# porte donc sa propre teinte, d'un cran plus sombre, et un filet la sépare.
+# À fond identique et sans trait, les deux colonnes coulaient l'une dans
+# l'autre et la page se lisait comme un seul bloc — l'écran n'était partagé
+# que dans le code.
+TEINTE_DROITE = "#E6E9EC"
+FILET = "#D3D8DE"
+
+# Échelle de la page. Déclarée ici plutôt qu'au seul appel de `render_affiche`
+# parce que la hauteur de la colonne droite s'en déduit : sous `zoom`, un
+# pixel de mise en page ne vaut plus un pixel d'écran.
+# 0,85 : réglé à l'écran sur un portable de 1 440 × 820, où la page à
+# l'échelle 1 débordait avant même la première carte.
+ECHELLE = 0.85
+
+# Ce que le rail d'onglets prend dans la colonne droite, au-dessus du panneau
+# de carte : sa propre hauteur et l'écart qui le sépare du panneau. Mesuré à
+# l'écran. Le reste du poste — titre, rembourrages, bandeau de légende — est
+# connu de `maps.hauteur_dans`, qui est seul à savoir de quoi une carte est
+# faite.
+RAIL_ONGLETS = 43
 
 
 def _zone(libelle, detail, hauteur):
@@ -108,7 +131,7 @@ def _gauche_diagnostic(tr, data, faits, corpus):
          "delta": tr("tuile_sans_ouvrage_detail",
                      {"part": ui.fr_number(faits["part_sans_ouvrage"], 0)}),
          "good": False, "icon": "search"},
-        {"value": "8 / 33", "label": tr("tuile_publies"),
+        {"value": "7 / 33", "label": tr("tuile_publies"),
          "delta": tr("tuile_publies_detail"), "good": False, "icon": "table-2"},
     ])
 
@@ -142,21 +165,34 @@ def _gauche_diagnostic(tr, data, faits, corpus):
                  tr("carte_publication_sous_titre"), "table-2"):
         ecart = perimetre.ecart_publication()
         cadre = pd.DataFrame([
-            {"etat": tr("champs_publies"), "champs": int(ecart["publies"])},
+            {"etat": tr("champs_publies"), "champs": int(ecart["communs"])},
             {"etat": tr("champs_absents"), "champs": int(ecart["absents"])},
         ])
 
-        charts.bar_h(cadre, "etat", "champs", unit=tr("unite_champs"),
-                     highlight=tr("champs_absents"))
+        # Anneau : « 7 champs décrits sur 33 » est une part d'un tout, et deux
+        # barres laissaient le lecteur faire la division lui-même.
+        #
+        # Les deux parts sont `absents` et `communs`, JAMAIS `publies` : ce
+        # dernier compte les colonnes du fichier diffusé — huit, dont `FID` et
+        # `geometry`, qui ne figurent dans aucun dictionnaire. Les additionner
+        # aux 26 champs manquants donnait 34 pour un référentiel de 33, en
+        # mélangeant deux populations. C'est l'anneau qui l'a révélé : une part
+        # d'un tout ne pardonne pas ce que deux barres laissaient passer.
+        charts.anneau(
+            [tr("champs_absents"), tr("champs_publies")],
+            [int(ecart["absents"]), int(ecart["communs"])],
+            centre=f'{int(ecart["communs"])} / {int(ecart["decrits"])}',
+            sous_centre=tr("champs_publies"), height=260,
+        )
         ui.note(tr("note_publication", {
-            "decrits": ecart["decrits"], "publies": ecart["publies"],
+            "decrits": ecart["decrits"], "publies": ecart["communs"],
             "part": ui.fr_number(ecart["part_publiee"], 0),
         }))
         charts.table_twin(cadre.rename(columns={
             "etat": tr("col_etat"), "champs": tr("col_champs")}))
 
 
-def _carte_risque(tr, data):
+def _carte_risque(tr, data, hauteur_carte):
     def dessin(hauteur):
         return maps.choroplethe(
             data["cantons"], valeur="risque_pts", cle="carte_aff_risque",
@@ -189,10 +225,11 @@ def _carte_risque(tr, data):
         }))
 
     maps.carte(tr("carte_risque_titre"), cle="aff_risque", dessin=dessin,
-               legende=pied, sous_titre=tr("carte_risque_sous_titre"))
+               legende=pied, sous_titre=tr("carte_risque_sous_titre"),
+               hauteur=hauteur_carte)
 
 
-def _carte_parcs(tr, data, faits, corpus):
+def _carte_parcs(tr, data, faits, corpus, hauteur_carte):
     # Les DEUX inventaires sur une seule carte. En deux cartes, l'œil devait
     # faire l'aller-retour ; superposés sur le même fond, le fait central se
     # lit d'un coup : les points bleus tiennent dans le sud, les orange dans
@@ -240,10 +277,11 @@ def _carte_parcs(tr, data, faits, corpus):
         }))
 
     maps.carte(tr("parcs_carte_titre"), cle="aff_parcs", dessin=dessin,
-               legende=pied, sous_titre=tr("parcs_carte_sous_titre"))
+               legende=pied, sous_titre=tr("parcs_carte_sous_titre"),
+               hauteur=hauteur_carte)
 
 
-def _carte_angle_mort(tr, data):
+def _carte_angle_mort(tr, data, hauteur_carte):
     couverture = analytics.couverture(data["cantons"], data["tde"],
                                       data["coso"])
 
@@ -269,10 +307,11 @@ def _carte_angle_mort(tr, data):
         }))
 
     maps.carte(tr("limites_carte_titre"), cle="aff_angle", dessin=dessin,
-               legende=pied, sous_titre=tr("limites_carte_sous_titre"))
+               legende=pied, sous_titre=tr("limites_carte_sous_titre"),
+               hauteur=hauteur_carte)
 
 
-def _droite_diagnostic(tr, data, faits, corpus):
+def _droite_diagnostic(tr, data, faits, corpus, hauteur_carte):
     """Colonne 38 % — les trois cartes, une par onglet.
 
     Empilées, elles imposaient un défilement de trois hauteurs de carte et
@@ -291,11 +330,11 @@ def _droite_diagnostic(tr, data, faits, corpus):
     ], cle="cartes_affiche", libelle=tr("onglets_cartes"), fond="#FFFFFF")
 
     if retenu == "risque":
-        _carte_risque(tr, data)
+        _carte_risque(tr, data, hauteur_carte)
     elif retenu == "parcs":
-        _carte_parcs(tr, data, faits, corpus)
+        _carte_parcs(tr, data, faits, corpus, hauteur_carte)
     else:
-        _carte_angle_mort(tr, data)
+        _carte_angle_mort(tr, data, hauteur_carte)
 
 
 def render():
@@ -316,6 +355,14 @@ def render():
     # appelle les deux rendus sans rien se passer.
     etat = {}
 
+    # La colonne droite ne défile pas : ce qu'on y pose doit tenir dans la
+    # fenêtre, à la hauteur près. La zone est donc MESURÉE — le socle demande
+    # sa hauteur au navigateur — et la carte s'y règle. Une hauteur en dur
+    # remplissait un écran et un seul : celui sur lequel elle avait été
+    # choisie.
+    zone = hauteur_colonne_droite(ECHELLE)
+    hauteur_carte = maps.hauteur_dans(zone, reserve=RAIL_ONGLETS)
+
     def gauche(vue):
         if vue != "diagnostic":
             _zone(tr("zone_gauche"), tr(f"vue_{vue}"), 760)
@@ -333,10 +380,13 @@ def render():
 
     def droite(vue):
         if vue != "diagnostic":
-            _zone(tr("zone_droite"), tr(f"carte_{vue}"), 736)
+            # La zone entière : la colonne droite démarre au ras du bord haut
+            # et ne défile pas, donc son contenu la remplit ou laisse un vide.
+            _zone(tr("zone_droite"), tr(f"carte_{vue}"), int(zone))
             return
 
-        _droite_diagnostic(trs, etat["data"], etat["faits"], corpus)
+        _droite_diagnostic(trs, etat["data"], etat["faits"], corpus,
+                           hauteur_carte)
 
     # Le sous-titre est CALCULÉ : il suivra les données, comme tout le reste.
     render_affiche(
@@ -349,9 +399,7 @@ def render():
         vues=[{"key": cle, "label": tr(f"vue_{cle}")} for cle in VUES],
         rendu_gauche=gauche,
         rendu_droite=droite,
-        # 0,85 : réglé à l'écran sur un portable de 1 440 × 820, où la
-        # page à l'échelle 1 débordait avant même la première carte.
-        echelle=0.85,
+        echelle=ECHELLE,
         pied_gauche=tr("pied_source"),
         pied_droit=tr("pied_auteur"),
 
@@ -370,25 +418,29 @@ def render():
         marge_menu=True,
         # 0 aucune · 1 discrète · 2 la charte · 3 marquée.
         ombre_menu=3,
-        hauteur_menu=116,
+        # Deux rangées : l'identité et la langue, puis le rail des quatre
+        # vues. Mesuré à l'écran — 14 de rembourrage haut, 62 de bloc de
+        # titres, 12 d'écart, 36 de boutons, 20 de rembourrage bas.
+        hauteur_menu=144,
         # La silhouette vient de la MÊME couche que les cartes de la page :
         # un logo dessiné à part pourrait montrer des frontières que les
         # données ne connaissent pas.
         logo=silhouette_svg(brut["cantons"], hauteur=68,
                             couleur=VERT_TOGO, libelle=tr("logo_alt")),
         # ── Les deux colonnes ────────────────────────────────────────────
-        # Les deux colonnes sont deux surfaces IDENTIQUES : même fond, même
-        # trait que le menu. Le filet vertical devient alors inutile — deux
-        # cartes séparées par une gouttière n'ont pas besoin d'un trait de
-        # plus entre elles, qui viendrait s'ajouter à leurs deux bordures.
-        separation_colonnes=False,
-        couleur_separation=TEINTE_COLONNES,
+        # L'écran est PARTAGÉ, et il doit se voir. Le filet court sur toute la
+        # hauteur, du bord haut au pied, et la droite porte sa propre teinte :
+        # à fond identique et sans trait, les deux moitiés coulaient l'une
+        # dans l'autre et rien ne disait où finissait le propos, où commençait
+        # la carte.
+        separation_colonnes=True,
+        couleur_separation=FILET,
 
         colonne_gauche_poids=62,
         colonne_gauche_fond=TEINTE_COLONNES,
         colonne_gauche_bordure=TEINTE_COLONNES,
 
         colonne_droite_poids=38,
-        colonne_droite_fond=TEINTE_COLONNES,
-        colonne_droite_bordure=TEINTE_COLONNES,
+        colonne_droite_fond=TEINTE_DROITE,
+        colonne_droite_bordure=FILET,
     )
