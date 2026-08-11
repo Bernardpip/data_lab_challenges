@@ -1,0 +1,34 @@
+{
+  "synthese": {
+    "fr": "Vue d'ensemble",
+    "en": "Overview"
+  },
+  "technique": {
+    "fr": "Formations techniques",
+    "en": "Technical training"
+  },
+  "superieur": {
+    "fr": "Enseignement supérieur",
+    "en": "Higher education"
+  },
+  "financement": {
+    "fr": "Financement & insertion",
+    "en": "Funding & employment"
+  },
+  "recommandations": {
+    "fr": "Recommandations",
+    "en": "Recommendations"
+  },
+  "rapport": {
+    "fr": "Rapport",
+    "en": "Report"
+  },
+  "donnees": {
+    "fr": "Données",
+    "en": "Data"
+  },
+  "annexes": {
+    "fr": "Annexes",
+    "en": "Appendices"
+  }
+}

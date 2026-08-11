@@ -1,0 +1,26 @@
+# Environnements Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Livrable reconstructible — le zip se régénère depuis le dépôt
+*.zip
+
+# Systèmes de fichiers
+.DS_Store
+Thumbs.db
+
+# Fichiers verrous bureautiques
+~$*
+
+# Outils
+.playwright-mcp/
+requirement.md
+
+# Réglages locaux de l'assistant
+.claude/

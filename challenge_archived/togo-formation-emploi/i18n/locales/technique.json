@@ -1,0 +1,137 @@
+{
+  "note_filieres": {
+    "fr": "Trois établissements sur quatre déclarent une formation professionnelle sans intitulé de métier. Les filières diplômantes (BTS, licence) restent marginales : un employeur ne peut pas savoir ce que sait faire un sortant.",
+    "en": "Three institutions in four report vocational training with no occupation named. Degree programmes (BTS, bachelor's) remain marginal: an employer cannot tell what a leaver is able to do."
+  },
+  "note_statuts": {
+    "fr": "Le champ d'origine peut contenir plusieurs états à la fois (« construit et utilisé, en construction »). Chaque établissement est ramené à son état le plus avancé : sans cela, douze combinaisons apparaîtraient pour cinq situations réelles.",
+    "en": "The source field can hold several states at once (“built and in use, under construction”). Each institution is reduced to its most advanced state: without this, twelve combinations would appear for five real situations."
+  },
+  "note_prefectures": {
+    "fr": "<b>{tete}</b> — le Grand Lomé — rassemblent à elles seules <b>{total_tete}</b> établissements, contre <b>{reste}</b> pour les {autres} autres préfectures réunies. L'accès à une formation technique dépend d'abord du lieu de résidence.",
+    "en": "<b>{tete}</b> — Greater Lomé — hold on their own <b>{total_tete}</b> institutions, against <b>{reste}</b> for the {autres} remaining prefectures combined. Access to technical training depends first of all on where you live."
+  },
+  "et": { "fr": " et ", "en": " and " },
+
+  "colonne_filiere": { "fr": "Filière", "en": "Programme" },
+  "colonne_statut": { "fr": "Statut", "en": "Status" },
+  "colonne_etablissements": { "fr": "Établissements", "en": "Institutions" },
+  "colonne_prefecture": { "fr": "Préfecture", "en": "Prefecture" },
+  "colonne_region": { "fr": "Région", "en": "Region" },
+
+  "tuile_selectionnes": { "fr": "Établissements sélectionnés", "en": "Selected institutions" },
+  "tuile_selectionnes_detail": { "fr": "sur {total} au total", "en": "of {total} in total" },
+  "tuile_geolocalises": { "fr": "Géolocalisés", "en": "Geolocated" },
+  "tuile_geolocalises_detail": { "fr": "{part} % de la sélection", "en": "{part} % of the selection" },
+  "tuile_prefectures": { "fr": "Préfectures couvertes", "en": "Prefectures covered" },
+  "tuile_prefectures_detail": { "fr": "sur {total} recensées", "en": "of {total} recorded" },
+  "tuile_filieres": { "fr": "Filières distinctes", "en": "Distinct programmes" },
+  "tuile_filieres_detail": { "fr": "sur {total} modalités recensées", "en": "of {total} categories recorded" },
+
+  "carte_filieres_titre": { "fr": "Filières proposées", "en": "Programmes offered" },
+  "carte_filieres_sous_titre": { "fr": "Nombre d'établissements par filière", "en": "Number of institutions per programme" },
+  "carte_bati_titre": { "fr": "État du bâti", "en": "Building condition" },
+  "carte_bati_sous_titre": { "fr": "Statut d'activité déclaré", "en": "Reported operating status" },
+  "carte_prefectures_titre": { "fr": "Préfectures les mieux dotées", "en": "Best-served prefectures" },
+  "carte_prefectures_sous_titre": { "fr": "Les 8 premières préfectures par nombre d'établissements", "en": "The top 8 prefectures by number of institutions" },
+  "carte_implantation_titre": { "fr": "Implantation", "en": "Locations" },
+  "carte_implantation_sous_titre": {
+    "fr": "Un point par établissement — survolez un point pour voir son nom, sa préfecture et sa filière",
+    "en": "One dot per institution — hover a dot to see its name, prefecture and programme"
+  },
+
+  "info_aucune_annee": {
+    "fr": "Aucune année de création renseignée dans la sélection.",
+    "en": "No opening year reported within the selection."
+  },
+  "tuile_dates": { "fr": "Établissements datés", "en": "Dated institutions" },
+  "tuile_dates_detail": { "fr": "sur {total} — {part} % renseignés", "en": "of {total} — {part} % reported" },
+  "tuile_recents": { "fr": "Créés depuis 2010", "en": "Opened since 2010" },
+  "tuile_recents_detail": { "fr": "{part} % du parc daté", "en": "{part} % of the dated stock" },
+  "tuile_decennie": { "fr": "Décennie la plus active", "en": "Busiest decade" },
+  "tuile_decennie_detail": { "fr": "{creations} créations", "en": "{creations} openings" },
+  "tuile_ancien": { "fr": "Plus ancien établissement", "en": "Oldest institution" },
+  "tuile_ancien_detail": { "fr": "première implantation recensée", "en": "first recorded location" },
+
+  "carte_rythme_titre": { "fr": "Rythme de création des établissements", "en": "Pace of institution openings" },
+  "carte_rythme_sous_titre": {
+    "fr": "Nombre d'établissements créés par décennie — la seule série longue disponible à l'échelle régionale",
+    "en": "Institutions opened per decade — the only long series available at regional level"
+  },
+  "unite_creations": { "fr": "créations", "en": "openings" },
+  "annotation_decennie_incomplete": { "fr": "décennie\nincomplète", "en": "incomplete\ndecade" },
+  "note_rythme": {
+    "fr": "L'offre technique est <b>récente</b> : plus de 80 % du parc daté a été créé depuis 1990, et les années 2010 concentrent à elles seules <b>{creations} créations</b>. La dernière colonne ne couvre que 2020-2021, elle n'est pas comparable aux précédentes.",
+    "en": "Technical provision is <b>recent</b>: over 80 % of the dated stock was created since 1990, and the 2010s alone account for <b>{creations} openings</b>. The last column covers only 2020-2021 and is not comparable with the others."
+  },
+  "colonne_decennie": { "fr": "Décennie", "en": "Decade" },
+  "colonne_creations": { "fr": "Créations", "en": "Openings" },
+  "colonne_cumul": { "fr": "Parc cumulé", "en": "Cumulative stock" },
+
+  "carte_ou_quand_titre": { "fr": "Où l'offre s'est-elle créée, et quand ?", "en": "Where was provision created, and when?" },
+  "carte_ou_quand_sous_titre": {
+    "fr": "Créations par région et par décennie depuis 1990 — plus la case est foncée, plus la région a été dotée sur la période",
+    "en": "Openings by region and decade since 1990 — the darker the cell, the more the region was served over the period"
+  },
+  "info_pas_assez_datees": {
+    "fr": "Pas assez de données datées pour cette ventilation.",
+    "en": "Not enough dated records for this breakdown."
+  },
+  "note_ou_quand": {
+    "fr": "La concentration ne s'est pas installée d'un coup : Maritime capte la majorité des créations à <b>chaque</b> décennie. Le signal encourageant se lit dans la dernière colonne : sur 2020-2021, les créations se répartissent de façon bien plus équilibrée entre les régions, y compris aux Savanes, restées à l'écart de toute la vague des années 2000.",
+    "en": "Concentration did not appear overnight: Maritime captures most openings in <b>every</b> decade. The encouraging signal is in the last column: over 2020-2021, openings are spread far more evenly across regions, including Savanes, which stayed outside the whole 2000s wave."
+  },
+
+  "tuile_sport": { "fr": "Avec terrain de sport", "en": "With a sports field" },
+  "tuile_sport_detail": { "fr": "{nombre} établissements sans", "en": "{nombre} institutions without" },
+  "tuile_wc": { "fr": "Équipés de WC", "en": "With toilets" },
+  "tuile_wc_detail": { "fr": "{part} % non renseignés", "en": "{part} % not reported" },
+  "tuile_foncier": { "fr": "Sur foncier privé", "en": "On private land" },
+  "tuile_foncier_detail": { "fr": "pérennité dépendante de baux privés", "en": "continuity depends on private leases" },
+  "tuile_localites": { "fr": "Localités couvertes", "en": "Localities covered" },
+  "tuile_localites_detail": { "fr": "{cantons} cantons · {communes} communes", "en": "{cantons} cantons · {communes} municipalities" },
+
+  "carte_sanitaire_titre": { "fr": "Équipement sanitaire", "en": "Sanitation" },
+  "carte_sanitaire_sous_titre": {
+    "fr": "Équipement le plus abouti déclaré par l'établissement",
+    "en": "Most complete facility reported by the institution"
+  },
+  "note_sanitaire": {
+    "fr": "Le jeu de données annonce documenter « la qualité des infrastructures » : ces champs sont les seuls qui la mesurent. <b>{part} %</b> des établissements ne la renseignent pas — l'absence de réponse est elle-même un signal sur l'état du parc.",
+    "en": "The dataset claims to document “infrastructure quality”: these fields are the only ones that measure it. <b>{part} %</b> of institutions leave it blank — that silence is itself a signal about the state of the stock."
+  },
+  "colonne_equipement": { "fr": "Équipement", "en": "Facility" },
+
+  "carte_foncier_titre": { "fr": "Statut foncier", "en": "Land tenure" },
+  "carte_foncier_sous_titre": {
+    "fr": "Sur quel type de terrain l'offre est installée",
+    "en": "What kind of land provision sits on"
+  },
+  "note_foncier": {
+    "fr": "Près des deux tiers des établissements sont sur du foncier <b>privé</b>, contre 14 % sur le domaine public. La continuité du service dépend donc largement de baux privés que la puissance publique ne maîtrise pas.",
+    "en": "Nearly two thirds of institutions sit on <b>private</b> land, against 14 % on public land. Service continuity therefore rests largely on private leases the State does not control."
+  },
+  "colonne_foncier": { "fr": "Statut foncier", "en": "Land tenure" },
+
+  "carte_ouverture_titre": { "fr": "Amplitude d'ouverture hebdomadaire", "en": "Weekly opening hours" },
+  "carte_ouverture_sous_titre": {
+    "fr": "Nombre de jours d'ouverture déclarés par semaine",
+    "en": "Number of opening days reported per week"
+  },
+  "unite_etablissements": { "fr": "établissements", "en": "institutions" },
+  "note_ouverture": {
+    "fr": "<b>{part} %</b> des établissements ouvrent 5 jours par semaine et seulement <b>{au_dela}</b> vont au-delà. Dans les préfectures saturées du Grand Lomé, étendre les créneaux est le levier de capacité le moins coûteux — aucun mètre carré à construire.",
+    "en": "<b>{part} %</b> of institutions open five days a week and only <b>{au_dela}</b> go beyond. In the saturated prefectures of Greater Lomé, extending time slots is the cheapest capacity lever — not a single square metre to build."
+  },
+  "colonne_ouverture": { "fr": "Ouverture", "en": "Opening" },
+
+  "carte_liste_titre": { "fr": "Liste des établissements", "en": "List of institutions" },
+  "carte_liste_sous_titre": {
+    "fr": "{nombre} établissements dans la sélection courante",
+    "en": "{nombre} institutions in the current selection"
+  },
+  "colonne_etablissement": { "fr": "Établissement", "en": "Institution" },
+  "colonne_commune": { "fr": "Commune", "en": "Municipality" },
+  "colonne_creation": { "fr": "Création", "en": "Opened" },
+  "colonne_sport": { "fr": "Terrain de sport", "en": "Sports field" }
+}

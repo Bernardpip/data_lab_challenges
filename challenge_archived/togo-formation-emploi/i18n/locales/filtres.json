@@ -1,0 +1,82 @@
+{
+  "region": {
+    "fr": "Région",
+    "en": "Region"
+  },
+  "prefecture": {
+    "fr": "Préfecture",
+    "en": "Prefecture"
+  },
+  "filiere": {
+    "fr": "Filière",
+    "en": "Programme"
+  },
+  "statut": {
+    "fr": "Statut",
+    "en": "Status"
+  },
+  "annees": {
+    "fr": "Années",
+    "en": "Years"
+  },
+  "aide_prefecture": {
+    "fr": "Limitée aux préfectures des régions sélectionnées.",
+    "en": "Restricted to prefectures within the selected regions."
+  },
+  "periode": {
+    "fr": "Période",
+    "en": "Period"
+  },
+  "mesures_retenues": {
+    "fr": "Mesures retenues :",
+    "en": "Measurements kept:"
+  },
+  "ville": {
+    "fr": "Ville",
+    "en": "City"
+  },
+  "type": {
+    "fr": "Type",
+    "en": "Type"
+  },
+  "niveaux": {
+    "fr": "Niveaux",
+    "en": "Levels"
+  },
+  "domaine": {
+    "fr": "Domaine",
+    "en": "Area"
+  },
+  "niveau": {
+    "fr": "Niveau",
+    "en": "Level"
+  },
+  "completude": {
+    "fr": "Complétude",
+    "en": "Coverage"
+  },
+  "fichier": {
+    "fr": "Fichier",
+    "en": "File"
+  },
+  "ingredient": {
+    "fr": "Ingrédient",
+    "en": "Input file"
+  },
+  "producteur": {
+    "fr": "Producteur",
+    "en": "Producer"
+  },
+  "usage": {
+    "fr": "Usage",
+    "en": "Use"
+  },
+  "solidite": {
+    "fr": "Solidité",
+    "en": "Robustness"
+  },
+  "annees_exclues": {
+    "fr": "L'intervalle {debut}-{fin} exclut également les {nombre} établissements dont l'année de création n'est pas renseignée.",
+    "en": "The {debut}-{fin} range also excludes the {nombre} institutions whose opening year is not reported."
+  }
+}

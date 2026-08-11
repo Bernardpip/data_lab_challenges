@@ -1,0 +1,510 @@
+{
+  "serie_acces": {
+    "fr": "Accès",
+    "en": "Access"
+  },
+  "serie_depense": {
+    "fr": "Dépense/étudiant",
+    "en": "Spending/student"
+  },
+  "info_deux_series_vides": {
+    "fr": "L'intervalle retenu ne contient de mesure pour aucune des deux séries. Élargissez la période.",
+    "en": "The selected range contains no measurement for either series. Widen the period."
+  },
+  "tuile_taux": {
+    "fr": "Taux d'inscription ({annee})",
+    "en": "Enrolment rate ({annee})"
+  },
+  "tuile_taux_detail": {
+    "fr": "contre {valeur} % en {annee}",
+    "en": "against {valeur} % in {annee}"
+  },
+  "tuile_progression": {
+    "fr": "Progression de l'accès",
+    "en": "Growth in access"
+  },
+  "tuile_depense": {
+    "fr": "Dépense par étudiant ({annee})",
+    "en": "Spending per student ({annee})"
+  },
+  "unite_pib_hab": {
+    "fr": "% du PIB/hab.",
+    "en": "% of GDP/capita"
+  },
+  "tuile_depense_detail": {
+    "fr": "−{part} % depuis {annee}",
+    "en": "−{part} % since {annee}"
+  },
+  "tuile_annees_documentees": {
+    "fr": "Années documentées",
+    "en": "Years documented"
+  },
+  "tuile_annees_documentees_detail": {
+    "fr": "sur l'intervalle {debut}-{fin}",
+    "en": "over the {debut}-{fin} range"
+  },
+  "carte_dynamique_titre": {
+    "fr": "Dynamique d'inscription dans l'enseignement supérieur",
+    "en": "Higher education enrolment dynamics"
+  },
+  "carte_dynamique_sous_titre": {
+    "fr": "Taux brut de scolarisation, en % de la classe d'âge ({debut}-{fin})",
+    "en": "Gross enrolment rate, as % of the age cohort ({debut}-{fin})"
+  },
+  "legende_taux": {
+    "fr": "Taux brut d'inscription",
+    "en": "Gross enrolment rate"
+  },
+  "note_dynamique": {
+    "fr": "Massification continue mais inégale : de <b>{debut_valeur} %</b> d'une classe d'âge en {debut_annee} à <b>{fin_valeur} %</b> en {fin_annee}, soit une multiplication par <b>{facteur}</b>. L'essentiel de la progression se joue à partir des années 2000 : c'est cette vague qui pèse aujourd'hui sur les moyens et sur le marché du travail.",
+    "en": "Continuous but uneven expansion: from <b>{debut_valeur} %</b> of an age cohort in {debut_annee} to <b>{fin_valeur} %</b> in {fin_annee}, a multiplication by <b>{facteur}</b>. Most of the growth happens from the 2000s onwards: it is that wave which now weighs on resources and on the labour market."
+  },
+  "colonne_annee": {
+    "fr": "Année",
+    "en": "Year"
+  },
+  "colonne_taux_brut": {
+    "fr": "Taux brut (%)",
+    "en": "Gross rate (%)"
+  },
+  "carte_depense_titre": {
+    "fr": "Dépense publique par étudiant",
+    "en": "Public spending per student"
+  },
+  "carte_depense_sous_titre": {
+    "fr": "En % du PIB par habitant ({debut}-{fin})",
+    "en": "As % of GDP per capita ({debut}-{fin})"
+  },
+  "legende_depense": {
+    "fr": "Dépense par étudiant",
+    "en": "Spending per student"
+  },
+  "note_depense": {
+    "fr": "Trajectoire inverse de celle des effectifs : <b>{debut_valeur} %</b> du PIB par habitant en {debut_annee}, <b>{fin_valeur} %</b> en {fin_annee}. L'État finance beaucoup plus d'étudiants, mais consacre à chacun une part décroissante de la richesse par habitant.",
+    "en": "The mirror image of enrolment: <b>{debut_valeur} %</b> of GDP per capita in {debut_annee}, <b>{fin_valeur} %</b> in {fin_annee}. The State funds far more students, but devotes to each a shrinking share of wealth per head."
+  },
+  "colonne_depense_pib": {
+    "fr": "Dépense (% PIB/hab.)",
+    "en": "Spending (% GDP/capita)"
+  },
+  "tuile_etablissements": {
+    "fr": "Établissements ({annee})",
+    "en": "Institutions ({annee})"
+  },
+  "tuile_etablissements_detail": {
+    "fr": "répartis sur {villes} villes",
+    "en": "across {villes} cities"
+  },
+  "tuile_prive": {
+    "fr": "Part du privé",
+    "en": "Private share"
+  },
+  "tuile_prive_detail": {
+    "fr": "{publics} établissements publics au total",
+    "en": "{publics} public institutions in total"
+  },
+  "tuile_lome": {
+    "fr": "Concentration à Lomé",
+    "en": "Concentration in Lomé"
+  },
+  "tuile_lome_detail": {
+    "fr": "des établissements du supérieur",
+    "en": "of higher education institutions"
+  },
+  "tuile_lome_detail_filtre": {
+    "fr": "des établissements retenus",
+    "en": "of the institutions retained"
+  },
+  "carte_implantation_titre": {
+    "fr": "Implantation du réseau",
+    "en": "Network locations"
+  },
+  "carte_implantation_sous_titre": {
+    "fr": "Un cercle par ville — sa surface est proportionnelle au nombre d'établissements",
+    "en": "One circle per city — its area is proportional to the number of institutions"
+  },
+  "note_carte_derivee": {
+    "fr": "Le fichier du supérieur ne porte <b>aucune coordonnée</b> : il ne connaît que des noms de villes. Chaque ville est donc placée au <b>barycentre des établissements techniques de sa préfecture</b>, seul fichier géolocalisé du corpus. Le point marque le centre de gravité de l'offre alentour, pas le centre exact de la ville.",
+    "en": "The higher education file carries <b>no coordinates</b>: it knows only city names. Each city is therefore placed at the <b>centroid of the technical institutions in its prefecture</b>, the corpus's only geolocated file. The dot marks the centre of gravity of nearby provision, not the city's exact centre."
+  },
+  "note_villes_sans_position": {
+    "fr": "Villes sans position calculable : <b>{villes}</b>. Elles restent comptées dans les graphes mais n'apparaissent pas sur la carte.",
+    "en": "Cities with no computable position: <b>{villes}</b>. They are still counted in the charts but do not appear on the map."
+  },
+  "carte_reseau_titre": {
+    "fr": "Réseau d'établissements par ville",
+    "en": "Institution network by city"
+  },
+  "carte_reseau_sous_titre": {
+    "fr": "Répartition public / privé des établissements ayant fonctionné",
+    "en": "Public / private split of institutions that operated"
+  },
+  "statut_public": {
+    "fr": "Public",
+    "en": "Public"
+  },
+  "statut_prive": {
+    "fr": "Privé",
+    "en": "Private"
+  },
+  "note_reseau": {
+    "fr": "Le réseau est à la fois <b>privé</b> ({prive} %) et <b>concentré</b> ({lome} % à Lomé). {suite}",
+    "en": "The network is both <b>private</b> ({prive} %) and <b>concentrated</b> ({lome} % in Lomé). {suite}"
+  },
+  "note_reseau_filtre": {
+    "fr": "Le réseau est <b>concentré</b> ({lome} % à Lomé). {suite}",
+    "en": "The network is <b>concentrated</b> ({lome} % in Lomé). {suite}"
+  },
+  "reseau_autres_villes": {
+    "fr": "Les {autres} autres villes se partagent <b>{reste}</b> établissements, dont <b>{publics}</b> publics.",
+    "en": "The other {autres} cities share <b>{reste}</b> institutions, of which <b>{publics}</b> are public."
+  },
+  "reseau_une_autre_ville": {
+    "fr": "La {autres} autre ville en compte <b>{reste}</b>, dont <b>{publics}</b> public.",
+    "en": "The remaining {autres} city has <b>{reste}</b>, of which <b>{publics}</b> public."
+  },
+  "colonne_ville": {
+    "fr": "Ville",
+    "en": "City"
+  },
+  "colonne_total": {
+    "fr": "Total",
+    "en": "Total"
+  },
+  "carte_types_titre": {
+    "fr": "Universités et autres établissements",
+    "en": "Universities and other institutions"
+  },
+  "carte_types_sous_titre": {
+    "fr": "Ventilation par type et par statut",
+    "en": "Breakdown by type and status"
+  },
+  "note_types": {
+    "fr": "Les universités sont très peu nombreuses (<b>{universites}</b> sur {total}) : l'essentiel du réseau est constitué d'« établissements » privés de petite taille. Cette fragmentation complique le pilotage de la qualité.",
+    "en": "Universities are very few (<b>{universites}</b> of {total}): the bulk of the network consists of small private “institutions”. This fragmentation complicates quality oversight."
+  },
+  "serie_dices": {
+    "fr": "Indicateurs DICES-TG",
+    "en": "DICES-TG indicators"
+  },
+  "aide_periode_cles": {
+    "fr": "Six exercices documentés (2014-2019), et toutes les séries n'ont pas la même amplitude.",
+    "en": "Six documented years (2014-2019), and the series do not all span the same range."
+  },
+  "info_effectifs_insuffisants": {
+    "fr": "Moins de deux mesures d'effectifs sur cet intervalle. Élargissez la période.",
+    "en": "Fewer than two headcount measurements in this range. Widen the period."
+  },
+  "tuile_indisponible": {
+    "fr": "moins de deux mesures sur la période",
+    "en": "fewer than two measurements over the period"
+  },
+  "tuile_variation": {
+    "fr": "{variation} % depuis {annee}",
+    "en": "{variation} % since {annee}"
+  },
+  "tuile_effectifs": {
+    "fr": "Effectifs étudiants",
+    "en": "Student headcount"
+  },
+  "tuile_feminite": {
+    "fr": "Part des femmes",
+    "en": "Female share"
+  },
+  "tuile_scientifiques": {
+    "fr": "Filières scientifiques",
+    "en": "Scientific programmes"
+  },
+  "tuile_ratio": {
+    "fr": "Étudiants par enseignant",
+    "en": "Students per teacher"
+  },
+  "carte_effectifs_titre": {
+    "fr": "Effectifs étudiants inscrits",
+    "en": "Enrolled student headcount"
+  },
+  "carte_effectifs_sous_titre": {
+    "fr": "En nombre d'étudiants — la première mesure absolue du corpus",
+    "en": "In number of students — the corpus's first absolute measure"
+  },
+  "unite_etudiants": {
+    "fr": "étudiants",
+    "en": "students"
+  },
+  "note_effectifs": {
+    "fr": "De <b>{debut_valeur}</b> étudiants en {debut_annee} à <b>{fin_valeur}</b> en {fin_annee}, soit <b>{variation} %</b>. Les huit autres ressources ne publiaient qu'un taux brut de scolarisation : impossible d'y lire combien d'étudiants sont réellement inscrits une année donnée. C'est ce fichier qui le permet — l'année {manquante} manque toutefois à la série.",
+    "en": "From <b>{debut_valeur}</b> students in {debut_annee} to <b>{fin_valeur}</b> in {fin_annee}, that is <b>{variation} %</b>. The other eight resources published only a gross enrolment rate: they could not say how many students are actually enrolled in a given year. This file can — although {manquante} is missing from the series."
+  },
+  "colonne_etudiants_inscrits": {
+    "fr": "Étudiants inscrits",
+    "en": "Enrolled students"
+  },
+  "carte_ratio_titre": {
+    "fr": "Ratio étudiant / enseignant",
+    "en": "Student / teacher ratio"
+  },
+  "carte_ratio_sous_titre": {
+    "fr": "Universités publiques — un ratio qui baisse est une amélioration",
+    "en": "Public universities — a falling ratio is an improvement"
+  },
+  "info_ratio_insuffisant": {
+    "fr": "Moins de deux mesures de ratio sur cet intervalle.",
+    "en": "Fewer than two ratio measurements in this range."
+  },
+  "legende_ratio": {
+    "fr": "Étudiants par enseignant",
+    "en": "Students per teacher"
+  },
+  "note_ratio": {
+    "fr": "<b>{debut_valeur}</b> étudiants par enseignant en {debut_annee}, <b>{fin_valeur}</b> en {fin_annee} : une amélioration de <b>{variation} %</b>. C'est un résultat <b>contraire</b> au récit de l'effet ciseaux : sur ces années, l'encadrement s'améliore pendant que les effectifs augmentent — donc le recrutement d'enseignants a été plus rapide que la massification.<br><br>Réserve : le ratio ne couvre que les universités <b>publiques</b>, qui accueillent environ trois quarts des étudiants, et ne repose que sur {n} mesures.",
+    "en": "<b>{debut_valeur}</b> students per teacher in {debut_annee}, <b>{fin_valeur}</b> in {fin_annee}: an improvement of <b>{variation} %</b>. This result <b>contradicts</b> the scissors-effect narrative: over these years, staffing improves while enrolment grows — so teacher recruitment outpaced mass enrolment.<br><br>Caveat: the ratio covers only <b>public</b> universities, which host about three quarters of students, and rests on just {n} measurements."
+  },
+  "colonne_ratio": {
+    "fr": "Étudiants par enseignant",
+    "en": "Students per teacher"
+  },
+  "carte_enseignants_titre": {
+    "fr": "Combien d'enseignants ? — indicateur reconstitué",
+    "en": "How many teachers? — a reconstructed indicator"
+  },
+  "carte_enseignants_sous_titre": {
+    "fr": "Le fichier ne publie pas les effectifs enseignants, mais il publie de quoi les retrouver sans hypothèse",
+    "en": "The file does not publish teacher headcounts, but it publishes what is needed to recover them without assumptions"
+  },
+  "unite_enseignants": {
+    "fr": "enseignants",
+    "en": "teachers"
+  },
+  "note_enseignants_methode": {
+    "fr": "Le calcul n'estime rien. Les deux densités publiées — étudiants pour 100 000 habitants, puis étudiants du public pour 100 000 habitants — partagent le même dénominateur de population : leur rapport donne donc <b>exactement</b> la part du public (<b>{part} %</b> en {annee}). Appliquée aux effectifs et divisée par le ratio d'encadrement, elle donne le nombre d'enseignants.",
+    "en": "The calculation estimates nothing. The two published densities — students per 100,000 inhabitants, then public-university students per 100,000 inhabitants — share the same population denominator: their ratio therefore gives <b>exactly</b> the public share (<b>{part} %</b> in {annee}). Applied to headcounts and divided by the staffing ratio, it yields the number of teachers."
+  },
+  "note_enseignants_resultat": {
+    "fr": "Résultat : environ <b>{debut}</b> enseignants en {annee_debut} et <b>{fin}</b> en {annee_fin}, soit <b>+{croissance} %</b> — quand les effectifs étudiants publics ne progressent que de <b>{croissance_etudiants} %</b> sur la même période. C'est l'explication chiffrée de l'amélioration du ratio.<br><br><b>Indicateur dérivé</b>, signalé comme tel : il n'est publié nulle part et dépend de la justesse des quatre séries qui le composent.",
+    "en": "Result: about <b>{debut}</b> teachers in {annee_debut} and <b>{fin}</b> in {annee_fin}, that is <b>+{croissance} %</b> — while public student headcounts grow by only <b>{croissance_etudiants} %</b> over the same period. This is the quantified explanation of the improving ratio.<br><br>A <b>derived indicator</b>, flagged as such: it is published nowhere and depends on the accuracy of the four series composing it."
+  },
+  "colonne_etudiants_total": {
+    "fr": "Étudiants (total)",
+    "en": "Students (total)"
+  },
+  "colonne_part_publique": {
+    "fr": "Part du public (%)",
+    "en": "Public share (%)"
+  },
+  "colonne_etudiants_publics": {
+    "fr": "Étudiants du public",
+    "en": "Public-university students"
+  },
+  "colonne_ratio_court": {
+    "fr": "Ratio",
+    "en": "Ratio"
+  },
+  "colonne_enseignants_calcule": {
+    "fr": "Enseignants (calculé)",
+    "en": "Teachers (computed)"
+  },
+  "carte_feminisation_titre": {
+    "fr": "Féminisation — et où elle s'arrête",
+    "en": "Gender balance — and where it stops"
+  },
+  "carte_feminisation_sous_titre": {
+    "fr": "Part des femmes dans l'ensemble du supérieur, puis dans les seules filières scientifiques et technologiques",
+    "en": "Female share across higher education, then in scientific and technological programmes only"
+  },
+  "info_feminisation_insuffisante": {
+    "fr": "Moins de deux mesures de féminisation sur cet intervalle.",
+    "en": "Fewer than two gender-balance measurements in this range."
+  },
+  "legende_feminite": {
+    "fr": "Part des femmes (ensemble du supérieur)",
+    "en": "Female share (all higher education)"
+  },
+  "legende_filles_sciences": {
+    "fr": "Part des filles (filières scientifiques)",
+    "en": "Female share (scientific programmes)"
+  },
+  "note_feminisation": {
+    "fr": "La part des femmes passe de <b>{debut_valeur} %</b> en {debut_annee} à <b>{fin_valeur} %</b> en {fin_annee}.{bascule}",
+    "en": "The female share rises from <b>{debut_valeur} %</b> in {debut_annee} to <b>{fin_valeur} %</b> in {fin_annee}.{bascule}"
+  },
+  "feminisation_bascule": {
+    "fr": " La parité est franchie en <b>{annee}</b> : les femmes deviennent majoritaires parmi les étudiants.",
+    "en": " Parity is crossed in <b>{annee}</b>: women become the majority among students."
+  },
+  "note_ecart_feminisation": {
+    "fr": "<b>Le chiffre d'ensemble masque l'essentiel.</b> La même année {annee}, les femmes représentent <b>{feminite} %</b> des étudiants mais seulement <b>{scientifiques} %</b> des étudiants des filières scientifiques et technologiques — un écart de <b>{ecart} points</b>. La parité est atteinte en volume, pas en orientation. C'est le seul endroit du corpus où une inégalité de parcours devient mesurable, et elle ne repose que sur {annees} années communes.",
+    "en": "<b>The headline figure hides the essential.</b> In that same year {annee}, women make up <b>{feminite} %</b> of students but only <b>{scientifiques} %</b> of students in scientific and technological programmes — a gap of <b>{ecart} points</b>. Parity is reached in volume, not in orientation. It is the only place in the corpus where an inequality of pathways becomes measurable, and it rests on just {annees} common years."
+  },
+  "note_doublon_feminisation": {
+    "fr": "<b>Doublon dans la source.</b> Le fichier publie deux séries de féminisation — « Proportion de femmes » (2014-2017) et « Rapport de féminité des étudiants » (2015-2019) — dont les valeurs sont <b>identiques</b> sur les trois années communes. C'est le même indicateur diffusé deux fois ; la série longue est retenue.",
+    "en": "<b>Duplicate in the source.</b> The file publishes two gender-balance series — “Proportion de femmes” (2014-2017) and “Rapport de féminité des étudiants” (2015-2019) — whose values are <b>identical</b> over the three common years. It is the same indicator released twice; the long series is retained."
+  },
+  "colonne_part_femmes": {
+    "fr": "Part des femmes (%)",
+    "en": "Female share (%)"
+  },
+  "carte_scientifiques_titre": {
+    "fr": "Filières scientifiques et technologiques",
+    "en": "Scientific and technological programmes"
+  },
+  "carte_scientifiques_sous_titre": {
+    "fr": "Part des étudiants inscrits dans une filière scientifique",
+    "en": "Share of students enrolled in a scientific programme"
+  },
+  "info_scientifiques_insuffisant": {
+    "fr": "Moins de deux mesures sur cet intervalle.",
+    "en": "Fewer than two measurements in this range."
+  },
+  "legende_scientifiques": {
+    "fr": "Filières scientifiques",
+    "en": "Scientific programmes"
+  },
+  "note_scientifiques": {
+    "fr": "De <b>{debut} %</b> à <b>{fin} %</b> entre {annee_debut} et {annee_fin}, soit <b>+{points} points</b>. La progression est réelle mais le niveau reste bas : plus de trois étudiants sur quatre suivent une filière non scientifique, alors que les besoins en compétences techniques sont le point de départ de tout ce travail.",
+    "en": "From <b>{debut} %</b> to <b>{fin} %</b> between {annee_debut} and {annee_fin}, that is <b>+{points} points</b>. The rise is real but the level stays low: more than three students in four follow a non-scientific programme, while the need for technical skills is the starting point of this whole work."
+  },
+  "colonne_part_scientifique": {
+    "fr": "Part scientifique (%)",
+    "en": "Scientific share (%)"
+  },
+  "carte_francs_titre": {
+    "fr": "La dépense par étudiant, enfin en francs",
+    "en": "Spending per student, at last in francs"
+  },
+  "carte_francs_sous_titre": {
+    "fr": "Ce que le reste du corpus ne permettait pas de trancher",
+    "en": "What the rest of the corpus could not settle"
+  },
+  "info_francs_insuffisant": {
+    "fr": "Moins de deux années où effectifs et dépense unitaire coïncident.",
+    "en": "Fewer than two years where headcount and unit spending coincide."
+  },
+  "note_francs": {
+    "fr": "Tout le tableau de bord répète que la chute de <b>−72 %</b> de la dépense par étudiant est exprimée en <b>% du PIB par habitant</b> et ne prouve pas une baisse en francs. Ce fichier donne les francs, et confirme la nuance : <b>{debut} F</b> par étudiant en {annee_debut}, <b>{fin} F</b> en {annee_fin} — soit <b>{variation} %</b> en nominal, donc quasi stable. Hors inflation, c'est une baisse réelle modérée, non un effondrement.",
+    "en": "The whole dashboard repeats that the <b>−72 %</b> fall in spending per student is expressed as a <b>% of GDP per capita</b> and does not prove a fall in francs. This file gives the francs, and confirms the nuance: <b>{debut} F</b> per student in {annee_debut}, <b>{fin} F</b> in {annee_fin} — that is <b>{variation} %</b> in nominal terms, so nearly flat. Net of inflation, it is a moderate real decline, not a collapse."
+  },
+  "note_francs_masse": {
+    "fr": "Rapporté à la masse, l'effort <b>augmente</b> : les effectifs progressant de <b>{effectifs} %</b>, la dépense totale consacrée aux étudiants passe de <b>{debut}</b> à <b>{fin} milliards de FCFA</b>, soit <b>+{variation} %</b>. Le décrochage est relatif à la richesse nationale, pas absolu.",
+    "en": "Related to the total, effort <b>rises</b>: with headcounts growing by <b>{effectifs} %</b>, total spending on students moves from <b>{debut}</b> to <b>{fin} billion FCFA</b>, that is <b>+{variation} %</b>. The decoupling is relative to national wealth, not absolute."
+  },
+  "colonne_depense_fcfa": {
+    "fr": "Dépense par étudiant (FCFA)",
+    "en": "Spending per student (FCFA)"
+  },
+  "colonne_etudiants": {
+    "fr": "Étudiants",
+    "en": "Students"
+  },
+  "colonne_depense_totale": {
+    "fr": "Dépense totale (M FCFA)",
+    "en": "Total spending (M FCFA)"
+  },
+  "carte_autres_titre": {
+    "fr": "Les autres séries du fichier",
+    "en": "The file's other series"
+  },
+  "carte_autres_sous_titre": {
+    "fr": "Indicateurs non demandés par le cahier des charges, mais publiés dans la même ressource",
+    "en": "Indicators not required by the brief, but published in the same resource"
+  },
+  "colonne_indicateur": {
+    "fr": "Indicateur",
+    "en": "Indicator"
+  },
+  "colonne_unite": {
+    "fr": "Unité",
+    "en": "Unit"
+  },
+  "colonne_debut": {
+    "fr": "Début",
+    "en": "Start"
+  },
+  "colonne_fin": {
+    "fr": "Fin",
+    "en": "End"
+  },
+  "colonne_variation": {
+    "fr": "Variation",
+    "en": "Change"
+  },
+  "colonne_mesures": {
+    "fr": "Mesures",
+    "en": "Measurements"
+  },
+  "note_bacheliers": {
+    "fr": "La série la plus parlante de ce lot est le <b>taux d'inscription immédiat des nouveaux bacheliers</b> dans une université publique : <b>{debut} %</b> en {annee_debut}, <b>{fin} %</b> en {annee_fin}. Quatre bacheliers sur dix ne poursuivent toujours pas immédiatement dans le public — ils vont au privé, ailleurs, ou nulle part. Le corpus ne permet pas de savoir lequel des trois.",
+    "en": "The most telling series here is the <b>immediate enrolment rate of new school-leavers</b> in a public university: <b>{debut} %</b> in {annee_debut}, <b>{fin} %</b> in {annee_fin}. Four school-leavers in ten still do not go straight into the public system — they go private, elsewhere, or nowhere. The corpus cannot say which of the three."
+  },
+  "ind_effectifs": {
+    "fr": "Effectifs étudiants inscrits",
+    "en": "Enrolled student headcount"
+  },
+  "ind_feminite": {
+    "fr": "Part des femmes parmi les étudiants",
+    "en": "Female share among students"
+  },
+  "ind_feminite_courte": {
+    "fr": "Proportion de femmes (série courte)",
+    "en": "Proportion of women (short series)"
+  },
+  "ind_scientifiques": {
+    "fr": "Étudiants en filières scientifiques et technologiques",
+    "en": "Students in scientific and technological programmes"
+  },
+  "ind_filles_scientifiques": {
+    "fr": "Filles parmi les étudiants scientifiques",
+    "en": "Girls among scientific students"
+  },
+  "ind_ratio_encadrement": {
+    "fr": "Ratio étudiant / enseignant (universités publiques)",
+    "en": "Student / teacher ratio (public universities)"
+  },
+  "ind_depense_fcfa": {
+    "fr": "Dépense annuelle par étudiant",
+    "en": "Annual spending per student"
+  },
+  "ind_part_education": {
+    "fr": "Part du budget allouée à l'enseignement",
+    "en": "Share of budget allocated to education"
+  },
+  "ind_part_superieur_pib": {
+    "fr": "Budget du supérieur rapporté au PIB",
+    "en": "Higher education budget relative to GDP"
+  },
+  "ind_densite_etudiants": {
+    "fr": "Étudiants pour 100 000 habitants",
+    "en": "Students per 100,000 inhabitants"
+  },
+  "ind_densite_publique": {
+    "fr": "Étudiants du public pour 100 000 habitants",
+    "en": "Public-university students per 100,000 inhabitants"
+  },
+  "ind_inscription_bacheliers": {
+    "fr": "Bacheliers s'inscrivant immédiatement dans une université publique",
+    "en": "School-leavers enrolling immediately in a public university"
+  },
+  "unite_ratio": {
+    "fr": "étudiants par enseignant",
+    "en": "students per teacher"
+  },
+  "unite_fcfa": {
+    "fr": "FCFA",
+    "en": "FCFA"
+  },
+  "unite_pourcent": {
+    "fr": "%",
+    "en": "%"
+  },
+  "carte_infobulle_un": {
+    "fr": "{total} établissement",
+    "en": "{total} institution"
+  },
+  "carte_infobulle_plusieurs": {
+    "fr": "{total} établissements",
+    "en": "{total} institutions"
+  },
+  "carte_infobulle_statuts": {
+    "fr": "{publics} public · {prives} privé",
+    "en": "{publics} public · {prives} private"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "jeunesse_libelle": { "fr": "Âge moyen de la population togolaise", "en": "Average age of the Togolese population" },
+  "jeunesse_valeur": { "fr": "23,4 ans", "en": "23.4 years" },
+  "jeunesse_detail": {
+    "fr": "8 095 498 habitants au recensement de 2022 ; environ 42 % de la population a moins de 15 ans. La pression sur le système de formation est structurelle et va s'accentuer.",
+    "en": "8,095,498 inhabitants at the 2022 census; about 42 % of the population is under 15. Pressure on the training system is structural and will intensify."
+  },
+  "jeunesse_source": { "fr": "INSEED — RGPH-5 (2022)", "en": "INSEED — RGPH-5 (2022)" },
+
+  "jeunes_sans_emploi_libelle": { "fr": "Jeunes de 18-35 ans sans emploi et en recherche active", "en": "18-35 year-olds without work and actively looking" },
+  "jeunes_sans_emploi_valeur": { "fr": "46 %", "en": "46 %" },
+  "jeunes_sans_emploi_detail": {
+    "fr": "Contre 23 à 29 % dans les tranches plus âgées. Cette génération est pourtant plus diplômée que la précédente : c'est le paradoxe formation-emploi. Les freins cités en premier sont le manque de formation adéquate et l'insuffisance d'expérience.",
+    "en": "Against 23 to 29 % in older brackets. Yet this generation is better qualified than the previous one: that is the skills-jobs paradox. The barriers cited first are inadequate training and insufficient experience."
+  },
+  "jeunes_sans_emploi_source": { "fr": "Afrobarometer — Round 10, publication PP93 (juin 2025)", "en": "Afrobarometer — Round 10, publication PP93 (June 2025)" },
+
+  "sous_emploi_libelle": { "fr": "Taux de sous-emploi (2015)", "en": "Underemployment rate (2015)" },
+  "sous_emploi_valeur": { "fr": "24,9 %", "en": "24.9 %" },
+  "sous_emploi_detail": {
+    "fr": "En hausse — 22,8 % en 2011 — pendant que le chômage déclaré baissait de 6,5 % à 3,4 % sur la même période. Le sous-emploi, pas le chômage, est la variable d'ajustement du marché du travail togolais.",
+    "en": "Rising — 22.8 % in 2011 — while reported unemployment fell from 6.5 % to 3.4 % over the same period. Underemployment, not unemployment, is the adjustment variable of Togo's labour market."
+  },
+  "sous_emploi_source": { "fr": "INSEED", "en": "INSEED" },
+
+  "informel_libelle": { "fr": "Part de l'emploi relevant du secteur informel", "en": "Share of employment in the informal sector" },
+  "informel_valeur": { "fr": "~87 %", "en": "~87 %" },
+  "informel_detail": {
+    "fr": "Un diplômé « en emploi » l'est très majoritairement dans une unité de production informelle : sans contrat, sans protection sociale et souvent sans lien avec sa qualification. Le taux de chômage seul ne dit rien de la qualité de l'insertion.",
+    "en": "A graduate “in work” is overwhelmingly so within an informal production unit: no contract, no social protection and often no link to their qualification. The unemployment rate alone says nothing about the quality of that work."
+  },
+  "informel_source": { "fr": "INSEED", "en": "INSEED" }
+}

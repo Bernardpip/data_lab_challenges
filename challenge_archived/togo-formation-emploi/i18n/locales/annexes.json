@@ -1,0 +1,152 @@
+{
+  "producteur_ministere": { "fr": "Ministère de l'Enseignement Technique · opendata.gouv.tg", "en": "Ministry of Technical Education · opendata.gouv.tg" },
+  "producteur_portail": { "fr": "opendata.gouv.tg", "en": "opendata.gouv.tg" },
+  "producteur_bm": { "fr": "opendata.gouv.tg — indicateur Banque mondiale", "en": "opendata.gouv.tg — World Bank indicator" },
+  "producteur_bm_oit": { "fr": "opendata.gouv.tg — indicateur Banque mondiale (OIT)", "en": "opendata.gouv.tg — World Bank indicator (ILO)" },
+
+  "origine_bm": { "fr": "Banque mondiale", "en": "World Bank" },
+  "origine_ministere": { "fr": "Ministère de l'Enseignement Technique", "en": "Ministry of Technical Education" },
+  "origine_portail": { "fr": "Portail national", "en": "National portal" },
+
+  "src_formations_titre": { "fr": "Établissements de formation technique — fichier principal (DEFT-TG)", "en": "Technical training institutions — main file (DEFT-TG)" },
+  "src_formations_contenu": { "fr": "256 établissements : localisation, filière, statut d'activité, foncier, sanitaires, terrain de sport, année de création et coordonnées géographiques.", "en": "256 institutions: location, programme, operating status, land tenure, sanitation, sports field, opening year and geographic coordinates." },
+  "src_formations_usage": { "fr": "Cartographie, couverture territoriale, structure de l'offre, dynamique de création, équipements.", "en": "Mapping, territorial coverage, structure of provision, openings over time, facilities." },
+
+  "src_controle_titre": { "fr": "Établissements techniques publics, privés confessionnels et laïcs (DEFT-TG)", "en": "Public, faith-based and secular private technical institutions (DEFT-TG)" },
+  "src_controle_contenu": { "fr": "Ressource complémentaire du même jeu, ventilant les établissements par statut juridique du promoteur.", "en": "Companion resource of the same dataset, breaking institutions down by the legal status of their promoter." },
+  "src_controle_usage": { "fr": "Contrôle de cohérence du statut des établissements ; non utilisée pour les agrégats, le fichier principal faisant foi.", "en": "Consistency check on institution status; not used for aggregates, the main file being authoritative." },
+
+  "src_dictionnaire_titre": { "fr": "Dictionnaire des champs des établissements techniques (DEFT-TG)", "en": "Field dictionary for technical institutions (DEFT-TG)" },
+  "src_dictionnaire_contenu": { "fr": "216 lignes décrivant chaque champ du fichier principal : libellé, question posée sur le terrain, type de donnée.", "en": "216 rows describing each field of the main file: label, question asked in the field, data type." },
+  "src_dictionnaire_usage": { "fr": "Interprétation des champs multi-valués et des sentinelles de non-réponse — base du nettoyage décrit en méthodologie.", "en": "Interpreting multi-valued fields and non-response sentinels — the basis of the cleaning described under methodology." },
+
+  "src_superieur_titre": { "fr": "Répartition des établissements du supérieur (DREESTSL-TG)", "en": "Distribution of higher education institutions (DREESTSL-TG)" },
+  "src_superieur_contenu": { "fr": "Établissements ayant fonctionné, par type (université / établissement), statut (public / privé) et ville.", "en": "Institutions that operated, by type (university / institution), status (public / private) and city." },
+  "src_superieur_usage": { "fr": "Réseau du supérieur, part du privé, concentration à Lomé.", "en": "Higher education network, private share, concentration in Lomé." },
+
+  "src_budget_titre": { "fr": "Budget de l'enseignement supérieur et budget national (DBESBNVE-TG)", "en": "Higher education budget and national budget (DBESBNVE-TG)" },
+  "src_budget_contenu": { "fr": "Montants votés et exécutés — enseignement supérieur, secteur éducation, budget national, PIB.", "en": "Approved and executed amounts — higher education, education sector, national budget, GDP." },
+  "src_budget_usage": { "fr": "Taux d'exécution, part du supérieur, priorité budgétaire.", "en": "Execution rates, higher education share, budgetary priority." },
+
+  "src_depenses_titre": { "fr": "Dépenses publiques par étudiant (DDPEES-TG)", "en": "Public spending per student (DDPEES-TG)" },
+  "src_depenses_contenu": { "fr": "Dépense publique par étudiant du supérieur, en % du PIB par habitant.", "en": "Public spending per higher education student, as % of GDP per capita." },
+  "src_depenses_usage": { "fr": "Effet ciseaux, effort public par tête.", "en": "Scissors effect, public effort per head." },
+
+  "src_inscriptions_titre": { "fr": "Inscriptions dans l'enseignement supérieur (DISES-TG)", "en": "Higher education enrolment (DISES-TG)" },
+  "src_inscriptions_contenu": { "fr": "Taux brut de scolarisation dans le supérieur, en % de la classe d'âge.", "en": "Gross enrolment rate in higher education, as % of the age cohort." },
+  "src_inscriptions_usage": { "fr": "Dynamique d'accès, massification.", "en": "Access dynamics, mass enrolment." },
+
+  "src_indicateurs_titre": { "fr": "Indicateurs clés de l'enseignement supérieur (DICES-TG)", "en": "Key higher education indicators (DICES-TG)" },
+  "src_indicateurs_contenu": { "fr": "Douze séries annuelles 2014-2019 : effectifs étudiants inscrits, rapport de féminité, part des filières scientifiques, ratio étudiant/enseignant, dépense annuelle par étudiant en FCFA, densités pour 100 000 habitants, part du budget de l'éducation et taux d'inscription des bacheliers.", "en": "Twelve annual series 2014-2019: enrolled student headcounts, female share, share of scientific programmes, student/teacher ratio, annual spending per student in FCFA, densities per 100,000 inhabitants, education budget share and school-leaver enrolment rate." },
+  "src_indicateurs_usage": { "fr": "Objectif n°2 du cahier des charges — effectifs, féminisation, filières scientifiques et encadrement. Seule ressource du corpus à donner la dépense par étudiant en francs.", "en": "Objective no. 2 of the brief — enrolment, gender balance, scientific programmes and staffing. The only resource in the corpus giving spending per student in francs." },
+
+  "src_chomage_titre": { "fr": "Chômage des diplômés du supérieur (DCDES-TG)", "en": "Unemployment among higher education graduates (DCDES-TG)" },
+  "src_chomage_contenu": { "fr": "Part des actifs diplômés du supérieur au chômage, définition CITE 2011 (niveaux 5 à 8).", "en": "Share of higher education graduates in the labour force who are unemployed, ISCED 2011 definition (levels 5 to 8)." },
+  "src_chomage_usage": { "fr": "Insertion des diplômés, mise en regard avec l'offre.", "en": "Graduate outcomes, set against provision." },
+
+  "aide_producteur": { "fr": "Le portail publie ; il ne produit pas toujours.", "en": "The portal publishes; it does not always produce." },
+  "etat_chargee": { "fr": "Chargée", "en": "Loaded" },
+  "etat_controle": { "fr": "Ressource de contrôle", "en": "Control resource" },
+  "info_aucune_ressource": { "fr": "Aucune ressource ne correspond à la sélection.", "en": "No resource matches the selection." },
+
+  "carte_sources_titre": { "fr": "Jeux de données mobilisés", "en": "Datasets used" },
+  "carte_sources_sous_titre": { "fr": "Neuf ressources ouvertes publiées sur le portail national — le volume indiqué est celui réellement chargé par le tableau de bord", "en": "Nine open resources published on the national portal — the volume shown is what the dashboard actually loads" },
+  "carte_sources_sous_titre_filtre": { "fr": "{retenues} ressources sur {total} — le volume indiqué est celui réellement chargé par le tableau de bord", "en": "{retenues} of {total} resources — the volume shown is what the dashboard actually loads" },
+  "volume": { "fr": "{lignes} lignes × {colonnes} colonnes", "en": "{lignes} rows × {colonnes} columns" },
+  "volume_non_chargee": { "fr": "ressource de contrôle — non chargée", "en": "control resource — not loaded" },
+  "libelle_contenu": { "fr": "Contenu.", "en": "Content." },
+  "libelle_usage": { "fr": "Utilisé pour.", "en": "Used for." },
+  "note_sources": { "fr": "Toutes les données sont publiques et rechargeables depuis <b>opendata.gouv.tg</b>. Aucune donnée n'a été achetée, estimée ni complétée par interpolation.", "en": "All data are public and can be re-downloaded from <b>opendata.gouv.tg</b>. No data was purchased, estimated or filled in by interpolation." },
+
+  "fichier_technique": { "fr": "Formations techniques", "en": "Technical training" },
+  "fichier_superieur": { "fr": "Enseignement supérieur", "en": "Higher education" },
+  "fichier_budget": { "fr": "Budget", "en": "Budget" },
+  "fichier_indicateurs": { "fr": "Indicateurs clés du supérieur", "en": "Key higher education indicators" },
+  "fichier_series": { "fr": "Séries internationales", "en": "International series" },
+
+  "net_statut_probleme": { "fr": "Ensemble multi-valué : `{Construit et Utilise,En construction}` — 12 combinaisons pour 5 états réels", "en": "Multi-valued set: `{Construit et Utilise,En construction}` — 12 combinations for 5 real states" },
+  "net_statut_traitement": { "fr": "Éclaté puis ramené à l'état le **plus avancé** par établissement", "en": "Split then reduced to the **most advanced** state per institution" },
+  "net_categorie_probleme": { "fr": "Doublon de casse et coquille : « Formation Professionnelle autre » / « Formation profesionnelle autre »", "en": "Case duplicate and typo: “Formation Professionnelle autre” / “Formation profesionnelle autre”" },
+  "net_categorie_traitement": { "fr": "Fusionnés en une seule modalité", "en": "Merged into a single category" },
+  "net_sentinelles_probleme": { "fr": "Sentinelles de non-réponse mélangées aux vraies modalités", "en": "Non-response sentinels mixed in with real categories" },
+  "net_sentinelles_traitement": { "fr": "Repliées sur « Non renseigné » — **conservées**, jamais supprimées", "en": "Folded into “Not reported” — **kept**, never deleted" },
+  "net_date_probleme": { "fr": "Années mêlées à des `Nsp` (colonne texte)", "en": "Years mixed with `Nsp` values (text column)" },
+  "net_date_traitement": { "fr": "Converties en numérique, hors-bornes écartées", "en": "Converted to numeric, out-of-range values dropped" },
+  "net_terrain_probleme": { "fr": "Libellés dédoublés par la casse, champ sanitaire multi-valué", "en": "Labels duplicated by case, multi-valued sanitation field" },
+  "net_terrain_traitement": { "fr": "Regroupés en familles ; équipement le plus abouti retenu", "en": "Grouped into families; most complete facility retained" },
+  "net_geometry_probleme": { "fr": "`POINT (lon lat)` en texte", "en": "`POINT (lon lat)` as text" },
+  "net_geometry_traitement": { "fr": "Extraites en latitude / longitude pour la carte", "en": "Extracted into latitude / longitude for the map" },
+  "net_agregats_champ": { "fr": "Lignes d'agrégat", "en": "Aggregate rows" },
+  "net_agregats_probleme": { "fr": "`type = Total` et `villes = TOTAL` **contradictoires avec le détail**", "en": "`type = Total` and `villes = TOTAL` **contradicting the detail**" },
+  "net_agregats_traitement": { "fr": "Écartées, tous les totaux recalculés — voir ci-dessous", "en": "Dropped, all totals recomputed — see below" },
+  "net_unit_probleme": { "fr": "Déclare « Nombre » pour toutes les séries, PIB compris — l'unité réelle n'est pas dans le fichier", "en": "Declares “Number” for every series, GDP included — the real unit is not in the file" },
+  "net_unit_traitement": { "fr": "Millions de FCFA retenus, d'après l'ordre de grandeur du PIB", "en": "Millions of FCFA retained, from the order of magnitude of GDP" },
+  "net_unit_sup_probleme": { "fr": "Absente pour le ratio étudiant/enseignant et le taux d'inscription des bacheliers", "en": "Missing for the student/teacher ratio and the school-leaver enrolment rate" },
+  "net_unit_sup_traitement": { "fr": "Renseignée d'après la nature de la mesure, jamais devinée", "en": "Filled in from the nature of the measure, never guessed" },
+  "net_feminisation_champ": { "fr": "Féminisation", "en": "Gender balance" },
+  "net_feminisation_probleme": { "fr": "Deux séries — « Proportion de femmes » et « Rapport de féminité » — aux valeurs **identiques** sur leurs trois années communes", "en": "Two series — “Proportion de femmes” and “Rapport de féminité” — with **identical** values over their three common years" },
+  "net_feminisation_traitement": { "fr": "Doublon signalé ; la série longue (2015-2019) est retenue", "en": "Duplicate flagged; the long series (2015-2019) is retained" },
+  "net_vides_champ": { "fr": "Années sans mesure", "en": "Years with no measurement" },
+  "net_vides_probleme": { "fr": "Le fichier liste toutes les années, la plupart sans valeur", "en": "The file lists every year, most with no value" },
+  "net_vides_traitement": { "fr": "Lignes vides écartées ; **aucune interpolation** des trous", "en": "Empty rows dropped; **no interpolation** of gaps" },
+
+  "aide_fichier_nettoyage": { "fr": "Fichier concerné par le traitement", "en": "File affected by the treatment" },
+  "carte_nettoyage_titre": { "fr": "Nettoyage appliqué", "en": "Cleaning applied" },
+  "carte_nettoyage_sous_titre": { "fr": "Les fichiers bruts ne sont pas exploitables tels quels — voici ce qui a été corrigé, et pourquoi", "en": "The raw files are not usable as delivered — here is what was corrected, and why" },
+  "carte_nettoyage_sous_titre_filtre": { "fr": "{retenues} traitements sur {total} — les fichiers bruts ne sont pas exploitables tels quels", "en": "{retenues} of {total} treatments — the raw files are not usable as delivered" },
+  "entete_nettoyage": { "fr": "| Fichier | Champ | Problème dans le fichier brut | Traitement |\n|---|---|---|---|", "en": "| File | Field | Problem in the raw file | Treatment |\n|---|---|---|---|" },
+  "note_superieur_contradiction": {
+    "fr": "Le cas du fichier de l'enseignement supérieur mérite d'être détaillé, car il ne s'agit pas d'un simple doublon d'agrégat. Ses lignes « Total » répètent le <b>même total général</b> dans la colonne Public <i>et</i> dans la colonne Privé : les additionner double le compte. Une somme naïve de tout le fichier donne <b>419</b> établissements au lieu de <b>73</b>.<br><br>Plus gênant, la contradiction porte sur une case précise du tableau : le croisement <i>type « Établissement » × statut « Privé »</i>. La ligne de total national y inscrit <b>14</b>, quand la seule ville de Lomé en déclare <b>51</b> et l'ensemble des villes <b>65</b>. Les deux ne peuvent pas être exacts. Le détail par ville a été retenu — il est granulaire et cohérent avec lui-même — mais c'est un <b>choix</b>, pas une certitude : tous les chiffres du supérieur en dépendent.",
+    "en": "The higher education file deserves detail, because this is not a simple aggregate duplicate. Its “Total” rows repeat the <b>same grand total</b> in the Public column <i>and</i> in the Private column: adding them double-counts. A naive sum of the whole file gives <b>419</b> institutions instead of <b>73</b>.<br><br>More troubling, the contradiction concerns one precise cell of the table: the crossing of <i>type “Institution” × status “Private”</i>. The national total row records <b>14</b> there, while the city of Lomé alone reports <b>51</b> and all cities together <b>65</b>. Both cannot be right. The city-level detail was retained — it is granular and internally consistent — but that is a <b>choice</b>, not a certainty: every higher education figure depends on it."
+  },
+  "carte_limites_titre": { "fr": "Ce que ces données ne permettent pas de dire", "en": "What these data cannot tell us" },
+  "carte_limites_sous_titre": { "fr": "Les limites sont posées explicitement plutôt que masquées", "en": "The limits are stated explicitly rather than hidden" },
+  "limites_corps": {
+    "fr": "- **Le chômage des diplômés n'existe qu'au niveau national**, sans ventilation par filière ni par région : aucun taux d'insertion local ou par filière n'est calculable. Un score régional intégrant le chômage reviendrait à fabriquer de la donnée — il a donc été écarté.\n- **Les séries internationales sont lacunaires** : 6 mesures de chômage en 16 ans, 10 mesures de dépense par étudiant en 20 ans. Les points manquants ne sont **pas interpolés** ; les graphes relient les mesures existantes.\n- **Aucun identifiant commun** entre le fichier des établissements techniques et celui du supérieur : le parcours d'un sortant n'est pas traçable.\n- **Dates de référence hétérogènes** : les établissements du supérieur datent de 2018, les formations techniques de 2025, les indicateurs s'arrêtent entre 2017 et 2022. Les comparaisons directes entre jeux sont donc évitées.",
+    "en": "- **Graduate unemployment exists only at national level**, with no breakdown by programme or region: no local or programme-level employment rate can be computed. A regional score including unemployment would amount to fabricating data — it was therefore ruled out.\n- **The international series are patchy**: 6 unemployment measurements over 16 years, 10 spending-per-student measurements over 20 years. Missing points are **not interpolated**; charts connect the existing measurements.\n- **No shared identifier** between the technical institutions file and the higher education file: a leaver's path cannot be traced.\n- **Heterogeneous reference dates**: higher education institutions date from 2018, technical training from 2025, indicators stop between 2017 and 2022. Direct comparisons across datasets are therefore avoided."
+  },
+  "note_limites": {
+    "fr": "Un tableau de bord d'adéquation formation-emploi devrait relier l'offre locale et l'emploi local. Les données ouvertes actuelles ne le permettent pas : c'est le premier constat, et il fonde la recommandation n°5.",
+    "en": "A skills-jobs alignment dashboard should link local provision to local employment. The current open data do not allow it: that is the first finding, and it underpins recommendation no. 5."
+  },
+
+  "carte_affichage_titre": { "fr": "Recommandation d'affichage", "en": "Display recommendation" },
+  "carte_affichage_sous_titre": { "fr": "Conditions dans lesquelles le tableau de bord a été conçu et testé", "en": "Conditions under which the dashboard was designed and tested" },
+  "affichage_tableau": {
+    "fr": "| Paramètre | Valeur recommandée |\n|---|---|\n| Navigateur | Chrome, Firefox ou Safari récents |\n| Largeur d'écran | **1 280 px ou plus** |\n| Zoom | 100 % convient ; 75 % densifie l'affichage |\n| Thème | Clair (forcé par l'application) |",
+    "en": "| Setting | Recommended value |\n|---|---|\n| Browser | Recent Chrome, Firefox or Safari |\n| Screen width | **1,280 px or more** |\n| Zoom | 100 % is fine; 75 % increases density |\n| Theme | Light (forced by the application) |"
+  },
+  "note_affichage": {
+    "fr": "La mise en page a été mesurée de 1 920 à 760 pixels de large : aucun débordement horizontal, aucun libellé d'axe tronqué — les axes réservent automatiquement la place de leurs étiquettes. En dessous de <b>1 280 px</b>, les vues en deux colonnes — carte et graphes — se resserrent sans devenir illisibles. Un zoom à <b>75 %</b> reste le réglage le plus confortable : il affiche davantage de contenu sans défilement.",
+    "en": "The layout was measured from 1,920 down to 760 pixels wide: no horizontal overflow, no truncated axis label — the axes automatically reserve room for their tick labels. Below <b>1,280 px</b>, the two-column views — map and charts — tighten without becoming unreadable. A <b>75 %</b> zoom remains the most comfortable setting: it shows more content without scrolling."
+  },
+
+  "carte_credits_titre": { "fr": "Crédits", "en": "Credits" },
+  "carte_credits_sous_titre": { "fr": "Conception et réalisation", "en": "Design and development" },
+  "credit_realise_par": { "fr": "Réalisé par", "en": "Built by" },
+  "credit_entreprise": { "fr": "Entreprise", "en": "Company" },
+  "credit_pour": { "fr": "Pour", "en": "For" },
+  "credit_secteur": { "fr": "Secteur", "en": "Sector" },
+  "credit_secteur_valeur": { "fr": "Éducation", "en": "Education" },
+  "credit_thematique": { "fr": "Thématique", "en": "Theme" },
+  "credit_thematique_valeur": { "fr": "Data Challenge Éducation", "en": "Education Data Challenge" },
+  "credit_challenge": { "fr": "Challenge", "en": "Challenge" },
+  "credit_challenge_valeur": { "fr": "Éducation | Défi 2", "en": "Education | Challenge 2" },
+  "credit_periode": { "fr": "Période", "en": "Period" },
+  "credit_periode_valeur": { "fr": "27 juillet — 3 août 2026", "en": "27 July — 3 August 2026" },
+  "credit_produit": { "fr": "Produit", "en": "Product" },
+  "credit_devise": {
+    "fr": "Un gagnant, c'est un perdant qui a retenté sa chance.",
+    "en": "A winner is a loser who tried one more time."
+  },
+  "note_donnees_credits": {
+    "fr": "<b>Données.</b> République togolaise 🇹🇬 — <b>opendata.gouv.tg</b>, neuf ressources ouvertes. Trois d'entre elles relaient des indicateurs de la <b>Banque mondiale</b> et de l'<b>OIT</b>.<br><br><b>Repères de contexte</b>, cités séparément et jamais mélangés aux graphes du portail : <b>INSEED</b> (RGPH-5 2022, enquêtes emploi) et <b>Afrobarometer</b> (Round 10, publication PP93, juin 2025).",
+    "en": "<b>Data.</b> Republic of Togo 🇹🇬 — <b>opendata.gouv.tg</b>, nine open resources. Three of them relay indicators from the <b>World Bank</b> and the <b>ILO</b>.<br><br><b>Context reference points</b>, cited separately and never mixed into the portal's charts: <b>INSEED</b> (RGPH-5 2022, employment surveys) and <b>Afrobarometer</b> (Round 10, publication PP93, June 2025)."
+  },
+  "carte_pile_titre": { "fr": "Pile technique", "en": "Technical stack" },
+  "carte_pile_sous_titre": { "fr": "Ce qui fait tourner le tableau de bord", "en": "What runs the dashboard" },
+  "pile_corps": {
+    "fr": "- **Streamlit** — application et navigation\n- **pandas** — nettoyage et agrégations\n- **Plotly** — graphes (palette validée pour la vision des couleurs)\n- **Folium / Leaflet** — cartographie, fond CartoDB Positron",
+    "en": "- **Streamlit** — application and navigation\n- **pandas** — cleaning and aggregation\n- **Plotly** — charts (palette validated for colour vision)\n- **Folium / Leaflet** — mapping, CartoDB Positron basemap"
+  }
+}

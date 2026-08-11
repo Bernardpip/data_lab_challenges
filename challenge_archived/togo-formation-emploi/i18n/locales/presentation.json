@@ -1,0 +1,570 @@
+{
+  "pied": {
+    "fr": "Formation & Emploi · Togo   |   Data AI Lab   |   Réalisé par Kokou PIPI   |   {page}/10",
+    "en": "Skills & Employment · Togo   |   Data AI Lab   |   Built by Kokou PIPI   |   {page}/10"
+  },
+  "fichier": {
+    "fr": "Rapport_Adequation_Formation_Emploi_Togo",
+    "en": "Report_Skills_Jobs_Alignment_Togo"
+  },
+
+  "couv_republique": { "fr": "🇹🇬  RÉPUBLIQUE TOGOLAISE", "en": "🇹🇬  REPUBLIC OF TOGO" },
+  "couv_titre": {
+    "fr": "Adéquation formation-emploi au Togo",
+    "en": "Skills–jobs alignment in Togo"
+  },
+  "couv_sous_titre": {
+    "fr": "Mesurer l'alignement entre l'offre de formation, les moyens publics et l'insertion professionnelle",
+    "en": "Measuring the alignment between training provision, public funding and entry into employment"
+  },
+  "couv_chiffres": {
+    "fr": "9 jeux de données ouvertes  ·  {total} établissements techniques géolocalisés  ·  séries 1971-2025",
+    "en": "9 open datasets  ·  {total} geolocated technical institutions  ·  series 1971-2025"
+  },
+  "couv_signature": {
+    "fr": "Data AI Lab  ·  Réalisé par Kokou PIPI  ·  Source : opendata.gouv.tg",
+    "en": "Data AI Lab  ·  Built by Kokou PIPI  ·  Source: opendata.gouv.tg"
+  },
+
+  "p1_titre": { "fr": "Données, nettoyage et démarche", "en": "Data, cleaning and method" },
+  "p1_sous_titre": {
+    "fr": "Ce que le corpus contient, ce qu'il a fallu corriger, et ce qu'il interdit d'affirmer",
+    "en": "What the corpus contains, what had to be corrected, and what it forbids claiming"
+  },
+  "p1_question_titre": { "fr": "La question", "en": "The question" },
+  "p1_question_corps": {
+    "fr": "L'offre de formation, les moyens publics qui la financent et l'insertion des diplômés sont-ils alignés ?",
+    "en": "Are training provision, the public funding behind it and graduate employment aligned?"
+  },
+  "p1_materiau_titre": { "fr": "Le matériau : 9 ressources", "en": "The material: 9 resources" },
+  "p1_materiau_1": {
+    "fr": "• Formations techniques — 3 ressources, établissement géolocalisé (2025)",
+    "en": "• Technical training — 3 resources, geolocated institution (2025)"
+  },
+  "p1_materiau_2": {
+    "fr": "• Établissements du supérieur — ville × type × statut (2018)",
+    "en": "• Higher education institutions — city × type × status (2018)"
+  },
+  "p1_materiau_3": {
+    "fr": "• Budget voté et exécuté — national (2013-2018)",
+    "en": "• Approved and executed budget — national (2013-2018)"
+  },
+  "p1_materiau_4": {
+    "fr": "• Inscriptions, dépense/étudiant, chômage — national (1971-2022)",
+    "en": "• Enrolment, spending per student, unemployment — national (1971-2022)"
+  },
+  "p1_materiau_5": {
+    "fr": "• Indicateurs clés du supérieur — effectifs, féminisation, filières (2014-2019)",
+    "en": "• Key higher education indicators — headcount, gender balance, programmes (2014-2019)"
+  },
+  "p1_asymetrie_titre": { "fr": "Asymétrie déterminante", "en": "A decisive asymmetry" },
+  "p1_asymetrie_corps": {
+    "fr": "Une seule source est fine et régionale : le recensement des établissements techniques. Tout le reste est national. Cette asymétrie borne ce que le travail peut conclure.",
+    "en": "Only one source is granular and regional: the census of technical institutions. Everything else is national. That asymmetry bounds what this work can conclude."
+  },
+
+  "p1_nettoyage_titre": { "fr": "Le nettoyage appliqué", "en": "The cleaning applied" },
+  "p1_nettoyage_chapeau": {
+    "fr": "La moitié des colonnes du fichier des établissements n'était pas exploitable en l'état.",
+    "en": "Half the columns of the institutions file were unusable as delivered."
+  },
+  "p1_net1_champ": { "fr": "Statut d'activité", "en": "Operating status" },
+  "p1_net1_traitement": {
+    "fr": "Champ à valeurs multiples : 12 combinaisons pour 5 états réels. Chaque établissement ramené à son état le plus avancé.",
+    "en": "Multi-valued field: 12 combinations for 5 real states. Each institution reduced to its most advanced state."
+  },
+  "p1_net2_champ": { "fr": "Filière", "en": "Programme" },
+  "p1_net2_traitement": {
+    "fr": "Doublon de casse et coquille (« profesionnelle ») comptés comme deux filières distinctes. Fusionnés.",
+    "en": "A case duplicate and a typo (“profesionnelle”) counted as two separate programmes. Merged."
+  },
+  "p1_net3_champ": { "fr": "Non-réponses", "en": "Non-responses" },
+  "p1_net3_traitement": {
+    "fr": "« Nsp », « N/a », « Neant » mêlés aux vraies modalités. Regroupés en « Non renseigné » et CONSERVÉS, jamais supprimés.",
+    "en": "“Nsp”, “N/a”, “Neant” mixed in with genuine categories. Grouped as “Not reported” and KEPT, never deleted."
+  },
+  "p1_net4_champ": { "fr": "Année de création", "en": "Year of establishment" },
+  "p1_net4_traitement": {
+    "fr": "Années mêlées à du texte dans la même colonne. Converties, valeurs hors bornes écartées.",
+    "en": "Years mixed with free text in the same column. Converted, out-of-range values discarded."
+  },
+  "p1_net5_champ": { "fr": "Coordonnées", "en": "Coordinates" },
+  "p1_net5_traitement": {
+    "fr": "Position stockée en texte. Extraite en latitude / longitude pour permettre la carte.",
+    "en": "Position stored as text. Extracted into latitude / longitude to make the map possible."
+  },
+  "p1_net6_champ": { "fr": "Totaux du fichier supérieur", "en": "Totals in the higher education file" },
+  "p1_net6_traitement": {
+    "fr": "Lignes d'agrégat contradictoires avec le détail (14 annoncés contre 65 comptés). Écartées, totaux recalculés.",
+    "en": "Aggregate rows contradicting the detail (14 stated against 65 counted). Discarded, totals recomputed."
+  },
+
+  "p1_principes_titre": { "fr": "Trois principes de rigueur", "en": "Three principles of rigour" },
+  "p1_pr1_titre": { "fr": "Aucune donnée fabriquée", "en": "No fabricated data" },
+  "p1_pr1_detail": {
+    "fr": "Séries lacunaires non interpolées ; non-réponses conservées comme modalité.",
+    "en": "Gappy series left un-interpolated; non-responses kept as a category."
+  },
+  "p1_pr2_titre": { "fr": "Aucun croisement non autorisé", "en": "No unwarranted crossing" },
+  "p1_pr2_detail": {
+    "fr": "Le chômage n'existe qu'au niveau national : il n'entre dans aucun score régional.",
+    "en": "Unemployment exists only at national level: it enters no regional score."
+  },
+  "p1_pr3_titre": { "fr": "Contexte externe séparé", "en": "External context kept separate" },
+  "p1_pr3_detail": {
+    "fr": "Les repères INSEED et Afrobarometer sont signalés et sourcés, jamais mêlés aux graphes du portail.",
+    "en": "The INSEED and Afrobarometer reference points are flagged and sourced, never mixed into the portal's charts."
+  },
+  "p1_neuvieme_titre": {
+    "fr": "Ce que la 9e ressource a débloqué",
+    "en": "What the 9th resource unlocked"
+  },
+  "p1_neuvieme_corps": {
+    "fr": "Effectifs, féminisation, filières scientifiques et ratio étudiant/enseignant ne figuraient dans aucune des huit premières ressources. Ils sont tous portés par la neuvième : la donnée existait, c'est l'inventaire qui était incomplet.",
+    "en": "Headcount, gender balance, scientific programmes and the student/teacher ratio appeared in none of the first eight resources. All are carried by the ninth: the data existed — it was the inventory that was incomplete."
+  },
+
+  "p2_titre": {
+    "fr": "Constat 1 — une offre extrêmement concentrée",
+    "en": "Finding 1 — provision is extremely concentrated"
+  },
+  "p2_sous_titre": {
+    "fr": "Répartition des établissements de formation technique par région",
+    "en": "Distribution of technical training institutions by region"
+  },
+  "p2_tuile1_libelle": { "fr": "Concentration en {region}", "en": "Concentration in {region}" },
+  "p2_tuile1_detail": { "fr": "{part} % dans 2 préfectures", "en": "{part} % in 2 prefectures" },
+  "p2_tuile2_libelle": { "fr": "Établissements en {region}", "en": "Institutions in {region}" },
+  "p2_tuile2_detail": {
+    "fr": "région la moins dotée du pays",
+    "en": "the country's least-served region"
+  },
+  "p2_tuile3_libelle": { "fr": "Indice Herfindahl", "en": "Herfindahl index" },
+  "p2_tuile3_detail": {
+    "fr": "contre {equilibre} si réparti également",
+    "en": "against {equilibre} if evenly distributed"
+  },
+  "p2_tuile4_libelle": { "fr": "Coefficient de Gini", "en": "Gini coefficient" },
+  "p2_tuile4_detail": {
+    "fr": "inégalité de la répartition",
+    "en": "inequality of the distribution"
+  },
+  "p2_serie": { "fr": "Établissements", "en": "Institutions" },
+  "p2_lecture_titre": { "fr": "Lecture", "en": "Reading" },
+  "p2_lecture_corps": {
+    "fr": "La région {tete} concentre {part} % des établissements techniques ; {queue} n'en compte que {nombre}. L'offre suit la démographie urbaine, pas le maillage administratif.",
+    "en": "The {tete} region concentrates {part} % of technical institutions; {queue} has only {nombre}. Provision follows urban demography, not the administrative grid."
+  },
+  "p2_mesure_titre": { "fr": "Ce que la mesure ajoute", "en": "What the measure adds" },
+  "p2_mesure_corps": {
+    "fr": "L'indice de Herfindahl-Hirschman est un indicateur de concentration : il mesure si une activité est répartie de manière équilibrée ou dominée par quelques régions. Pour 5 régions, une répartition parfaitement égale donnerait {equilibre}. On observe {observe} : la concentration est donc deux fois celle d'un pays qui répartirait uniformément son offre.",
+    "en": "The Herfindahl-Hirschman index is a concentration measure: it tells whether an activity is evenly spread or dominated by a few regions. For 5 regions, a perfectly equal split would give {equilibre}. We observe {observe}: concentration is therefore twice that of a country spreading its provision uniformly."
+  },
+  "p2_superieur_titre": { "fr": "Et dans le supérieur", "en": "And in higher education" },
+  "p2_superieur_corps": {
+    "fr": "{lome} % des établissements sont à Lomé et {prive} % du réseau est privé.",
+    "en": "{lome} % of institutions are in Lomé and {prive} % of the network is private."
+  },
+
+  "p3_titre": {
+    "fr": "Constat 2 — la concentration s'est reproduite, décennie après décennie",
+    "en": "Finding 2 — concentration reproduced itself, decade after decade"
+  },
+  "p3_sous_titre": {
+    "fr": "Créations d'établissements techniques par décennie (série datée, 1922-2021)",
+    "en": "Technical institution openings by decade (dated series, 1922-2021)"
+  },
+  "p3_serie": { "fr": "Créations", "en": "Openings" },
+  "p3_recente_titre": { "fr": "Une offre récente", "en": "A recent stock" },
+  "p3_recente_corps": {
+    "fr": "Plus de 80 % du parc daté a été créé depuis 1990. Les années {decennie} concentrent à elles seules {creations} créations.",
+    "en": "More than 80 % of the dated stock was created since 1990. The {decennie}s alone account for {creations} openings."
+  },
+  "p3_desequilibre_titre": {
+    "fr": "Le déséquilibre s'est reproduit",
+    "en": "The imbalance reproduced itself"
+  },
+  "p3_desequilibre_corps": {
+    "fr": "La région Maritime capte la majorité des créations à chaque décennie. Les Savanes n'enregistrent aucune création dans les années 2000. La concentration n'est donc pas un héritage ancien en voie de résorption : elle a été reconduite pendant toute la phase d'expansion.",
+    "en": "The Maritime region captures most openings in every decade. Savanes records none at all in the 2000s. Concentration is therefore not an old legacy in the process of fading: it was renewed throughout the expansion phase."
+  },
+  "p3_inflexion_titre": { "fr": "Une inflexion récente", "en": "A recent shift" },
+  "p3_inflexion_corps": {
+    "fr": "Sur 2020-2021, Maritime ne représente plus que 8 créations sur 21, contre 58 sur 92 dans les années 2010. Le rééquilibrage a commencé, mais il reste fragile et non consolidé.",
+    "en": "Over 2020-2021, Maritime accounts for only 8 openings out of 21, against 58 out of 92 in the 2010s. Rebalancing has begun, but it remains fragile and unconsolidated."
+  },
+
+  "p4_titre": { "fr": "Constat 3 — l'effet ciseaux", "en": "Finding 3 — the scissors effect" },
+  "p4_sous_titre": {
+    "fr": "Accès au supérieur et dépense publique par étudiant, indexés base 100 en 1998",
+    "en": "Access to higher education and public spending per student, indexed to 100 in 1998"
+  },
+  "p4_trajectoires_titre": {
+    "fr": "Deux trajectoires opposées",
+    "en": "Two opposing trajectories"
+  },
+  "p4_trajectoires_corps": {
+    "fr": "Depuis 1998, l'accès au supérieur a été multiplié par {facteur} pendant que la dépense par étudiant perdait {perte} % de sa valeur relative.",
+    "en": "Since 1998, access to higher education has multiplied by {facteur} while spending per student lost {perte} % of its relative value."
+  },
+  "p4_axe_titre": {
+    "fr": "Un seul axe, pas de double échelle",
+    "en": "One axis, no dual scale"
+  },
+  "p4_axe_corps": {
+    "fr": "Les deux séries sont indexées à 100 sur la même année : l'écart est mesurable et non un artefact produit par un graphique à double axe.",
+    "en": "Both series are indexed to 100 on the same year: the gap is measurable, not an artefact manufactured by a dual-axis chart."
+  },
+  "p4_ecart_titre": { "fr": "L'écart, mesuré", "en": "The gap, measured" },
+  "p4_ecart_corps": {
+    "fr": "Quand l'accès augmente de 1 %, la dépense par étudiant baisse de {elasticite} %. Ce rapport, très proche de 1 pour 1, correspond à une enveloppe budgétaire globale restée quasi inchangée : chaque étudiant supplémentaire a dilué les moyens disponibles, sans que le total soit relevé à proportion.",
+    "en": "When access rises by 1 %, spending per student falls by {elasticite} %. That near one-for-one ratio corresponds to an overall budget envelope left almost unchanged: each additional student diluted the available means, with no proportional increase in the total."
+  },
+
+  "p5_titre": {
+    "fr": "Analyses réalisées et résultats obtenus",
+    "en": "Analyses performed and results obtained"
+  },
+  "p5_sous_titre": {
+    "fr": "Cinq analyses statistiques, ce qu'elles cherchaient à établir et ce qu'elles montrent",
+    "en": "Five statistical analyses, what they set out to establish and what they show"
+  },
+  "p5_a1_nom": {
+    "fr": "1 · Trajectoire de l'accès au supérieur",
+    "en": "1 · Trajectory of access to higher education"
+  },
+  "p5_a1_question": {
+    "fr": "L'accès progresse-t-il, et à quel rythme ?",
+    "en": "Is access rising, and how fast?"
+  },
+  "p5_a1_resultat": {
+    "fr": "+{par_an} point par an sur 1971-2020",
+    "en": "+{par_an} point per year over 1971-2020"
+  },
+  "p5_a1_lecture": {
+    "fr": "Progression régulière et très marquée, mesurée sur 38 années. C'est l'analyse la plus solide du travail : la tendance explique {r2} % des variations observées.",
+    "en": "A steady and pronounced rise, measured over 38 years. This is the most solid analysis in the work: the trend explains {r2} % of the observed variation."
+  },
+  "p5_a2_nom": {
+    "fr": "2 · Trajectoire des moyens par étudiant",
+    "en": "2 · Trajectory of means per student"
+  },
+  "p5_a2_question": {
+    "fr": "L'effort public par étudiant suit-il la hausse des effectifs ?",
+    "en": "Does public effort per student keep pace with rising numbers?"
+  },
+  "p5_a2_resultat": {
+    "fr": "{par_an} points par an sur 1998-2017",
+    "en": "{par_an} points per year over 1998-2017"
+  },
+  "p5_a2_lecture": {
+    "fr": "La dépense par étudiant recule continûment sur toute la période. Le recul est établi et non un effet de bruit statistique, même si la série ne compte que 10 mesures sur 20 ans.",
+    "en": "Spending per student falls continuously across the whole period. The decline is established and not a statistical-noise effect, even though the series holds only 10 measurements over 20 years."
+  },
+  "p5_a3_nom": { "fr": "3 · Lien entre accès et moyens", "en": "3 · Link between access and means" },
+  "p5_a3_question": {
+    "fr": "De combien les moyens par étudiant reculent-ils quand l'accès s'élargit ?",
+    "en": "By how much do means per student fall as access widens?"
+  },
+  "p5_a3_resultat": {
+    "fr": "Élasticité de {elasticite} — quasi unitaire",
+    "en": "Elasticity of {elasticite} — near unitary"
+  },
+  "p5_a3_lecture": {
+    "fr": "Quand l'accès augmente de 1 %, la dépense par étudiant baisse de {absolu} %. Une valeur proche de −1 correspond à une enveloppe globale inchangée : la massification a été absorbée à moyens quasi constants.",
+    "en": "When access rises by 1 %, spending per student falls by {absolu} %. A value close to −1 corresponds to an unchanged overall envelope: massification was absorbed at near-constant means."
+  },
+  "p5_a4_nom": {
+    "fr": "4 · Degré de concentration territoriale",
+    "en": "4 · Degree of territorial concentration"
+  },
+  "p5_a4_question": {
+    "fr": "L'offre est-elle répartie équitablement ou dominée par une région ?",
+    "en": "Is provision spread fairly or dominated by one region?"
+  },
+  "p5_a4_resultat": {
+    "fr": "Indice de concentration : {hhi}",
+    "en": "Concentration index: {hhi}"
+  },
+  "p5_a4_lecture": {
+    "fr": "L'indice de Herfindahl-Hirschman mesure si une activité est répartie de manière équilibrée ou dominée par quelques régions. Pour 5 régions, une répartition parfaitement égale vaudrait {equilibre}. On observe {hhi}, soit le double : la concentration est forte. Le coefficient de Gini ({gini}) le confirme sur l'ensemble de la distribution.",
+    "en": "The Herfindahl-Hirschman index tells whether an activity is evenly spread or dominated by a few regions. For 5 regions, a perfectly equal split would be {equilibre}. We observe {hhi}, twice as much: concentration is strong. The Gini coefficient ({gini}) confirms it across the whole distribution."
+  },
+  "p5_a5_nom": { "fr": "5 · Datation de l'accélération", "en": "5 · Dating the acceleration" },
+  "p5_a5_question": {
+    "fr": "Quand la massification a-t-elle vraiment démarré ?",
+    "en": "When did massification really begin?"
+  },
+  "p5_a5_resultat": {
+    "fr": "Rythme multiplié par {rapport} après 2000",
+    "en": "Pace multiplied by {rapport} after 2000"
+  },
+  "p5_a5_lecture": {
+    "fr": "En comparant la période antérieure et postérieure à 2000, le rythme de progression de l'accès passe de {avant} à {apres} point par an. L'accélération est objectivée, ce n'est pas une impression de lecture graphique.",
+    "en": "Comparing the periods before and after 2000, the pace of progress in access goes from {avant} to {apres} point per year. The acceleration is objectified, not an impression from reading a chart."
+  },
+  "p5_verdict_etabli": { "fr": "Établi", "en": "Established" },
+  "p5_verdict_non_concluant": { "fr": "Non concluant", "en": "Inconclusive" },
+  "p5_fiab1_nom": { "fr": "Accès au supérieur", "en": "Access to higher education" },
+  "p5_fiab1_detail": { "fr": "38 années observées", "en": "38 years observed" },
+  "p5_fiab2_nom": { "fr": "Moyens par étudiant", "en": "Means per student" },
+  "p5_fiab2_detail": { "fr": "10 mesures sur 20 ans", "en": "10 measurements over 20 years" },
+  "p5_fiab3_nom": { "fr": "Lien accès / moyens", "en": "Access / means link" },
+  "p5_fiab3_detail": {
+    "fr": "cohérent avec les deux analyses précédentes",
+    "en": "consistent with the two preceding analyses"
+  },
+  "p5_fiab4_nom": { "fr": "Accélération en 2000", "en": "Acceleration in 2000" },
+  "p5_fiab4_detail": {
+    "fr": "les deux périodes diffèrent nettement",
+    "en": "the two periods differ clearly"
+  },
+  "p5_fiab5_nom": {
+    "fr": "Effet d'une hausse de crédits",
+    "en": "Effect of a funding increase"
+  },
+  "p5_fiab5_detail": {
+    "fr": "seulement {n} années comparables",
+    "en": "only {n} comparable years"
+  },
+  "p5_note": {
+    "fr": "Une cinquième analyse a testé si une hausse brutale des crédits dégrade leur exécution. Avec seulement {n} années comparables, elle n'est pas concluante : le résultat est conservé et signalé comme tel, car un test non concluant reste une information — le lien demeure une hypothèse de gestion, pas un fait établi.",
+    "en": "A fifth analysis tested whether an abrupt funding increase degrades execution. With only {n} comparable years it is inconclusive: the result is kept and flagged as such, because an inconclusive test is still information — the link remains a management hypothesis, not an established fact."
+  },
+
+  "p6_titre": {
+    "fr": "Constat 4 — le budget n'est pas le coupable évident",
+    "en": "Finding 4 — the budget is not the obvious culprit"
+  },
+  "p6_sous_titre": {
+    "fr": "Taux d'exécution comparé : enseignement supérieur, éducation, budget national",
+    "en": "Execution rates compared: higher education, education, national budget"
+  },
+  "p6_serie_es": { "fr": "Enseignement supérieur", "en": "Higher education" },
+  "p6_serie_educ": { "fr": "Secteur éducation", "en": "Education sector" },
+  "p6_serie_nat": { "fr": "Budget national", "en": "National budget" },
+  "p6_lecture_titre": {
+    "fr": "Une lecture rapide serait fausse",
+    "en": "A quick reading would be wrong"
+  },
+  "p6_lecture_corps": {
+    "fr": "Le supérieur exécute en moyenne {es} % de son enveloppe, contre {national} % pour le budget de l'État. Il exécute donc MIEUX que la moyenne nationale : il n'a pas de problème structurel de décaissement.",
+    "en": "Higher education executes on average {es} % of its envelope, against {national} % for the state budget. It therefore executes BETTER than the national average: it has no structural disbursement problem."
+  },
+  "p6_alerte_titre": { "fr": "Le vrai point d'alerte", "en": "The real warning sign" },
+  "p6_alerte_corps": {
+    "fr": "En 2018, l'enveloppe bondit de 47 % et l'exécution tombe à son plus bas niveau, laissant près de 6 milliards de FCFA non consommés. C'est la hausse brutale qui n'a pas été absorbée.",
+    "en": "In 2018 the envelope jumps by 47 % and execution falls to its lowest level, leaving nearly 6 billion FCFA unspent. It is the abrupt increase that was not absorbed."
+  },
+  "p6_prive_titre": { "fr": "Zéro franc au privé", "en": "Not one franc to the private sector" },
+  "p6_prive_corps": {
+    "fr": "La subvention de l'État aux établissements privés du supérieur est nulle sur les six années documentées, alors que le privé porte {prive} % du réseau. L'État a de fait sous-traité la massification sans contrepartie.",
+    "en": "State subsidy to private higher education institutions is nil across the six documented years, while the private sector carries {prive} % of the network. The state has in effect subcontracted massification with nothing in return."
+  },
+
+  "p7_titre": {
+    "fr": "Constat 5 — pourquoi le chômage déclaré ne suffit pas",
+    "en": "Finding 5 — why reported unemployment is not enough"
+  },
+  "p7_sous_titre": {
+    "fr": "Ce que mesure vraiment un taux de chômage dans une économie informelle",
+    "en": "What an unemployment rate really measures in an informal economy"
+  },
+  "p7_tuile1_libelle": {
+    "fr": "Chômage des diplômés ({annee})",
+    "en": "Graduate unemployment ({annee})"
+  },
+  "p7_tuile1_detail": {
+    "fr": "série Banque mondiale / OIT",
+    "en": "World Bank / ILO series"
+  },
+  "p7_tuile2_valeur": { "fr": "46 %", "en": "46 %" },
+  "p7_tuile2_libelle": {
+    "fr": "Jeunes 18-35 ans sans emploi",
+    "en": "18-35 year-olds without work"
+  },
+  "p7_tuile2_detail": {
+    "fr": "et en recherche active — Afrobarometer 2025",
+    "en": "and actively looking — Afrobarometer 2025"
+  },
+  "p7_tuile3_valeur": { "fr": "24,9 %", "en": "24.9 %" },
+  "p7_tuile3_libelle": {
+    "fr": "Taux de sous-emploi (2015)",
+    "en": "Underemployment rate (2015)"
+  },
+  "p7_tuile3_detail": {
+    "fr": "en hausse depuis 22,8 % en 2011 — INSEED",
+    "en": "up from 22.8 % in 2011 — INSEED"
+  },
+  "p7_tuile4_valeur": { "fr": "~87 %", "en": "~87 %" },
+  "p7_tuile4_libelle": {
+    "fr": "Part de l'emploi informel",
+    "en": "Share of informal employment"
+  },
+  "p7_tuile4_detail": { "fr": "INSEED", "en": "INSEED" },
+  "p7_paradoxe_titre": { "fr": "Le paradoxe apparent", "en": "The apparent paradox" },
+  "p7_paradoxe_corps": {
+    "fr": "Un chômage de {taux} % suggérerait une insertion satisfaisante. Trois repères externes disent le contraire, et l'explication est structurelle : dans une économie informelle à près de 90 %, ne pas travailler n'est pas une option finançable. L'ajustement du marché du travail ne passe donc pas par le chômage déclaré mais par le sous-emploi et l'informalité.",
+    "en": "Unemployment of {taux} % would suggest satisfactory outcomes. Three external reference points say otherwise, and the explanation is structural: in an economy nearly 90 % informal, not working is not an affordable option. The labour market therefore adjusts not through reported unemployment but through underemployment and informality."
+  },
+  "p7_pilotage_titre": {
+    "fr": "Conséquence pour le pilotage",
+    "en": "Consequence for policy steering"
+  },
+  "p7_pilotage_corps": {
+    "fr": "Le taux de chômage mesure surtout qui peut se permettre de CHERCHER un emploi — pas la qualité de l'insertion. Une politique de formation doit donc suivre le sous-emploi, la formalité de l'emploi et l'adéquation poste/qualification : ce sont les seules variables sur lesquelles elle peut réellement agir.",
+    "en": "The unemployment rate mostly measures who can afford to LOOK for work — not the quality of employment. A training policy must therefore track underemployment, job formality and the job/qualification match: those are the only variables it can actually act on."
+  },
+  "p7_test_corps": {
+    "fr": "Aucun test statistique ne relie accès et chômage sur ces données (p = 0,77, n = 5) : avec cinq points communs, la puissance est quasi nulle. Le test ne conclut rien — et c'est précisément ce qu'il faut retenir.",
+    "en": "No statistical test links access and unemployment on this data (p = 0.77, n = 5): with five common points, power is close to zero. The test concludes nothing — and that is precisely what should be retained."
+  },
+
+  "p8_titre": { "fr": "Recommandations — 26 leviers, 5 axes", "en": "Recommendations — 26 levers, 5 axes" },
+  "p8_sous_titre": {
+    "fr": "Sélection par axe ; chaque levier part d'un constat chiffré et renvoie à la vue qui l'établit",
+    "en": "A selection per axis; each lever starts from a quantified finding and points to the view establishing it"
+  },
+  "p8_axe1": { "fr": "Territoire", "en": "Territory" },
+  "p8_axe1_l1": {
+    "fr": "Conditionner les ouvertures à un critère de couverture préfectorale",
+    "en": "Make new openings conditional on a prefecture-coverage criterion"
+  },
+  "p8_axe1_l2": {
+    "fr": "Cibler les Savanes : pôle technique public de plein exercice",
+    "en": "Target Savanes: a full-scale public technical hub"
+  },
+  "p8_axe1_l3": {
+    "fr": "Consolider l'inflexion 2020-2021 par un objectif chiffré pluriannuel",
+    "en": "Consolidate the 2020-2021 shift with a multi-year quantified target"
+  },
+  "p8_axe1_l4": {
+    "fr": "Raisonner en temps d'accès (bassin) plutôt qu'en nombre par région",
+    "en": "Think in travel time (catchment) rather than counts per region"
+  },
+  "p8_axe2": { "fr": "Financement", "en": "Funding" },
+  "p8_axe2_l1": {
+    "fr": "Étaler les hausses de crédits sur deux exercices",
+    "en": "Spread funding increases over two financial years"
+  },
+  "p8_axe2_l2": {
+    "fr": "Indexer la dépense par étudiant sur les effectifs réels",
+    "en": "Index spending per student to actual headcount"
+  },
+  "p8_axe2_l3": {
+    "fr": "Trancher la position vis-à-vis du privé : subvention conditionnée ou offre publique",
+    "en": "Settle the stance on the private sector: conditional subsidy or public provision"
+  },
+  "p8_axe2_l4": {
+    "fr": "Publier les taux d'exécution par ministère en donnée ouverte",
+    "en": "Publish execution rates by ministry as open data"
+  },
+  "p8_axe3": { "fr": "Qualité de l'offre", "en": "Quality of provision" },
+  "p8_axe3_l1": {
+    "fr": "Socle minimal d'équipements opposable au renouvellement d'agrément",
+    "en": "A minimum facilities baseline enforceable at accreditation renewal"
+  },
+  "p8_axe3_l2": {
+    "fr": "Sécuriser le foncier des établissements assurant un service en zone peu couverte",
+    "en": "Secure land tenure for institutions serving under-covered areas"
+  },
+  "p8_axe3_l3": {
+    "fr": "Étendre l'amplitude d'ouverture dans les établissements saturés",
+    "en": "Extend opening hours in saturated institutions"
+  },
+  "p8_axe3_l4": {
+    "fr": "Imposer un référentiel national de métiers dans les déclarations",
+    "en": "Require a national occupational framework in declarations"
+  },
+  "p8_axe4": { "fr": "Réseau du supérieur", "en": "Higher education network" },
+  "p8_axe4_l1": {
+    "fr": "Antennes universitaires adossées aux pôles techniques existants",
+    "en": "University branches attached to existing technical hubs"
+  },
+  "p8_axe4_l2": {
+    "fr": "Au moins un établissement public du supérieur par région",
+    "en": "At least one public higher education institution per region"
+  },
+  "p8_axe4_l3": {
+    "fr": "Publier les frais de scolarité moyens par type et par ville",
+    "en": "Publish average tuition fees by type and by city"
+  },
+  "p8_axe4_l4": {
+    "fr": "Ouvrir les filières scientifiques aux femmes : 51,5 % du supérieur, 15,6 % du scientifique",
+    "en": "Open scientific programmes to women: 51.5 % of higher education, 15.6 % of science"
+  },
+  "p8_axe5": { "fr": "Données", "en": "Data" },
+  "p8_axe5_l1": {
+    "fr": "Republier les 201 champs déjà collectés du recensement technique",
+    "en": "Re-publish the 201 already-collected fields of the technical census"
+  },
+  "p8_axe5_l2": {
+    "fr": "Identifiant établissement unique et pérenne, partagé et publié",
+    "en": "A unique, durable institution identifier, shared and published"
+  },
+  "p8_axe5_l3": {
+    "fr": "Enquête d'insertion par établissement, filière et sexe",
+    "en": "An employment-outcomes survey by institution, programme and sex"
+  },
+  "p8_axe5_l4": {
+    "fr": "Aligner les périodes de collecte et publier les dates de référence",
+    "en": "Align collection periods and publish reference dates"
+  },
+
+  "p9_titre": { "fr": "Conclusion", "en": "Conclusion" },
+  "p9_sous_titre": {
+    "fr": "Réponse à la question posée, et limites de cette réponse",
+    "en": "An answer to the question asked, and the limits of that answer"
+  },
+  "p9_alignement_titre": {
+    "fr": "L'alignement n'est pas réalisé",
+    "en": "Alignment has not been achieved"
+  },
+  "p9_territorial_titre": { "fr": "Territorial", "en": "Territorial" },
+  "p9_territorial_detail": {
+    "fr": "{region} % des établissements techniques dans une région, {lome} % du supérieur dans une ville. La concentration s'est reproduite à chaque décennie.",
+    "en": "{region} % of technical institutions in one region, {lome} % of higher education in one city. Concentration reproduced itself in every decade."
+  },
+  "p9_financier_titre": { "fr": "Financier", "en": "Financial" },
+  "p9_financier_detail": {
+    "fr": "Le problème n'est pas l'incapacité à dépenser — le supérieur exécute mieux que l'État — mais le décrochage de la dépense par étudiant, à enveloppe globale quasi constante.",
+    "en": "The problem is not an inability to spend — higher education executes better than the state does — but the drop in spending per student, at a near-constant overall envelope."
+  },
+  "p9_insertion_titre": { "fr": "Insertion", "en": "Employment outcomes" },
+  "p9_insertion_detail": {
+    "fr": "On ne peut pas conclure. Le seul indicateur est national, sans ventilation par filière ni région, et il mesure mal ce qu'il prétend mesurer dans une économie informelle.",
+    "en": "No conclusion is possible. The only indicator is national, with no breakdown by programme or region, and it measures poorly what it claims to measure in an informal economy."
+  },
+  "p9_limites_titre": {
+    "fr": "Ce que ce travail ne peut pas établir",
+    "en": "What this work cannot establish"
+  },
+  "p9_limite_1": {
+    "fr": "• Le taux d'insertion par filière de formation technique",
+    "en": "• The employment rate by technical training programme"
+  },
+  "p9_limite_2": {
+    "fr": "• Le chômage par région, seul capable de relier offre locale et emploi local",
+    "en": "• Unemployment by region, the only measure able to link local provision to local jobs"
+  },
+  "p9_limite_3": {
+    "fr": "• Le devenir des sortants, faute d'identifiant commun entre les fichiers",
+    "en": "• What becomes of leavers, for lack of a common identifier across files"
+  },
+  "p9_limite_4": {
+    "fr": "• Les effectifs et l'encadrement de la formation technique : 201 des 216 champs",
+    "en": "• Headcount and staffing in technical training: 201 of the 216 fields"
+  },
+  "p9_limite_5": {
+    "fr": "   décrits au questionnaire ne sont pas publiés",
+    "en": "   described in the questionnaire are not published"
+  },
+  "p9_decision_titre": {
+    "fr": "La première décision est informationnelle",
+    "en": "The first decision is an informational one"
+  },
+  "p9_decision_corps": {
+    "fr": "Sans identifiant établissement commun aux référentiels et sans enquête d'insertion par filière, aucune politique d'adéquation formation-emploi ne peut être ni ciblée ni évaluée. Tout le reste en découle — c'est la recommandation la plus structurante de ce travail.",
+    "en": "Without an institution identifier common to the reference registers, and without an employment-outcomes survey by programme, no skills–jobs policy can be either targeted or evaluated. Everything else follows from that — it is the most structuring recommendation of this work."
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "tuile_jeux": {
+    "fr": "Jeux de données mobilisés",
+    "en": "Datasets used"
+  },
+  "tuile_jeux_detail": {
+    "fr": "ressources ouvertes du portail national",
+    "en": "open resources from the national portal"
+  },
+  "tuile_etablissements": {
+    "fr": "Établissements techniques",
+    "en": "Technical institutions"
+  },
+  "tuile_etablissements_detail": {
+    "fr": "{localites} localités couvertes",
+    "en": "{localites} localities covered"
+  },
+  "tuile_periode": {
+    "fr": "Période couverte",
+    "en": "Period covered"
+  },
+  "tuile_periode_detail": {
+    "fr": "selon les séries",
+    "en": "depending on the series"
+  },
+  "tuile_granularite": {
+    "fr": "Niveau géographique le plus fin",
+    "en": "Finest geographic level"
+  },
+  "tuile_granularite_unite": {
+    "fr": "cantons",
+    "en": "cantons"
+  },
+  "tuile_granularite_detail": {
+    "fr": "sur les 5 régions",
+    "en": "across the 5 regions"
+  },
+  "carte_intro_titre": {
+    "fr": "1. Introduction",
+    "en": "1. Introduction"
+  },
+  "carte_intro_sous_titre": {
+    "fr": "Objet, question posée et matériau disponible",
+    "en": "Purpose, question asked and available material"
+  },
+  "intro_question": {
+    "fr": "### 1.1 La question\n\nL'adéquation formation-emploi désigne le degré auquel l'appareil de formation d'un pays produit les compétences que son économie absorbe — au bon niveau, au bon endroit, et en nombre soutenable pour les finances publiques. La question posée ici est celle-ci : **l'offre de formation togolaise, les moyens publics qui la financent et l'insertion des diplômés sont-ils alignés ?**\n\nTrois sous-questions structurent le travail :\n\n1. **Où** se trouve l'offre de formation, et ce maillage correspond-il au territoire réel ?\n2. **Comment** évoluent les moyens publics rapportés au nombre d'étudiants à former ?\n3. **Que** deviennent les diplômés, et les données permettent-elles seulement de le savoir ?",
+    "en": "### 1.1 The question\n\nSkills-jobs alignment is the degree to which a country's training system produces the skills its economy absorbs — at the right level, in the right place, and in numbers public finances can sustain. The question asked here is this: **are Togo's training provision, the public funding behind it and graduate employment aligned?**\n\nThree sub-questions structure the work:\n\n1. **Where** is training provision, and does that network match the actual territory?\n2. **How** does public funding evolve relative to the number of students to be trained?\n3. **What** becomes of graduates, and do the data even allow us to know?"
+  },
+  "intro_materiau": {
+    "fr": "### 1.2 Le matériau\n\nLe travail repose sur **neuf ressources ouvertes** publiées sur `opendata.gouv.tg`, de nature très différente :\n\n| Nature | Jeux | Granularité | Période |\n|---|---|---|---|\n| Recensement d'établissements | Formations techniques (3 ressources) | Établissement géolocalisé | 2025 |\n| Répartition administrative | Établissements du supérieur | Ville × type × statut | 2018 |\n| Finances publiques | Budget voté et exécuté | National, annuel | 2013-2018 |\n| Indicateurs internationaux | Inscriptions, dépense par étudiant, chômage | National, annuel | 1971-2022 |\n| Indicateurs sectoriels | Indicateurs clés du supérieur (DICES-TG) | National, annuel | 2014-2019 |\n\nDeux traits déterminent tout ce qui suit. D'abord, **une seule source est infranationale et fine** — le recensement des établissements techniques ; tout le reste est national. Ensuite, la neuvième ressource est arrivée **après** les huit autres : c'est elle qui porte les effectifs, la féminisation, les filières scientifiques et le ratio d'encadrement, sans lesquels l'objectif n°2 du cahier des charges serait resté lettre morte.",
+    "en": "### 1.2 The material\n\nThe work rests on **nine open resources** published on `opendata.gouv.tg`, of very different natures:\n\n| Nature | Datasets | Granularity | Period |\n|---|---|---|---|\n| Institution census | Technical training (3 resources) | Geolocated institution | 2025 |\n| Administrative breakdown | Higher education institutions | City × type × status | 2018 |\n| Public finance | Approved and executed budget | National, annual | 2013-2018 |\n| International indicators | Enrolment, spending per student, unemployment | National, annual | 1971-2022 |\n| Sector indicators | Key higher education indicators (DICES-TG) | National, annual | 2014-2019 |\n\nTwo features determine everything that follows. First, **only one source is subnational and fine-grained** — the technical institution census; everything else is national. Second, the ninth resource arrived **after** the other eight: it carries enrolment, gender balance, scientific programmes and the staffing ratio, without which objective no. 2 of the brief would have remained a dead letter."
+  },
+  "note_nettoyage": {
+    "fr": "La moitié des colonnes du fichier des établissements n'était pas exploitable en l'état : champs multi-valués, doublons de casse, sentinelles de non-réponse mêlées aux vraies modalités. Le détail du nettoyage est en <b>Annexes › Méthodologie</b> ; il conditionne la validité de tout ce qui suit.",
+    "en": "Half the columns in the institution file were unusable as delivered: multi-valued fields, case duplicates, non-response sentinels mixed in with real categories. The cleaning is detailed under <b>Appendices › Methodology</b>; everything that follows depends on it."
+  },
+  "carte_demarche_titre": {
+    "fr": "1.3 Démarche",
+    "en": "1.3 Method"
+  },
+  "carte_demarche_sous_titre": {
+    "fr": "Comment les conclusions sont construites",
+    "en": "How the conclusions are built"
+  },
+  "demarche_principes": {
+    "fr": "La méthode suit trois principes, tenus sur l'ensemble du travail :\n\n- **Aucune donnée fabriquée.** Les séries lacunaires ne sont pas interpolées, les non-réponses sont conservées comme modalité « Non renseigné » plutôt que supprimées — les faire disparaître embellirait artificiellement les répartitions.\n- **Aucun croisement que les données n'autorisent pas.** Le chômage n'existe qu'au niveau national : il n'entre donc dans aucun score régional.\n- **Le contexte externe est séparé du corpus.** Quatre repères issus de l'INSEED et d'Afrobarometer éclairent la lecture ; ils sont signalés comme tels et sourcés, jamais mélangés aux graphes du portail.",
+    "en": "The method follows three principles, held throughout:\n\n- **No fabricated data.** Patchy series are not interpolated; non-responses are kept as a “Not reported” category rather than dropped — removing them would artificially flatter the distributions.\n- **No cross-analysis the data do not permit.** Unemployment exists only at national level: it therefore enters no regional score.\n- **External context is kept separate from the corpus.** Four reference points from INSEED and Afrobarometer inform the reading; they are flagged and sourced, never mixed into the portal's charts."
+  },
+  "carte_perimetre_titre": {
+    "fr": "1.4 Périmètre — ce qui est honoré, et ce qui ne peut pas l'être",
+    "en": "1.4 Scope — what is delivered, and what cannot be"
+  },
+  "carte_perimetre_sous_titre": {
+    "fr": "Les {total} indicateurs demandés par le cahier des charges, confrontés un à un au contenu réel des neuf ressources",
+    "en": "The {total} indicators required by the brief, checked one by one against what the nine resources actually contain"
+  },
+  "tuile_honores": {
+    "fr": "Indicateurs honorés",
+    "en": "Indicators delivered"
+  },
+  "tuile_honores_detail": {
+    "fr": "établis directement sur les données",
+    "en": "established directly from the data"
+  },
+  "tuile_partiels": {
+    "fr": "Honorés partiellement",
+    "en": "Partially delivered"
+  },
+  "tuile_partiels_detail": {
+    "fr": "un proxy existe, pas la mesure demandée",
+    "en": "a proxy exists, not the required measure"
+  },
+  "tuile_impossibles": {
+    "fr": "Hors de portée",
+    "en": "Out of reach"
+  },
+  "tuile_impossibles_detail": {
+    "fr": "la donnée n'est pas dans le corpus",
+    "en": "the data is not in the corpus"
+  },
+  "verdict_honore": {
+    "fr": "Honoré",
+    "en": "Delivered"
+  },
+  "verdict_partiel": {
+    "fr": "Partiel",
+    "en": "Partial"
+  },
+  "verdict_impossible": {
+    "fr": "Impossible",
+    "en": "Impossible"
+  },
+  "libelle_source": {
+    "fr": "Source : {source}",
+    "en": "Source: {source}"
+  },
+  "carte_causes_titre": {
+    "fr": "1.5 Pourquoi certains indicateurs ne peuvent pas être honorés",
+    "en": "1.5 Why some indicators cannot be delivered"
+  },
+  "carte_causes_sous_titre": {
+    "fr": "Deux causes distinctes, qui n'appellent pas le même remède",
+    "en": "Two distinct causes, calling for different remedies"
+  },
+  "causes_corps": {
+    "fr": "Les indicateurs qui manquent ne manquent pas tous pour la même raison, et les confondre conduirait à des recommandations fausses. Le corpus en distingue **deux**.\n\n#### a) Une donnée collectée, mais non publiée — le cas de la formation technique\n\nLe jeu DEFT-TG publie deux ressources. La première est le fichier de données, avec ses **{publies} colonnes**. La seconde est le dictionnaire des champs, qui décrit le questionnaire réellement administré sur le terrain : **{decrits} champs**. Seuls **{communs}** figurent dans les deux, soit **{part} %** du questionnaire. **{absents} champs décrits n'ont pas été diffusés** — et ce sont précisément ceux qu'on attendrait :\n\n| Ce qu'on attendrait du fichier technique | Champs prévus au questionnaire | Publiés |\n|---|---|---|\n| Nombre d'élèves formés | `{champs_eleves}` | aucun |\n| Encadrement | {nb_enseignants} champs dont `enseignants_total` | aucun |\n| Ventilation par sexe | {nb_sexe} champs dont `enseignants_femmes`, `personnel_femme_nbr` | aucun |\n\nLe dictionnaire les type explicitement comme des entiers (`xsd:int`) : ce sont des dénombrements, pas des champs restés vides. **Cette limite se lève par une exportation, pas par une enquête.**\n\n#### b) Une donnée qui n'existe à aucune granularité utile — le cas de l'insertion\n\nLe chômage des diplômés n'est publié qu'au niveau **national**, sans ventilation par filière ni par région. Ce n'est pas un défaut de diffusion : l'enquête source ne descend pas plus bas. Aucun taux d'insertion local n'est donc calculable, ce qui interdit de relier une offre de formation à son marché du travail. C'est la limite la plus lourde du travail, et la seule qui exige une enquête nouvelle.\n\n#### Un précédent qui invite à la prudence\n\nLes quatre indicateurs de l'objectif n°2 — effectifs, féminisation, filières scientifiques, ratio étudiant/enseignant — figuraient dans ce même chapitre comme hors de portée, tant que le corpus comptait huit ressources. Ils sont tous portés par une **neuvième** (DICES-TG), publiée sur le même portail. La donnée existait ; c'est son inventaire qui était incomplet. Un « indicateur absent » signifie donc toujours *absent du corpus retenu*, jamais *inexistant*.",
+    "en": "The missing indicators are not all missing for the same reason, and confusing them would lead to wrong recommendations. The corpus shows **two**.\n\n#### a) Data collected but not published — the technical training case\n\nThe DEFT-TG dataset publishes two resources. The first is the data file, with its **{publies} columns**. The second is the field dictionary, describing the questionnaire actually administered in the field: **{decrits} fields**. Only **{communs}** appear in both, that is **{part} %** of the questionnaire. **{absents} described fields were not released** — and they are precisely the ones one would expect:\n\n| What one would expect from the technical file | Fields planned in the questionnaire | Published |\n|---|---|---|\n| Number of pupils trained | `{champs_eleves}` | none |\n| Staffing | {nb_enseignants} fields including `enseignants_total` | none |\n| Breakdown by sex | {nb_sexe} fields including `enseignants_femmes`, `personnel_femme_nbr` | none |\n\nThe dictionary types them explicitly as integers (`xsd:int`): these are counts, not fields left empty. **This limit is lifted by an export, not by a survey.**\n\n#### b) Data that exists at no useful granularity — the employment case\n\nGraduate unemployment is published at **national** level only, with no breakdown by programme or region. This is not a release failure: the source survey does not go lower. No local employment rate can therefore be computed, which rules out linking training provision to its labour market. It is the heaviest limit of the work, and the only one requiring a new survey.\n\n#### A precedent that calls for caution\n\nThe four indicators of objective no. 2 — enrolment, gender balance, scientific programmes, student/teacher ratio — appeared in this very chapter as out of reach, as long as the corpus held eight resources. They are all carried by a **ninth** (DICES-TG), published on the same portal. The data existed; it was the inventory that was incomplete. A “missing indicator” therefore always means *absent from the corpus considered*, never *non-existent*."
+  },
+  "note_consequence": {
+    "fr": "<b>Conséquence sur les recommandations.</b> Une donnée jamais collectée impose une enquête — plusieurs mois et un budget. Une donnée collectée mais non publiée n'impose qu'une <b>republication</b> de la ressource existante. Les {absents} champs manquants du fichier technique sont déjà dans le système d'information du ministère : c'est la mesure la moins coûteuse et la plus immédiate de tout ce rapport.",
+    "en": "<b>Consequence for the recommendations.</b> Data never collected requires a survey — several months and a budget. Data collected but unpublished requires only a <b>re-release</b> of the existing resource. The {absents} missing fields of the technical file are already in the ministry's information system: this is the cheapest and most immediate measure in the whole report."
+  },
+  "note_verification": {
+    "fr": "Présences et absences sont <b>vérifiées</b>, non supposées : les huit fichiers sont balayés à la recherche de toute colonne <i>et</i> de tout intitulé de série évoquant le sexe, un effectif, un enseignant ou une discipline. Le contrôle est reproductible — <code>utils/perimetre.py</code>, fonction <code>localise_indicateurs</code>.",
+    "en": "Presences and absences are <b>verified</b>, not assumed: the eight files are swept for any column <i>and</i> any series label mentioning sex, a headcount, a teacher or a discipline. The check is reproducible — <code>utils/perimetre.py</code>, function <code>localise_indicateurs</code>."
+  },
+  "carte_dev_titre": {
+    "fr": "2. Développement",
+    "en": "2. Findings"
+  },
+  "carte_dev_sous_titre": {
+    "fr": "Ce que les données établissent, en quatre constats",
+    "en": "What the data establish, in four findings"
+  },
+  "dev_constat_1": {
+    "fr": "### 2.1 Premier constat — une offre extrêmement concentrée\n\nLa région **{region_tete}** concentre **{part_tete} %** des établissements de formation technique du pays, et deux préfectures du Grand Lomé en rassemblent **{part_deux} %** à elles seules. À l'autre extrémité, **{region_queue}** en compte **{etab_queue}**.\n\nLe déséquilibre est encore plus marqué dans l'enseignement supérieur : **{part_lome} %** des établissements sont à Lomé, et **{part_prive} %** du réseau est privé.\n\nL'apport décisif est **temporel** : le fichier date chaque création, ce qui permet de savoir *quand* cette concentration s'est installée. Elle n'est pas un héritage ancien qu'on corrigerait progressivement — Maritime capte la majorité des créations à **chaque décennie**, y compris pendant la phase d'expansion des années 2000-2010. Les Savanes n'enregistrent **aucune création dans les années 2000**. Seule la période 2020-2021 montre une inflexion réelle.",
+    "en": "### 2.1 First finding — extremely concentrated provision\n\nThe **{region_tete}** region holds **{part_tete} %** of the country's technical training institutions, and two prefectures of Greater Lomé account for **{part_deux} %** on their own. At the other end, **{region_queue}** has **{etab_queue}**.\n\nThe imbalance is sharper still in higher education: **{part_lome} %** of institutions are in Lomé, and **{part_prive} %** of the network is private.\n\nThe decisive contribution is **temporal**: the file dates every opening, which shows *when* this concentration took hold. It is not an old legacy being gradually corrected — Maritime captures most openings in **every decade**, including through the 2000-2010 expansion. Savanes records **no opening at all in the 2000s**. Only 2020-2021 shows a real inflection."
+  },
+  "dev_constat_2": {
+    "fr": "### 2.2 Deuxième constat — l'effet ciseaux\n\nEntre 1998 et 2017, deux courbes divergent sur une base commune :\n\n- l'accès au supérieur est multiplié par **{acces}** ;\n- la dépense publique par étudiant perd **{perte} %** de sa valeur relative, passant de **{depense_debut} %** du PIB par habitant à **{depense_fin} %**.\n\nLes deux séries sont indexées à 100 sur la même année et lues sur **un seul axe** : l'écart est donc mesurable, et non un artefact d'échelle produit par un graphique à double axe. C'est le cœur du diagnostic — l'accès a été élargi sans que les moyens par étudiant suivent.",
+    "en": "### 2.2 Second finding — the scissors effect\n\nBetween 1998 and 2017, two curves diverge on a common base:\n\n- access to higher education multiplies by **{acces}**;\n- public spending per student loses **{perte} %** of its relative value, falling from **{depense_debut} %** of GDP per capita to **{depense_fin} %**.\n\nBoth series are indexed to 100 on the same year and read on **a single axis**: the gap is therefore measurable, not a scaling artefact produced by a dual-axis chart. This is the core of the diagnosis — access was widened without resources per student following."
+  },
+  "dev_constat_3": {
+    "fr": "### 2.3 Troisième constat — le budget n'est pas le coupable évident\n\nUne lecture rapide conclurait à une incapacité du supérieur à dépenser ses crédits. La comparaison la dément : le supérieur exécute en moyenne **{moyenne_es} %** de son enveloppe, contre **{moyenne_nat} %** pour le budget de l'État. **Il exécute mieux que la moyenne nationale.**\n\nLe point d'alerte est ailleurs, et il est précis : en **2018**, l'enveloppe votée bondit de **47 %** et l'exécution tombe à son plus bas niveau (**{taux_2018} %**), laissant près de **6 milliards de FCFA** non consommés. Ce n'est pas une incapacité chronique, c'est une hausse trop brutale pour être absorbée dans l'exercice.\n\nUn second fait budgétaire mérite d'être isolé : la subvention de l'État aux établissements **privés** du supérieur est de **zéro sur les six années documentées**, alors que le privé porte **{part_prive} %** du réseau. L'État a de fait sous-traité la massification sans contrepartie ni levier de régulation.",
+    "en": "### 2.3 Third finding — the budget is not the obvious culprit\n\nA quick reading would conclude that higher education cannot spend its funds. The comparison refutes it: higher education executes on average **{moyenne_es} %** of its allocation, against **{moyenne_nat} %** for the State budget. **It executes better than the national average.**\n\nThe warning sign lies elsewhere, and it is precise: in **2018**, the approved allocation jumps by **47 %** and execution falls to its lowest level (**{taux_2018} %**), leaving nearly **6 billion FCFA** unspent. This is not chronic incapacity, it is a rise too abrupt to absorb within the year.\n\nA second budgetary fact deserves isolating: the State subsidy to **private** higher education institutions is **zero across the six documented years**, while the private sector carries **{part_prive} %** of the network. The State has in effect outsourced mass enrolment with neither counterpart nor regulatory lever."
+  },
+  "dev_constat_4": {
+    "fr": "### 2.4 Quatrième constat — la qualité de l'offre est peu documentée, et faible\n\nLe jeu de données annonce documenter « la qualité des infrastructures et des équipements ». Trois champs le permettent, et le résultat est sévère :\n\n- **{part_sport} %** des établissements disposent d'un terrain de sport ;\n- **{part_wc} %** sont équipés de WC, et **{part_inconnu} %** ne renseignent pas leur équipement sanitaire ;\n- **{part_foncier} %** sont installés sur du foncier privé, contre 14 % sur le domaine public.\n\nL'ampleur des non-réponses est en soi un résultat : elle indique un appareil de collecte qui documente mal ce qu'il est censé piloter.",
+    "en": "### 2.4 Fourth finding — provision quality is poorly documented, and weak\n\nThe dataset claims to document “the quality of infrastructure and equipment”. Three fields allow it, and the result is harsh:\n\n- **{part_sport} %** of institutions have a sports field;\n- **{part_wc} %** have toilets, and **{part_inconnu} %** do not report their sanitation at all;\n- **{part_foncier} %** sit on private land, against 14 % on public land.\n\nThe scale of non-response is itself a result: it points to a collection system that poorly documents what it is meant to steer."
+  },
+  "carte_chomage_titre": {
+    "fr": "2.5 Ce que le chômage déclaré ne dit pas",
+    "en": "2.5 What reported unemployment does not say"
+  },
+  "carte_chomage_sous_titre": {
+    "fr": "Le point où les données du portail doivent être complétées",
+    "en": "Where the portal's data must be supplemented"
+  },
+  "chomage_corps": {
+    "fr": "Le taux de chômage des diplômés du supérieur s'établit à **{taux} %** en **{annee}**, après un pic de **{pic} %** en **{annee_pic}**. Pris seul, ce chiffre suggérerait une insertion satisfaisante.\n\nIl faut le lire autrement. Dans une économie très informelle, **ne pas travailler n'est pas une option finançable** : l'ajustement du marché du travail ne passe pas par le chômage déclaré mais par le **sous-emploi** et l'**informalité**. Le taux mesure donc surtout qui peut se permettre de *chercher* un emploi — pas la qualité de l'insertion. Les enquêtes nationales et Afrobarometer le confirment :",
+    "en": "Unemployment among higher education graduates stands at **{taux} %** in **{annee}**, after a peak of **{pic} %** in **{annee_pic}**. Taken alone, that figure would suggest satisfactory outcomes.\n\nIt must be read differently. In a heavily informal economy, **not working is not an affordable option**: the labour market adjusts not through reported unemployment but through **underemployment** and **informality**. The rate therefore mostly measures who can afford to *look* for work — not the quality of employment outcomes. National surveys and Afrobarometer confirm it:"
+  },
+  "carte_conclusion_titre": {
+    "fr": "3. Conclusion",
+    "en": "3. Conclusion"
+  },
+  "carte_conclusion_sous_titre": {
+    "fr": "Réponse à la question posée, et limites de cette réponse",
+    "en": "Answer to the question asked, and the limits of that answer"
+  },
+  "conclusion_reponse": {
+    "fr": "### 3.1 Réponse à la question\n\n**L'offre de formation, les moyens publics et l'insertion ne sont pas alignés**, et le désalignement se joue sur trois plans distincts qu'il serait faux de confondre :\n\n**Sur le plan territorial**, l'offre suit la démographie urbaine et non le maillage administratif. {part_tete} % des établissements techniques sont dans une seule région, {part_lome} % du supérieur dans une seule ville. Ce n'est pas un héritage en voie de résorption : la concentration s'est **reproduite à chaque décennie**, et seule la période récente montre une inflexion.\n\n**Sur le plan financier**, le problème n'est pas l'incapacité à dépenser — le supérieur exécute mieux que l'État — mais le **décrochage de la dépense par étudiant**, divisée par près de quatre pendant que les effectifs explosaient. À quoi s'ajoute une position non assumée vis-à-vis du privé, qui porte {part_prive} % du réseau sans recevoir un franc de subvention.\n\n**Sur le plan de l'insertion**, la réponse honnête est qu'**on ne peut pas conclure**. Le seul indicateur disponible est national, sans ventilation par filière ni par région, et il mesure mal ce qu'il prétend mesurer dans une économie informelle à près de 90 %.",
+    "en": "### 3.1 Answer to the question\n\n**Training provision, public funding and employment outcomes are not aligned**, and the misalignment plays out on three distinct levels that it would be wrong to conflate:\n\n**Territorially**, provision follows urban demographics rather than the administrative grid. {part_tete} % of technical institutions sit in a single region, {part_lome} % of higher education in a single city. This is not a legacy being absorbed: concentration has **repeated itself in every decade**, and only the recent period shows an inflection.\n\n**Financially**, the problem is not an inability to spend — higher education executes better than the State — but the **decoupling of spending per student**, divided by nearly four while enrolment surged. To which is added an unstated position towards the private sector, which carries {part_prive} % of the network without receiving a single franc of subsidy.\n\n**On employment outcomes**, the honest answer is that **no conclusion is possible**. The only available indicator is national, with no breakdown by programme or region, and it poorly measures what it claims to in an economy that is nearly 90 % informal."
+  },
+  "conclusion_limites": {
+    "fr": "### 3.2 Ce que ce travail ne peut pas établir, et pourquoi\n\nSur les **{total}** indicateurs demandés par le cahier des charges, **{honores}** sont honorés, **{partiels}** ne le sont que partiellement et **{impossibles}** sont hors de portée. Aucun n'a été simulé. Le détail figure en **1.4** ; la conclusion à en tirer est qu'il existe **deux limites de nature différente**, qu'il serait coûteux de confondre.\n\n**La première est une limite de publication, pas de connaissance.** Féminisation, effectifs d'élèves et ratio étudiant/enseignant sont absents du fichier diffusé mais **présents dans le questionnaire** : le dictionnaire des champs décrit {decrits} champs, la ressource publiée en expose {publies}. {absents} champs déjà collectés ne sont pas diffusés. Cette limite se lève par une exportation, pas par une enquête.\n\n**La seconde est une limite de fond.** Le chômage des diplômés n'existe qu'au niveau national, sans ventilation par filière ni par région. Trois croisements qu'on attendrait légitimement restent donc impossibles :\n\n- le **taux d'insertion par filière** de formation technique ;\n- le **chômage par région**, qui seul permettrait de relier offre locale et emploi local ;\n- le **devenir des sortants** des établissements cartographiés, faute d'identifiant commun entre les fichiers.\n\nLe tableau de bord met donc en regard des séries **nationales** (accès, dépense, chômage) et une géographie **infranationale** de l'offre. C'est le niveau de preuve que le corpus autorise.",
+    "en": "### 3.2 What this work cannot establish, and why\n\nOf the **{total}** indicators required by the brief, **{honores}** are delivered, **{partiels}** only partially, and **{impossibles}** are out of reach. None was simulated. The detail is in **1.4**; the conclusion to draw is that there are **two limits of different natures**, which it would be costly to conflate.\n\n**The first is a publication limit, not a knowledge limit.** Gender balance, pupil headcounts and the student/teacher ratio are absent from the released file but **present in the questionnaire**: the field dictionary describes {decrits} fields, the published resource exposes {publies}. {absents} already-collected fields are not released. This limit is lifted by an export, not by a survey.\n\n**The second is a substantive limit.** Graduate unemployment exists only at national level, with no breakdown by programme or region. Three legitimately expected cross-analyses therefore remain impossible:\n\n- the **employment rate by programme** of technical training;\n- **unemployment by region**, the only way to link local provision to local jobs;\n- the **destination of leavers** from the mapped institutions, for want of a shared identifier across files.\n\nThe dashboard therefore sets **national** series (access, spending, unemployment) against a **subnational** geography of provision. That is the level of proof the corpus permits."
+  },
+  "note_decision": {
+    "fr": "La première décision à prendre n'est pas budgétaire mais <b>informationnelle</b> — et elle se dédouble. À court terme, <b>republier les {absents} champs déjà collectés</b> : c'est la mesure la moins coûteuse du rapport, et elle débloque à elle seule trois des indicateurs demandés. À moyen terme, un identifiant établissement commun aux référentiels et une enquête d'insertion ventilée par filière et par région — sans quoi aucune politique d'adéquation formation-emploi ne peut être ni ciblée ni évaluée.",
+    "en": "The first decision to take is not budgetary but <b>informational</b> — and it splits in two. In the short term, <b>re-release the {absents} already-collected fields</b>: it is the cheapest measure in the report, and it alone unlocks three of the required indicators. In the medium term, a shared institution identifier across registries and an employment survey broken down by programme and region — without which no skills-jobs policy can be targeted or evaluated."
+  },
+  "carte_suites_titre": {
+    "fr": "3.3 Suites opérationnelles",
+    "en": "3.3 Operational next steps"
+  },
+  "carte_suites_sous_titre": {
+    "fr": "Où trouver le détail des actions proposées",
+    "en": "Where to find the detail of the proposed actions"
+  },
+  "suites_corps": {
+    "fr": "Les constats de ce rapport sont traduits en **26 leviers d'action** classés par axe — territoire, financement, qualité de l'offre, réseau du supérieur, données. Chacun part d'un constat chiffré dans ce tableau de bord et renvoie à la vue qui l'établit, de sorte qu'aucune recommandation ne soit invérifiable.\n\n→ **Recommandations › Leviers d'action**\n\nLe classement des régions par priorité, avec le score de couverture et son mode de calcul explicite, est disponible en **Recommandations › Territoires prioritaires**.",
+    "en": "The findings of this report are translated into **26 action levers** grouped by axis — territory, funding, provision quality, higher education network, data. Each starts from a quantified finding in this dashboard and points to the view that establishes it, so that no recommendation is unverifiable.\n\n→ **Recommendations › Action levers**\n\nThe ranking of regions by priority, with the coverage score and its explicit calculation, is available under **Recommendations › Priority areas**."
+  }
+}

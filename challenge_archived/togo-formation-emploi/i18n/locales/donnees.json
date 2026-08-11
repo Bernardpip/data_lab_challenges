@@ -1,0 +1,141 @@
+{
+  "aide_niveau": { "fr": "Un seul fichier descend sous le niveau national.", "en": "Only one file goes below national level." },
+  "completude_disponible": { "fr": "Disponible", "en": "Available" },
+  "completude_sans_objet": { "fr": "Sans objet", "en": "Not applicable" },
+  "aide_completude": { "fr": "La complétude champ par champ n'a de sens que sur un fichier de niveau établissement.", "en": "Field-by-field coverage only makes sense on an institution-level file." },
+
+  "tuile_fichiers": { "fr": "Fichiers retenus", "en": "Files retained" },
+  "tuile_fichiers_detail": { "fr": "sur {total} fichiers chargés", "en": "of {total} files loaded" },
+  "tuile_lignes": { "fr": "Lignes au total", "en": "Rows in total" },
+  "tuile_lignes_detail": { "fr": "dans la sélection", "en": "in the selection" },
+  "tuile_infranationales": { "fr": "Sources infranationales", "en": "Subnational sources" },
+  "tuile_infranationales_detail": { "fr": "seul le fichier technique descend sous le national", "en": "only the technical file goes below national level" },
+  "tuile_annees": { "fr": "Années couvertes", "en": "Years covered" },
+  "tuile_annees_detail": { "fr": "selon les fichiers", "en": "depending on the file" },
+  "info_aucun_fichier": { "fr": "Aucun fichier ne correspond à la sélection.", "en": "No file matches the selection." },
+
+  "fiche_volumetrie": { "fr": "Volumétrie", "en": "Volume" },
+  "fiche_volumetrie_valeur": { "fr": "{lignes} lignes × {colonnes} colonnes", "en": "{lignes} rows × {colonnes} columns" },
+  "fiche_granularite": { "fr": "Granularité", "en": "Granularity" },
+  "fiche_niveau": { "fr": "Niveau géographique", "en": "Geographic level" },
+  "fiche_periode": { "fr": "Période", "en": "Period" },
+  "fiche_cle": { "fr": "Clé", "en": "Key" },
+
+  "carte_completude_titre": { "fr": "Complétude des champs", "en": "Field coverage" },
+  "carte_completude_sous_titre": {
+    "fr": "Part des établissements pour lesquels le champ est réellement renseigné — « Non renseigné » ne compte pas comme une réponse",
+    "en": "Share of institutions for which the field is actually filled in — “Not reported” does not count as an answer"
+  },
+  "note_completude": {
+    "fr": "<b>{faibles} champs sur {total}</b> sont renseignés pour moins de 90 % des établissements. Le champ le moins complet est <b>{champ}</b> ({taux} %). Ces trous sont conservés en clair dans les graphes sous la modalité « Non renseigné » : les masquer donnerait des répartitions plus nettes mais fausses.",
+    "en": "<b>{faibles} of {total} fields</b> are filled in for fewer than 90 % of institutions. The least complete field is <b>{champ}</b> ({taux} %). These gaps are kept visible in the charts under the “Not reported” category: hiding them would give cleaner but false distributions."
+  },
+  "colonne_champ": { "fr": "Champ", "en": "Field" },
+  "colonne_renseignes": { "fr": "Renseignés", "en": "Filled in" },
+  "colonne_taux": { "fr": "Taux (%)", "en": "Rate (%)" },
+
+  "verdict_solide": { "fr": "Croisement solide", "en": "Robust cross-analysis" },
+  "verdict_fragile": { "fr": "Fragile — {obs} observations", "en": "Fragile — {obs} observations" },
+  "etat_fragile": { "fr": "Fragile", "en": "Fragile" },
+  "entete_ingredients": { "fr": "Ingrédients", "en": "Inputs" },
+  "entete_cle": { "fr": "Clé", "en": "Key" },
+  "entete_observations": { "fr": "Observations", "en": "Observations" },
+
+  "aide_solidite": {
+    "fr": "Le seuil dépend de la recette : dix années pour une série longue, cinq régions pour le croisement géographique.",
+    "en": "The threshold depends on the recipe: ten years for a long series, five regions for the geographic cross-analysis."
+  },
+  "tuile_croisements": { "fr": "Croisements affichés", "en": "Cross-analyses shown" },
+  "tuile_croisements_detail": { "fr": "sur {total} possibles", "en": "of {total} possible" },
+  "tuile_plus_solide": { "fr": "Croisement le plus solide", "en": "Most robust cross-analysis" },
+  "tuile_plus_solide_detail": { "fr": "accès × moyens ({debut}-{fin})", "en": "access × funding ({debut}-{fin})" },
+  "tuile_geographique": { "fr": "Croisement géographique", "en": "Geographic cross-analysis" },
+  "tuile_geographique_detail": { "fr": "le seul possible, via les chefs-lieux", "en": "the only one possible, via regional capitals" },
+  "tuile_plus_attendu": { "fr": "Croisement le plus attendu", "en": "Most anticipated cross-analysis" },
+  "tuile_plus_attendu_detail": { "fr": "accès × chômage — trop peu", "en": "access × unemployment — too few" },
+  "unite_annees": { "fr": "années", "en": "years" },
+  "info_aucun_croisement": { "fr": "Aucun croisement ne correspond à la sélection.", "en": "No cross-analysis matches the selection." },
+
+  "r1_titre": { "fr": "Recette 1 — Accès et moyens", "en": "Recipe 1 — Access and funding" },
+  "r1_sous_titre": { "fr": "L'élargissement de l'accès s'est-il accompagné des moyens correspondants ?", "en": "Was widening access matched by corresponding resources?" },
+  "r1_serie_acces": { "fr": "Accès au supérieur", "en": "Access to higher education" },
+  "r1_serie_depense": { "fr": "Dépense par étudiant", "en": "Spending per student" },
+  "r1_note": {
+    "fr": "Aucun des deux fichiers ne peut produire ce résultat seul : l'un mesure un taux de scolarisation, l'autre un pourcentage du PIB par habitant. La jointure sur l'année et la mise en indice commune rendent l'écart lisible — il atteint <b>{ecart} points</b> en {annee}.",
+    "en": "Neither file can produce this result alone: one measures an enrolment rate, the other a percentage of GDP per capita. Joining on the year and rebasing to a common index make the gap readable — it reaches <b>{ecart} points</b> in {annee}."
+  },
+  "colonne_annee": { "fr": "Année", "en": "Year" },
+  "colonne_acces": { "fr": "Accès (%)", "en": "Access (%)" },
+  "colonne_depense_pib": { "fr": "Dépense (% PIB/hab.)", "en": "Spending (% GDP/capita)" },
+  "colonne_acces_indice": { "fr": "Accès (indice)", "en": "Access (index)" },
+  "colonne_depense_indice": { "fr": "Dépense (indice)", "en": "Spending (index)" },
+  "colonne_ecart": { "fr": "Écart (points)", "en": "Gap (points)" },
+
+  "r2_titre": { "fr": "Recette 2 — L'effort en francs, rapporté à l'accès", "en": "Recipe 2 — Effort in francs, relative to access" },
+  "r2_sous_titre": { "fr": "Le même effort, mesuré en monnaie plutôt qu'en part du PIB", "en": "The same effort, measured in currency rather than as a share of GDP" },
+  "r2_serie": { "fr": "Budget voté par point de taux d'accès", "en": "Approved budget per point of access rate" },
+  "r2_note": {
+    "fr": "Cette recette <b>corrige la lecture de la recette 1</b>. Entre {debut} et {fin}, le budget voté du supérieur progresse de <b>{budget} %</b> quand l'accès n'augmente que de <b>{acces} %</b> : rapporté à chaque point de taux d'accès, l'effort budgétaire <b>augmente de {ratio} %</b>.<br><br>Autrement dit, sur la période récente, l'État met <i>plus</i> de francs par étudiant — mais moins que ne croît la richesse nationale, ce que seul l'indicateur en part du PIB fait apparaître. Les deux lectures sont vraies, elles ne mesurent pas la même chose.",
+    "en": "This recipe <b>corrects the reading of recipe 1</b>. Between {debut} and {fin}, the approved higher education budget rises by <b>{budget} %</b> while access rises by only <b>{acces} %</b>: per point of access rate, budgetary effort <b>increases by {ratio} %</b>.<br><br>In other words, over the recent period the State puts in <i>more</i> francs per student — but less than national wealth grows, which only the share-of-GDP indicator reveals. Both readings are true; they do not measure the same thing."
+  },
+  "colonne_budget_vote": { "fr": "Budget voté (M FCFA)", "en": "Approved budget (M FCFA)" },
+  "colonne_execute": { "fr": "Exécuté (M FCFA)", "en": "Executed (M FCFA)" },
+  "colonne_taux_acces": { "fr": "Taux d'accès (%)", "en": "Access rate (%)" },
+  "colonne_budget_par_point": { "fr": "M FCFA par point d'accès", "en": "M FCFA per access point" },
+
+  "r3_titre": { "fr": "Recette 3 — Deux sources, deux récits", "en": "Recipe 3 — Two sources, two stories" },
+  "r3_sous_titre": { "fr": "Confrontation des deux mesures du financement sur leurs années communes", "en": "The two funding measures set against each other over their common years" },
+  "r3_serie_budget": { "fr": "Budget voté (FCFA)", "en": "Approved budget (FCFA)" },
+  "r3_serie_depense": { "fr": "Dépense/étudiant (% PIB/hab.)", "en": "Spending/student (% GDP/capita)" },
+  "r3_note": {
+    "fr": "Croisement de contrôle, et il est <b>alarmant au premier regard</b> : sur les mêmes années, le budget en francs monte de <b>{budget} %</b> tandis que la dépense par étudiant en part du PIB baisse de <b>{depense} %</b>. Les deux séries vont en sens opposé.<br><br>Il n'y a pourtant pas d'erreur : la seconde est un ratio dont le dénominateur — le PIB par habitant — progresse plus vite que le numérateur. <b>C'est la raison pour laquelle ce tableau de bord ne présente jamais la baisse de la dépense par étudiant comme une baisse en francs.</b>",
+    "en": "A control cross-analysis, and it is <b>alarming at first glance</b>: over the same years, the budget in francs rises by <b>{budget} %</b> while spending per student as a share of GDP falls by <b>{depense} %</b>. The two series move in opposite directions.<br><br>Yet there is no error: the second is a ratio whose denominator — GDP per capita — grows faster than its numerator. <b>This is why this dashboard never presents the fall in spending per student as a fall in francs.</b>"
+  },
+
+  "r4_titre": { "fr": "Recette 4 — Deux réseaux sur un même territoire", "en": "Recipe 4 — Two networks on one territory" },
+  "r4_sous_titre": { "fr": "Formation technique et enseignement supérieur, ramenés à la région", "en": "Technical training and higher education, brought back to the region" },
+  "r4_serie_technique": { "fr": "Formation technique", "en": "Technical training" },
+  "r4_serie_superieur": { "fr": "Enseignement supérieur", "en": "Higher education" },
+  "r4_note": {
+    "fr": "Seul croisement géographique du corpus. Le fichier du supérieur ne connaît que des villes : elles sont ramenées à leur région par une table de correspondance dont cinq entrées sont <b>attestées par les données elles-mêmes</b> et trois par leur préfecture.<br><br>Le résultat est net : le supérieur est <b>encore plus concentré</b> que la formation technique. Maritime pèse <b>{part_tech} %</b> du réseau technique mais <b>{part_sup} %</b> du supérieur. À l'inverse, les Plateaux accueillent <b>{plateaux_tech} %</b> des établissements techniques pour seulement <b>{plateaux_sup} %</b> du supérieur : c'est la région où le décalage entre les deux réseaux est le plus fort.",
+    "en": "The only geographic cross-analysis in the corpus. The higher education file knows only cities: they are mapped to their region through a lookup table whose five entries are <b>attested by the data themselves</b> and three by their prefecture.<br><br>The result is clear: higher education is <b>even more concentrated</b> than technical training. Maritime accounts for <b>{part_tech} %</b> of the technical network but <b>{part_sup} %</b> of higher education. Conversely, Plateaux hosts <b>{plateaux_tech} %</b> of technical institutions for only <b>{plateaux_sup} %</b> of higher education: it is the region where the gap between the two networks is widest."
+  },
+  "r4_reserve": {
+    "fr": "<b>Réserve de méthode.</b> Les deux jeux n'ont pas la même date ({millesimes}) : la comparaison porte sur des structures, pas sur un instantané commun. Aucune ville n'est restée non appariée.",
+    "en": "<b>Methodological caveat.</b> The two datasets do not share a date ({millesimes}): the comparison is of structures, not of a common snapshot. No city was left unmatched."
+  },
+  "colonne_region": { "fr": "Région", "en": "Region" },
+  "colonne_technique": { "fr": "Technique", "en": "Technical" },
+  "colonne_superieur": { "fr": "Supérieur", "en": "Higher ed." },
+  "colonne_total": { "fr": "Total", "en": "Total" },
+  "colonne_part_technique": { "fr": "Part technique (%)", "en": "Technical share (%)" },
+  "colonne_part_superieur": { "fr": "Part supérieur (%)", "en": "Higher ed. share (%)" },
+  "colonne_ecart_points": { "fr": "Écart (points)", "en": "Gap (points)" },
+
+  "r5_titre": { "fr": "Recette 5 — Accès et insertion", "en": "Recipe 5 — Access and employment" },
+  "r5_sous_titre": { "fr": "Le croisement que tout le sujet appelle — et que les données refusent", "en": "The cross-analysis the whole brief calls for — and the data refuse" },
+  "r5_axe_x": { "fr": "Taux brut d'inscription (%)", "en": "Gross enrolment rate (%)" },
+  "r5_axe_y": { "fr": "Chômage des diplômés (%)", "en": "Graduate unemployment (%)" },
+  "r5_note": {
+    "fr": "C'est la recette que le sujet réclame : l'élargissement de l'accès se traduit-il par une dégradation de l'insertion ? La jointure ne retient que <b>{obs} années communes</b> ({debut}-{fin}), et aucune droite ne peut être ajustée avec un tel effectif — le nuage est affiché sans régression, délibérément.<br><br><b>Conclusion : ce croisement ne conclut pas.</b> Ce n'est pas une absence de lien, c'est une absence de puissance statistique. Et c'est précisément ce vide qui fonde la recommandation centrale du travail : sans enquête d'insertion par filière et par région, la question posée reste sans réponse mesurable.",
+    "en": "This is the recipe the brief demands: does widening access translate into worse employment outcomes? The join keeps only <b>{obs} common years</b> ({debut}-{fin}), and no line can be fitted on such a sample — the scatter is shown without regression, deliberately.<br><br><b>Conclusion: this cross-analysis concludes nothing.</b> That is not an absence of relationship, it is an absence of statistical power. And it is precisely this void that underpins the work's central recommendation: without an employment survey broken down by programme and region, the question asked remains without a measurable answer."
+  },
+  "colonne_chomage": { "fr": "Chômage (%)", "en": "Unemployment (%)" },
+
+  "r6_titre": { "fr": "Recette 6 — Le taux d'accès monte-t-il parce qu'il y a plus d'étudiants ?", "en": "Recipe 6 — Is the access rate rising because there are more students?" },
+  "r6_sous_titre": { "fr": "Taux brut de scolarisation confronté aux effectifs absolus", "en": "Gross enrolment rate set against absolute headcounts" },
+  "r6_serie_taux": { "fr": "Taux brut d'inscription", "en": "Gross enrolment rate" },
+  "r6_serie_effectifs": { "fr": "Effectifs étudiants (nombre)", "en": "Student headcount (number)" },
+  "r6_note_1": {
+    "fr": "Pendant huit ressources, l'accès n'était mesurable qu'en <b>taux</b> — un pourcentage de la classe d'âge. Un taux qui monte peut vouloir dire deux choses opposées : plus d'étudiants, ou une classe d'âge plus petite. Aucun fichier ne permettait de trancher. Le neuvième donne les effectifs absolus.",
+    "en": "Across eight resources, access was measurable only as a <b>rate</b> — a percentage of the age cohort. A rising rate can mean two opposite things: more students, or a smaller cohort. No file allowed a decision. The ninth provides absolute headcounts."
+  },
+  "r6_note_2": {
+    "fr": "Verdict : entre {debut} et {fin}, le taux progresse de <b>{taux} %</b> mais les effectifs de <b>{effectifs} %</b> — un écart de <b>{ecart} points</b> d'indice. Les étudiants sont donc <b>plus nombreux que ne le dit le taux</b> : la classe d'âge de référence s'est elle aussi élargie. La massification est démographique autant que scolaire, et la pression sur les moyens est plus forte que le taux ne le laissait paraître.",
+    "en": "Verdict: between {debut} and {fin}, the rate rises by <b>{taux} %</b> but headcounts by <b>{effectifs} %</b> — a gap of <b>{ecart} index points</b>. Students are therefore <b>more numerous than the rate suggests</b>: the reference cohort has widened too. Mass enrolment is demographic as much as educational, and the pressure on resources is stronger than the rate let on."
+  },
+  "colonne_taux_brut": { "fr": "Taux brut (%)", "en": "Gross rate (%)" },
+  "colonne_effectifs": { "fr": "Étudiants inscrits", "en": "Enrolled students" },
+  "colonne_taux_indice": { "fr": "Taux (indice)", "en": "Rate (index)" },
+  "colonne_effectifs_indice": { "fr": "Effectifs (indice)", "en": "Headcount (index)" }
+}

@@ -32,10 +32,12 @@ Thumbs.db
 .claude/
 .vscode/
 
-# ─── En attente d'arbitrage ─────────────────────────────────────────────────
-# `challenge_archived/togo-formation-emploi` est AUJOURD'HUI un dépôt git à
-# lui seul (github.com/Bernardpip/togo-formation-emploi), d'où Railway déploie.
-# Le committer ici exigerait de retirer son `.git`, décision reportée : sans
-# cette ligne, git n'enregistrerait qu'un pointeur et GitHub afficherait un
-# dossier gris impossible à ouvrir. À lever le jour où il sera absorbé.
-challenge_archived/togo-formation-emploi/
+# ─── Le pilote est absorbé ──────────────────────────────────────────────────
+# `challenge_archived/togo-formation-emploi` était un dépôt git à lui seul.
+# Son `.git` a été retiré et ses fichiers vivent désormais ici : c'est de CE
+# dépôt que Railway déploie, avec `challenge_archived/togo-formation-emploi`
+# en dossier racine du service.
+#
+# Son dépôt d'origine (github.com/Bernardpip/togo-formation-emploi) reste en
+# ligne et garde tout l'historique jusqu'au commit « Bascule sur le socle
+# partagé » — c'est l'archive, elle ne reçoit plus rien.

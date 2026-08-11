@@ -1,0 +1,223 @@
+{
+  "serie_exercices": { "fr": "Exercices budgétaires", "en": "Financial years" },
+  "aide_exercices": { "fr": "Six exercices documentés seulement (2013-2018).", "en": "Only six documented financial years (2013-2018)." },
+  "info_deux_exercices": {
+    "fr": "Deux exercices au minimum sont nécessaires pour lire une trajectoire budgétaire. Élargissez la période.",
+    "en": "At least two financial years are needed to read a budget trajectory. Widen the period."
+  },
+  "info_deux_exercices_comparaison": {
+    "fr": "Deux exercices au minimum sont nécessaires pour comparer des taux d'exécution. Élargissez la période.",
+    "en": "At least two financial years are needed to compare execution rates. Widen the period."
+  },
+
+  "tuile_vote": { "fr": "Budget voté ({annee})", "en": "Approved budget ({annee})" },
+  "unite_md_fcfa": { "fr": "Md FCFA", "en": "bn FCFA" },
+  "tuile_vote_detail": { "fr": "+{variation} % sur un an", "en": "+{variation} % year on year" },
+  "tuile_execution": { "fr": "Taux d'exécution", "en": "Execution rate" },
+  "tuile_execution_detail": { "fr": "{ecart} pts sous l'enveloppe votée", "en": "{ecart} pts below the approved allocation" },
+  "tuile_part_national": { "fr": "Part du budget national", "en": "Share of national budget" },
+  "tuile_part_national_detail": { "fr": "de l'enveloppe votée de l'État", "en": "of the State's approved allocation" },
+  "tuile_part_education": { "fr": "Part du budget éducation", "en": "Share of education budget" },
+  "tuile_part_education_detail": { "fr": "le supérieur dans l'éducation", "en": "higher education within education" },
+
+  "carte_budget_titre": { "fr": "Budget de l'enseignement supérieur : voté et exécuté", "en": "Higher education budget: approved and executed" },
+  "carte_budget_sous_titre": { "fr": "En millions de FCFA ({debut}-{fin})", "en": "In millions of FCFA ({debut}-{fin})" },
+  "legende_vote": { "fr": "Voté", "en": "Approved" },
+  "legende_execute": { "fr": "Exécuté", "en": "Executed" },
+  "note_budget": {
+    "fr": "L'exercice <b>{annee}</b> est le plus mal exécuté de la période : l'écart voté-exécuté y atteint <b>{ecart} points</b>, soit <b>{manquant} milliards de FCFA</b> non consommés, contre {min} à {max} points les autres années.",
+    "en": "Financial year <b>{annee}</b> is the worst executed of the period: the approved-to-executed gap reaches <b>{ecart} points</b>, that is <b>{manquant} billion FCFA</b> unspent, against {min} to {max} points in the other years."
+  },
+  "colonne_annee": { "fr": "Année", "en": "Year" },
+  "colonne_vote": { "fr": "Voté (M FCFA)", "en": "Approved (M FCFA)" },
+  "colonne_execute": { "fr": "Exécuté (M FCFA)", "en": "Executed (M FCFA)" },
+  "colonne_execution": { "fr": "Exécution (%)", "en": "Execution (%)" },
+  "colonne_part_national": { "fr": "Part du national (%)", "en": "Share of national (%)" },
+
+  "carte_ecart_titre": { "fr": "Écart d'exécution", "en": "Execution gap" },
+  "carte_ecart_sous_titre": { "fr": "Points d'écart entre budget exécuté et budget voté", "en": "Percentage-point gap between executed and approved budget" },
+  "note_ecart": {
+    "fr": "Toutes les années sont en sous-exécution, mais l'ampleur varie fortement : de {min} point en {annee_min} à {max} points en {annee_max}. Cette irrégularité compte autant que le niveau moyen, car elle rend la programmation difficile.",
+    "en": "Every year is under-executed, but the magnitude varies widely: from {min} point in {annee_min} to {max} points in {annee_max}. This irregularity matters as much as the average level, because it makes planning difficult."
+  },
+
+  "carte_priorite_titre": { "fr": "Priorité budgétaire accordée au supérieur", "en": "Budgetary priority given to higher education" },
+  "carte_priorite_sous_titre": { "fr": "Part du budget de l'enseignement supérieur dans le budget national voté", "en": "Share of the higher education budget in the approved national budget" },
+  "legende_part_national": { "fr": "Part du budget national", "en": "Share of national budget" },
+  "note_priorite": {
+    "fr": "La part reste comprise entre <b>{min} %</b> et <b>{max} %</b> du budget national : la priorité accordée au supérieur progresse, mais bien moins vite que le nombre d'étudiants à financer.",
+    "en": "The share stays between <b>{min} %</b> and <b>{max} %</b> of the national budget: priority given to higher education rises, but far more slowly than the number of students to fund."
+  },
+
+  "niveau_superieur": { "fr": "Enseignement supérieur", "en": "Higher education" },
+  "niveau_education": { "fr": "Secteur éducation", "en": "Education sector" },
+  "niveau_national": { "fr": "Budget national", "en": "National budget" },
+  "aide_niveaux": {
+    "fr": "Le budget national sert de point de comparaison : sans lui, la sous-exécution du supérieur paraît anormale.",
+    "en": "The national budget serves as a benchmark: without it, higher education's under-execution looks abnormal."
+  },
+
+  "tuile_exec_superieur": { "fr": "Exécution moyenne du supérieur", "en": "Average higher education execution" },
+  "tuile_exec_superieur_detail": { "fr": "soit {ecart} pts au-dessus de l'État", "en": "that is {ecart} pts above the State" },
+  "tuile_exec_etat": { "fr": "Exécution moyenne de l'État", "en": "Average State execution" },
+  "tuile_exec_etat_detail": { "fr": "sous-exécution structurelle du budget national", "en": "structural under-execution of the national budget" },
+  "tuile_part_educ": { "fr": "Part de l'éducation", "en": "Education share" },
+  "tuile_part_educ_detail": { "fr": "du budget national voté en {annee}", "en": "of the approved national budget in {annee}" },
+  "tuile_subvention": { "fr": "Subvention au privé", "en": "Subsidy to private sector" },
+  "tuile_subvention_detail": { "fr": "sur {annees} années documentées", "en": "over {annees} documented years" },
+
+  "carte_compare_titre": { "fr": "Le supérieur exécute-t-il mal, ou est-ce le cas de tout l'État ?", "en": "Does higher education execute badly, or does the whole State?" },
+  "carte_compare_sous_titre": { "fr": "Taux d'exécution comparé — enseignement supérieur, secteur éducation et budget national ({debut}-{fin})", "en": "Comparative execution rate — higher education, education sector and national budget ({debut}-{fin})" },
+  "note_compare": {
+    "fr": "Ce graphe corrige une lecture trop rapide de la sous-exécution. Le supérieur exécute en moyenne <b>{moyenne_es} %</b> de son enveloppe, contre <b>{moyenne_nat} %</b> pour le budget de l'État : il n'a <b>pas</b> de problème structurel de décaissement, il fait mieux que la moyenne. Son plus bas niveau d'exécution est atteint en <b>{annee}</b> ({taux} %){contexte}. C'est une hausse mal absorbée, pas une incapacité chronique.",
+    "en": "This chart corrects a hasty reading of under-execution. Higher education spends on average <b>{moyenne_es} %</b> of its allocation, against <b>{moyenne_nat} %</b> for the State budget: it has <b>no</b> structural disbursement problem, it does better than average. Its lowest execution is reached in <b>{annee}</b> ({taux} %){contexte}. It is a poorly absorbed increase, not chronic incapacity."
+  },
+  "contexte_hausse": { "fr": " — l'année où son enveloppe bondit de {hausse} %", "en": " — the year its allocation jumps by {hausse} %" },
+  "note_national_masque": {
+    "fr": "Le budget national est masqué : le taux du supérieur se lit alors sans son point de comparaison, et paraît plus mauvais qu'il ne l'est.",
+    "en": "The national budget is hidden: higher education's rate is then read without its benchmark, and looks worse than it is."
+  },
+  "colonne_superieur": { "fr": "Supérieur (%)", "en": "Higher ed. (%)" },
+  "colonne_education": { "fr": "Éducation (%)", "en": "Education (%)" },
+  "colonne_national": { "fr": "National (%)", "en": "National (%)" },
+
+  "carte_poids_titre": { "fr": "Poids de l'éducation dans le budget", "en": "Weight of education in the budget" },
+  "carte_poids_sous_titre": { "fr": "Part du secteur éducation dans le budget national voté", "en": "Share of the education sector in the approved national budget" },
+  "legende_poids": { "fr": "Éducation / budget national", "en": "Education / national budget" },
+  "note_poids": {
+    "fr": "L'éducation pèse entre <b>{min} %</b> et <b>{max} %</b> du budget voté, avec une progression nette sur la période. Le supérieur en capte <b>{part} %</b> en moyenne — le reste va au primaire et au secondaire, qui accueillent les cohortes bien plus nombreuses qui arriveront ensuite dans le supérieur.",
+    "en": "Education accounts for between <b>{min} %</b> and <b>{max} %</b> of the approved budget, rising clearly over the period. Higher education captures <b>{part} %</b> on average — the rest goes to primary and secondary, which host the far larger cohorts that will later reach higher education."
+  },
+  "colonne_educ_national": { "fr": "Éducation / national (%)", "en": "Education / national (%)" },
+  "colonne_sup_educ": { "fr": "Supérieur / éducation (%)", "en": "Higher ed. / education (%)" },
+  "colonne_sup_national": { "fr": "Supérieur / national (%)", "en": "Higher ed. / national (%)" },
+
+  "carte_subvention_titre": { "fr": "Subvention de l'État au privé", "en": "State subsidy to the private sector" },
+  "carte_subvention_sous_titre": { "fr": "Montant alloué aux établissements privés du supérieur", "en": "Amount allocated to private higher education institutions" },
+  "subvention_legende": { "fr": "FCFA sur les {annees} exercices retenus ({debut}-{fin})", "en": "FCFA over the {annees} financial years retained ({debut}-{fin})" },
+  "note_subvention": {
+    "fr": "Un graphe serait trompeur ici : la série est <b>nulle sur toute la période</b>. C'est pourtant le chiffre le plus parlant du jeu budgétaire — le privé porte <b>92 %</b> du réseau du supérieur et ne reçoit aucune subvention publique. L'État a de fait sous-traité la massification sans contrepartie ni levier de régulation.",
+    "en": "A chart would be misleading here: the series is <b>zero across the whole period</b>. Yet it is the most telling figure in the budget dataset — the private sector carries <b>92 %</b> of the higher education network and receives no public subsidy. The State has in effect outsourced mass enrolment with neither counterpart nor regulatory lever."
+  },
+  "colonne_subvention": { "fr": "Subvention (M FCFA)", "en": "Subsidy (M FCFA)" },
+
+  "carte_montants_titre": { "fr": "Ce que les taux d'exécution masquent : les montants", "en": "What execution rates hide: the amounts" },
+  "carte_montants_sous_titre": { "fr": "Crédits votés mais non consommés, en milliards de FCFA", "en": "Approved but unspent funds, in billions of FCFA" },
+  "note_montants": {
+    "fr": "Un taux d'exécution ne dit rien de l'enjeu financier réel. Rapportés en francs, les ordres de grandeur n'ont rien à voir : sur {debut}-{fin}, l'État laisse <b>{national} milliards de FCFA</b> non consommés, contre <b>{superieur} milliards</b> pour le seul enseignement supérieur — soit environ {part} % du total. Le gisement d'efficacité budgétaire n'est pas dans le supérieur.<br><br>{surexecution}",
+    "en": "An execution rate says nothing about the real financial stake. Converted into francs, the orders of magnitude are unrelated: over {debut}-{fin}, the State leaves <b>{national} billion FCFA</b> unspent, against <b>{superieur} billion</b> for higher education alone — about {part} % of the total. The scope for budgetary efficiency is not in higher education.<br><br>{surexecution}"
+  },
+  "surexecution_educ": {
+    "fr": "Le secteur éducation passe même <b>au-dessus</b> de son enveloppe en <b>{annees}</b> (valeurs négatives sur le graphe) : il a dépensé plus que voté, ce qu'aucun taux moyen ne laisse voir.",
+    "en": "The education sector even goes <b>above</b> its allocation in <b>{annees}</b> (negative values on the chart): it spent more than approved, which no average rate reveals."
+  },
+  "surexecution_aucune": {
+    "fr": "Sur cet intervalle, aucun des trois niveaux ne dépasse son enveloppe votée : tous sont en sous-exécution.",
+    "en": "Over this range, none of the three levels exceeds its approved allocation: all are under-executed."
+  },
+  "colonne_non_consomme_sup": { "fr": "Supérieur (M FCFA)", "en": "Higher ed. (M FCFA)" },
+  "colonne_non_consomme_educ": { "fr": "Éducation (M FCFA)", "en": "Education (M FCFA)" },
+  "colonne_non_consomme_nat": { "fr": "National (M FCFA)", "en": "National (M FCFA)" },
+
+  "carte_priorise_titre": { "fr": "Le supérieur a-t-il été priorisé ?", "en": "Was higher education prioritised?" },
+  "carte_priorise_sous_titre": { "fr": "Croissance de l'enveloppe votée entre {debut} et {fin}", "en": "Growth of the approved allocation between {debut} and {fin}" },
+  "colonne_graphe_superieur": { "fr": "Enseignement\nsupérieur", "en": "Higher\neducation" },
+  "colonne_graphe_education": { "fr": "Secteur\néducation", "en": "Education\nsector" },
+  "colonne_graphe_national": { "fr": "Budget\nnational", "en": "National\nbudget" },
+  "note_priorise": {
+    "fr": "Réponse : <b>oui, nettement</b>. L'enveloppe du supérieur croît de <b>{es} %</b> sur la période, contre <b>{educ} %</b> pour l'éducation et seulement <b>{national} %</b> pour le budget de l'État. Le supérieur n'a donc pas été porté par la hausse générale : il a été priorisé, à un rythme trois fois supérieur à celui du budget national.",
+    "en": "Answer: <b>yes, clearly</b>. The higher education allocation grows by <b>{es} %</b> over the period, against <b>{educ} %</b> for education and only <b>{national} %</b> for the State budget. Higher education was therefore not carried by the general rise: it was prioritised, at three times the pace of the national budget."
+  },
+
+  "carte_pib_titre": { "fr": "Effort rapporté à la richesse nationale", "en": "Effort relative to national wealth" },
+  "carte_pib_sous_titre": { "fr": "Part du PIB consacrée à chaque niveau — les seuls exercices où il est renseigné", "en": "Share of GDP devoted to each level — the only years where it is reported" },
+  "info_pib_absent": { "fr": "Le PIB n'est renseigné pour aucune année.", "en": "GDP is not reported for any year." },
+  "pib_seul_exercice": { "fr": "seul exercice où le PIB est renseigné", "en": "the only year where GDP is reported" },
+  "pib_ecart": { "fr": "{ecart} pts depuis {annee}", "en": "{ecart} pts since {annee}" },
+  "tuile_pib_national": { "fr": "Budget national ({annee})", "en": "National budget ({annee})" },
+  "tuile_pib_educ": { "fr": "Éducation ({annee})", "en": "Education ({annee})" },
+  "tuile_pib_sup": { "fr": "Supérieur ({annee})", "en": "Higher education ({annee})" },
+  "unite_pib": { "fr": "% du PIB", "en": "% of GDP" },
+  "colonne_pib_national": { "fr": "Budget national (% PIB)", "en": "National budget (% GDP)" },
+  "colonne_pib_educ": { "fr": "Éducation (% PIB)", "en": "Education (% GDP)" },
+  "colonne_pib_sup": { "fr": "Supérieur (% PIB)", "en": "Higher education (% GDP)" },
+  "note_pib": {
+    "fr": "Le PIB n'est fourni que pour <b>{pib} exercices</b> sur {total} : aucune tendance ne peut être établie, seulement quelques points de repère. Ils situent l'effort éducatif autour de <b>{moyenne} % du PIB</b>, dans la fourchette de 4 à 6 % recommandée au niveau international — le problème togolais n'est donc pas l'ampleur de l'effort éducatif global, mais sa répartition entre niveaux et entre territoires.",
+    "en": "GDP is provided for only <b>{pib} financial years</b> out of {total}: no trend can be established, only a few reference points. They place educational effort around <b>{moyenne} % of GDP</b>, within the 4 to 6 % range recommended internationally — Togo's problem is therefore not the size of overall educational effort, but its distribution across levels and territories."
+  },
+
+  "serie_depense": { "fr": "Dépense/étudiant", "en": "Spending/student" },
+  "serie_acces": { "fr": "Accès", "en": "Access" },
+  "serie_budget": { "fr": "Budget", "en": "Budget" },
+  "info_depense_insuffisante": {
+    "fr": "Moins de deux mesures de dépense par étudiant sur cet intervalle : aucune trajectoire n'est lisible. Élargissez la période.",
+    "en": "Fewer than two spending-per-student measurements in this range: no trajectory is readable. Widen the period."
+  },
+  "carte_depense_titre": { "fr": "Dépense publique par étudiant", "en": "Public spending per student" },
+  "carte_depense_sous_titre": { "fr": "En % du PIB par habitant — ce que l'État consacre à chaque étudiant", "en": "As % of GDP per capita — what the State devotes to each student" },
+  "legende_depense": { "fr": "Dépense par étudiant", "en": "Spending per student" },
+  "note_depense": {
+    "fr": "<b>{variation} %</b> entre {debut} et {fin}. La trajectoire n'est pas régulière : effondrement des années 2000, rebond interrompu au milieu des années 2010, puis nouvelle érosion. La série est lacunaire — {mesures} mesures en {etendue} ans — et les points manquants ne sont pas interpolés.",
+    "en": "<b>{variation} %</b> between {debut} and {fin}. The path is not steady: collapse in the 2000s, a rebound interrupted in the mid-2010s, then renewed erosion. The series is patchy — {mesures} measurements over {etendue} years — and missing points are not interpolated."
+  },
+  "note_precision_lecture": {
+    "fr": "<b>Précision de lecture indispensable.</b> Cet indicateur est exprimé en <b>% du PIB par habitant</b>, non en francs. Sa baisse signifie que la dépense par étudiant progresse <b>moins vite que la richesse par habitant</b> — ce n'est pas nécessairement une baisse en montants.{chiffrage} Le constat exact est donc : <i>l'effort public sur le supérieur décroche par rapport à l'enrichissement du pays</i>, et non que l'État dépense moins qu'avant par étudiant.",
+    "en": "<b>An essential reading caveat.</b> This indicator is expressed as a <b>% of GDP per capita</b>, not in francs. Its fall means that spending per student grows <b>more slowly than wealth per head</b> — it is not necessarily a fall in amounts.{chiffrage} The exact finding is therefore: <i>public effort on higher education is decoupling from the country's growing wealth</i>, not that the State spends less per student than before."
+  },
+  "chiffrage_budget": {
+    "fr": " Sur {debut}-{fin}, le budget voté du supérieur augmente d'ailleurs de <b>{budget} %</b> pendant que le taux d'inscription progresse de <b>{acces} %</b>.",
+    "en": " Over {debut}-{fin}, the approved higher education budget in fact rises by <b>{budget} %</b> while the enrolment rate rises by <b>{acces} %</b>."
+  },
+  "note_francs_disponibles": {
+    "fr": "<b>La nuance est désormais chiffrée.</b> Une neuvième ressource (DICES-TG) publie cette même dépense <b>en francs</b> : 363 725 F par étudiant en 2015, 354 110 F en 2019, soit −2,6 % en nominal — quasi stable, là où l'indicateur en part du PIB affiche −72 % sur une période plus longue. Les deux mesures sont exactes et ne disent pas la même chose. Voir <b>Enseignement supérieur › Indicateurs clés</b>.",
+    "en": "<b>The nuance is now quantified.</b> A ninth resource (DICES-TG) publishes this same spending <b>in francs</b>: 363,725 F per student in 2015, 354,110 F in 2019, that is −2.6 % in nominal terms — nearly flat, where the share-of-GDP indicator shows −72 % over a longer period. Both measures are exact and do not say the same thing. See <b>Higher education › Key indicators</b>."
+  },
+  "colonne_depense_pib": { "fr": "Dépense (% PIB/hab.)", "en": "Spending (% GDP/capita)" },
+
+  "carte_effort_titre": { "fr": "Effort public rapporté à l'accès", "en": "Public effort relative to access" },
+  "carte_effort_sous_titre": { "fr": "Inscriptions et dépense par étudiant, indexées sur {base}", "en": "Enrolment and spending per student, indexed to {base}" },
+  "carte_effort_sous_titre_sans_base": { "fr": "Inscriptions et dépense par étudiant, indexées sur une base commune", "en": "Enrolment and spending per student, indexed to a common base" },
+  "info_pas_assez_annees_communes": {
+    "fr": "Les deux séries n'ont pas assez d'années communes sur cet intervalle pour être indexées sur une base partagée.",
+    "en": "The two series do not share enough years in this range to be indexed to a common base."
+  },
+  "note_effort": {
+    "fr": "Un seul axe, deux séries indexées à 100 : la divergence est mesurable et non un effet d'échelle. C'est le cœur du diagnostic — l'accès a été élargi sans que les moyens par étudiant suivent.",
+    "en": "A single axis, two series indexed to 100: the divergence is measurable and not a scaling effect. This is the core of the diagnosis — access was widened without resources per student following."
+  },
+
+  "serie_chomage": { "fr": "Chômage des diplômés", "en": "Graduate unemployment" },
+  "aide_periode_chomage": { "fr": "Six mesures seulement, réparties entre 2011 et 2022.", "en": "Only six measurements, spread between 2011 and 2022." },
+  "info_chomage_insuffisant": {
+    "fr": "Moins de deux mesures de chômage sur cet intervalle : la série n'a que six points au total. Élargissez la période.",
+    "en": "Fewer than two unemployment measurements in this range: the series has only six points in total. Widen the period."
+  },
+  "tuile_chomage": { "fr": "Chômage des diplômés ({annee})", "en": "Graduate unemployment ({annee})" },
+  "tuile_chomage_detail": { "fr": "pic de {pic} % en {annee}", "en": "peak of {pic} % in {annee}" },
+  "tuile_amplitude": { "fr": "Amplitude de la série", "en": "Range of the series" },
+  "unite_pts": { "fr": "pts", "en": "pts" },
+  "tuile_amplitude_detail": { "fr": "entre le minimum et le pic", "en": "between the minimum and the peak" },
+  "tuile_mesures": { "fr": "Mesures disponibles", "en": "Measurements available" },
+  "carte_chomage_titre": { "fr": "Chômage des diplômés de l'enseignement supérieur", "en": "Unemployment among higher education graduates" },
+  "carte_chomage_sous_titre": { "fr": "En % de la population active diplômée du supérieur", "en": "As % of the labour force holding a higher education degree" },
+  "note_chomage": {
+    "fr": "La série n'a que <b>{mesures} mesures</b> sur {etendue} ans : elle documente des niveaux, pas une tendance. Deux constats tiennent quand même — le pic de {annee_pic} arrive après la décennie de plus forte massification, et le niveau de {annee_fin} reste {sens} à celui de {annee_debut}.",
+    "en": "The series has only <b>{mesures} measurements</b> over {etendue} years: it documents levels, not a trend. Two findings still hold — the {annee_pic} peak comes after the decade of fastest expansion, and the {annee_fin} level remains {sens} the {annee_debut} level."
+  },
+  "sens_superieur": { "fr": "supérieur", "en": "above" },
+  "sens_inferieur": { "fr": "inférieur", "en": "below" },
+  "colonne_chomage": { "fr": "Chômage (%)", "en": "Unemployment (%)" },
+
+  "carte_trompeur_titre": { "fr": "Pourquoi ce taux est trompeur", "en": "Why this rate is misleading" },
+  "carte_trompeur_sous_titre": { "fr": "Un chômage de {taux} % ne signifie pas que l'insertion se passe bien — repères issus d'enquêtes nationales, hors portail open data", "en": "Unemployment of {taux} % does not mean employment outcomes are good — reference points from national surveys, outside the open data portal" },
+  "note_trompeur": {
+    "fr": "Dans une économie très informelle, <b>ne pas travailler n'est pas une option finançable</b> : l'ajustement du marché du travail ne passe pas par le chômage déclaré mais par le <b>sous-emploi</b> et l'<b>informalité</b>. Le taux ci-dessus mesure donc surtout qui peut se permettre de chercher un emploi, pas la qualité de l'insertion des diplômés.",
+    "en": "In a heavily informal economy, <b>not working is not an affordable option</b>: the labour market adjusts not through reported unemployment but through <b>underemployment</b> and <b>informality</b>. The rate above therefore mostly measures who can afford to look for work, not the quality of graduate outcomes."
+  },
+  "carte_limite_titre": { "fr": "Limite de lecture", "en": "Reading limit" },
+  "carte_limite_sous_titre": { "fr": "Ce que ces données ne permettent pas de dire", "en": "What these data cannot tell us" },
+  "limite_corps": {
+    "fr": "Le chômage des diplômés n'est disponible qu'au niveau **national** et sans ventilation par filière. Trois croisements souvent attendus d'un tableau de bord d'adéquation formation-emploi ne sont donc **pas** calculables ici, et aucun n'est simulé :\n\n- le taux d'insertion **par filière** de formation technique ;\n- le chômage des diplômés **par région**, qui permettrait de relier directement l'offre locale de formation et l'emploi local ;\n- le devenir des sortants des établissements cartographiés, faute d'identifiant commun entre les fichiers.\n\nLe tableau de bord met donc en regard des séries **nationales** (accès, dépense, chômage) et une géographie **infranationale** de l'offre : c'est le niveau de preuve que les données ouvertes autorisent.",
+    "en": "Graduate unemployment is available only at **national** level and with no breakdown by programme. Three cross-analyses often expected of a skills-jobs dashboard are therefore **not** computable here, and none is simulated:\n\n- the employment rate **by programme** of technical training;\n- graduate unemployment **by region**, which would directly link local training provision to local jobs;\n- the destination of leavers from the mapped institutions, for want of a shared identifier across files.\n\nThe dashboard therefore sets **national** series (access, spending, unemployment) against a **subnational** geography of provision: that is the level of proof the open data permit."
+  }
+}

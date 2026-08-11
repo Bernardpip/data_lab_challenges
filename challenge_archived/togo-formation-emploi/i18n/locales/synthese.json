@@ -1,0 +1,173 @@
+{
+  "tuile_etablissements": {
+    "fr": "Établissements techniques",
+    "en": "Technical institutions"
+  },
+  "tuile_etablissements_detail": {
+    "fr": "{regions} région{s_region} · {prefectures} préfecture{s_prefecture}",
+    "en": "{regions} region{s_region} · {prefectures} prefecture{s_prefecture}"
+  },
+  "tuile_etablissements_detail_filtre": {
+    "fr": "sur {total} · {regions} région{s_region} · {prefectures} préfecture{s_prefecture}",
+    "en": "of {total} · {regions} region{s_region} · {prefectures} prefecture{s_prefecture}"
+  },
+  "tuile_concentration": {
+    "fr": "Concentration en {region}",
+    "en": "Concentration in {region}"
+  },
+  "tuile_concentration_detail": {
+    "fr": "{part} % dans 2 préfectures",
+    "en": "{part} % in 2 prefectures"
+  },
+  "tuile_superieur": {
+    "fr": "Établissements du supérieur ({annee})",
+    "en": "Higher education institutions ({annee})"
+  },
+  "tuile_superieur_detail": {
+    "fr": "{part} % à Lomé",
+    "en": "{part} % in Lomé"
+  },
+  "tuile_inscription": {
+    "fr": "Taux d'inscription au supérieur ({annee})",
+    "en": "Higher education enrolment rate ({annee})"
+  },
+  "tuile_inscription_detail": {
+    "fr": "×{facteur} depuis {annee}",
+    "en": "×{facteur} since {annee}"
+  },
+  "tuile_chomage": {
+    "fr": "Chômage des diplômés ({annee})",
+    "en": "Graduate unemployment ({annee})"
+  },
+  "tuile_chomage_detail": {
+    "fr": "{ecart} pts sous le pic de {annee}",
+    "en": "{ecart} pts below the {annee} peak"
+  },
+
+  "note_indicateurs_nationaux": {
+    "fr": "Les trois derniers indicateurs — réseau du supérieur, accès et chômage — n'existent qu'au niveau national dans les données ouvertes : ils ne suivent pas la sélection territoriale.",
+    "en": "The last three indicators — higher education network, access and unemployment — exist only at national level in the open data: they do not follow the territorial selection."
+  },
+
+  "carte_couverture_titre": {
+    "fr": "Couverture territoriale",
+    "en": "Territorial coverage"
+  },
+  "carte_couverture_sous_titre": {
+    "fr": "Établissements de formation technique par région",
+    "en": "Technical training institutions by region"
+  },
+  "note_couverture": {
+    "fr": "La région <b>{region_tete}</b> concentre <b>{part} %</b> des établissements techniques {perimetre}, quand <b>{region_queue}</b> n'en compte que <b>{nombre}</b>. L'offre suit la démographie urbaine, pas le maillage administratif.",
+    "en": "The <b>{region_tete}</b> region holds <b>{part} %</b> of the technical institutions {perimetre}, while <b>{region_queue}</b> has only <b>{nombre}</b>. Provision follows urban demographics, not the administrative grid."
+  },
+  "perimetre_pays": {
+    "fr": "du pays",
+    "en": "in the country"
+  },
+  "perimetre_selection": {
+    "fr": "de la sélection",
+    "en": "in the selection"
+  },
+  "note_couverture_une_region": {
+    "fr": "La sélection ne retient qu'une région, <b>{region}</b>, avec <b>{total}</b> établissements répartis sur <b>{prefectures}</b> préfectures. Élargissez la sélection pour comparer les régions entre elles.",
+    "en": "The selection keeps a single region, <b>{region}</b>, with <b>{total}</b> institutions across <b>{prefectures}</b> prefectures. Widen the selection to compare regions with one another."
+  },
+  "colonne_region": { "fr": "Région", "en": "Region" },
+  "colonne_etablissements": { "fr": "Établissements", "en": "Institutions" },
+  "colonne_part": { "fr": "Part (%)", "en": "Share (%)" },
+
+  "carte_grille_titre": {
+    "fr": "Offre par région et par filière",
+    "en": "Provision by region and programme"
+  },
+  "carte_grille_sous_titre": {
+    "fr": "Nombre d'établissements — plus la case est foncée, plus l'offre est dense",
+    "en": "Number of institutions — the darker the cell, the denser the provision"
+  },
+  "note_grille": {
+    "fr": "L'offre est très peu diversifiée : <b>{part} %</b> des établissements relèvent d'une seule modalité (« {modalite} »), et les filières diplômantes (BTS, licence) sont rares en dehors du littoral.",
+    "en": "Provision is barely diversified: <b>{part} %</b> of institutions fall under a single category (“{modalite}”), and degree programmes (BTS, bachelor's) are rare away from the coast."
+  },
+
+  "serie_acces": { "fr": "Accès", "en": "Access" },
+  "serie_depense": { "fr": "Dépense/étudiant", "en": "Spending/student" },
+  "serie_chomage": { "fr": "Chômage", "en": "Unemployment" },
+  "serie_budget": { "fr": "Budget", "en": "Budget" },
+  "aide_periode": {
+    "fr": "Cadre les quatre séries de la page. Le budget n'existe que sur 2013-2018 : au-delà, sa carte se vide.",
+    "en": "Frames all four series on this page. The budget only covers 2013-2018: outside that range, its card empties."
+  },
+
+  "carte_ciseaux_titre": {
+    "fr": "L'effet ciseaux",
+    "en": "The scissors effect"
+  },
+  "carte_ciseaux_sous_titre": {
+    "fr": "Accès à l'enseignement supérieur et dépense publique par étudiant, indexés sur une base commune",
+    "en": "Access to higher education and public spending per student, indexed to a common base"
+  },
+  "info_pas_assez_annees_communes": {
+    "fr": "Les deux séries n'ont pas assez d'années communes sur cet intervalle pour être indexées sur une base partagée.",
+    "en": "The two series do not share enough years in this range to be indexed to a common base."
+  },
+  "note_ciseaux": {
+    "fr": "Depuis {base}, l'accès au supérieur a été multiplié par <b>{acces}</b> pendant que la dépense publique par étudiant perdait <b>{perte} %</b> de sa valeur relative. Les deux courbes sont ramenées à une base 100 commune en {base} : c'est le même axe, donc l'écart est réel, pas un artefact d'échelle.",
+    "en": "Since {base}, access to higher education has multiplied by <b>{acces}</b> while public spending per student lost <b>{perte} %</b> of its relative value. Both curves are rebased to 100 in {base}: it is the same axis, so the gap is real, not a scaling artefact."
+  },
+
+  "carte_chomage_titre": {
+    "fr": "Chômage des diplômés du supérieur",
+    "en": "Unemployment among higher education graduates"
+  },
+  "carte_chomage_sous_titre": {
+    "fr": "% de la population active diplômée du supérieur",
+    "en": "% of the labour force holding a higher education degree"
+  },
+  "info_chomage_vide": {
+    "fr": "Aucune mesure de chômage sur l'intervalle retenu.",
+    "en": "No unemployment measurement within the selected range."
+  },
+  "legende_chomage": {
+    "fr": "Chômage des diplômés",
+    "en": "Graduate unemployment"
+  },
+  "note_chomage": {
+    "fr": "Série volatile et lacunaire ({mesures} mesures en {etendue} ans) : le pic de <b>{pic} %</b> en {annee_pic} suit la décennie de plus forte massification. Trop peu de points pour un lien de cause à effet — le graphe montre la coïncidence, pas la causalité.",
+    "en": "A volatile, patchy series ({mesures} measurements over {etendue} years): the <b>{pic} %</b> peak in {annee_pic} follows the decade of fastest expansion. Too few points for a causal link — the chart shows coincidence, not causation."
+  },
+  "colonne_annee": { "fr": "Année", "en": "Year" },
+  "colonne_chomage": { "fr": "Chômage (%)", "en": "Unemployment (%)" },
+
+  "carte_budget_titre": {
+    "fr": "Exécution du budget de l'enseignement supérieur",
+    "en": "Higher education budget execution"
+  },
+  "carte_budget_sous_titre": {
+    "fr": "Écart entre le budget exécuté et le budget voté, en points",
+    "en": "Gap between executed and approved budget, in percentage points"
+  },
+  "info_budget_vide": {
+    "fr": "Le budget n'est documenté que sur 2013-2018 : aucun exercice ne tombe dans l'intervalle retenu.",
+    "en": "The budget is documented for 2013-2018 only: no financial year falls within the selected range."
+  },
+  "note_budget": {
+    "fr": "Le budget voté n'est jamais entièrement consommé. L'écart est le plus creusé en {annee} (<b>{ecart} points</b>). La comparaison avec les autres budgets, en onglet « Exécution comparée », montre toutefois que le supérieur décaisse mieux que l'État dans son ensemble.",
+    "en": "The approved budget is never fully spent. The gap is widest in {annee} (<b>{ecart} points</b>). Comparison with other budgets, under “Comparative execution”, nevertheless shows that higher education disburses better than the State as a whole."
+  },
+  "colonne_vote": { "fr": "Voté (M FCFA)", "en": "Approved (M FCFA)" },
+  "colonne_execute": { "fr": "Exécuté (M FCFA)", "en": "Executed (M FCFA)" },
+  "colonne_execution": { "fr": "Exécution (%)", "en": "Execution (%)" },
+
+  "carte_rapport_titre": { "fr": "Rapport de synthèse", "en": "Summary report" },
+  "carte_rapport_sous_titre": {
+    "fr": "Le livrable PowerPoint — 10 pages, graphiques éditables",
+    "en": "The PowerPoint deliverable — 10 pages, editable charts"
+  },
+  "rapport_bouton_fr": { "fr": "Français · PPTX", "en": "Français · PPTX" },
+  "rapport_bouton_en": { "fr": "English · PPTX", "en": "English · PPTX" },
+  "note_rapport": {
+    "fr": "Le fichier est <b>construit à la demande</b> depuis les jeux nettoyés, pas archivé : ses chiffres sont ceux de ce tableau de bord au moment du téléchargement. Les graphiques sont des objets PowerPoint natifs — éditables et redimensionnables, pas des images.",
+    "en": "The file is <b>built on demand</b> from the cleaned datasets rather than archived: its figures are those of this dashboard at the moment of download. The charts are native PowerPoint objects — editable and resizable, not images."
+  }
+}

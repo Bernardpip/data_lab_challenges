@@ -1,0 +1,117 @@
+{
+  "badge_non_estimable": { "fr": "Non estimable", "en": "Not estimable" },
+  "badge_non_significatif": { "fr": "Non significatif", "en": "Not significant" },
+  "badge_significatif_faible_n": { "fr": "Significatif mais n = {n}", "en": "Significant but n = {n}" },
+  "badge_significatif": { "fr": "Significatif · n = {n}", "en": "Significant · n = {n}" },
+  "info_estimation_impossible": {
+    "fr": "Estimation impossible : trop peu d'observations.",
+    "en": "Estimation impossible: too few observations."
+  },
+  "diag_coefficient": { "fr": "Coefficient", "en": "Coefficient" },
+  "diag_ic": { "fr": "IC 95 %", "en": "95 % CI" },
+  "unite_pt_an": { "fr": "pt/an", "en": "pt/yr" },
+  "unite_pt_par_hausse": { "fr": "pt par % de hausse", "en": "pt per % increase" },
+
+  "tuile_tendance_inscriptions": { "fr": "Tendance des inscriptions", "en": "Enrolment trend" },
+  "unite_pts_decennie": { "fr": "pts/décennie", "en": "pts/decade" },
+  "tuile_diag": { "fr": "R² {r2} · n = {n}", "en": "R² {r2} · n = {n}" },
+  "tuile_tendance_depense": { "fr": "Tendance dépense/étudiant", "en": "Spending/student trend" },
+  "tuile_elasticite": { "fr": "Élasticité dépense/accès", "en": "Spending/access elasticity" },
+  "tuile_elasticite_detail": { "fr": "quasi-unitaire — enveloppe figée", "en": "near-unitary — frozen envelope" },
+  "tuile_acceleration": { "fr": "Accélération après 2000", "en": "Acceleration after 2000" },
+  "tuile_acceleration_detail": { "fr": "sur la pente des inscriptions", "en": "on the enrolment slope" },
+
+  "m1_titre": { "fr": "Modèle 1 — Tendance de l'accès à l'enseignement supérieur", "en": "Model 1 — Trend in access to higher education" },
+  "m1_sous_titre": { "fr": "MCO : taux brut d'inscription ~ année (1971-2020)", "en": "OLS: gross enrolment rate ~ year (1971-2020)" },
+  "m1_axe_x": { "fr": "Année", "en": "Year" },
+  "m1_axe_y": { "fr": "Taux brut d'inscription (%)", "en": "Gross enrolment rate (%)" },
+  "m1_note": {
+    "fr": "<b>Interprétation.</b> Le taux d'inscription progresse de <b>{par_an} point par an</b> en moyenne ({par_decennie} points par décennie). Le modèle explique <b>{r2} %</b> de la variance sur {n} observations, avec une pente très hautement significative. C'est l'estimation la plus solide de cette page.<br><br><b>Réserve.</b> La relation n'est pas parfaitement linéaire : le nuage montre une inflexion nette vers 2000, traitée au modèle 4. Une droite unique sous-estime la période récente et surestime les années 1970-80.",
+    "en": "<b>Interpretation.</b> The enrolment rate rises by <b>{par_an} point per year</b> on average ({par_decennie} points per decade). The model explains <b>{r2} %</b> of the variance over {n} observations, with a very highly significant slope. This is the most robust estimate on this page.<br><br><b>Caveat.</b> The relationship is not perfectly linear: the scatter shows a clear inflection around 2000, handled in model 4. A single line understates the recent period and overstates the 1970s-80s."
+  },
+
+  "m2_titre": { "fr": "Modèle 2 — Trajectoire de la dépense publique par étudiant", "en": "Model 2 — Path of public spending per student" },
+  "m2_sous_titre": { "fr": "MCO : dépense (% du PIB/hab.) ~ année (1998-2017)", "en": "OLS: spending (% of GDP per capita) ~ year (1998-2017)" },
+  "m2_axe_y": { "fr": "Dépense par étudiant (% du PIB/hab.)", "en": "Spending per student (% of GDP per capita)" },
+  "m2_note": {
+    "fr": "<b>Interprétation.</b> La dépense par étudiant recule de <b>{par_an} points par an</b>, soit près de <b>{par_decennie} points par décennie</b>. La pente est significative (p &lt; 0,001) et l'intervalle de confiance ne contient jamais zéro : la baisse est établie, pas un effet de bruit.<br><br><b>Réserve.</b> n = {n} sur 20 ans — la série est lacunaire et le point de 1998 (281 %) pèse fortement sur la pente. La <i>direction</i> est robuste, l'<i>amplitude exacte</i> l'est moins.",
+    "en": "<b>Interpretation.</b> Spending per student falls by <b>{par_an} points per year</b>, close to <b>{par_decennie} points per decade</b>. The slope is significant (p &lt; 0.001) and the confidence interval never contains zero: the decline is established, not noise.<br><br><b>Caveat.</b> n = {n} over 20 years — the series is patchy and the 1998 point (281 %) weighs heavily on the slope. The <i>direction</i> is robust, the <i>exact magnitude</i> less so."
+  },
+
+  "m3_titre": { "fr": "Modèle 3 — Élasticité de la dépense par rapport à l'accès", "en": "Model 3 — Elasticity of spending with respect to access" },
+  "m3_sous_titre": { "fr": "MCO log-log : log(dépense) ~ log(inscriptions), période commune 1998-2017", "en": "Log-log OLS: log(spending) ~ log(enrolment), common period 1998-2017" },
+  "m3_note": {
+    "fr": "<b>Interprétation.</b> L'élasticité vaut <b>{elasticite}</b> : quand le taux d'inscription augmente de 1 %, la dépense par étudiant baisse de <b>{amplitude} %</b>.<br><br><b>C'est le résultat central de cette page.</b> Une élasticité de −1 signifierait une enveloppe budgétaire totale <i>strictement constante</i>, intégralement diluée par les effectifs. Or l'intervalle de confiance à 95 % — [{ic_bas} ; {ic_haut}] — <b>contient −1</b> : on ne peut donc pas rejeter l'hypothèse que l'effort budgétaire global n'a pas suivi du tout la massification. Chaque étudiant supplémentaire a été absorbé à moyens quasi constants.<br><br><b>Réserve.</b> n = {n}. Le résultat est cohérent avec les modèles 1 et 2, mais une élasticité estimée sur dix points reste indicative.",
+    "en": "<b>Interpretation.</b> The elasticity is <b>{elasticite}</b>: when the enrolment rate rises by 1 %, spending per student falls by <b>{amplitude} %</b>.<br><br><b>This is the central result on this page.</b> An elasticity of −1 would mean a <i>strictly constant</i> total budget, entirely diluted by student numbers. Yet the 95 % confidence interval — [{ic_bas}; {ic_haut}] — <b>contains −1</b>: we therefore cannot reject the hypothesis that overall budgetary effort did not follow mass enrolment at all. Each additional student was absorbed at near-constant resources.<br><br><b>Caveat.</b> n = {n}. The result is consistent with models 1 and 2, but an elasticity estimated on ten points remains indicative."
+  },
+
+  "m4_titre": { "fr": "Modèle 4 — Rupture de tendance en 2000", "en": "Model 4 — Trend break in 2000" },
+  "m4_sous_titre": { "fr": "Deux régressions séparées sur les inscriptions, avant et après 2000", "en": "Two separate regressions on enrolment, before and after 2000" },
+  "m4_avant": { "fr": "**Avant 2000**", "en": "**Before 2000**" },
+  "m4_apres": { "fr": "**À partir de 2000**", "en": "**From 2000 onwards**" },
+  "m4_verdict_disjoints": {
+    "fr": "les intervalles de confiance <b>ne se recouvrent pas</b> : l'accélération est objectivée, ce n'est pas une impression visuelle",
+    "en": "the confidence intervals <b>do not overlap</b>: the acceleration is objectively established, not a visual impression"
+  },
+  "m4_verdict_recouvrent": {
+    "fr": "leurs intervalles de confiance <b>se recouvrent</b> : l'écart de pente n'est pas établi au seuil de 5 %",
+    "en": "their confidence intervals <b>overlap</b>: the slope difference is not established at the 5 % level"
+  },
+  "m4_note": {
+    "fr": "<b>Interprétation.</b> La pente passe de <b>{avant}</b> à <b>{apres} point par an</b>, soit une accélération d'un facteur <b>{rapport}</b>. Les deux pentes sont hautement significatives et {verdict}.<br><br><b>Portée.</b> Ce test date le basculement mais n'en explique pas la cause. La coïncidence avec l'expansion du privé est cohérente avec le reste du tableau de bord, sans que ces données puissent l'établir.",
+    "en": "<b>Interpretation.</b> The slope moves from <b>{avant}</b> to <b>{apres} point per year</b>, an acceleration by a factor of <b>{rapport}</b>. Both slopes are highly significant and {verdict}.<br><br><b>Reach.</b> This test dates the shift but does not explain its cause. The coincidence with the expansion of private provision is consistent with the rest of the dashboard, without these data being able to establish it."
+  },
+
+  "conc_titre": { "fr": "Mesures de concentration territoriale", "en": "Measures of territorial concentration" },
+  "conc_sous_titre": { "fr": "Indices calculés sur la répartition régionale des établissements techniques", "en": "Indices computed on the regional distribution of technical institutions" },
+  "tuile_hhi": { "fr": "Indice Herfindahl (HHI)", "en": "Herfindahl index (HHI)" },
+  "tuile_hhi_detail": { "fr": "contre {equilibre} si réparti également", "en": "against {equilibre} if evenly spread" },
+  "tuile_hhi_norm": { "fr": "HHI normalisé", "en": "Normalised HHI" },
+  "tuile_hhi_norm_detail": { "fr": "0 = équilibre parfait, 1 = tout dans une région", "en": "0 = perfect balance, 1 = all in one region" },
+  "tuile_gini": { "fr": "Coefficient de Gini", "en": "Gini coefficient" },
+  "tuile_gini_detail": { "fr": "inégalité de la répartition", "en": "inequality of the distribution" },
+  "tuile_part_max": { "fr": "Part de la région dominante", "en": "Share of the dominant region" },
+  "tuile_part_max_detail": { "fr": "sur {unites} régions", "en": "across {unites} regions" },
+  "conc_note": {
+    "fr": "<b>Interprétation.</b> Un HHI de <b>{hhi}</b> pour 5 régions se compare à <b>{equilibre}</b>, valeur d'une répartition parfaitement égale : la concentration observée est donc <b>deux fois</b> celle d'un pays qui répartirait uniformément son offre. Le Gini de <b>{gini}</b> confirme une inégalité forte — à titre de repère, c'est l'ordre de grandeur des coefficients de Gini de revenus les plus élevés au monde, appliqué ici à l'accès à la formation.",
+    "en": "<b>Interpretation.</b> An HHI of <b>{hhi}</b> for 5 regions compares with <b>{equilibre}</b>, the value of a perfectly even distribution: the observed concentration is therefore <b>twice</b> that of a country spreading its provision uniformly. The Gini of <b>{gini}</b> confirms strong inequality — for reference, that is the order of magnitude of the highest income Gini coefficients in the world, applied here to access to training."
+  },
+
+  "correl_titre": { "fr": "Corrélations — et pourquoi deux coefficients valent mieux qu'un", "en": "Correlations — and why two coefficients beat one" },
+  "correl_sous_titre": { "fr": "Pearson (linéaire) et Spearman (monotone) sur les périodes communes", "en": "Pearson (linear) and Spearman (monotonic) over the common periods" },
+  "correl_tableau": {
+    "fr": "| Relation testée | Pearson r | p | Spearman ρ | p | n | Conclusion |\n|---|---|---|---|---|---|---|\n| Inscriptions ↔ dépense/étudiant | {dep_pr} | {dep_pp} | {dep_sr} | {dep_sp} | {dep_n} | Lien négatif, mais fragile |\n| Inscriptions ↔ chômage des diplômés | {cho_pr} | {cho_pp} | {cho_sr} | {cho_sp} | {cho_n} | **Aucun lien détectable** |",
+    "en": "| Relationship tested | Pearson r | p | Spearman ρ | p | n | Conclusion |\n|---|---|---|---|---|---|---|\n| Enrolment ↔ spending/student | {dep_pr} | {dep_pp} | {dep_sr} | {dep_sp} | {dep_n} | Negative link, but fragile |\n| Enrolment ↔ graduate unemployment | {cho_pr} | {cho_pp} | {cho_sr} | {cho_sp} | {cho_n} | **No detectable link** |"
+  },
+  "correl_note": {
+    "fr": "<b>Interprétation — premier cas.</b> Pearson donne <b>{dep_pr}</b> (significatif) mais Spearman seulement <b>{dep_sr}</b> (non significatif). Cet écart marqué est un signal : la corrélation linéaire est portée par quelques points extrêmes — surtout 1998 — plus que par une décroissance régulière. Ne publier que le Pearson aurait surestimé la solidité du lien.<br><br><b>Interprétation — second cas.</b> Aucune relation entre accès et chômage des diplômés n'est détectable (p = {cho_pp}, n = {cho_n}). Ce n'est <b>pas</b> une preuve d'absence de lien : avec cinq points communs, la puissance statistique est quasi nulle. Le test ne conclut rien, et c'est exactement ce qu'il faut retenir.",
+    "en": "<b>Interpretation — first case.</b> Pearson gives <b>{dep_pr}</b> (significant) but Spearman only <b>{dep_sr}</b> (not significant). That marked gap is a signal: the linear correlation is driven by a few extreme points — chiefly 1998 — rather than by a steady decline. Publishing only the Pearson would have overstated how solid the link is.<br><br><b>Interpretation — second case.</b> No relationship between access and graduate unemployment is detectable (p = {cho_pp}, n = {cho_n}). This is <b>not</b> proof that no link exists: with five common points, statistical power is close to nil. The test concludes nothing, and that is precisely what to retain."
+  },
+
+  "m5_titre": { "fr": "Modèle 5 — Une hausse brutale des crédits dégrade-t-elle l'exécution ?", "en": "Model 5 — Does an abrupt funding increase degrade execution?" },
+  "m5_sous_titre": { "fr": "MCO : taux d'exécution ~ variation annuelle de l'enveloppe votée", "en": "OLS: execution rate ~ annual change in the approved allocation" },
+  "m5_axe_x": { "fr": "Variation de l'enveloppe votée (%)", "en": "Change in approved allocation (%)" },
+  "m5_axe_y": { "fr": "Taux d'exécution (%)", "en": "Execution rate (%)" },
+  "m5_note": {
+    "fr": "<b>Interprétation — résultat négatif assumé.</b> Le coefficient est du signe attendu (<b>{pente}</b> : plus l'enveloppe augmente, moins elle s'exécute) et le R² paraît élevé (<b>{r2}</b>). Mais avec <b>n = {n}</b> observations, la p-value atteint <b>{p}</b> et l'intervalle de confiance [{ic_bas} ; {ic_haut}] <b>contient zéro</b>.<br><br><b>Conclusion honnête : l'hypothèse n'est pas établie.</b> Elle reste cohérente avec le cas de 2018 (+47 % de crédits, exécution au plus bas), mais cinq points ne permettent pas de la démontrer. Le levier correspondant est donc formulé comme une précaution de gestion, pas comme une loi vérifiée.",
+    "en": "<b>Interpretation — a negative result, owned.</b> The coefficient has the expected sign (<b>{pente}</b>: the larger the allocation, the less of it is spent) and the R² looks high (<b>{r2}</b>). But with <b>n = {n}</b> observations, the p-value reaches <b>{p}</b> and the confidence interval [{ic_bas}; {ic_haut}] <b>contains zero</b>.<br><br><b>Honest conclusion: the hypothesis is not established.</b> It remains consistent with the 2018 case (+47 % in funding, execution at its lowest), but five points cannot demonstrate it. The corresponding lever is therefore framed as a management precaution, not a verified law."
+  },
+
+  "hors_portee_titre": { "fr": "Les {nombre} indicateurs demandés qui ne peuvent pas être honorés", "en": "The {nombre} required indicators that cannot be delivered" },
+  "hors_portee_sous_titre": {
+    "fr": "Chaque absence est vérifiée dans les huit fichiers, puis rapportée à sa cause — qui n'est pas la même d'un indicateur à l'autre",
+    "en": "Each absence is verified across the eight files, then traced to its cause — which differs from one indicator to the next"
+  },
+  "hors_portee_corps": {
+    "fr": "Un indicateur peut manquer pour trois raisons très différentes, et les confondre conduirait à des recommandations fausses. Sur les **{total}** indicateurs que le cahier des charges demande, **{nombre}** sont hors de portée — pour trois motifs distincts.\n\n**a) La donnée a été collectée, mais n'a pas été publiée.** C'est le cas des effectifs d'élèves, du personnel enseignant et de toute ventilation par sexe. Le dictionnaire des champs décrit **{decrits} champs** de questionnaire ; le fichier diffusé en expose **{publies}**. **{absents} champs manquent**, dont `{champs_eleves}`, `enseignants_total`, `enseignants_femmes`. Le dictionnaire les type `xsd:int` : ce sont des dénombrements, pas des champs restés vides.\n\n**b) La donnée n'existe à aucune granularité utile.** Le chômage des diplômés n'est publié qu'au niveau **national**, sans ventilation par filière ni par région. Ce n'est pas un défaut de publication : l'enquête source ne descend pas plus bas. Aucun taux d'insertion local n'est donc calculable — et c'est ce qui interdit de relier une offre de formation à son marché du travail.\n\n**c) La nomenclature elle-même est absente.** Aucune notion de discipline dans le corpus : le supérieur n'est ventilé que par type et statut, le technique par catégorie de diplôme. La « part des filières scientifiques » n'a donc aucun dénominateur, et les « types de formations proposées » annoncés par la description du jeu — mécanique, électricité, informatique, bâtiment — n'y figurent nulle part.",
+    "en": "An indicator can be missing for three very different reasons, and conflating them would lead to wrong recommendations. Of the **{total}** indicators the brief requires, **{nombre}** are out of reach — for three distinct motives.\n\n**a) The data was collected but not published.** This applies to pupil headcounts, teaching staff and any breakdown by sex. The field dictionary describes **{decrits} fields** of questionnaire; the released file exposes **{publies}**. **{absents} fields are missing**, including `{champs_eleves}`, `enseignants_total`, `enseignants_femmes`. The dictionary types them `xsd:int`: these are counts, not fields left empty.\n\n**b) The data exists at no useful granularity.** Graduate unemployment is published at **national** level only, with no breakdown by programme or region. This is not a release failure: the source survey does not go lower. No local employment rate can therefore be computed — and that is what rules out linking training provision to its labour market.\n\n**c) The classification itself is absent.** No notion of discipline in the corpus: higher education is broken down only by type and status, technical training by qualification category. The “share of scientific programmes” therefore has no denominator, and the “types of training offered” announced in the dataset description — mechanics, electricity, IT, construction — appear nowhere."
+  },
+  "hors_portee_note_1": {
+    "fr": "Aucun de ces indicateurs n'a été estimé. Les produire aurait exigé de les reconstituer par hypothèse — donc de présenter comme mesuré ce qui serait supposé. C'est une limite du <b>corpus</b>, pas de l'analyse.",
+    "en": "None of these indicators was estimated. Producing them would have required reconstructing them by assumption — presenting as measured what would in fact be supposed. This is a limit of the <b>corpus</b>, not of the analysis."
+  },
+  "hors_portee_note_2": {
+    "fr": "<b>Ce que cela change pour l'action.</b> Les trois causes n'appellent pas le même remède, et c'est l'apport principal de cette page. Le cas (a) ne demande qu'une <b>republication</b> : les {absents} champs sont déjà dans le système d'information du ministère. Le cas (b) demande une <b>enquête d'insertion</b> ventilée par filière et par région. Le cas (c) demande un <b>référentiel national de métiers et de disciplines</b>. Confondre les trois conduirait à financer une enquête là où une simple exportation suffirait.",
+    "en": "<b>What this changes for action.</b> The three causes call for different remedies, and that is this page's main contribution. Case (a) requires only a <b>re-release</b>: the {absents} fields are already in the ministry's information system. Case (b) requires an <b>employment survey</b> broken down by programme and region. Case (c) requires a <b>national register of occupations and disciplines</b>. Conflating the three would mean funding a survey where a simple export would do."
+  }
+}

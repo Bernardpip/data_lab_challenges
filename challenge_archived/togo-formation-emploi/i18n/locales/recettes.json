@@ -1,0 +1,18 @@
+{
+  "ing_inscriptions": { "fr": "Inscriptions (DISES-TG)", "en": "Enrolment (DISES-TG)" },
+  "ing_depenses": { "fr": "Dépenses par étudiant (DDPEES-TG)", "en": "Spending per student (DDPEES-TG)" },
+  "ing_budget": { "fr": "Budget (DBESBNVE-TG)", "en": "Budget (DBESBNVE-TG)" },
+  "ing_formations": { "fr": "Formations techniques (DEFT-TG)", "en": "Technical training (DEFT-TG)" },
+  "ing_superieur": { "fr": "Établissements du supérieur (DREESTSL-TG)", "en": "Higher education institutions (DREESTSL-TG)" },
+  "ing_chomage": { "fr": "Chômage des diplômés (DCDES-TG)", "en": "Graduate unemployment (DCDES-TG)" },
+  "ing_indicateurs": { "fr": "Indicateurs clés du supérieur (DICES-TG)", "en": "Key higher education indicators (DICES-TG)" },
+
+  "cle_annee": { "fr": "Année", "en": "Year" },
+  "cle_region": { "fr": "Région (via chef-lieu pour le supérieur)", "en": "Region (via regional capital for higher education)" },
+  "millesimes_reseaux": { "fr": "Technique 2025 · Supérieur 2018", "en": "Technical 2025 · Higher education 2018" },
+
+  "source_attestee": { "fr": "attestée par les données", "en": "attested by the data" },
+  "source_ogou": { "fr": "via la préfecture d'Ogou", "en": "via the Ogou prefecture" },
+  "source_zio": { "fr": "via la préfecture de Zio", "en": "via the Zio prefecture" },
+  "source_lacs": { "fr": "via la préfecture des Lacs", "en": "via the Lacs prefecture" }
+}

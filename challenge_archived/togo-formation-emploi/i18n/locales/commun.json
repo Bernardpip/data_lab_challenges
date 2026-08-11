@@ -1,0 +1,122 @@
+{
+  "marque": {
+    "fr": "Formation & Emploi",
+    "en": "Skills & Employment"
+  },
+  "organisation": {
+    "fr": "République togolaise",
+    "en": "Republic of Togo"
+  },
+  "laboratoire": {
+    "fr": "Data AI Lab",
+    "en": "Data AI Lab"
+  },
+  "reduire_barre": {
+    "fr": "Réduire la barre",
+    "en": "Collapse sidebar"
+  },
+  "deployer_barre": {
+    "fr": "Déployer la barre",
+    "en": "Expand sidebar"
+  },
+  "realise_par": {
+    "fr": "Réalisé par {auteur}",
+    "en": "Built by {auteur}"
+  },
+  "voir_donnees": {
+    "fr": "Voir les données",
+    "en": "View the data"
+  },
+  "choisir": {
+    "fr": "Choisir",
+    "en": "Select"
+  },
+  "tous": {
+    "fr": "Tous",
+    "en": "All"
+  },
+  "toutes": {
+    "fr": "Toutes",
+    "en": "All"
+  },
+  "aucun_etablissement": {
+    "fr": "Aucun établissement ne correspond à la sélection.",
+    "en": "No institution matches the current selection."
+  },
+  "aucune_mesure": {
+    "fr": "Aucune mesure sur l'intervalle retenu.",
+    "en": "No measurement within the selected range."
+  },
+  "pas_assez_de_points": {
+    "fr": "Moins de deux mesures sur cet intervalle : aucune trajectoire n'est lisible. Élargissez la période.",
+    "en": "Fewer than two measurements in this range: no trend can be read. Widen the period."
+  },
+  "bientot": {
+    "fr": "Bientôt disponible",
+    "en": "Coming soon"
+  },
+  "etablissements": {
+    "fr": "établissements",
+    "en": "institutions"
+  },
+  "etudiants": {
+    "fr": "étudiants",
+    "en": "students"
+  },
+  "annees": {
+    "fr": "années",
+    "en": "years"
+  },
+  "mesures": {
+    "fr": "mesures",
+    "en": "measurements"
+  },
+  "sur_total": {
+    "fr": "sur {total} au total",
+    "en": "of {total} in total"
+  },
+  "non_renseigne": {
+    "fr": "Non renseigné",
+    "en": "Not reported"
+  },
+  "langue": {
+    "fr": "Langue",
+    "en": "Language"
+  },
+  "changer_langue": {
+    "fr": "Changer de langue",
+    "en": "Change language"
+  },
+  "aucun_etablissement_geolocalise": {
+    "fr": "Aucun établissement géolocalisé dans la sélection.",
+    "en": "No geolocated institution in the selection."
+  },
+  "aucune_ville_avec_etablissement": {
+    "fr": "Aucune ville de la sélection ne porte d'établissement.",
+    "en": "No city in the selection holds an institution."
+  },
+  "serie_inscriptions": {
+    "fr": "Inscriptions dans le supérieur",
+    "en": "Higher education enrolment"
+  },
+  "serie_depense_etudiant": {
+    "fr": "Dépense publique par étudiant",
+    "en": "Public spending per student"
+  },
+  "bientot_detail": {
+    "fr": "Disponible prochainement.",
+    "en": "Coming soon."
+  },
+  "introuvable_titre": {
+    "fr": "Page introuvable",
+    "en": "Page not found"
+  },
+  "introuvable_detail": {
+    "fr": "Cette route ne correspond à aucune vue.",
+    "en": "This route matches no view."
+  },
+  "nav_absente": {
+    "fr": "Aucune section de navigation configurée.",
+    "en": "No navigation section configured."
+  }
+}

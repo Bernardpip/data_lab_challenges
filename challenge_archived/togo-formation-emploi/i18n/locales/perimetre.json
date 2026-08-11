@@ -1,0 +1,64 @@
+{
+  "obj1": { "fr": "1. Cartographier l'offre technique par territoire", "en": "1. Map technical provision by territory" },
+  "obj2": { "fr": "2. Indicateurs clés de l'enseignement supérieur", "en": "2. Key higher education indicators" },
+  "obj3": { "fr": "3. Répartition du supérieur par type, statut, localisation", "en": "3. Higher education distribution by type, status, location" },
+  "obj4": { "fr": "4. Suivre la dynamique d'inscription", "en": "4. Track enrolment dynamics" },
+  "obj5": { "fr": "5. Investissement public × dépense/étudiant × chômage", "en": "5. Public investment × spending/student × unemployment" },
+  "obj6": { "fr": "6. Proposer des recommandations", "en": "6. Propose recommendations" },
+
+  "i1_indicateur": { "fr": "Localisation des établissements", "en": "Institution locations" },
+  "i1_source": { "fr": "DEFT-TG — 5 niveaux administratifs + coordonnées", "en": "DEFT-TG — 5 administrative levels + coordinates" },
+  "i1_motif": { "fr": "256 établissements géolocalisés, du canton à la région.", "en": "256 geolocated institutions, from canton to region." },
+
+  "i2_indicateur": { "fr": "Types de formations proposées (mécanique, électricité, informatique, bâtiment…)", "en": "Types of training offered (mechanics, electricity, IT, construction…)" },
+  "i2_source": { "fr": "Annoncé par la description du jeu, absent du fichier", "en": "Announced in the dataset description, absent from the file" },
+  "i2_motif": { "fr": "Le fichier ne porte qu'une catégorie de diplôme (CAP, BTS, licence, « formation professionnelle autre ») : aucun métier n'est nommé. 191 établissements sur 256 relèvent de la modalité générique.", "en": "The file carries only a qualification category (CAP, BTS, bachelor's, “other vocational training”): no occupation is named. 191 of 256 institutions fall under the generic category." },
+
+  "i3_indicateur": { "fr": "Nombre d'étudiants formés", "en": "Number of students trained" },
+  "i3_source": { "fr": "Décrit au dictionnaire ({champs}…), non publié", "en": "Described in the dictionary ({champs}…), not published" },
+  "i3_motif": { "fr": "Annoncé par la description du jeu et prévu au questionnaire, mais absent de la ressource diffusée.", "en": "Announced in the dataset description and planned in the questionnaire, but absent from the released resource." },
+
+  "i4_indicateur": { "fr": "Qualité des infrastructures et équipements", "en": "Quality of infrastructure and facilities" },
+  "i4_source": { "fr": "DEFT-TG — foncier, sanitaires, terrain de sport", "en": "DEFT-TG — land tenure, sanitation, sports field" },
+  "i4_motif": { "fr": "Trois champs seulement, et 30 % des établissements ne renseignent pas leur équipement sanitaire.", "en": "Only three fields, and 30 % of institutions do not report their sanitation." },
+
+  "i5_indicateur": { "fr": "Effectifs étudiants", "en": "Student headcount" },
+  "i5_source": { "fr": "DICES-TG — effectifs absolus, 2014-2019", "en": "DICES-TG — absolute headcounts, 2014-2019" },
+  "i5_motif": { "fr": "{mesures} mesures d'effectifs inscrits, de {debut} à {fin} étudiants. Les huit premières ressources ne publiaient qu'un taux brut de scolarisation, sans effectif absolu.", "en": "{mesures} enrolled-headcount measurements, from {debut} to {fin} students. The first eight resources published only a gross enrolment rate, with no absolute headcount." },
+
+  "i6_indicateur": { "fr": "Féminisation", "en": "Gender balance" },
+  "i6_source": { "fr": "DICES-TG — rapport de féminité, 2015-2019", "en": "DICES-TG — female share, 2015-2019" },
+  "i6_motif": { "fr": "Série complète sur cinq ans, et croisée avec la part des filles dans les filières scientifiques : c'est ce croisement qui révèle l'écart, invisible sur le seul chiffre d'ensemble.", "en": "A complete five-year series, crossed with the share of girls in scientific programmes: it is that crossing which reveals the gap, invisible in the headline figure alone." },
+
+  "i7_indicateur": { "fr": "Filières scientifiques", "en": "Scientific programmes" },
+  "i7_source": { "fr": "DICES-TG — part des étudiants scientifiques, 2015-2019", "en": "DICES-TG — share of scientific students, 2015-2019" },
+  "i7_motif": { "fr": "Part des étudiants inscrits en filière scientifique et technologique. Réserve : aucune nomenclature de discipline n'accompagne l'agrégat, on ne peut donc pas savoir quelles filières y sont comptées.", "en": "Share of students enrolled in scientific and technological programmes. Caveat: no discipline classification accompanies the aggregate, so which programmes are counted cannot be known." },
+
+  "i8_indicateur": { "fr": "Ratio étudiant / enseignants", "en": "Student / teacher ratio" },
+  "i8_source": { "fr": "DICES-TG — universités publiques uniquement, 3 mesures", "en": "DICES-TG — public universities only, 3 measurements" },
+  "i8_motif": { "fr": "Le ratio est publié, mais pour les seules universités publiques (environ trois quarts des étudiants) et sur trois années. Le privé, qui porte 92 % des établissements, n'est pas couvert.", "en": "The ratio is published, but for public universities only (about three quarters of students) and over three years. The private sector, which carries 92 % of institutions, is not covered." },
+
+  "i9_indicateur": { "fr": "Type × statut × ville", "en": "Type × status × city" },
+  "i9_source": { "fr": "DREESTSL-TG", "en": "DREESTSL-TG" },
+  "i9_motif": { "fr": "Les trois dimensions demandées sont présentes. Réserve : une seule année (2018) et 8 villes, sans établissement nominatif.", "en": "All three required dimensions are present. Caveat: a single year (2018) and 8 cities, with no named institution." },
+
+  "i10_indicateur": { "fr": "Taux brut d'inscription, série longue", "en": "Gross enrolment rate, long series" },
+  "i10_source": { "fr": "DISES-TG — 1971-2020", "en": "DISES-TG — 1971-2020" },
+  "i10_motif": { "fr": "La série la plus longue et la plus dense du corpus.", "en": "The longest and densest series in the corpus." },
+
+  "i11_indicateur": { "fr": "Budget voté et exécuté", "en": "Approved and executed budget" },
+  "i11_source": { "fr": "DBESBNVE-TG — 3 niveaux emboîtés", "en": "DBESBNVE-TG — 3 nested levels" },
+  "i11_motif": { "fr": "Six exercices (2013-2018), supérieur / éducation / national.", "en": "Six financial years (2013-2018), higher education / education / national." },
+
+  "i12_indicateur": { "fr": "Dépense publique par étudiant", "en": "Public spending per student" },
+  "i12_source": { "fr": "DDPEES-TG", "en": "DDPEES-TG" },
+  "i12_motif": { "fr": "En % du PIB par habitant — un effort relatif, jamais des francs.", "en": "As % of GDP per capita — a relative effort, never francs." },
+
+  "i13_indicateur": { "fr": "Chômage des diplômés par filière ou par région", "en": "Graduate unemployment by programme or region" },
+  "i13_source": { "fr": "DCDES-TG — national uniquement", "en": "DCDES-TG — national only" },
+  "i13_motif": { "fr": "Le seul indicateur d'insertion est national et sans ventilation : aucun taux local ni par filière n'est calculable, ce qui interdit de relier une offre de formation à son marché du travail.", "en": "The only employment indicator is national and unbroken down: no local or programme-level rate is computable, which rules out linking training provision to its labour market." },
+
+  "i14_indicateur": { "fr": "Leviers adossés à un constat mesuré", "en": "Levers anchored in a measured finding" },
+  "i14_source": { "fr": "26 leviers, chacun renvoyant à la vue qui l'établit", "en": "26 levers, each pointing to the view establishing it" },
+  "i14_motif": { "fr": "Aucune recommandation générique : chaque levier cite son constat chiffré.", "en": "No generic recommendation: each lever cites its quantified finding." }
+}

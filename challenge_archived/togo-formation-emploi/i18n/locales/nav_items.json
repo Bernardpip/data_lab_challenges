@@ -1,0 +1,102 @@
+{
+  "synthese": {
+    "fr": "Synthèse nationale",
+    "en": "National summary"
+  },
+  "adequation": {
+    "fr": "Adéquation formation-emploi",
+    "en": "Skills-jobs alignment"
+  },
+  "carto": {
+    "fr": "Cartographie",
+    "en": "Mapping"
+  },
+  "dynamique": {
+    "fr": "Dynamique de création",
+    "en": "Openings over time"
+  },
+  "equipements": {
+    "fr": "Équipements",
+    "en": "Facilities"
+  },
+  "etablissements": {
+    "fr": "Établissements",
+    "en": "Institutions"
+  },
+  "sup_indicateurs": {
+    "fr": "Accès et moyens",
+    "en": "Access and funding"
+  },
+  "sup_cles": {
+    "fr": "Indicateurs clés",
+    "en": "Key indicators"
+  },
+  "sup_reseau": {
+    "fr": "Réseau d'établissements",
+    "en": "Institution network"
+  },
+  "budget": {
+    "fr": "Budget",
+    "en": "Budget"
+  },
+  "execution": {
+    "fr": "Exécution comparée",
+    "en": "Comparative execution"
+  },
+  "depense": {
+    "fr": "Dépense par étudiant",
+    "en": "Spending per student"
+  },
+  "chomage": {
+    "fr": "Chômage des diplômés",
+    "en": "Graduate unemployment"
+  },
+  "priorites": {
+    "fr": "Territoires prioritaires",
+    "en": "Priority areas"
+  },
+  "leviers": {
+    "fr": "Leviers d'action",
+    "en": "Action levers"
+  },
+  "rapport_intro": {
+    "fr": "Introduction",
+    "en": "Introduction"
+  },
+  "rapport_dev": {
+    "fr": "Développement",
+    "en": "Findings"
+  },
+  "eco_modeles": {
+    "fr": "Modèles économétriques",
+    "en": "Econometric models"
+  },
+  "eco_limites": {
+    "fr": "Tests & limites",
+    "en": "Tests & limitations"
+  },
+  "rapport_conclusion": {
+    "fr": "Conclusion",
+    "en": "Conclusion"
+  },
+  "fichiers": {
+    "fr": "Analyse par fichier",
+    "en": "File-by-file analysis"
+  },
+  "croisements": {
+    "fr": "Croisements",
+    "en": "Cross-file analyses"
+  },
+  "sources": {
+    "fr": "Sources des données",
+    "en": "Data sources"
+  },
+  "methodologie": {
+    "fr": "Méthodologie",
+    "en": "Methodology"
+  },
+  "affichage": {
+    "fr": "Affichage & crédits",
+    "en": "Display & credits"
+  }
+}
