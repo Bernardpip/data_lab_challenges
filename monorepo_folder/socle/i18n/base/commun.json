@@ -1,0 +1,24 @@
+{
+  "bientot": {"fr": "Bientôt disponible", "en": "Coming soon"},
+  "bientot_detail": {"fr": "Disponible prochainement.", "en": "Coming soon."},
+  "introuvable_titre": {"fr": "Page introuvable", "en": "Page not found"},
+  "introuvable_detail": {"fr": "Cette route ne correspond à aucune vue.", "en": "This route matches no view."},
+  "nav_absente": {"fr": "Aucune section de navigation configurée.", "en": "No navigation section configured."},
+
+  "reduire_barre": {"fr": "Réduire la barre", "en": "Collapse sidebar"},
+  "deployer_barre": {"fr": "Déployer la barre", "en": "Expand sidebar"},
+  "langue": {"fr": "Langue", "en": "Language"},
+  "changer_langue": {"fr": "Changer de langue", "en": "Change language"},
+  "passer_en": {"fr": "Passer en {langue}", "en": "Switch to {langue}"},
+
+  "realise_par": {"fr": "Réalisé par {auteur}", "en": "Built by {auteur}"},
+  "voir_donnees": {"fr": "Voir les données", "en": "View the data"},
+
+  "tous": {"fr": "Tous", "en": "All"},
+  "toutes": {"fr": "Toutes", "en": "All"},
+  "non_renseigne": {"fr": "Non renseigné", "en": "Not reported"},
+  "aucun_resultat": {"fr": "Aucune donnée ne correspond à la sélection.", "en": "No data matches the selection."},
+  "aucune_mesure": {"fr": "Aucune mesure sur l'intervalle retenu.", "en": "No measurement within the selected range."},
+  "aucun_point_localise": {"fr": "Aucun point localisé dans la sélection.", "en": "No located point in the selection."},
+  "pas_assez_de_points": {"fr": "Moins de deux mesures sur cet intervalle : aucune trajectoire n'est lisible. Élargissez la période.", "en": "Fewer than two measurements in this range: no trend can be read. Widen the period."}
+}

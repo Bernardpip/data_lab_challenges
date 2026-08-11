@@ -1,0 +1,11 @@
+{
+  "fichier": {"fr": "Rapport_{{PROJET}}", "en": "Report_{{PROJET}}"},
+  "pied": {"fr": "{{TITRE}} · page {page}", "en": "{{TITRE_EN}} · page {page}"},
+
+  "p1_titre": {"fr": "{{TITRE}}", "en": "{{TITRE_EN}}"},
+  "p1_sous_titre": {"fr": "Données ouvertes — opendata.gouv.tg", "en": "Open data — opendata.gouv.tg"},
+  "p1_auteur": {"fr": "{{AUTEUR}}", "en": "{{AUTEUR}}"},
+
+  "p2_titre": {"fr": "Données, nettoyage et démarche", "en": "Data, cleaning and method"},
+  "p2_sous_titre": {"fr": "Ce que le corpus permet, et ce qu'il ne permet pas", "en": "What the corpus allows, and what it does not"}
+}

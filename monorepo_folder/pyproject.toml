@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "datalab-socle"
+version = "1.0.0"
+description = "Socle partagé des tableaux de bord DataLab — coquille, charte, dataviz, i18n, économétrie."
+# Plancher, pas cible. Les défis se DÉPLOIENT en 3.11.9 (cf. runtime.txt du
+# gabarit), mais le socle n'emploie aucune syntaxe postérieure à 3.9 et doit
+# pouvoir s'installer sur le Python d'un poste qui n'a que celui-là — c'est
+# aussi le minimum que `verifier.py` annonce à qui décompresse le livrable.
+requires-python = ">=3.9"
+authors = [{ name = "Kokou PIPI" }]
+
+# Les versions sont celles éprouvées sur le pilote (Railway, Python 3.11.9).
+# Elles sont ÉPINGLÉES et non bornées par le bas : un socle dont la mise en
+# page dépend de 862 lignes de CSS calées sur une version de Streamlit ne
+# survit pas à une montée de version silencieuse en production.
+dependencies = [
+    "streamlit==1.50.0",
+    "pandas==2.3.3",
+    "numpy==2.0.2",
+    "plotly==6.9.0",
+    "scipy==1.13.1",
+    "folium==0.20.0",
+    "streamlit-folium==0.25.3",
+]
+
+[project.optional-dependencies]
+# Le corpus d'un défi géospatial (GPKG, GeoJSON, raster) — pas tous en ont besoin.
+geo = [
+    "geopandas==1.0.1",
+    "pyogrio==0.11.1",
+    "pyproj==3.6.1",
+    "shapely==2.0.7",
+]
+# Le rapport PowerPoint et les exports tableur.
+rapport = [
+    "python-pptx==1.0.2",
+    "openpyxl==3.1.5",
+    "XlsxWriter==3.2.9",
+    "lxml==6.1.1",
+]
+
+[tool.setuptools.packages.find]
+include = ["socle*"]
+
+# Les textes du socle voyagent AVEC le paquet : sans eux, une installation
+# affiche des clés brutes dans la sidebar et le footer.
+[tool.setuptools.package-data]
+"socle.i18n" = ["base/*.json"]

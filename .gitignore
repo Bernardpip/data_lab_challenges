@@ -1,0 +1,33 @@
+# Environnements Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Streamlit — un fichier de secrets ne se versionne jamais
+.streamlit/secrets.toml
+
+# Livrables reconstructibles : le zip se régénère depuis le dépôt
+# (cf. scripts/faire_zip.py d'un défi)
+*.zip
+
+# Systèmes de fichiers
+.DS_Store
+Thumbs.db
+
+# Fichiers verrous bureautiques
+~$*
+
+# Outils locaux
+.playwright-mcp/
+.claude/
+.vscode/
+
+# ─── En attente d'arbitrage ─────────────────────────────────────────────────
+# `challenge_archived/togo-formation-emploi` est AUJOURD'HUI un dépôt git à
+# lui seul (github.com/Bernardpip/togo-formation-emploi), d'où Railway déploie.
+# Le committer ici exigerait de retirer son `.git`, décision reportée : sans
+# cette ligne, git n'enregistrerait qu'un pointeur et GitHub afficherait un
+# dossier gris impossible à ouvrir. À lever le jour où il sera absorbé.
+challenge_archived/togo-formation-emploi/

@@ -1,0 +1,9 @@
+{
+  "region": {"fr": "Région", "en": "Region"},
+  "prefecture": {"fr": "Préfecture", "en": "Prefecture"},
+  "canton": {"fr": "Canton", "en": "Canton"},
+  "periode": {"fr": "Période", "en": "Period"},
+  "annees": {"fr": "Années", "en": "Years"},
+  "statut": {"fr": "Statut", "en": "Status"},
+  "type": {"fr": "Type", "en": "Type"}
+}

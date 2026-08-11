@@ -1,0 +1,10 @@
+{
+  "aucun_jeu": {"fr": "jeu de données déclaré", "en": "dataset declared"},
+  "aucun_jeu_detail": {"fr": "Déposez les fichiers dans data/, puis déclarez-les dans utils/loader.py (FICHIERS) et utils/data.py (datasets).", "en": "Drop the files into data/, then declare them in utils/loader.py (FICHIERS) and utils/data.py (datasets)."},
+
+  "jeux_charges": {"fr": "jeux chargés", "en": "datasets loaded"},
+
+  "carte_titre": {"fr": "Première carte", "en": "First card"},
+  "carte_sous_titre": {"fr": "Remplacez cette vue témoin par la première vue validée en phase 3.", "en": "Replace this placeholder view with the first view approved in phase 3."},
+  "note_amorce": {"fr": "Le corpus compte {jeux} jeux chargés. Une note porte la CONCLUSION que le graphe autorise, jamais sa description — et cite ses chiffres en paramètres, pour qu'ils suivent les filtres.", "en": "The corpus holds {jeux} loaded datasets. A note carries the CONCLUSION the chart supports, never its description — and quotes its figures as parameters, so they follow the filters."}
+}

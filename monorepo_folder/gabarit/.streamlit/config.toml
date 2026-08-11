@@ -1,0 +1,44 @@
+# Thème FORCÉ en clair.
+#
+# Sans ce fichier, Streamlit suit le mode sombre du système : les tableaux
+# (st.dataframe) et les inputs basculaient en fond sombre avec un texte gris
+# illisible, alors que tout le design system (tokens zendho) est clair.
+# Les valeurs reprennent socle/design/tokens.py — même source de vérité.
+
+[theme]
+base = "light"
+primaryColor = "#6366F1"
+backgroundColor = "#F0F0F0"
+secondaryBackgroundColor = "#FCFCFC"
+textColor = "#0F172A"
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"
+# En ligne, une trace d'exception affichée au visiteur ne l'aide pas et
+# expose la structure du code. En local elle reste précieuse : le réglage
+# est donc surchargé au déploiement (voir DEPLOIEMENT.md).
+showErrorDetails = true
+
+[browser]
+gatherUsageStats = false
+
+# ─── Service derrière un proxy (Render puis Cloudflare) ─────────────────────
+#
+# Le port n'est PAS fixé ici : Render l'impose par la variable $PORT et le
+# change à chaque démarrage. Il est passé en ligne de commande (render.yaml).
+[server]
+headless = true                  # aucun navigateur à ouvrir sur le serveur
+maxUploadSize = 5                # l'application ne reçoit aucun fichier
+
+# `fileWatcherType` n'est PAS fixé ici. Mis à "none", il économise de la
+# mémoire en production mais supprime le rechargement à chaud en local : on
+# modifie une feuille de style et rien ne bouge. Il est donc passé en ligne de
+# commande par railway.toml, là où il ne concerne que le serveur déployé.
+
+# `enableCORS = false` circule dans beaucoup de tutoriels de déploiement
+# Streamlit. Ne pas l'ajouter : depuis la version 1.x, il est INCOMPATIBLE
+# avec `enableXsrfProtection`, que Streamlit rétablit alors de force en
+# affichant un avertissement au démarrage. Les deux valeurs par défaut (CORS
+# et XSRF actifs) fonctionnent derrière Render et Cloudflare, à condition que
+# le proxy transmette l'en-tête Host — ce que les deux font.

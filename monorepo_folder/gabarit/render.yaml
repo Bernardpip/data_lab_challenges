@@ -1,0 +1,28 @@
+# Déploiement Render — infrastructure décrite dans le dépôt.
+#
+# Render lit ce fichier au premier déploiement : il n'y a rien à configurer
+# dans l'interface. Chaque `git push` sur la branche suivie redéclenche une
+# construction, comme sur Vercel.
+services:
+  - type: web
+    name: {{PROJET}}
+    runtime: python
+    plan: free
+    region: frankfurt          # la plus proche du terrain parmi les régions Render
+    branch: main
+
+    buildCommand: pip install -r requirements.txt
+
+    # $PORT est imposé par Render et change à chaque démarrage : il ne peut
+    # pas être figé dans config.toml. L'adresse 0.0.0.0 est indispensable —
+    # sur 127.0.0.1 le conteneur ne serait joignable que depuis lui-même.
+    startCommand: >
+      streamlit run app.py
+      --server.port $PORT
+      --server.address 0.0.0.0
+
+    healthCheckPath: /_stcore/health
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
