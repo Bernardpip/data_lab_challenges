@@ -362,5 +362,69 @@
   "famille_autres": {
     "fr": "Identifiants et remarques",
     "en": "Identifiers and remarks"
+  },
+  "rapport_tuile_pages": {
+    "fr": "Pages",
+    "en": "Pages"
+  },
+  "rapport_tuile_pages_detail": {
+    "fr": "le même récit que ces sept actes, en dix planches",
+    "en": "the same story as these seven acts, in ten plates"
+  },
+  "rapport_tuile_langues": {
+    "fr": "Langues",
+    "en": "Languages"
+  },
+  "rapport_tuile_langues_detail": {
+    "fr": "français et anglais, écrits depuis les mêmes chiffres",
+    "en": "French and English, written from the same figures"
+  },
+  "rapport_tuile_fichiers": {
+    "fr": "Fichiers à prendre",
+    "en": "Files to take"
+  },
+  "rapport_tuile_fichiers_detail": {
+    "fr": "deux formats par langue",
+    "en": "two formats per language"
+  },
+  "rapport_absent": {
+    "fr": "Aucun rapport dans `rapport/`. Il se produit en une commande : `python3 scripts/generer_presentation.py`, puis `python3 scripts/exporter_pdf.py` pour la version PDF.",
+    "en": "No report in `rapport/`. One command produces it: `python3 scripts/generer_presentation.py`, then `python3 scripts/exporter_pdf.py` for the PDF version."
+  },
+  "rapport_fr_titre": {
+    "fr": "Rapport — français",
+    "en": "Report — French"
+  },
+  "rapport_fr_sous_titre": {
+    "fr": "L'eau que le Togo ne compte pas · dix pages",
+    "en": "The water Togo does not count · ten pages"
+  },
+  "rapport_en_titre": {
+    "fr": "Rapport — anglais",
+    "en": "Report — English"
+  },
+  "rapport_en_sous_titre": {
+    "fr": "The water Togo does not count · ten pages",
+    "en": "The water Togo does not count · ten pages"
+  },
+  "rapport_bouton_pdf": {
+    "fr": "Télécharger le PDF",
+    "en": "Download the PDF"
+  },
+  "rapport_bouton_pptx": {
+    "fr": "Télécharger le PowerPoint",
+    "en": "Download the PowerPoint"
+  },
+  "rapport_detail_pdf": {
+    "fr": "{ko} ko — s'ouvre partout, sans logiciel de présentation",
+    "en": "{ko} kB — opens anywhere, no presentation software"
+  },
+  "rapport_detail_pptx": {
+    "fr": "{ko} ko — graphiques natifs : ils se retouchent et se recopient",
+    "en": "{ko} kB — native charts: editable and reusable"
+  },
+  "rapport_note": {
+    "fr": "Les chiffres du rapport viennent des mêmes fonctions que ce tableau de bord, collectés en une seule fois : ils ne peuvent pas diverger de ce que montre l'écran. Ses graphiques sont natifs — on peut les reprendre dans un autre document sans les redessiner.",
+    "en": "The report's figures come from the same functions as this dashboard, collected once: they cannot diverge from what the screen shows. Its charts are native — they can be reused in another document without redrawing them."
   }
 }

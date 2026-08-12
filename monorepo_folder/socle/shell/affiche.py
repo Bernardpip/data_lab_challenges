@@ -800,19 +800,6 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
             # pour une seule pièce, et il fallait se souvenir de laquelle
             # menait où. L'avatar reste, parce qu'il dit en plus qui regarde.
 
-            # LE RAPPORT se télécharge depuis le bandeau, et de nulle part
-            # ailleurs. Il était produit, versionné, joint à l'archive — et
-            # invisible à qui n'ouvre que le tableau de bord : il fallait
-            # savoir qu'un dossier `rapport/` existait. Un livrable qu'on ne
-            # peut pas prendre depuis l'écran où on le lit n'est pas livré.
-            #
-            # Un dépliant plutôt qu'un bouton : le rapport existe en deux
-            # formats, et choisir pour le lecteur — le PDF parce qu'il
-            # s'ouvre partout, ou le PowerPoint parce que l'énoncé le demande
-            # — reviendrait à en cacher un.
-            if (config or {}).get("rapport", {}).get("fichiers"):
-                _rapport(config["rapport"])
-
             # La bascule de langue ferme la ligne, poussée au bord droit. Elle
             # garde ses deux boutons plutôt qu'un groupe segmenté : ses cases
             # sont des ACTIONS — traduire la page — et non un choix parmi une
@@ -841,64 +828,6 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                 "settings"
             ):
                 _reglages(config)
-
-
-def _rapport(reglages):
-    """Le dépliant de téléchargement du rapport, dans le rail du menu.
-
-    `reglages` : {titre, aide, fichiers: [(libellé, chemin, mime, détail)]}.
-    Les fichiers sont lus à la demande — l'ouverture du dépliant — et non à
-    chaque passage : deux cents kilooctets par rendu pour un bouton que
-    personne ne clique seraient payés par tout le monde.
-    """
-
-    with st.container(key="kgaffrapport"):
-        with st.popover(reglages.get("titre", ""),
-                        help=reglages.get("aide"), use_container_width=False):
-            if reglages.get("note"):
-                st.markdown(
-                    f'<div style="font-size:12px;line-height:1.5;'
-                    f'color:var(--kg-color-text-muted);margin:0 0 10px;">'
-                    f'{reglages["note"]}</div>',
-                    unsafe_allow_html=True,
-                )
-
-            for libelle, chemin, mime, detail in reglages["fichiers"]:
-                fichier = Path(chemin)
-
-                if not fichier.exists():
-                    continue
-
-                st.download_button(
-                    libelle, data=_octets(str(fichier),
-                                          fichier.stat().st_mtime),
-                    file_name=fichier.name, mime=mime,
-                    # La clé porte le SUFFIXE : les deux formats du rapport
-                    # partagent leur nom de base, et deux boutons de même clé
-                    # lèvent une exception qui interrompait le menu — la
-                    # bascule de langue disparaissait avec, vu à l'écran.
-                    key=f"kgrapport_{fichier.stem}{fichier.suffix}",
-                    use_container_width=True,
-                )
-
-                if detail:
-                    st.markdown(
-                        f'<div style="font-size:11px;line-height:1.4;'
-                        f'color:var(--kg-color-text-muted);'
-                        f'margin:-6px 0 10px;">{detail}</div>',
-                        unsafe_allow_html=True,
-                    )
-
-
-@st.cache_data(show_spinner=False, max_entries=8)
-def _octets(chemin, empreinte):
-    """Le contenu d'un fichier à télécharger — lu une fois, gardé en mémoire.
-
-    `empreinte` est la date de modification : un rapport regénéré est relu,
-    et l'ancien ne part pas à sa place.
-    """
-
-    return Path(chemin).read_bytes()
 
 
 def _titre_fenetre(titre, note=None, retour=None, icone_nom="users",

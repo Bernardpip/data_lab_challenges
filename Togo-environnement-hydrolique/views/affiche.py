@@ -20,7 +20,7 @@ from socle.charts.maps import silhouette_svg
 from socle.design.tokens import RISQUE_OFFICIEL, RISQUE_CONTOUR, SERIES
 from socle.shell import render_affiche
 from socle.shell.affiche import hauteur_colonne_droite
-from socle.i18n.traduction import t, langue
+from socle.i18n.traduction import t
 
 from views import annexes as annexes_vue
 from views import croisements as croisements_vue
@@ -966,30 +966,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
 
         return peindre
 
-    # Le RAPPORT, dans la langue qu'on lit. Les deux versions existent côte à
-    # côte dans `rapport/` ; proposer les quatre fichiers ferait choisir une
-    # langue à qui vient d'en choisir une. Le PDF passe en premier — il
-    # s'ouvre partout —, le PowerPoint suit, parce que c'est lui que l'énoncé
-    # demande et qu'il reste modifiable.
-    fichiers_rapport = {
-        "fr": ("Togo_Eau_Assainissement_Rapport", "Rapport"),
-        "en": ("Togo_Water_Sanitation_Report", "Report"),
-    }
-    souche, _ = fichiers_rapport.get(langue(), fichiers_rapport["fr"])
-
     return {
-        "rapport": {
-            "titre": tr("rapport_titre"),
-            "aide": tr("rapport_aide"),
-            "note": tr("rapport_note"),
-            "fichiers": [
-                (tr("rapport_pdf"), RACINE / "rapport" / f"{souche}.pdf",
-                 "application/pdf", tr("rapport_pdf_detail")),
-                (tr("rapport_pptx"), RACINE / "rapport" / f"{souche}.pptx",
-                 "application/vnd.openxmlformats-officedocument"
-                 ".presentationml.presentation", tr("rapport_pptx_detail")),
-            ],
-        },
         # La fenêtre de réglages. Ses libellés vivent ici, comme ceux du menu :
         # le socle qui la peint n'écrit aucun mot visible, et un défi qui ne
         # déclare pas ce bloc n'a tout simplement pas de bouton.
@@ -1282,8 +1259,12 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             # ── Acte 8 · Preuves ─────────────────────────────────────────
             {"id": "preuves", "can_view": True, "name": tr("section_preuves"),
              "reference": carte_du_corpus, "tab_items": [
-                {"id": "preuves", "can_view": True, "name": tr("vue_preuves"),
+                # Le RAPPORT ouvre l'acte : c'est le livrable, et le premier
+                # geste de qui vient vérifier est de l'emporter.
+                {"id": "rapport", "can_view": True, "name": tr("vue_rapport"),
                  "is_default": True,
+                 "component": portee(annexes_vue.render_rapport)},
+                {"id": "preuves", "can_view": True, "name": tr("vue_preuves"),
                  "component": portee(annexes_vue.render_preuves)},
                 {"id": "sources", "can_view": True, "name": tr("vue_sources"),
                  "component": portee(annexes_vue.render_sources)},
@@ -1382,10 +1363,14 @@ def render():
         marge_menu=True,
         # 0 aucune · 1 discrète · 2 la charte · 3 marquée.
         ombre_menu=3,
-        # Deux rangées : l'identité et la langue, puis le rail des quatre
-        # vues. Mesuré à l'écran — 14 de rembourrage haut, 62 de bloc de
-        # titres, 12 d'écart, 36 de boutons, 20 de rembourrage bas.
-        hauteur_menu=144,
+        # TROIS rangées depuis que « Preuves » s'est coupé en deux : neuf
+        # sections ne tiennent plus sur la même ligne que les onglets, et le
+        # rail passe à la ligne. La valeur est RELEVÉE sur le bandeau rendu,
+        # pas additionnée à la main : le compte doit être juste au pixel,
+        # puisque c'est lui qui réserve la place sous un bandeau en `fixed`.
+        # À 144 — la valeur d'avant la coupe — la première carte passait
+        # dix-huit pixels dessous.
+        hauteur_menu=190,
         # La silhouette vient de la MÊME couche que les cartes de la page :
         # un logo dessiné à part pourrait montrer des frontières que les
         # données ne connaissent pas.
