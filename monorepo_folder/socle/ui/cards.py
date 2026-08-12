@@ -8,7 +8,8 @@ import streamlit as st
 from contextlib import contextmanager
 
 from socle.design.icons import icon
-from socle.design.tokens import COLORS, STATUS, STATUS_LIGHT
+from socle.design.tokens import (COLORS, STATUS, STATUS_LIGHT,
+                                 STATUS_BORDER)
 
 
 # ─── Carte de contenu ───────────────────────────────────────────────────────
@@ -213,7 +214,10 @@ def stat_tiles(tiles):
         # valeur passe après sa couleur. L'encre reste noire, la surface parle.
         fond = (
             f'background:{STATUS_LIGHT[etat]};'
-            f'border-color:{STATUS_LIGHT[etat]};'
+            # Le filet ferme les trois côtés que le rail ne tient pas. Sans
+            # lui, la tuile teintée n'avait de contour qu'à gauche et se
+            # dissolvait dans la page sur ses autres bords.
+            f'border-color:{STATUS_BORDER[etat]};'
             f'box-shadow:inset 3px 0 0 {STATUS[etat]};'
             if etat else ""
         )

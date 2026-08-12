@@ -236,6 +236,17 @@ STATUS_LIGHT = {
     "critical": "#FBEBEB",
 }
 
+# Les mêmes en FILET — le statut mélangé à 30 % de blanc. Une surface teintée
+# sans contour se dissout sur un fond clair : le rail de gauche tenait la
+# tuile d'un seul côté, et les trois autres flottaient. Assez pâles pour ne
+# pas concurrencer le rail, assez marqués pour fermer la forme.
+STATUS_BORDER = {
+    "good": "#B6E3B6",
+    "warning": "#FDE8BA",
+    "serious": "#F9DACD",
+    "critical": "#F1C4C4",
+}
+
 # Encre & chrome des graphes — repris des tokens zendho pour que le chart
 # s'assoie dans l'UI sans jurer.
 INK = {

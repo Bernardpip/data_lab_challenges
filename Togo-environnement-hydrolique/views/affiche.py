@@ -93,13 +93,13 @@ def _charte_visuelle():
         "<style>"
         # `position: fixed` sur le menu fait de lui un bloc de référence :
         # l'ancrage en bas suffit, sans toucher au flux.
+        # `overflow: hidden` sur la CARTE, et non un arrondi sur la bande :
+        # une bande de 3 px ne peut pas suivre un coin de 12, elle sortait
+        # droit là où la carte s'incurvait. C'est la carte qui découpe.
+        ".st-key-kgaffmenu { overflow: hidden; }"
         ".st-key-kgaffmenu::after {"
         ' content: ""; position: absolute; left: 0; right: 0; bottom: 0;'
         f" height: 3px; background: {charte.BANDEAU};"
-        # Les coins suivent ceux de la carte, sinon la bande dépasse de deux
-        # pixels à gauche et à droite — visible sur fond clair.
-        " border-radius: 0 0 var(--kg-radius-lg, 12px)"
-        " var(--kg-radius-lg, 12px);"
         " pointer-events: none; }"
         # Le survol ne touche QUE les entrées inactives : repeindre l'active
         # la ferait clignoter au passage de la souris.
@@ -1219,7 +1219,11 @@ def render():
         couleur_vue_inactive="#FFFFFF",
         couleur_langue_active="#FFFFFF",
         couleur_langue_inactive="#F1F5F9",
-        couleur_fond_menu=FOND,
+        # L'en-tête prend le vert très clair du drapeau : c'est le seul bloc
+        # de la page qui nomme le commanditaire plutôt que de porter une
+        # donnée, et la teinte le sépare du blanc des cartes sans ajouter un
+        # trait de plus.
+        couleur_fond_menu=charte.VERT_CLAIR,
         couleur_bordure_menu="#E2E8F0",
         marge_menu=True,
         # 0 aucune · 1 discrète · 2 la charte · 3 marquée.
