@@ -37,6 +37,16 @@ Deux choix que la forme ne dicte pas :
     une entrée peut ainsi pointer hors de l'affiche, et c'est ce qui permet
     aux sorties de vivre dans le même menu que les vues sans être des vues.
 
+  · `can_view` masque une entrée ou un onglet SANS le supprimer. Il vaut vrai
+    par défaut. C'est une autorisation d'affichage, jamais une sécurité : le
+    composant n'est pas rendu, mais rien n'empêche d'atteindre son URL. Une
+    donnée qu'il ne faut pas montrer ne se cache pas dans un menu.
+
+    La configuration en donne la valeur INITIALE ; l'utilisateur la change
+    depuis la fenêtre de réglages, et son choix vit dans la session. Les deux
+    ne se contredisent pas — la session l'emporte, et un rechargement rend la
+    configuration.
+
   · `component` accepte une FONCTION ou un COUPLE `{gauche, droite}`. L'affiche
     a deux colonnes ; une entrée qui ne déclare qu'une fonction peint la
     gauche, et la droite retombe sur la carte de référence de sa section.
@@ -56,6 +66,12 @@ PARAM_ONGLET = "v"
 
 _CLE_MENU = "_menu_actif"
 _CLE_ONGLET = "_onglet_actif"
+
+# Préfixe des clés de session qui portent les autorisations d'affichage. Une
+# clé par entrée et par onglet, nommée depuis son identifiant : deux onglets de
+# même identifiant dans deux sections différentes partageraient sinon leur
+# visibilité.
+_PREFIXE_VU = "_menu_vu_"
 
 # Couleurs par défaut : celles du socle. Une configuration qui n'en passe
 # aucune garde exactement la charte commune.
@@ -87,6 +103,12 @@ def _texte(nom, langue):
         return nom.get(langue) or nom.get("fr") or next(iter(nom.values()), "")
 
     return ""
+
+
+# Le nom PUBLIC de la traduction d'un libellé. La fenêtre de réglages du shell
+# affiche les mêmes noms que le rail, et doit donc les résoudre de la même
+# façon — passer par le nom privé aurait été un aveu de couche mal découpée.
+texte = _texte
 
 
 def verifier(config):
@@ -149,6 +171,71 @@ def verifier(config):
                 )
 
     return reproches
+
+
+def cle_visibilite(element, parent=None):
+    """La clé de session qui porte l'autorisation d'un élément."""
+
+    identifiant = element.get("id", "")
+
+    return f"{_PREFIXE_VU}{parent + '.' if parent else ''}{identifiant}"
+
+
+def visible(element, parent=None):
+    """L'élément doit-il être affiché ?
+
+    La SESSION l'emporte sur la configuration : l'utilisateur vient de faire
+    un choix dans la fenêtre de réglages, et le lui reprendre au prochain
+    rendu serait incompréhensible. Un rechargement rend la configuration,
+    puisque la session repart à vide.
+    """
+
+    # pyrefly: ignore [missing-attribute]
+    retenu = st.session_state.get(cle_visibilite(element, parent))
+
+    if retenu is None:
+        return bool(element.get("can_view", True))
+
+    return bool(retenu)
+
+
+def autoriser(element, valeur, parent=None):
+    """Écrit l'autorisation d'un élément dans la session."""
+
+    st.session_state[cle_visibilite(element, parent)] = bool(valeur)
+
+
+def oublier_autorisations(config):
+    """Rend la main à la configuration — le bouton « tout réafficher »."""
+
+    for entree in config.get("menu_items") or []:
+        st.session_state.pop(cle_visibilite(entree), None)
+
+        for onglet in entree.get("tab_items") or []:
+            st.session_state.pop(cle_visibilite(onglet, entree.get("id")), None)
+
+
+def entrees_visibles(config):
+    """Les entrées de menu que l'utilisateur a le droit de voir.
+
+    Si TOUT est masqué, on rend la liste entière plutôt qu'un écran vide : un
+    menu sans entrée n'est pas un menu, et l'utilisateur n'aurait plus aucun
+    moyen de rouvrir la fenêtre qui lui rendrait ses sections.
+    """
+
+    entrees = config.get("menu_items") or []
+    retenues = [e for e in entrees if visible(e)]
+
+    return retenues or entrees
+
+
+def onglets_visibles(entree):
+    """Les onglets affichables d'une entrée — même repli que ci-dessus."""
+
+    onglets = entree.get("tab_items") or []
+    retenus = [o for o in onglets if visible(o, entree.get("id"))]
+
+    return retenus or onglets
 
 
 def _defaut(elements):
@@ -244,12 +331,14 @@ def resoudre(config, langue):
     qui dit quelle liste d'onglets le menu affichera.
     """
 
-    entrees = config.get("menu_items") or []
+    # Les entrées MASQUÉES sortent du rail comme du routage : une section
+    # cachée dont l'URL resterait active reviendrait au premier clic.
+    entrees = entrees_visibles(config)
     menu = _actif(entrees, PARAM_MENU, _CLE_MENU)
     entree = next((e for e in entrees if e.get("id") == menu),
                   entrees[0] if entrees else {})
 
-    onglets = entree.get("tab_items") or []
+    onglets = onglets_visibles(entree)
     onglet = _actif(onglets, PARAM_ONGLET, _CLE_ONGLET)
     courant = next((o for o in onglets if o.get("id") == onglet),
                    onglets[0] if onglets else {})

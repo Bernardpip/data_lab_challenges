@@ -370,5 +370,21 @@
   "onglet_programme": {
     "fr": "Le programme",
     "en": "The programme"
+  },
+  "reglages_titre": {
+    "fr": "Ce que vous voulez voir",
+    "en": "What you want to see"
+  },
+  "reglages_note": {
+    "fr": "Range le menu, ne protège rien : une section masquée reste atteignable par son adresse. Les trente vues ne servent pas le même lecteur — celui qui vient pour la proposition n'a que faire des recettes de nettoyage.",
+    "en": "This tidies the menu, it protects nothing: a hidden section stays reachable by its URL. The thirty views do not serve the same reader — whoever comes for the proposal has no use for cleaning recipes."
+  },
+  "reglages_reinitialiser": {
+    "fr": "Tout réafficher",
+    "en": "Show everything"
+  },
+  "reglages_fermer": {
+    "fr": "Fermer",
+    "en": "Close"
   }
 }

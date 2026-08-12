@@ -552,7 +552,7 @@ def quitter(params):
 
 
 def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
-          marque=None):
+          marque=None, config=None):
     """Menu haut : identité et langue sur une ligne, le rail en dessous.
 
     Le menu ne fait plus toute la largeur de la page — il tient dans la colonne
@@ -669,6 +669,25 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                         elif cible["key"] != etat["onglet"]:
                             menu.aller_a_l_onglet(cible["key"], etat)
 
+            # Les RÉGLAGES précèdent la bascule, dans leur propre conteneur :
+            # un bouton de plus dans celui de la langue aurait hérité de sa
+            # grille à deux cases et de sa forme de bascule, alors qu'il OUVRE
+            # quelque chose au lieu de choisir entre deux états.
+            if (config or {}).get("settings"):
+                with st.container(key="kgaffreglages"):
+                    # L'icône est un RACCOURCI Streamlit, non le SVG du socle :
+                    # un libellé de bouton est du markdown, qui échappe le HTML
+                    # — le tracé s'y écrivait en clair et débordait sur tout le
+                    # rail, vérifié à l'écran. Le raccourci, lui, est rendu.
+                    if st.button(
+                        (config["settings"].get("icone")
+                         or ":material/settings:"),
+                        key="affreglages",
+                        help=config["settings"].get("titre"),
+                        type="tertiary",
+                    ):
+                        _reglages(config)
+
             # La bascule de langue ferme la ligne, poussée au bord droit. Elle
             # garde ses deux boutons plutôt qu'un groupe segmenté : ses cases
             # sont des ACTIONS — traduire la page — et non un choix parmi une
@@ -689,6 +708,78 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                                   else "tertiary"),
                         ):
                             definir_langue(code)
+
+
+@st.dialog(" ", width="medium")
+def _reglages(config):
+    """Fenêtre des autorisations d'affichage — sections et onglets.
+
+    Elle ne CACHE pas des données, elle range un menu : les trente vues de
+    l'affiche ne servent pas le même lecteur, et celui qui vient pour la
+    proposition n'a que faire des recettes de nettoyage. C'est écrit dans la
+    fenêtre plutôt que laissé croire à un contrôle d'accès — l'URL d'une
+    section masquée reste atteignable, et doit le rester : une donnée qu'il ne
+    faut pas montrer ne se cache pas dans un menu.
+
+    Les libellés viennent de la configuration, comme le reste du menu : le
+    socle n'écrit aucun mot visible.
+    """
+
+    reglages = config.get("settings") or {}
+    active = langue()
+
+    st.markdown(
+        f'<div style="font-size:var(--kg-fs-xl);font-weight:650;'
+        f'margin:-8px 0 2px;">{reglages.get("titre", "")}</div>'
+        + (f'<div style="font-size:13px;color:var(--kg-color-text-muted);'
+           f'margin-bottom:12px;">{reglages["note"]}</div>'
+           if reglages.get("note") else ""),
+        unsafe_allow_html=True,
+    )
+
+    for entree in config.get("menu_items") or []:
+        identifiant = entree.get("id")
+
+        vue = st.toggle(f'**{menu.texte(entree.get("name"), active)}**',
+                        value=menu.visible(entree), key=f"reg_{identifiant}")
+        menu.autoriser(entree, vue)
+
+        # Les onglets d'une section masquée restent RÉGLABLES mais grisés :
+        # les retirer ferait perdre le détail du réglage au premier
+        # basculement de la section, et tout serait à recocher.
+        for onglet in entree.get("tab_items") or []:
+            actif = st.checkbox(
+                menu.texte(onglet.get("name"), active),
+                value=menu.visible(onglet, identifiant),
+                key=f"reg_{identifiant}_{onglet.get('id')}",
+                disabled=not vue,
+            )
+            menu.autoriser(onglet, actif, identifiant)
+
+        st.markdown('<div style="height:10px;"></div>', unsafe_allow_html=True)
+
+    gauche, droite = st.columns(2)
+
+    with gauche:
+        if reglages.get("reinitialiser") and st.button(
+            reglages["reinitialiser"], use_container_width=True,
+            key="reg_reinit",
+        ):
+            menu.oublier_autorisations(config)
+            # Les clés des widgets de CETTE fenêtre partent aussi : elles
+            # garderaient sinon l'ancien état et le réécriraient au rendu
+            # suivant, annulant la remise à zéro qu'on vient de demander.
+            for cle in [c for c in st.session_state if c.startswith("reg_")]:
+                del st.session_state[cle]
+
+            st.rerun()
+
+    with droite:
+        if reglages.get("fermer") and st.button(
+            reglages["fermer"], use_container_width=True, type="primary",
+            key="reg_fermer",
+        ):
+            st.rerun()
 
 
 def render_affiche(titre, config, sous_titre=None,
@@ -888,7 +979,7 @@ def render_affiche(titre, config, sous_titre=None,
     # socle, pour l'emporter sur elle.
     st.markdown(menu.styles(config), unsafe_allow_html=True)
 
-    _menu(titre, sous_titre, sur_titre, etat, logo,
+    _menu(titre, sous_titre, sur_titre, etat, logo, config=config,
           logo_url=logo_url, marque=marque)
 
     corps = st.container(key="kgaffcorps")

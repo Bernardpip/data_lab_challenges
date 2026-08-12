@@ -944,29 +944,38 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
         return peindre
 
     return {
+        # La fenêtre de réglages. Ses libellés vivent ici, comme ceux du menu :
+        # le socle qui la peint n'écrit aucun mot visible, et un défi qui ne
+        # déclare pas ce bloc n'a tout simplement pas de bouton.
+        "settings": {
+            "titre": tr("reglages_titre"),
+            "note": tr("reglages_note"),
+            "reinitialiser": tr("reglages_reinitialiser"),
+            "fermer": tr("reglages_fermer"),
+        },
         "menu_active_color": VERT_TOGO,
         "menu_inactive_color": "transparent",
         "tab_active_color": FOND,
         "tab_inactive_color": "transparent",
         "menu_items": [
             # ── Acte 0 · Le constat ──────────────────────────────────────
-            {"id": "constat", "name": tr("section_constat"),
+            {"id": "constat", "can_view": True, "name": tr("section_constat"),
              "is_default": True, "reference": None, "tab_items": [
-                {"id": "home", "name": tr("vue_home"), "is_default": True,
+                {"id": "home", "can_view": True, "name": tr("vue_home"), "is_default": True,
                  "component": propre(_gauche_diagnostic, _droite_diagnostic)},
-                {"id": "paradoxe", "name": tr("vue_paradoxe"),
+                {"id": "paradoxe", "can_view": True, "name": tr("vue_paradoxe"),
                  "component": recit_(recit.paradoxe, (
                      "bivariee", tr("onglet_bivariee"), recit.carte_bivariee))},
-                {"id": "limites", "name": tr("vue_limites"),
+                {"id": "limites", "can_view": True, "name": tr("vue_limites"),
                  "component": recit_(recit.limites, (
                      "couverture", tr("onglet_couverture"),
                      avec(trs, _carte_angle_mort)))},
             ]},
 
             # ── Acte 1 · Où est l'eau ? ──────────────────────────────────
-            {"id": "ou", "name": tr("section_ou"),
+            {"id": "ou", "can_view": True, "name": tr("section_ou"),
              "reference": carte_de_section, "tab_items": [
-                {"id": "repartition", "name": tr("vue_repartition"),
+                {"id": "repartition", "can_view": True, "name": tr("vue_repartition"),
                  "is_default": True,
                  "component": recit_(
                      recit.repartition,
@@ -977,14 +986,14 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                       lambda _tr, data, h: parc_vue.carte_tde_seule(h)),
                      ("coso", tr("onglet_coso"),
                       lambda _tr, data, h: parc_vue.carte_coso_seule(h)))},
-                {"id": "densite", "name": tr("vue_densite"),
+                {"id": "densite", "can_view": True, "name": tr("vue_densite"),
                  "component": recit_(
                      recit.densite,
                      ("densite", tr("onglet_densite"), recit.carte_densite),
                      ("population", tr("onglet_population"),
                       lambda _tr, data, h:
                           demographie_vue.carte_population_seule(h)))},
-                {"id": "deserts", "name": tr("vue_deserts"),
+                {"id": "deserts", "can_view": True, "name": tr("vue_deserts"),
                  "component": recit_(
                      recit.deserts,
                      ("deserts", tr("onglet_deserts"), recit.carte_deserts),
@@ -992,29 +1001,29 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             ]},
 
             # ── Acte 2 · Dans quel état ? ────────────────────────────────
-            {"id": "etat", "name": tr("section_etat"),
+            {"id": "etat", "can_view": True, "name": tr("section_etat"),
              "reference": carte_de_section, "tab_items": [
-                {"id": "angle_mort", "name": tr("vue_angle_mort"),
+                {"id": "angle_mort", "can_view": True, "name": tr("vue_angle_mort"),
                  "is_default": True,
                  "component": recit_(recit.angle_mort, (
                      "couverture", tr("onglet_couverture"),
                      avec(trs, _carte_angle_mort)))},
-                {"id": "entretien", "name": tr("vue_entretien"),
+                {"id": "entretien", "can_view": True, "name": tr("vue_entretien"),
                  "component": recit_(recit.entretien, (
                      "entretien", tr("onglet_entretien"),
                      recit.carte_entretien))},
-                {"id": "fragilite", "name": tr("vue_fragilite"),
+                {"id": "fragilite", "can_view": True, "name": tr("vue_fragilite"),
                  "component": recit_(recit.fragilite, (
                      "debit", tr("onglet_debit"), recit.carte_debit))},
-                {"id": "service", "name": tr("vue_service"),
+                {"id": "service", "can_view": True, "name": tr("vue_service"),
                  "component": recit_(recit.service, (
                      "service", tr("onglet_service"), recit.carte_service))},
             ]},
 
             # ── Acte 3 · Pour combien d'habitants ? ──────────────────────
-            {"id": "habitants", "name": tr("section_habitants"),
+            {"id": "habitants", "can_view": True, "name": tr("section_habitants"),
              "reference": carte_de_section, "tab_items": [
-                {"id": "pression", "name": tr("vue_pression"),
+                {"id": "pression", "can_view": True, "name": tr("vue_pression"),
                  "is_default": True, "component": {
                      "gauche": lambda: _etroit(
                          lambda: demographie_vue.render_pression(
@@ -1027,9 +1036,9 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                          ("densite", tr("onglet_densite"),
                           recit.carte_densite)),
                  }},
-                {"id": "ventes", "name": tr("vue_ventes"),
+                {"id": "ventes", "can_view": True, "name": tr("vue_ventes"),
                  "component": portee(demographie_vue.render_ventes)},
-                {"id": "allocation", "name": tr("vue_allocation"),
+                {"id": "allocation", "can_view": True, "name": tr("vue_allocation"),
                  "component": {
                      "gauche": portee(croisements_vue.render_allocation),
                      "droite": cartes_de(
@@ -1037,15 +1046,15 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                          ("investissement", tr("onglet_investissement"),
                           recit.carte_investissement)),
                  }},
-                {"id": "rattrapage", "name": tr("vue_rattrapage"),
+                {"id": "rattrapage", "can_view": True, "name": tr("vue_rattrapage"),
                  "component": recit_(recit.rattrapage, (
                      "deficit", tr("onglet_deficit"), recit.carte_deficit))},
             ]},
 
             # ── Acte 4 · Et quand l'eau monte ? ──────────────────────────
-            {"id": "inondation", "name": tr("section_inondation"),
+            {"id": "inondation", "can_view": True, "name": tr("section_inondation"),
              "reference": carte_de_section, "tab_items": [
-                {"id": "alea", "name": tr("vue_alea"), "is_default": True,
+                {"id": "alea", "can_view": True, "name": tr("vue_alea"), "is_default": True,
                  "component": {
                      "gauche": lambda: _etroit(
                          lambda: risque_vue.render_carto(avec_carte=False)),
@@ -1056,9 +1065,9 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                          ("quantiles", tr("onglet_fri_quantiles"),
                           avec(trs, _carte_risque))),
                  }},
-                {"id": "facteurs", "name": tr("vue_fri_facteurs"),
+                {"id": "facteurs", "can_view": True, "name": tr("vue_fri_facteurs"),
                  "component": portee(risque_vue.render_facteurs)},
-                {"id": "ouvrages_risque", "name": tr("vue_ouvrages_risque"),
+                {"id": "ouvrages_risque", "can_view": True, "name": tr("vue_ouvrages_risque"),
                  "component": {
                      "gauche": portee(croisements_vue.render_ouvrages_risque),
                      "droite": cartes_de(
@@ -1066,7 +1075,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                          ("bivariee", tr("onglet_bivariee"),
                           recit.carte_bivariee)),
                  }},
-                {"id": "fri", "name": tr("vue_fri"),
+                {"id": "fri", "can_view": True, "name": tr("vue_fri"),
                  "component": recit_(
                      recit.que_classe_le_fri,
                      ("officiel", tr("onglet_fri_officiel"),
@@ -1076,9 +1085,9 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             ]},
 
             # ── Acte 5 · Que faire ? ─────────────────────────────────────
-            {"id": "agir", "name": tr("section_agir"),
+            {"id": "agir", "can_view": True, "name": tr("section_agir"),
              "reference": carte_de_section, "tab_items": [
-                {"id": "priorites_reco", "name": tr("vue_priorites_reco"),
+                {"id": "priorites_reco", "can_view": True, "name": tr("vue_priorites_reco"),
                  "is_default": True, "component": {
                      "gauche": portee(recommandations_vue.render_priorites),
                      "droite": cartes_de(
@@ -1086,10 +1095,10 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                          ("prioritaires", tr("onglet_prioritaires"),
                           avec(trs, _droite_priorites, None, corpus))),
                  }},
-                {"id": "facture", "name": tr("vue_facture"),
+                {"id": "facture", "can_view": True, "name": tr("vue_facture"),
                  "component": recit_(recit.facture, (
                      "facture", tr("onglet_facture"), recit.carte_facture))},
-                {"id": "leviers", "name": tr("vue_leviers"),
+                {"id": "leviers", "can_view": True, "name": tr("vue_leviers"),
                  "component": portee(recommandations_vue.render_leviers)},
             ]},
 
@@ -1099,9 +1108,9 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             # leviers d'abord, leur chiffrage ensuite — et avant les preuves,
             # qui ferment le dossier : une proposition se lit pendant qu'on a
             # encore les constats en tête, pas après l'appareil critique.
-            {"id": "proposition", "name": tr("section_proposition"),
+            {"id": "proposition", "can_view": True, "name": tr("section_proposition"),
              "reference": carte_de_section, "tab_items": [
-                {"id": "ouvrages", "name": tr("vue_proposition_ouvrages"),
+                {"id": "ouvrages", "can_view": True, "name": tr("vue_proposition_ouvrages"),
                  "is_default": True,
                  "component": recit_(
                      recit.proposition_ouvrages,
@@ -1112,7 +1121,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                      ("besoin", tr("onglet_besoin"),
                       recit.carte_deficit_canton),
                      annees_extra=recit.annees_du_programme())},
-                {"id": "inondations",
+                {"id": "inondations", "can_view": True,
                  "name": tr("vue_proposition_inondations"),
                  "component": recit_(
                      recit.proposition_inondations,
@@ -1123,22 +1132,22 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             ]},
 
             # ── Acte 7 · Ce qu'on sait, ce qu'on ignore ──────────────────
-            {"id": "preuves", "name": tr("section_preuves"),
+            {"id": "preuves", "can_view": True, "name": tr("section_preuves"),
              "reference": carte_du_corpus, "tab_items": [
-                {"id": "fichiers", "name": tr("vue_fichiers"),
+                {"id": "fichiers", "can_view": True, "name": tr("vue_fichiers"),
                  "is_default": True,
                  "component": portee(donnees_vue.render_fichiers)},
-                {"id": "recettes", "name": tr("vue_recettes"),
+                {"id": "recettes", "can_view": True, "name": tr("vue_recettes"),
                  "component": portee(donnees_vue.render_recettes)},
-                {"id": "perimetre", "name": tr("vue_perimetre"),
+                {"id": "perimetre", "can_view": True, "name": tr("vue_perimetre"),
                  "component": portee(donnees_vue.render_perimetre)},
-                {"id": "preuves", "name": tr("vue_preuves"),
+                {"id": "preuves", "can_view": True, "name": tr("vue_preuves"),
                  "component": portee(annexes_vue.render_preuves)},
-                {"id": "sources", "name": tr("vue_sources"),
+                {"id": "sources", "can_view": True, "name": tr("vue_sources"),
                  "component": portee(annexes_vue.render_sources)},
-                {"id": "methodologie", "name": tr("vue_methodologie"),
+                {"id": "methodologie", "can_view": True, "name": tr("vue_methodologie"),
                  "component": portee(annexes_vue.render_methodologie)},
-                {"id": "affichage", "name": tr("vue_affichage"),
+                {"id": "affichage", "can_view": True, "name": tr("vue_affichage"),
                  "component": portee(annexes_vue.render_affichage)},
             ]},
         ],
@@ -1219,11 +1228,10 @@ def render():
         couleur_vue_inactive="#FFFFFF",
         couleur_langue_active="#FFFFFF",
         couleur_langue_inactive="#F1F5F9",
-        # L'en-tête prend le vert très clair du drapeau : c'est le seul bloc
-        # de la page qui nomme le commanditaire plutôt que de porter une
-        # donnée, et la teinte le sépare du blanc des cartes sans ajouter un
-        # trait de plus.
-        couleur_fond_menu=charte.VERT_CLAIR,
+        # L'en-tête reste BLANC : le bandeau tricolore lui suffit à nommer le
+        # commanditaire, et un fond teinté sous des onglets eux-mêmes blancs
+        # créait deux surfaces claires qui se disputaient le regard.
+        couleur_fond_menu=FOND,
         couleur_bordure_menu="#E2E8F0",
         marge_menu=True,
         # 0 aucune · 1 discrète · 2 la charte · 3 marquée.
