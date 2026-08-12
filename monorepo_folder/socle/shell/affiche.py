@@ -728,9 +728,9 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                         # regarde : c'est le geste de quelqu'un qui veut
                         # ranger son propre menu, pas changer d'identité.
                         fichier = (config.get("users") or {}).get("fichier")
-                        courant = (utilisateurs.actif(fichier)
+                        porteur = (utilisateurs.profil_actif(fichier)
                                    if fichier else None)
-                        ouvrir_fenetre(("droits", courant["id"]) if courant
+                        ouvrir_fenetre(("droits", porteur["id"]) if porteur
                                        else ("liste", None))
                         st.rerun()
 
@@ -781,38 +781,38 @@ def _titre_fenetre(titre, note=None, retour=None):
     )
 
 
-def _carte_utilisateur(personne, fichier, reglages, courant):
-    """Une carte de la liste : avatar, identité, activation, réglages.
+def _carte_utilisateur(personne, fichier, reglages, courant, langue_active):
+    """Une carte de la liste : avatar, identité, profil, activation, réglages.
 
     Les deux boutons ne font PAS la même chose, et la carte doit le montrer :
-    « Activer » change qui regarde et recompose le menu ; l'engrenage ouvre les
-    autorisations de cette personne-là, sans la rendre active. Les confondre
-    obligerait à devenir quelqu'un pour régler ce qu'il voit.
+    « Activer » change qui regarde et recompose le menu ; l'engrenage ouvre le
+    PROFIL de cette personne, donc ce que voient tous ceux qui le portent.
     """
 
     identifiant = personne.get("id")
     est_courant = courant and courant.get("id") == identifiant
+    porteur = utilisateurs.profil(fichier, personne.get("profil"))
 
-    with st.container(key=f"regcarte_{identifiant}",
-                      border=True):
+    with st.container(key=f"regcarte_{identifiant}", border=True):
         colonnes = st.columns([1, 6, 3], vertical_alignment="center")
 
         with colonnes[0]:
             st.markdown(utilisateurs.avatar(personne, 42), unsafe_allow_html=True)
 
         with colonnes[1]:
-            # ÉCHAPPÉS : ces trois champs sont saisis par un humain, écrits
-            # dans un fichier qui s'édite à la main, et rendus ici en HTML
-            # brut. Un nom contenant une balise s'exécuterait chez tous ceux
-            # qui ouvrent la fenêtre — signalé par la revue de sécurité, et
-            # c'était juste.
             st.markdown(
                 f'<div style="font-weight:650;line-height:1.3;">'
                 f'{utilisateurs.texte_sur(personne.get("prenom"))} '
                 f'{utilisateurs.texte_sur(personne.get("nom"))}</div>'
                 f'<div style="font-size:12px;color:var(--kg-color-text-muted);'
                 f'overflow-wrap:anywhere;">'
-                f'{utilisateurs.texte_sur(personne.get("email"))}</div>',
+                f'{utilisateurs.texte_sur(personne.get("email"))}</div>'
+                # Le PROFIL sur la carte : sans lui, deux personnes aux droits
+                # opposés se ressemblent trait pour trait.
+                f'<div style="font-size:11px;margin-top:3px;'
+                f'color:var(--kg-color-primary);font-weight:600;">'
+                f'{utilisateurs.texte_sur(menu.texte((porteur or {}).get("nom"), langue_active))}'
+                f'</div>',
                 unsafe_allow_html=True,
             )
 
@@ -835,37 +835,102 @@ def _carte_utilisateur(personne, fichier, reglages, courant):
                 if st.button(":material/settings:",
                              key=f"reg_droits_{identifiant}",
                              help=reglages.get("droits"), type="tertiary"):
-                    utilisateurs.aller_a("droits", identifiant)
+                    utilisateurs.aller_a("droits", personne.get("profil"))
                     st.rerun()
 
 
-def _ecran_liste(config, fichier, reglages):
-    """Écran 1 — qui regarde."""
+def _accorde(nombre, reglages):
+    """« 1 utilisateur », « 3 utilisateurs » — le décompte s'accorde.
+
+    Le singulier est donné à part par la configuration : le socle ne connaît
+    ni la langue ni sa règle d'accord, et deviner un « s » vaudrait pour deux
+    langues sur trois.
+    """
+
+    mot = (reglages.get("porteur") if nombre == 1
+           else reglages.get("porteurs")) or ""
+
+    return f"{nombre} {mot}"
+
+
+def _carte_profil(porteur, fichier, reglages, langue_active):
+    """Une carte de profil : nom, date de création, porteurs, configuration."""
+
+    identifiant = porteur.get("id")
+    verrouille = bool(porteur.get("verrouille"))
+
+    with st.container(key=f"regprofil_{identifiant}", border=True):
+        gauche, droite = st.columns([7, 3], vertical_alignment="center")
+
+        with gauche:
+            st.markdown(
+                f'<div style="font-weight:650;line-height:1.3;">'
+                f'{utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))}'
+                + (f' <span style="font-size:11px;font-weight:500;'
+                   f'color:var(--kg-color-text-muted);">'
+                   f'· {reglages.get("verrouille", "")}</span>'
+                   if verrouille else "")
+                + f'</div>'
+                f'<div style="font-size:12px;color:var(--kg-color-text-muted);">'
+                f'{reglages.get("cree_le", "")} '
+                f'{utilisateurs.texte_sur(porteur.get("cree_le"))} · '
+                f'{_accorde(utilisateurs.porteurs(fichier, identifiant), reglages)}'
+                f'</div>',
+                unsafe_allow_html=True,
+            )
+
+        with droite:
+            if st.button(reglages.get("configurer", ""),
+                         key=f"reg_conf_{identifiant}",
+                         use_container_width=True,
+                         # Le profil d'origine ne se règle pas : c'est le
+                         # recours, celui qui voit tout quand tous les autres
+                         # ont été coupés.
+                         disabled=verrouille,
+                         help=(reglages.get("verrouille_note")
+                               if verrouille else None)):
+                utilisateurs.aller_a("droits", identifiant)
+                st.rerun()
+
+
+def _ecran_accueil(config, fichier, reglages, langue_active):
+    """Écran 1 — deux onglets : qui regarde, et selon quel profil."""
 
     _titre_fenetre(reglages.get("titre", ""), reglages.get("note"))
 
-    courant = utilisateurs.actif(fichier)
-    gens = utilisateurs.liste(fichier)
+    onglet_gens, onglet_profils = st.tabs(
+        [reglages.get("titre", ""), reglages.get("profils", "")])
 
-    if not gens:
-        st.info(reglages.get("vide", ""))
+    with onglet_gens:
+        courant = utilisateurs.actif(fichier)
 
-    for personne in gens:
-        _carte_utilisateur(personne, fichier, reglages, courant)
+        for personne in utilisateurs.liste(fichier):
+            _carte_utilisateur(personne, fichier, reglages, courant,
+                               langue_active)
 
-    if st.button(reglages.get("ajouter", ""), key="reg_ajouter",
-                 use_container_width=True):
-        utilisateurs.aller_a("creation")
-        st.rerun()
+        if st.button(reglages.get("ajouter", ""), key="reg_ajouter",
+                     use_container_width=True):
+            utilisateurs.aller_a("creation")
+            st.rerun()
+
+    with onglet_profils:
+        for porteur in utilisateurs.profils(fichier):
+            _carte_profil(porteur, fichier, reglages, langue_active)
+
+        if st.button(reglages.get("profil_ajouter", ""), key="reg_ajouter_profil",
+                     use_container_width=True):
+            utilisateurs.aller_a("profil_creation")
+            st.rerun()
 
 
 def _ecran_creation(config, fichier, reglages, langue_active):
-    """Écran 2 — le formulaire, puis les autorisations de la personne créée."""
+    """Écran 2 — le formulaire d'utilisateur, puis les droits de son profil."""
 
     _titre_fenetre(reglages.get("creation", ""), reglages.get("creation_note"),
                    retour=reglages.get("retour"))
 
-    profils = config.get("users", {}).get("profils") or {}
+    disponibles = utilisateurs.profils(fichier)
+    par_identifiant = {p["id"]: p for p in disponibles}
 
     with st.form("reg_formulaire", border=False):
         gauche, droite = st.columns([1, 3], vertical_alignment="top")
@@ -880,11 +945,13 @@ def _ecran_creation(config, fichier, reglages, langue_active):
             prenom = un.text_input(reglages.get("prenom", ""))
             nom = deux.text_input(reglages.get("nom", ""))
 
-            profil = st.selectbox(
-                reglages.get("profil", ""), list(profils),
+            # Le PROFIL décide de ce que la personne verra : il est donc
+            # obligatoire, et la liste ne contient que des profils existants.
+            profil_id = st.selectbox(
+                reglages.get("profil", ""), list(par_identifiant),
                 format_func=lambda cle: menu.texte(
-                    profils[cle].get("name"), langue_active) or cle,
-            ) if profils else None
+                    par_identifiant[cle].get("nom"), langue_active) or cle,
+            ) if par_identifiant else None
 
             email = st.text_input(reglages.get("email", ""))
 
@@ -897,41 +964,66 @@ def _ecran_creation(config, fichier, reglages, langue_active):
             if not (prenom or nom).strip():
                 st.warning(reglages.get("nom_requis", ""))
             else:
-                identifiant = utilisateurs.ajouter(
-                    fichier, prenom, nom, profil, email,
-                    photo=utilisateurs.photo_encodee(photo), profils=profils,
+                utilisateurs.ajouter(
+                    fichier, prenom, nom, profil_id, email,
+                    photo=utilisateurs.photo_encodee(photo),
                 )
+                utilisateurs.aller_a("liste")
+                st.rerun()
+
+
+def _ecran_profil_creation(config, fichier, reglages):
+    """Écran 3 — créer un profil, puis enchaîner sur sa configuration."""
+
+    _titre_fenetre(reglages.get("profil_creation", ""),
+                   reglages.get("profil_creation_note"),
+                   retour=reglages.get("retour"))
+
+    with st.form("reg_profil", border=False):
+        nom = st.text_input(reglages.get("profil_nom", ""))
+
+        if st.form_submit_button(reglages.get("creer", ""), type="primary",
+                                 use_container_width=True):
+            if not nom.strip():
+                st.warning(reglages.get("profil_nom_requis", ""))
+            else:
+                identifiant = utilisateurs.ajouter_profil(fichier, nom)
+                # On enchaîne sur les autorisations : un profil créé sans
+                # réglage voit tout, ce qui n'est jamais ce qu'on voulait.
                 utilisateurs.aller_a("droits", identifiant)
                 st.rerun()
 
 
 def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
-    """Écran 3 — les autorisations d'UNE personne.
+    """Écran 4 — les autorisations d'UN PROFIL.
 
     Le nom de la section et son interrupteur tiennent la même ligne ; le
     dépliant ne contient que les onglets. Un interrupteur logé à l'intérieur
-    obligeait à ouvrir la section pour la couper — soit deux gestes pour un
-    réglage binaire.
+    obligeait à ouvrir la section pour la couper — deux gestes pour un réglage
+    binaire.
     """
 
-    personne = utilisateurs.trouver(fichier, identifiant)
+    porteur = utilisateurs.profil(fichier, identifiant)
 
-    if personne is None:
+    if porteur is None:
         utilisateurs.aller_a("liste")
         st.rerun()
         return
 
+    nombre = utilisateurs.porteurs(fichier, identifiant)
+
     _titre_fenetre(
         f'{reglages.get("droits", "")} — '
-        f'{utilisateurs.texte_sur(personne.get("prenom"))} '
-        f'{utilisateurs.texte_sur(personne.get("nom"))}',
-        reglages.get("droits_note"), retour=reglages.get("retour"),
+        f'{utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))}',
+        f'{reglages.get("droits_note", "")} '
+        f'({_accorde(nombre, reglages)})',
+        retour=reglages.get("retour"),
     )
 
     for entree in config.get("menu_items") or []:
         section = entree.get("id")
         onglets = entree.get("tab_items") or []
-        vue = utilisateurs.autorise(personne, section,
+        vue = utilisateurs.autorise(porteur, section,
                                     defaut=bool(entree.get("can_view", True)))
 
         ligne, interrupteur = st.columns([8, 2], vertical_alignment="top")
@@ -954,7 +1046,7 @@ def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
                 for onglet in onglets:
                     cle_onglet = onglet.get("id")
                     etat_onglet = utilisateurs.autorise(
-                        personne, section, cle_onglet,
+                        porteur, section, cle_onglet,
                         defaut=bool(onglet.get("can_view", True)),
                     )
                     coche = st.checkbox(
@@ -979,13 +1071,15 @@ def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
             st.rerun()
 
     with milieu:
-        # La suppression vit ICI, loin du bouton « Activer » de la carte : une
-        # croix à côté de lui se clique par erreur, et rien ne se défait.
+        # La suppression vit ICI, loin du bouton « Configurer » de la carte :
+        # une croix à côté de lui se clique par erreur, et rien ne se défait.
+        # Le profil d'origine, lui, ne se supprime pas.
         if reglages.get("supprimer") and st.button(
             reglages["supprimer"], use_container_width=True,
             key="reg_supprimer", type="tertiary",
+            disabled=bool(porteur.get("verrouille")),
         ):
-            utilisateurs.supprimer(fichier, identifiant)
+            utilisateurs.supprimer_profil(fichier, identifiant)
             utilisateurs.aller_a("liste")
             st.rerun()
 
@@ -1022,7 +1116,7 @@ def ouvrir_fenetre(ouverture=None):
 
 @st.dialog(" ", width="medium", on_dismiss=_fermer_fenetre)
 def _reglages(config, ouverture=None):
-    """La fenêtre — trois écrans, un seul objet : qui regarde, et quoi.
+    """La fenêtre — utilisateurs, profils, et ce que chaque profil montre.
 
     Elle ne CACHE pas des données, elle range un menu : trente vues ne servent
     pas le même lecteur, et celui qui vient pour la proposition n'a que faire
@@ -1048,8 +1142,6 @@ def _reglages(config, ouverture=None):
         '[data-testid="stDialog"] [data-testid="stHorizontalBlock"]'
         " { flex-wrap: nowrap; }"
         '[data-testid="stDialog"] [data-testid="stColumn"] { min-width: 0; }'
-        # Le dépliant colle à son interrupteur : sans cette reprise, la marge
-        # par défaut décalait l'un de l'autre de six pixels sur la verticale.
         '[data-testid="stDialog"] [data-testid="stExpander"] details'
         " { margin: 0; }"
         "</style>",
@@ -1067,10 +1159,12 @@ def _reglages(config, ouverture=None):
 
     if nom_ecran == "creation":
         _ecran_creation(config, fichier, reglages, active)
+    elif nom_ecran == "profil_creation":
+        _ecran_profil_creation(config, fichier, reglages)
     elif nom_ecran == "droits" and identifiant:
         _ecran_droits(config, fichier, reglages, active, identifiant)
     else:
-        _ecran_liste(config, fichier, reglages)
+        _ecran_accueil(config, fichier, reglages, active)
 
 
 def render_affiche(titre, config, sous_titre=None,
@@ -1258,7 +1352,16 @@ def render_affiche(titre, config, sous_titre=None,
     # déclaré. Branché avant la résolution de la route : c'est elle qui décide
     # quelles sections existent, et elle doit déjà voir celles qui sont
     # coupées.
-    menu.brancher_utilisateurs((config.get("users") or {}).get("fichier"))
+    fichier_gens = (config.get("users") or {}).get("fichier")
+
+    if fichier_gens:
+        # Le profil et l'utilisateur d'origine sont posés AVANT tout : sans
+        # eux, la première ouverture rendrait une fenêtre vide et un menu sans
+        # autorisations.
+        utilisateurs.initialiser(fichier_gens,
+                                 (config.get("users") or {}).get("defauts"))
+
+    menu.brancher_utilisateurs(fichier_gens)
 
     # La configuration est VÉRIFIÉE avant tout rendu : une navigation fausse
     # se manifeste sinon par un symptôme sans rapport avec sa cause — une case

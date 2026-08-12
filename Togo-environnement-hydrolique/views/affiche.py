@@ -970,6 +970,18 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             "nom": tr("reglages_nom"),
             "profil": tr("reglages_profil"),
             "profil_note": tr("reglages_profil_note"),
+            "profils": tr("reglages_profils"),
+            "profil_ajouter": tr("reglages_profil_ajouter"),
+            "profil_creation": tr("reglages_profil_creation"),
+            "profil_creation_note": tr("reglages_profil_creation_note"),
+            "profil_nom": tr("reglages_profil_nom"),
+            "profil_nom_requis": tr("reglages_profil_nom_requis"),
+            "configurer": tr("reglages_configurer"),
+            "cree_le": tr("reglages_cree_le"),
+            "porteurs": tr("reglages_porteurs"),
+            "porteur": tr("reglages_porteur"),
+            "verrouille": tr("reglages_verrouille"),
+            "verrouille_note": tr("reglages_verrouille_note"),
             "email": tr("reglages_email"),
             "photo": tr("reglages_photo"),
             "creer": tr("reglages_creer"),
@@ -990,17 +1002,16 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
         # dont le fichier date d'avant.
         "users": {
             "fichier": RACINE / ".locale" / "utilisateurs.json",
-            "profils": {
-                "analyste": {"name": tr("profil_analyste"),
-                             "autorisations": {}},
-                "decideur": {"name": tr("profil_decideur"), "autorisations": {
-                    "ou": False, "etat": False, "habitants": False,
-                    "inondation": False, "preuves": False,
-                }},
-                "public": {"name": tr("profil_public"), "autorisations": {
-                    "habitants": False, "preuves": False,
-                }},
-                "autre": {"name": tr("profil_autre"), "autorisations": {}},
+            # Ce que le socle pose au premier lancement : un profil
+            # d'administration et son utilisateur, tous deux VERROUILLÉS. Les
+            # autres profils se créent depuis la fenêtre — ce sont des données,
+            # pas de la configuration, et les figer ici empêcherait d'en
+            # ajouter sans toucher au code.
+            "defauts": {
+                "profil_nom": tr("profil_administrateur"),
+                "prenom": tr("admin_prenom"),
+                "nom": tr("admin_nom"),
+                "email": tr("admin_email"),
             },
         },
         "menu_active_color": VERT_TOGO,

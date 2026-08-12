@@ -214,11 +214,14 @@ def visible(element, parent=None):
         # pyrefly: ignore [missing-import]
         from socle.shell import utilisateurs
 
-        personne = utilisateurs.actif(_FICHIER_UTILISATEURS)
+        # Le PROFIL de l'utilisateur actif, non l'utilisateur : deux personnes
+        # du même profil voient la même chose, et c'est là tout l'intérêt d'un
+        # profil.
+        porteur = utilisateurs.profil_actif(_FICHIER_UTILISATEURS)
 
-        if personne is not None:
+        if porteur is not None:
             return utilisateurs.autorise(
-                personne, parent or identifiant,
+                porteur, parent or identifiant,
                 identifiant if parent else None,
                 defaut=bool(element.get("can_view", True)),
             )

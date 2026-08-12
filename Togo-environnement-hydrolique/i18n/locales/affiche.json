@@ -408,8 +408,8 @@
     "en": "Permissions"
   },
   "reglages_droits_note": {
-    "fr": "Ce que cette personne voit du menu. Une section coupée grise ses onglets sans les perdre : on récupère le réglage en la rallumant.",
-    "en": "What this person sees of the menu. A switched-off section greys its tabs without losing them: turn it back on and the settings return."
+    "fr": "Ce que voient TOUS ceux qui portent ce profil. Une section coupée grise ses onglets sans les perdre : on récupère le réglage en la rallumant.",
+    "en": "What EVERYONE carrying this profile sees. A switched-off section greys its tabs without losing them: turn it back on and the settings return."
   },
   "reglages_retour": {
     "fr": "‹  Retour",
@@ -463,20 +463,68 @@
     "fr": "Aucun fichier d'utilisateurs n'est déclaré dans la configuration.",
     "en": "No users file is declared in the configuration."
   },
-  "profil_analyste": {
-    "fr": "Analyste — tout le dossier",
-    "en": "Analyst — the whole file"
+  "reglages_profils": {
+    "fr": "Profils",
+    "en": "Profiles"
   },
-  "profil_decideur": {
-    "fr": "Décideur — constat et proposition",
-    "en": "Decision-maker — finding and proposal"
+  "reglages_profil_ajouter": {
+    "fr": "＋  Créer un profil",
+    "en": "＋  Create a profile"
   },
-  "profil_public": {
-    "fr": "Public — l'essentiel",
-    "en": "Public — the essentials"
+  "reglages_profil_creation": {
+    "fr": "Nouveau profil",
+    "en": "New profile"
   },
-  "profil_autre": {
-    "fr": "Autre — tout le dossier",
-    "en": "Other — the whole file"
+  "reglages_profil_creation_note": {
+    "fr": "Un profil décide de ce que voient TOUS ceux qui le portent. Il voit tout tant qu'on ne lui a rien coupé — l'écran suivant sert à cela.",
+    "en": "A profile decides what EVERYONE carrying it sees. It sees everything until something is switched off — the next screen is for that."
+  },
+  "reglages_profil_nom": {
+    "fr": "Nom du profil",
+    "en": "Profile name"
+  },
+  "reglages_profil_nom_requis": {
+    "fr": "Il faut un nom.",
+    "en": "A name is required."
+  },
+  "reglages_configurer": {
+    "fr": "Configurer",
+    "en": "Configure"
+  },
+  "reglages_cree_le": {
+    "fr": "Créé le",
+    "en": "Created"
+  },
+  "reglages_porteurs": {
+    "fr": "utilisateurs",
+    "en": "users"
+  },
+  "reglages_verrouille": {
+    "fr": "verrouillé",
+    "en": "locked"
+  },
+  "reglages_verrouille_note": {
+    "fr": "Le profil d'administration ne se règle pas : c'est le recours qui voit tout quand tous les autres ont été coupés.",
+    "en": "The administration profile cannot be edited: it is the fallback that sees everything once all the others have been switched off."
+  },
+  "profil_administrateur": {
+    "fr": "Administrateur",
+    "en": "Administrator"
+  },
+  "admin_prenom": {
+    "fr": "Admin",
+    "en": "Admin"
+  },
+  "admin_nom": {
+    "fr": "Togo",
+    "en": "Togo"
+  },
+  "admin_email": {
+    "fr": "admin@datalab.gouv.tg",
+    "en": "admin@datalab.gouv.tg"
+  },
+  "reglages_porteur": {
+    "fr": "utilisateur",
+    "en": "user"
   }
 }
