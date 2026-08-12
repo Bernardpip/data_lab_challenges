@@ -78,6 +78,11 @@ HAUTEUR_DEFAUT = 820
 # qu'une colonne calculée avec d'autres valeurs déborderait sans le dire.
 _RESERVE_CORPS = 54
 
+# Ce que l'en-tête et le pied de la FENÊTRE prennent sur sa hauteur, retour
+# compris. Le reste va au corps, qui défile. Mesuré à l'écran plutôt que
+# supposé : à cent quatre-vingts, le pied débordait sous la fenêtre.
+_RESERVE_FENETRE = 250
+
 # Le script est POSÉ DANS LA PAGE, pas exécuté dans le cadre du composant.
 # Streamlit met ses cadres en bac à sable sans `allow-top-navigation` : une
 # tentative de rechargement depuis l'intérieur est refusée net — « the frame
@@ -798,20 +803,29 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                 _reglages(config)
 
 
-def _titre_fenetre(titre, note=None, retour=None, icone_nom="users"):
+def _titre_fenetre(titre, note=None, retour=None, icone_nom="users",
+                   actions=(), sur_retour=None):
     """L'en-tête d'un écran — pastille d'icône, titre, note, retour éventuel.
 
     La pastille n'est pas un ornement : c'est elle qui donne à la fenêtre un
     premier repère visuel, là où deux lignes de texte empilées ressemblaient à
     n'importe quel paragraphe.
+
+    `actions` : suite de `(icône, clé, infobulle, action, désactivé)` posée au
+    bout de la ligne du titre. Ce sont les gestes SECONDAIRES d'un écran —
+    ceux qu'on fait une fois pour toutes. Ils tiennent en icônes : écrits en
+    toutes lettres, ils réclamaient cent quarante pixels dans une colonne qui
+    en offre cent vingt, et se coupaient en deux mots.
     """
 
     if retour:
         if st.button(retour, key="reg_retour", type="tertiary"):
+            if sur_retour:
+                sur_retour()
             utilisateurs.aller_a("liste")
             st.rerun()
 
-    st.markdown(
+    entete = (
         f'<div style="display:flex;align-items:center;gap:11px;'
         f'margin:{"2px" if retour else "-6px"} 0 8px;">'
         f'<span style="width:34px;height:34px;border-radius:10px;flex:none;'
@@ -823,8 +837,29 @@ def _titre_fenetre(titre, note=None, retour=None, icone_nom="users"):
         + (f'<div style="font-size:12.5px;line-height:1.55;'
            f'color:var(--kg-color-text-muted);margin:0 0 14px;'
            f'max-width:64ch;">{note}</div>' if note else "")
-        + '<div style="height:1px;background:var(--kg-color-border-light,'
-          '#ECEEF0);margin:0 0 12px;"></div>',
+    )
+
+    if actions:
+        with st.container(key="regentete"):
+            gauche, droite = st.columns([16, 4], vertical_alignment="center")
+
+            with gauche:
+                st.markdown(entete, unsafe_allow_html=True)
+
+            with droite:
+                for colonne, (symbole, cle, aide, action, inactif) in zip(
+                    st.columns(len(actions)), actions
+                ):
+                    with colonne:
+                        if st.button(symbole, key=cle, help=aide,
+                                     type="tertiary", disabled=bool(inactif)):
+                            action()
+    else:
+        st.markdown(entete, unsafe_allow_html=True)
+
+    st.markdown(
+        '<div style="height:1px;background:var(--kg-color-border-light,'
+        '#ECEEF0);margin:0 0 12px;"></div>',
         unsafe_allow_html=True,
     )
 
@@ -1267,6 +1302,44 @@ def _ecran_profil_creation(config, fichier, reglages):
     )
 
 
+def _cle_droit(identifiant, section, onglet=None):
+    """La clé du widget d'une autorisation — et donc celle de son brouillon."""
+
+    return f"reg_{identifiant}_{section}" + (f"_{onglet}" if onglet else "")
+
+
+def _oublier_droits(config, identifiant):
+    """Jette le brouillon d'un profil.
+
+    Les interrupteurs vivent en session sous leur clé : sans cet oubli, celui
+    qui règle huit sections, se ravise et ferme la fenêtre les retrouverait
+    tels quels en revenant, alors que rien n'a été enregistré.
+    """
+
+    for entree in config.get("menu_items") or []:
+        section = entree.get("id")
+        st.session_state.pop(_cle_droit(identifiant, section), None)
+
+        for onglet in entree.get("tab_items") or []:
+            st.session_state.pop(
+                _cle_droit(identifiant, section, onglet.get("id")), None)
+
+
+def _hauteur_corps(reglages):
+    """Ce qu'il reste à la liste une fois l'en-tête et le pied servis.
+
+    La fenêtre a une hauteur fixe et le socle la plafonne à 88 % de l'écran :
+    le corps se déduit de la plus petite des deux, jamais d'un nombre écrit en
+    dur, sinon un portable court verrait son pied passer sous la ligne de
+    flottaison.
+    """
+
+    fenetre = min((reglages or {}).get("hauteur") or 640,
+                  0.88 * hauteur_fenetre())
+
+    return int(max(200, fenetre - _RESERVE_FENETRE))
+
+
 def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
     """Écran 4 — les autorisations d'UN PROFIL.
 
@@ -1274,6 +1347,16 @@ def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
     dépliant ne contient que les onglets. Un interrupteur logé à l'intérieur
     obligeait à ouvrir la section pour la couper — deux gestes pour un réglage
     binaire.
+
+    Trois bandes : un en-tête qui ne bouge pas, une liste qui défile, un pied
+    qui ne bouge pas non plus. Trente-huit sections et onglets ne tiennent pas
+    dans une fenêtre : à défiler d'un bloc, on perdait de vue à la fois le nom
+    du profil qu'on règle et le bouton qui enregistre.
+
+    Rien n'est écrit avant « Enregistrer ». Les interrupteurs se posaient au
+    fichier un par un, si bien qu'on ne pouvait ni se raviser ni voir ce qu'on
+    avait changé ; ils tiennent maintenant en session, et le disque n'est
+    touché qu'une fois.
     """
 
     porteur = utilisateurs.profil(fichier, identifiant)
@@ -1284,80 +1367,119 @@ def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
         return
 
     nombre = utilisateurs.porteurs(fichier, identifiant)
+    verrouille = bool(porteur.get("verrouille"))
+    entrees = config.get("menu_items") or []
+
+    def reinitialiser():
+        # Le brouillon, pas le fichier : « tout réafficher » est une PROPOSITION
+        # comme les autres, et elle attend le même enregistrement.
+        for entree in entrees:
+            section = entree.get("id")
+            st.session_state[_cle_droit(identifiant, section)] = True
+
+            for onglet in entree.get("tab_items") or []:
+                st.session_state[
+                    _cle_droit(identifiant, section, onglet.get("id"))] = True
+
+        st.rerun()
+
+    def supprimer():
+        _oublier_droits(config, identifiant)
+        utilisateurs.supprimer_profil(fichier, identifiant)
+        utilisateurs.aller_a("liste")
+        st.rerun()
+
+    def enregistrer():
+        # On n'écrit que les EXCEPTIONS : un réglage conforme à ce que déclare
+        # le défi efface sa ligne plutôt que de la répéter. Sans quoi les
+        # quarante-six autorisations seraient gravées chez chaque profil, et
+        # changer un défaut demain ne changerait plus rien pour personne.
+        valeurs = {}
+
+        for entree in entrees:
+            section = entree.get("id")
+            etat = st.session_state.get(_cle_droit(identifiant, section))
+            defaut = bool(entree.get("can_view", True))
+
+            if etat is not None:
+                valeurs[(section, None)] = None if bool(etat) == defaut else bool(etat)
+
+            for onglet in entree.get("tab_items") or []:
+                cle_onglet = onglet.get("id")
+                etat = st.session_state.get(
+                    _cle_droit(identifiant, section, cle_onglet))
+                defaut = bool(onglet.get("can_view", True))
+
+                if etat is not None:
+                    valeurs[(section, cle_onglet)] = (
+                        None if bool(etat) == defaut else bool(etat))
+
+        utilisateurs.autoriser_plusieurs(fichier, identifiant, valeurs)
+        _oublier_droits(config, identifiant)
+        utilisateurs.aller_a("liste")
+        st.rerun()
 
     # Aucune NOTE : l'écran s'explique par ce qu'il montre — un nom de profil,
     # des sections, des interrupteurs. Le paragraphe qui les décrivait était lu
     # une fois, puis sauté ; il ne reste que le décompte des porteurs, qui, lui,
     # dit ce que le réglage engage.
+    #
+    # La SUPPRESSION et le « tout réafficher » montent dans l'en-tête : ce sont
+    # des gestes qu'on fait une fois, et le pied ne garde que celui qu'on
+    # cherche en sortant.
     _titre_fenetre(
         f'{reglages.get("droits", "")} — '
         f'{utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))}',
         _accorde(nombre, reglages),
         retour=reglages.get("retour"), icone_nom="shield",
+        sur_retour=lambda: _oublier_droits(config, identifiant),
+        actions=(
+            (":material/restart_alt:", "reg_reinit",
+             reglages.get("reinitialiser"), reinitialiser, verrouille),
+            (":material/delete:", "reg_supprimer",
+             reglages.get("supprimer"), supprimer, verrouille),
+        ),
     )
 
-    for entree in config.get("menu_items") or []:
-        section = entree.get("id")
-        onglets = entree.get("tab_items") or []
-        vue = utilisateurs.autorise(porteur, section,
-                                    defaut=bool(entree.get("can_view", True)))
+    with st.container(key="regcorps", height=_hauteur_corps(reglages)):
+        for entree in entrees:
+            section = entree.get("id")
+            onglets = entree.get("tab_items") or []
+            vue = utilisateurs.autorise(porteur, section,
+                                        defaut=bool(entree.get("can_view", True)))
 
-        ligne, interrupteur = st.columns([8, 2], vertical_alignment="top")
+            ligne, interrupteur = st.columns([8, 2], vertical_alignment="top")
 
-        with interrupteur:
-            choisi = st.toggle(menu.texte(entree.get("name"), langue_active),
-                               value=vue, key=f"reg_{identifiant}_{section}",
-                               label_visibility="collapsed")
+            with interrupteur:
+                # `value` ne sert qu'au PREMIER passage : ensuite Streamlit tient
+                # l'état sous la clé, et c'est lui le brouillon.
+                choisi = st.toggle(menu.texte(entree.get("name"), langue_active),
+                                   value=vue, label_visibility="collapsed",
+                                   key=_cle_droit(identifiant, section))
 
-            if choisi != vue:
-                utilisateurs.autoriser(fichier, identifiant, section, choisi)
-                st.rerun()
+            with ligne:
+                with st.expander(
+                    f'**{menu.texte(entree.get("name"), langue_active)}**',
+                    expanded=False,
+                ):
+                    # Les onglets d'une section coupée restent RÉGLABLES mais
+                    # grisés : les retirer ferait perdre le détail au premier
+                    # basculement, et tout serait à recocher.
+                    for onglet in onglets:
+                        cle_onglet = onglet.get("id")
+                        st.checkbox(
+                            menu.texte(onglet.get("name"), langue_active),
+                            value=utilisateurs.autorise(
+                                porteur, section, cle_onglet,
+                                defaut=bool(onglet.get("can_view", True)),
+                            ),
+                            disabled=not choisi,
+                            key=_cle_droit(identifiant, section, cle_onglet),
+                        )
 
-        with ligne:
-            with st.expander(f'**{menu.texte(entree.get("name"), langue_active)}**',
-                             expanded=False):
-                # Les onglets d'une section coupée restent RÉGLABLES mais
-                # grisés : les retirer ferait perdre le détail au premier
-                # basculement, et tout serait à recocher.
-                for onglet in onglets:
-                    cle_onglet = onglet.get("id")
-                    etat_onglet = utilisateurs.autorise(
-                        porteur, section, cle_onglet,
-                        defaut=bool(onglet.get("can_view", True)),
-                    )
-                    coche = st.checkbox(
-                        menu.texte(onglet.get("name"), langue_active),
-                        value=etat_onglet, disabled=not choisi,
-                        key=f"reg_{identifiant}_{section}_{cle_onglet}",
-                    )
-
-                    if coche != etat_onglet:
-                        utilisateurs.autoriser(fichier, identifiant, section,
-                                               coche, onglet=cle_onglet)
-                        st.rerun()
-
-    def reinitialiser():
-        utilisateurs.tout_autoriser(fichier, identifiant)
-        st.rerun()
-
-    def supprimer():
-        utilisateurs.supprimer_profil(fichier, identifiant)
-        utilisateurs.aller_a("liste")
-        st.rerun()
-
-    def fermer():
-        _fermer_fenetre()
-        st.rerun()
-
-    # La SUPPRESSION en premier, donc la plus à gauche : c'est le geste
-    # irréversible, et il s'éloigne ainsi de celui qu'on répète. Le profil
-    # d'origine ne se supprime pas.
     _pied(
-        (reglages.get("supprimer"), "reg_supprimer", "tertiary", supprimer,
-         bool(porteur.get("verrouille"))),
-        (reglages.get("reinitialiser"), "reg_reinit", "secondary",
-         reinitialiser, False),
-        (reglages.get("fermer"), "reg_fermer", "primary", fermer, False),
+        (reglages.get("enregistrer"), "reg_enregistrer", "primary",
+         enregistrer, verrouille),
     )
 
 
@@ -1582,6 +1704,23 @@ def _styles_fenetre(reglages=None):
 [data-testid="stDialog"] [class*="st-key-kgtabreggensligne"] a {
   color: inherit !important; text-decoration: none !important;
   pointer-events: none;
+}
+/* Le CORPS de l'écran des droits défile seul, entre un en-tête et un pied qui
+   ne bougent pas. Streamlit encadre les conteneurs à hauteur fixe : ce cadre
+   ferait une boîte dans la boîte, alors que la fenêtre en est déjà une. */
+[data-testid="stDialog"] .st-key-regcorps {
+  border: none !important; padding: 0 6px 0 2px !important;
+}
+/* Les gestes secondaires de l'en-tête : deux icônes carrées, sans cadre. */
+[data-testid="stDialog"] .st-key-reg_reinit button,
+[data-testid="stDialog"] .st-key-reg_supprimer button {
+  width: 32px !important; height: 32px !important; min-height: 32px !important;
+  padding: 0 !important; border-radius: 8px; border: none;
+  background: transparent; color: var(--kg-color-text-muted);
+}
+[data-testid="stDialog"] .st-key-reg_reinit button:hover {
+  color: var(--kg-color-primary);
+  background: var(--kg-color-primary-light, #E4F0EB);
 }
 /* La SUPPRESSION est une action irréversible : elle se signale en rouge, mais
    reste un lien — un bouton plein appellerait le clic qu'on veut éviter. */

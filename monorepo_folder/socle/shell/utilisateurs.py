@@ -378,6 +378,35 @@ def autoriser(fichier, profil_id, section, valeur, onglet=None):
     enregistrer(fichier)
 
 
+def autoriser_plusieurs(fichier, profil_id, valeurs):
+    """Écrit d'un coup toute la table d'un profil — un seul passage au disque.
+
+    `valeurs` : {(section, onglet|None): bool | None}. Poser les quarante-six
+    autorisations d'un écran une par une rouvrait et réécrivait le fichier
+    quarante-six fois pour un seul geste de l'utilisateur.
+
+    Une valeur NULLE efface la ligne. C'est ainsi que la table ne garde que
+    les exceptions : ce qui suit la configuration du défi n'y figure pas, et
+    une vue ajoutée demain apparaîtra chez tout le monde au lieu de rester
+    cachée chez ceux dont le fichier date d'avant.
+    """
+
+    vise = profil(fichier, profil_id)
+
+    if vise is None or vise.get("verrouille"):
+        return
+
+    table = vise.setdefault("autorisations", {})
+
+    for (section, onglet), valeur in valeurs.items():
+        if valeur is None:
+            table.pop(cle(section, onglet), None)
+        else:
+            table[cle(section, onglet)] = bool(valeur)
+
+    enregistrer(fichier)
+
+
 def tout_autoriser(fichier, profil_id):
     """Vide la table : le profil retrouve la configuration du défi."""
 

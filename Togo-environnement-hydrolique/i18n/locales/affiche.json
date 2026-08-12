@@ -383,6 +383,10 @@
     "fr": "Tout réafficher",
     "en": "Show everything"
   },
+  "reglages_enregistrer": {
+    "fr": "Enregistrer",
+    "en": "Save"
+  },
   "reglages_fermer": {
     "fr": "Fermer",
     "en": "Close"

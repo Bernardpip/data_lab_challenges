@@ -1011,6 +1011,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             "supprimer": tr("reglages_supprimer"),
             "sans_fichier": tr("reglages_sans_fichier"),
             "reinitialiser": tr("reglages_reinitialiser"),
+            "enregistrer": tr("reglages_enregistrer"),
             "fermer": tr("reglages_fermer"),
         },
         # Les UTILISATEURS de l'affiche. Le fichier est hors dépôt : il porte
