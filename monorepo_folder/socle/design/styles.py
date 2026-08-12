@@ -1360,7 +1360,13 @@ a.kg-aff-logo:hover { opacity: .8; }
 
    Le rail lui réserve la place en conséquence — sinon le dernier onglet
    passerait dessous. */
-.st-key-kgaffrail { position: relative; padding-right: 86px; }
+/* Le rail garde ses distances avec le BAS du bandeau. Les défis y peignent
+   une bande — ici le drapeau —, et les puces de navigation venaient s'asseoir
+   dessus : quatre pixels, mesurés, entre le bord d'un bouton et une surface
+   d'une autre nature. */
+.st-key-kgaffrail {
+  position: relative; padding-right: 86px; margin-bottom: 10px;
+}
 
 .st-key-kgafflang {
   position: absolute !important;
