@@ -20,7 +20,7 @@ from socle.charts.maps import silhouette_svg
 from socle.design.tokens import RISQUE_OFFICIEL, RISQUE_CONTOUR, SERIES
 from socle.shell import render_affiche
 from socle.shell.affiche import hauteur_colonne_droite
-from socle.i18n.traduction import t
+from socle.i18n.traduction import t, langue
 
 from views import annexes as annexes_vue
 from views import croisements as croisements_vue
@@ -966,7 +966,30 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
 
         return peindre
 
+    # Le RAPPORT, dans la langue qu'on lit. Les deux versions existent côte à
+    # côte dans `rapport/` ; proposer les quatre fichiers ferait choisir une
+    # langue à qui vient d'en choisir une. Le PDF passe en premier — il
+    # s'ouvre partout —, le PowerPoint suit, parce que c'est lui que l'énoncé
+    # demande et qu'il reste modifiable.
+    fichiers_rapport = {
+        "fr": ("Togo_Eau_Assainissement_Rapport", "Rapport"),
+        "en": ("Togo_Water_Sanitation_Report", "Report"),
+    }
+    souche, _ = fichiers_rapport.get(langue(), fichiers_rapport["fr"])
+
     return {
+        "rapport": {
+            "titre": tr("rapport_titre"),
+            "aide": tr("rapport_aide"),
+            "note": tr("rapport_note"),
+            "fichiers": [
+                (tr("rapport_pdf"), RACINE / "rapport" / f"{souche}.pdf",
+                 "application/pdf", tr("rapport_pdf_detail")),
+                (tr("rapport_pptx"), RACINE / "rapport" / f"{souche}.pptx",
+                 "application/vnd.openxmlformats-officedocument"
+                 ".presentationml.presentation", tr("rapport_pptx_detail")),
+            ],
+        },
         # La fenêtre de réglages. Ses libellés vivent ici, comme ceux du menu :
         # le socle qui la peint n'écrit aucun mot visible, et un défi qui ne
         # déclare pas ce bloc n'a tout simplement pas de bouton.

@@ -586,5 +586,33 @@
   "reglages_colonne_acces": {
     "fr": "Ce qu'il montre",
     "en": "What it shows"
+  },
+  "rapport_titre": {
+    "fr": "Rapport",
+    "en": "Report"
+  },
+  "rapport_aide": {
+    "fr": "Le rapport de dix pages, à télécharger",
+    "en": "The ten-page report, to download"
+  },
+  "rapport_note": {
+    "fr": "Dix pages, dans la langue affichée. Les chiffres viennent des mêmes fonctions que cet écran : ils ne peuvent pas en diverger.",
+    "en": "Ten pages, in the language on screen. The figures come from the same functions as this dashboard: they cannot diverge from it."
+  },
+  "rapport_pdf": {
+    "fr": "Télécharger le PDF",
+    "en": "Download the PDF"
+  },
+  "rapport_pdf_detail": {
+    "fr": "s'ouvre partout, sans logiciel de présentation",
+    "en": "opens anywhere, no presentation software"
+  },
+  "rapport_pptx": {
+    "fr": "Télécharger le PowerPoint",
+    "en": "Download the PowerPoint"
+  },
+  "rapport_pptx_detail": {
+    "fr": "graphiques natifs : ils se retouchent et se recopient",
+    "en": "native charts: editable and reusable"
   }
 }

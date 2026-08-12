@@ -1014,6 +1014,34 @@ _CSS_AFFICHE = """
    intercale un enveloppeur en pleine largeur entre les deux, si bien qu'un
    alignement demandé au conteneur ne descend pas jusqu'à la bascule. La marge
    automatique, elle, la pousse au bord depuis l'intérieur. */
+/* Le dépliant du RAPPORT ferme la rangée des onglets, juste avant la bascule
+   de langue. Il reste dans le FLUX — contrairement à elle, qui est ancrée —
+   pour se pousser à droite des onglets quel que soit leur nombre. Une puce
+   discrète : c'est un livrable qu'on prend une fois, pas une navigation. */
+.st-key-kgaffrapport { flex: 0 0 auto !important; width: auto !important;
+  margin: 0 !important; }
+/* La poussée vers la droite se pose sur l'ENVELOPPE, pas sur le conteneur :
+   Streamlit glisse un `stLayoutWrapper` entre le rail et lui, et c'est cette
+   enveloppe qui est l'élément de la rangée. Une marge automatique posée un
+   cran trop bas ne pousse rien — la puce restait collée au dernier onglet,
+   comme s'il y en avait un de plus. */
+.st-key-kgaffrail > div:has(> .st-key-kgaffrapport) {
+  margin-left: auto !important; margin-right: 8px !important;
+}
+.st-key-kgaffrapport button {
+  height: 28px !important; min-height: 28px !important;
+  padding: 0 12px !important; border-radius: 999px;
+  border: 1px solid var(--kg-color-border-light, #ECEEF0);
+  background: #FFFFFF; color: var(--kg-color-text-secondary);
+  font-size: 12.5px; font-weight: 600; white-space: nowrap;
+}
+.st-key-kgaffrapport button:hover {
+  border-color: var(--kg-color-primary); color: var(--kg-color-primary);
+}
+
+/* La bascule de langue garde son ancrage : elle ne bouge jamais, quoi qu'il
+   y ait à sa gauche. Le dépliant, lui, s'arrête juste avant elle — d'où la
+   marge automatique ci-dessus et la réserve du rail. */
 .st-key-kgafflang { flex: 0 0 auto !important; width: 88px; margin-left: auto; }
 .st-key-kgafflang [data-testid="stColumn"] { flex: 1 1 46px !important; }
 
