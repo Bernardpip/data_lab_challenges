@@ -705,7 +705,13 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
         with rail:
             entrees = etat["entrees"]
 
-            if len(entrees) > 1:
+            # La section s'affiche MÊME SEULE. On la cachait, au motif qu'un
+            # choix unique n'est pas un choix ; mais elle ne sert pas qu'à
+            # choisir — elle dit où l'on est. Chez qui n'a droit qu'à une
+            # section, le rail commençait aux onglets, sans rien pour nommer ce
+            # qu'ils découpent, et la même page changeait d'allure d'un profil
+            # à l'autre. Le rang reste le même, elle ne coûte pas une ligne.
+            if entrees:
                 with st.container(key="kgaffsections"):
                     libelles = {e["label"]: e["key"] for e in entrees}
                     courant = next(
@@ -713,13 +719,43 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                         entrees[0]["label"],
                     )
 
+                    def garder_la_selection(actuel=courant):
+                        """Un rail sans puce allumée n'annonce plus rien.
+
+                        Le groupe segmenté se DÉSÉLECTIONNE quand on reclique
+                        la case active : la section restait la bonne, mais
+                        plus rien ne l'indiquait — et sur un profil qui n'a
+                        droit qu'à une section, il suffisait d'un clic pour
+                        éteindre tout le rail.
+
+                        La valeur se repose ICI et pas après coup : Streamlit
+                        refuse qu'on écrive l'état d'un widget une fois qu'il
+                        est instancié, et l'écran s'arrêtait sur l'exception,
+                        sans onglets ni contenu — vu à l'écran. Dans son
+                        propre rappel, l'écriture est permise.
+                        """
+
+                        if not st.session_state.get("affsections"):
+                            st.session_state["affsections"] = actuel
+
+                    # La valeur de départ se pose AVANT le widget, et non par
+                    # `default` : les deux ensemble font apparaître un
+                    # avertissement de Streamlit en travers du bandeau — vu à
+                    # l'écran. On ne la repose que si celle qui est en mémoire
+                    # n'existe plus dans la liste : sinon on écraserait le
+                    # choix qu'on vient de faire, puisque `courant` reflète
+                    # encore la section précédente à cet instant du passage.
+                    # C'est aussi ce qui rattrape un changement de LANGUE, où
+                    # tous les libellés changent d'un coup.
+                    if st.session_state.get("affsections") not in libelles:
+                        st.session_state["affsections"] = courant
+
                     choisi = st.segmented_control(
                         titre or "menu", list(libelles), key="affsections",
-                        default=courant, label_visibility="collapsed",
+                        label_visibility="collapsed",
+                        on_change=garder_la_selection,
                     )
 
-                    # `None` quand l'utilisateur déselectionne : un menu sans
-                    # entrée active n'existe pas, on ignore le geste.
                     if choisi and libelles[choisi] != etat["menu"]:
                         menu.aller_au_menu(libelles[choisi], etat)
 
