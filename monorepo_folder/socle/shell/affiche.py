@@ -848,6 +848,26 @@ def render_affiche(titre, config, sous_titre=None,
             f'[data-testid="stMain"] {{'
             f" height: calc(100vh / {echelle});"
             f" min-height: calc(100vh / {echelle}); }}"
+            # Le CURSEUR d'intervalle, dernière victime du même écart de
+            # repères. Sa bibliothèque mesure la piste en pixels VISUELS —
+            # 203 sous un facteur de 0,85 — puis pose ses poignées en pixels
+            # de MISE EN PAGE, où la piste en fait 239 : la poignée haute
+            # s'arrêtait donc à 85 % de sa course, à vingt-six pixels du bout,
+            # sur un curseur pourtant à son maximum. Le défaut ne se voit qu'à
+            # l'extrémité DROITE, la gauche étant à zéro dans les deux repères.
+            #
+            # On rétrécit la boîte qui porte les poignées au facteur, puis on
+            # la réétire de son inverse : les poignées, positionnées dans la
+            # boîte rétrécie, retombent alors sur les bornes visibles, et la
+            # piste garde sa largeur. Elles s'étirent de 18 % avec elle — un
+            # point de 8 px en fait 9,4, ce qui ne se voit pas.
+            f'[data-testid="stSlider"] [role="slider"] {{'
+            f" transform-origin: left center; }}"
+            f'[data-testid="stSlider"] [data-baseweb="slider"]'
+            f" > div > div {{"
+            f" width: calc(100% * {echelle});"
+            f" transform: scaleX(calc(1 / {echelle}));"
+            f" transform-origin: left center; }}"
             f"</style>",
             unsafe_allow_html=True,
         )
