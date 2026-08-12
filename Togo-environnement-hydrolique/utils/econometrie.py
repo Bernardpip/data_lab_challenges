@@ -267,6 +267,82 @@ def ce_que_le_fri_ordonne(cantons):
     return {"correlations": pd.DataFrame(lignes), "sommet": classement}
 
 
+def fri_sans_population(cantons):
+    """Le classement du FRI si l'on retirait sa composante de population.
+
+    `ce_que_le_fri_ordonne` établit que l'indice range les cantons comme la
+    population les range (ρ = 0,80) bien plus que comme l'aléa les range
+    (ρ = 0,54). L'objection légitime est qu'une corrélation n'est pas une
+    décomposition : la population et l'aléa sont eux-mêmes liés, les gens
+    s'installant près des cours d'eau.
+
+    Cette fonction répond par la CONTREFACTUELLE plutôt que par la corrélation.
+    Elle rejoue la formule du producteur — moyenne géométrique des composantes
+    normalisées — puis la rejoue AMPUTÉE de `norm_pop`, et mesure de combien de
+    places les cantons se déplacent. Si le classement tient, la composante
+    n'était qu'un ingrédient parmi sept ; s'il se disloque, l'indice est un
+    classement démographique portant un nom d'aléa.
+
+    Restreinte aux cantons dont TOUTES les composantes sont non nulles : un
+    zéro annule un produit, et les 346 cantons qui en portent un ne peuvent
+    entrer dans aucune moyenne géométrique — c'est la même restriction que
+    `analytics.reconstitution_fri`, et pour la même raison.
+    """
+
+    composantes = analytics.COMPOSANTES_FRI
+    X = cantons[composantes].to_numpy(dtype=float)
+    complets = (X > 0).all(axis=1)
+
+    cadre = cantons[complets].copy()
+
+    if len(cadre) < 10:
+        return {"cadre": cadre, "cantons": int(len(cadre)), "rho_complet": float("nan"),
+                "rho_ampute": float("nan"), "deplacement_median": float("nan"),
+                "renouvellement": 0, "sommet": 10}
+
+    valeurs = cadre[composantes].to_numpy(dtype=float)
+    sans = [c for c in composantes if c != "norm_pop"]
+    valeurs_amputees = cadre[sans].to_numpy(dtype=float)
+
+    cadre["fri_reconstitue"] = valeurs.prod(axis=1) ** (1 / len(composantes))
+    cadre["fri_ampute"] = (
+        valeurs_amputees.prod(axis=1) ** (1 / len(sans))
+    )
+
+    # Rang 1 = le plus exposé, dans les trois classements.
+    for colonne, rang in (("risque_pts", "rang_publie"),
+                          ("fri_reconstitue", "rang_reconstitue"),
+                          ("fri_ampute", "rang_ampute")):
+        cadre[rang] = cadre[colonne].rank(ascending=False, method="min").astype(int)
+
+    cadre["deplacement"] = (cadre["rang_ampute"] - cadre["rang_publie"]).abs()
+
+    sommet = 10
+    tete_publiee = set(cadre.nsmallest(sommet, "rang_publie")["canton"])
+    tete_amputee = set(cadre.nsmallest(sommet, "rang_ampute")["canton"])
+
+    rho_complet, _ = stats.spearmanr(cadre["risque_pts"],
+                                     cadre["fri_reconstitue"])
+    rho_ampute, _ = stats.spearmanr(cadre["risque_pts"], cadre["fri_ampute"])
+
+    # `cle_canton` voyage avec le résultat : deux cantons peuvent porter le
+    # même NOM dans deux préfectures, et une carte qui joindrait sur le nom
+    # dupliquerait leurs polygones sans que rien ne le signale.
+    colonnes = ["cle_canton", "canton", "prefecture", "region", "population",
+                "risque_pts", "rang_publie", "rang_ampute", "deplacement"]
+
+    return {
+        "cadre": cadre[colonnes].sort_values("rang_publie").reset_index(drop=True),
+        "cantons": int(len(cadre)),
+        "rho_complet": float(rho_complet),
+        "rho_ampute": float(rho_ampute),
+        "deplacement_median": float(cadre["deplacement"].median()),
+        "deplacement_max": int(cadre["deplacement"].max()),
+        "renouvellement": int(sommet - len(tete_publiee & tete_amputee)),
+        "sommet": sommet,
+    }
+
+
 # ─── Modèle 5 : la couverture, région par région ─────────────────────────────
 
 def couverture_par_region(cantons, tde, coso):

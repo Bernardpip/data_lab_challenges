@@ -262,6 +262,11 @@ def carte_tde_seule(hauteur=None):
         maps.points(
             filtre, cle="carte_tde_droite", height=h,
             message_vide=tc("aucun_point_localise"),
+            # Le PAYS commande le cadrage : 65 des 67 ouvrages tenant dans la
+            # seule région Maritime, un cadrage sur les points montrait Lomé en
+            # gros plan et cachait ce que la carte doit dire — que le reste du
+            # territoire n'en a aucun.
+            fond=datasets()["cantons"],
             infobulle=lambda row: (
                 f'<b>{row["ouvrage"]}</b><br>'
                 f'{row["canton"]} · {row["prefecture"]}'),
@@ -291,6 +296,7 @@ def carte_coso_seule(hauteur=None):
         maps.points(
             situes, cle="carte_coso_droite", height=h,
             message_vide=tc("aucun_point_localise"),
+            fond=datasets()["cantons"],
             infobulle=lambda row: (
                 f'<b>{row["localite"]}</b><br>{row["type_ouvrage"]}'),
         )

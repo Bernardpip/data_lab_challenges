@@ -263,12 +263,16 @@ def choroplethe(gdf, valeur, cle, champs=None, libelles=None, height=980,
 
 
 def points(df, cle, infobulle=None, lat="lat", lon="lon", height=980,
-           rayon=5, message_vide=None):
+           rayon=5, message_vide=None, fond=None):
     """Un point par ligne — forme d'IDENTITÉ (où sont les choses).
 
     `infobulle` : fonction ligne -> HTML, ou None pour aucune bulle. La forme
     du contenu appartient au défi, qui seul connaît ses colonnes.
     `cle` : clé Streamlit, distincte par carte de l'application.
+    `fond` : couche de territoire qui COMMANDE le cadrage, comme dans
+    `points_multi` et `disques`. Sans elle, la carte se cadre sur les points :
+    un inventaire groupé dans une région se montre alors en gros plan, et le
+    lecteur ne voit plus qu'il ne couvre qu'un cinquième du pays.
     """
 
     situes = df.dropna(subset=[lat, lon])
@@ -289,10 +293,24 @@ def points(df, cle, infobulle=None, lat="lat", lon="lon", height=980,
         zoom_snap=PAS_ZOOM,
     )
 
-    carte.fit_bounds([
-        [situes[lat].min(), situes[lon].min()],
-        [situes[lat].max(), situes[lon].max()],
-    ], padding=(24, 24))
+    if fond is not None and not fond.empty:
+        limites = fond.total_bounds
+        carte.fit_bounds([[limites[1], limites[0]], [limites[3], limites[2]]],
+                         padding=(14, 14))
+
+        folium.GeoJson(
+            _silhouette(fond, _empreinte(fond, [fond.columns[0]])),
+            style_function=lambda _: {"color": INK["primary"], "weight": 1.6,
+                                      "fillColor": INK["surface"],
+                                      "fillOpacity": 0.45},
+            interactive=False,
+            smooth_factor=0.5,
+        ).add_to(carte)
+    else:
+        carte.fit_bounds([
+            [situes[lat].min(), situes[lon].min()],
+            [situes[lat].max(), situes[lon].max()],
+        ], padding=(24, 24))
 
     for _, row in situes.iterrows():
         folium.CircleMarker(
@@ -436,11 +454,15 @@ def legende_series(entrees, libelle=None):
 
 
 def disques(df, valeur, cle, etiquette=None, infobulle=None,
-            lat="lat", lon="lon", height=980, message_vide=None):
+            lat="lat", lon="lon", height=980, message_vide=None, fond=None):
     """Un disque par ligne, AIRE proportionnelle — forme de MAGNITUDE située.
 
     `valeur` : colonne numérique portée par l'aire.
     `etiquette` : colonne du label écrit à côté du disque, ou None pour aucun.
+    `fond` : couche de territoire qui COMMANDE le cadrage, comme dans
+    `points_multi`. Sans elle, la carte se cadre sur les points et montre leur
+    enveloppe, jamais le pays — or quand les points sont groupés dans une
+    région, c'est précisément le reste du territoire qui porte le propos.
 
     Deux décisions de forme, valables au-delà de ce corpus :
 
@@ -463,14 +485,29 @@ def disques(df, valeur, cle, etiquette=None, infobulle=None,
     carte = folium.Map(tiles="CartoDB positron", control_scale=True,
                        zoom_snap=PAS_ZOOM)
 
-    # Cadrage sur TOUS les points situés, y compris ceux à zéro : le vide
-    # d'une ville sans équipement fait partie de ce que la carte montre.
-    # `fit_bounds` cadre les CENTRES : le plus gros disque déborderait sous la
-    # carte sans une marge au moins égale à son rayon, plus la place du label.
-    carte.fit_bounds([
-        [situes[lat].min(), situes[lon].min()],
-        [situes[lat].max(), situes[lon].max()],
-    ], padding=(56, 56))
+    if fond is not None and not fond.empty:
+        limites = fond.total_bounds
+        carte.fit_bounds([[limites[1], limites[0]], [limites[3], limites[2]]],
+                         padding=(14, 14))
+
+        folium.GeoJson(
+            _silhouette(fond, _empreinte(fond, [fond.columns[0]])),
+            style_function=lambda _: {"color": INK["primary"], "weight": 1.6,
+                                      "fillColor": INK["surface"],
+                                      "fillOpacity": 0.45},
+            interactive=False,
+            smooth_factor=0.5,
+        ).add_to(carte)
+    else:
+        # Cadrage sur TOUS les points situés, y compris ceux à zéro : le vide
+        # d'une ville sans équipement fait partie de ce que la carte montre.
+        # `fit_bounds` cadre les CENTRES : le plus gros disque déborderait sous
+        # la carte sans une marge au moins égale à son rayon, plus la place du
+        # label.
+        carte.fit_bounds([
+            [situes[lat].min(), situes[lon].min()],
+            [situes[lat].max(), situes[lon].max()],
+        ], padding=(56, 56))
 
     maximum = porteurs[valeur].max()
     rayons = {

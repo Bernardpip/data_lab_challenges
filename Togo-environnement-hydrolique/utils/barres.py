@@ -19,6 +19,9 @@ jamais une liste unifiée qui laisserait choisir une région où le jeu n'a rien
 
 from contextlib import contextmanager
 
+# pyrefly: ignore [missing-import]
+import streamlit as st
+
 from socle.ui import filters
 from socle.i18n.traduction import t
 
@@ -142,6 +145,28 @@ def territoriale(cadre, avec_commune=False, reliquat=None,
         cadre, champs=champs, reliquat=_reliquat(reliquat)))
 
 
+def _annee_resserree(coso, cle):
+    """L'intervalle retenu est-il plus étroit que l'amplitude du corpus ?
+
+    Lu dans la session AVANT que le curseur ne se repeigne : c'est la valeur du
+    rendu précédent, la seule disponible à l'ouverture de la zone, et c'est
+    exactement ce que la zone doit annoncer.
+    """
+
+    retenu = st.session_state.get(cle)
+
+    if not retenu or coso is None:
+        return False
+
+    annees = coso["annee_achevement"].dropna()
+
+    if annees.empty:
+        return False
+
+    return (float(retenu[0]) > float(annees.min())
+            or float(retenu[-1]) < float(annees.max()))
+
+
 def zone_territoriale(cadre, coso=None, cle="affiche"):
     """La barre de l'affiche, posée dans la zone « Filtres » du socle.
 
@@ -186,10 +211,21 @@ def zone_territoriale(cadre, coso=None, cle="affiche"):
             "note": _note_intervalle("annee_achevement"),
         }
 
+    # L'ANNÉE ne compte comme filtre que si elle est resserrée. Le curseur
+    # porte toujours un couple de bornes, jamais rien de vide : compté comme
+    # les autres, il faisait annoncer « 1 filtre actif » à une page qui montrait
+    # le corpus entier. Le bouton de remise à zéro le vide malgré tout — d'où
+    # deux listes, et non une.
+    comptees = [c for c in cles if c != "filtre_annee"]
+
+    if intervalle is not None and _annee_resserree(coso, "filtre_annee"):
+        comptees.append("filtre_annee")
+
     # Aucun sous-titre : une zone nommée « Filtres » n'a pas besoin qu'on
     # explique ce que fait un filtre.
     with filters.zone(cle=cle, titre=tf("zone_titre"),
-                      cles_session=cles, libelle_reset=tc("reinitialiser")):
+                      cles_session=cles, cles_comptees=comptees,
+                      libelle_reset=tc("reinitialiser")):
         # Colonne de 62 % : pas de colonne d'appui, elle se replierait.
         return filters.territoriale(cadre, champs=champs,
                                     intervalle=intervalle, reliquat=False)

@@ -27,6 +27,7 @@ from views import donnees as donnees_vue
 from views import parc as parc_vue
 from views import recommandations as recommandations_vue
 from views import risque as risque_vue
+from views import recit
 from socle.design.marque import datalab_marque
 
 from utils import liens
@@ -352,15 +353,15 @@ def _droite_diagnostic(tr, data, faits, corpus, hauteur_carte):
     retenu = ui.onglets([
         ("risque", tr("onglet_risque")),
         ("parcs", tr("onglet_parcs")),
-        ("angle", tr("onglet_angle_mort")),
     ], cle="cartes_affiche", libelle=tr("onglets_cartes"), fond="#FFFFFF")
 
-    if retenu == "risque":
-        _carte_risque(tr, data, hauteur_carte)
-    elif retenu == "parcs":
+    # La couverture du corpus a quitté ce rang : elle est le sujet ENTIER de
+    # l'onglet « Les limites », et la garder ici en aurait fait la troisième
+    # carte d'une vue qui parle d'autre chose.
+    if retenu == "parcs":
         _carte_parcs(tr, data, faits, corpus, hauteur_carte)
     else:
-        _carte_angle_mort(tr, data, hauteur_carte)
+        _carte_risque(tr, data, hauteur_carte)
 
 
 
@@ -662,6 +663,7 @@ def _perimetre_partage(brut):
     """
 
     cantons = brut["cantons"]
+    restreint = False
 
     for colonne, cle in (("region", "filtre_region"),
                          ("prefecture", "filtre_prefecture")):
@@ -669,8 +671,25 @@ def _perimetre_partage(brut):
 
         if retenues:
             cantons = cantons[cantons[colonne].isin(retenues)]
+            restreint = True
 
-    return {**brut, "cantons": cantons}
+    if not restreint:
+        return {**brut, "cantons": cantons}
+
+    # Les deux parcs suivent le référentiel, et seulement quand une modalité
+    # est cochée : à pleine amplitude, les joindre écarterait les ouvrages dont
+    # le canton n'est pas rattaché. C'est la règle de `_filtrer`, et les cartes
+    # du récit — entretien, débit, remise — la demandent : elles peignent des
+    # OUVRAGES, non des cantons, et resteraient nationales sous un filtre
+    # régional.
+    cles = set(cantons["cle_canton"])
+
+    return {
+        **brut,
+        "cantons": cantons,
+        "tde": brut["tde"][brut["tde"]["cle_canton"].isin(cles)],
+        "coso": brut["coso"][brut["coso"]["cle_canton"].isin(cles)],
+    }
 
 
 def _carte_reference_risque(tr, data, faits, corpus, hauteur_carte):
@@ -703,7 +722,33 @@ def _etroit(rendu):
         rendu()
 
 
-def configuration(tr, trs, brut, corpus, hauteur_carte):
+def _cartes(options, cle, tr):
+    """Colonne droite à PLUSIEURS cartes — une par onglet.
+
+    Empilées, deux cartes imposent un défilement de deux hauteurs et invitent à
+    les comparer côte à côte alors qu'elles ne répondent pas à la même
+    question. En onglets, on en regarde une à la fois.
+
+    `options` : liste de `(clé, libellé, peintre)`. Le rang n'est posé que s'il
+    y a plus d'une carte : un onglet unique est un bouton qui ne fait rien.
+    """
+
+    if len(options) == 1:
+        options[0][2]()
+        return
+
+    retenu = ui.onglets([(c, libelle) for c, libelle, _ in options],
+                        cle=cle, libelle=tr("onglets_cartes"), fond=FOND)
+
+    for c, _, peintre in options:
+        if c == retenu:
+            peintre()
+            return
+
+    options[0][2]()
+
+
+def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
     """La configuration déclarative du menu — un seul objet, tout le chemin.
 
     Les composants sont liés ICI à leurs données : chaque entrée reçoit des
@@ -723,8 +768,16 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
 
     etat = {}
 
-    def propre(gauche, droite=None):
-        """Un onglet de la SYNTHÈSE — filtres de l'affiche, deux colonnes."""
+    def propre(gauche, droite=None, traducteur=None):
+        """Un onglet PROPRE à l'affiche — filtres de l'affiche, deux colonnes.
+
+        `traducteur` désigne le domaine i18n du peintre : `synthese` pour les
+        vues d'origine, `recit` pour les actes. Il est passé plutôt que deviné,
+        parce qu'un peintre ne doit pas avoir à savoir dans quel domaine vivent
+        ses textes — c'est la configuration qui les relie.
+        """
+
+        parle = traducteur or trs
 
         def peindre_gauche():
             data = _filtrer(brut)
@@ -734,13 +787,45 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
             # tels que le corpus entier les donne ferait dire « 330 cantons
             # sans ouvrage » à une page qui n'en montre plus que douze.
             etat["data"], etat["faits"] = data, faits
-            gauche(trs, data, faits, corpus)
+            gauche(parle, data, faits, corpus)
 
         if droite is None:
             return peindre_gauche
 
         def peindre_droite():
-            droite(trs, etat["data"], etat["faits"], corpus, hauteur_carte)
+            droite(parle, etat["data"], etat["faits"], corpus, hauteur_carte)
+
+        return {"gauche": peindre_gauche, "droite": peindre_droite}
+
+    def recit_(gauche, *cartes):
+        """Un onglet du RÉCIT — peintre de gauche, et ses cartes de droite.
+
+        Les peintres de carte de `recit` prennent `(tr, data, hauteur)`, sans
+        les faits : une carte ne commente pas la synthèse, elle montre un
+        territoire. La signature plus courte évite de traîner deux arguments
+        que ces fonctions n'utiliseraient jamais.
+
+        `cartes` : suite de `(clé, libellé, peintre)`. Aucune carte donnée, et
+        la colonne droite retombe sur la carte de référence de la section.
+        """
+
+        def peindre_gauche():
+            data = _filtrer(brut)
+            faits = analytics.synthese(data["cantons"], data["tde"],
+                                       data["coso"], data["ventes"])
+            etat["data"], etat["faits"] = data, faits
+            gauche(trr, data, faits, corpus)
+
+        if not cartes:
+            return peindre_gauche
+
+        def peindre_droite():
+            _cartes(
+                [(c, libelle,
+                  (lambda p=peintre: p(trr, etat["data"], hauteur_carte)))
+                 for c, libelle, peintre in cartes],
+                cle="cartes_" + cartes[0][0], tr=tr,
+            )
 
         return {"gauche": peindre_gauche, "droite": peindre_droite}
 
@@ -764,87 +849,196 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
 
         _carte_risque(trs, _perimetre_partage(brut), hauteur_carte)
 
+    def carte_du_corpus():
+        """Le repli de l'acte des preuves : ce que le corpus couvre."""
+
+        _carte_angle_mort(trs, _perimetre_partage(brut), hauteur_carte)
+
+    def avec(traducteur, peintre, *extras):
+        """Fige le domaine i18n — et les arguments — d'un peintre de carte.
+
+        Les cartes de `recit` prennent `(tr, data, hauteur)` ; celles écrites
+        pour les vues d'origine en prennent cinq et lisent leurs textes dans un
+        autre domaine. Plutôt que d'aligner vingt signatures, on adapte ici :
+        la configuration est le seul endroit qui connaisse les deux mondes.
+        """
+
+        return lambda _tr, data, hauteur: peintre(traducteur, data, *extras,
+                                                  hauteur)
+
+    def cartes_de(cle, *cartes):
+        """Colonne droite d'un onglet PORTÉ, qui n'a pas passé par `propre`.
+
+        Le périmètre vient des clés de session posées par la barre de filtres
+        de la colonne gauche — la même mécanique que `carte_de_section`, et
+        pour la même raison : la carte doit montrer ce que les graphes d'à côté
+        montrent, sans que rien ne transite d'une colonne à l'autre.
+        """
+
+        def peindre():
+            data = _perimetre_partage(brut)
+
+            _cartes(
+                [(c, libelle, (lambda p=peintre: p(trr, data, hauteur_carte)))
+                 for c, libelle, peintre in cartes],
+                cle="cartes_" + cle, tr=tr,
+            )
+
+        return peindre
+
     return {
         "menu_active_color": VERT_TOGO,
         "menu_inactive_color": "transparent",
         "tab_active_color": FOND,
         "tab_inactive_color": "transparent",
         "menu_items": [
-            {"id": "synthese", "name": tr("section_synthese"),
+            # ── Acte 0 · Le constat ──────────────────────────────────────
+            {"id": "constat", "name": tr("section_constat"),
              "is_default": True, "reference": None, "tab_items": [
-                {"id": "diagnostic", "name": tr("vue_diagnostic"),
-                 "is_default": True,
+                {"id": "home", "name": tr("vue_home"), "is_default": True,
                  "component": propre(_gauche_diagnostic, _droite_diagnostic)},
-                {"id": "risque", "name": tr("vue_risque"),
-                 "component": propre(_gauche_risque, _droite_risque)},
-                {"id": "parc", "name": tr("vue_parc"),
-                 "component": propre(_gauche_parc, _droite_parc)},
-                {"id": "priorites", "name": tr("vue_priorites"),
-                 "component": propre(_gauche_priorites, _droite_priorites)},
+                {"id": "paradoxe", "name": tr("vue_paradoxe"),
+                 "component": recit_(recit.paradoxe, (
+                     "bivariee", tr("onglet_bivariee"), recit.carte_bivariee))},
+                {"id": "limites", "name": tr("vue_limites"),
+                 "component": recit_(recit.limites, (
+                     "couverture", tr("onglet_couverture"),
+                     avec(trs, _carte_angle_mort)))},
             ]},
-            {"id": "inondation", "name": tr("section_inondation"),
+
+            # ── Acte 1 · Où est l'eau ? ──────────────────────────────────
+            {"id": "ou", "name": tr("section_ou"),
              "reference": carte_de_section, "tab_items": [
-                # La seule vue portée qui déclare ses DEUX colonnes : elle
-                # porte une carte, et la laisser à gauche l'aurait dupliquée
-                # avec la carte de référence de la section.
-                {"id": "fri_carto", "name": tr("vue_fri_carto"),
-                 "is_default": True, "component": {
-                     "gauche": lambda: _etroit(
-                         lambda: risque_vue.render_carto(avec_carte=False)),
-                     "droite": lambda: risque_vue.carte_seule(hauteur_carte),
-                 }},
-                {"id": "fri_facteurs", "name": tr("vue_fri_facteurs"),
-                 "component": portee(risque_vue.render_facteurs)},
+                {"id": "repartition", "name": tr("vue_repartition"),
+                 "is_default": True,
+                 "component": recit_(
+                     recit.repartition,
+                     ("parcs", tr("onglet_les_deux"),
+                      lambda _tr, data, h: _carte_parcs(
+                          trs, data, etat["faits"], corpus, h)),
+                     ("tde", tr("onglet_tde"),
+                      lambda _tr, data, h: parc_vue.carte_tde_seule(h)),
+                     ("coso", tr("onglet_coso"),
+                      lambda _tr, data, h: parc_vue.carte_coso_seule(h)))},
+                {"id": "densite", "name": tr("vue_densite"),
+                 "component": recit_(
+                     recit.densite,
+                     ("densite", tr("onglet_densite"), recit.carte_densite),
+                     ("population", tr("onglet_population"),
+                      lambda _tr, data, h:
+                          demographie_vue.carte_population_seule(h)))},
+                {"id": "deserts", "name": tr("vue_deserts"),
+                 "component": recit_(
+                     recit.deserts,
+                     ("deserts", tr("onglet_deserts"), recit.carte_deserts),
+                     ("rayons", tr("onglet_rayons"), recit.carte_rayons))},
             ]},
-            {"id": "parc", "name": tr("section_parc"),
+
+            # ── Acte 2 · Dans quel état ? ────────────────────────────────
+            {"id": "etat", "name": tr("section_etat"),
              "reference": carte_de_section, "tab_items": [
-                {"id": "tde", "name": tr("vue_tde"), "is_default": True,
-                 "component": {
-                     "gauche": lambda: _etroit(
-                         lambda: parc_vue.render_tde(avec_carte=False)),
-                     "droite": lambda: parc_vue.carte_tde_seule(hauteur_carte),
-                 }},
-                {"id": "coso", "name": tr("vue_coso"), "component": {
-                     "gauche": lambda: _etroit(
-                         lambda: parc_vue.render_coso(avec_carte=False)),
-                     "droite": lambda: parc_vue.carte_coso_seule(hauteur_carte),
-                 }},
-                {"id": "technique", "name": tr("vue_technique"),
-                 "component": portee(parc_vue.render_technique)},
+                {"id": "angle_mort", "name": tr("vue_angle_mort"),
+                 "is_default": True,
+                 "component": recit_(recit.angle_mort, (
+                     "couverture", tr("onglet_couverture"),
+                     avec(trs, _carte_angle_mort)))},
+                {"id": "entretien", "name": tr("vue_entretien"),
+                 "component": recit_(recit.entretien, (
+                     "entretien", tr("onglet_entretien"),
+                     recit.carte_entretien))},
+                {"id": "fragilite", "name": tr("vue_fragilite"),
+                 "component": recit_(recit.fragilite, (
+                     "debit", tr("onglet_debit"), recit.carte_debit))},
+                {"id": "service", "name": tr("vue_service"),
+                 "component": recit_(recit.service, (
+                     "service", tr("onglet_service"), recit.carte_service))},
             ]},
-            {"id": "demographie", "name": tr("section_demographie"),
+
+            # ── Acte 3 · Pour combien d'habitants ? ──────────────────────
+            {"id": "habitants", "name": tr("section_habitants"),
              "reference": carte_de_section, "tab_items": [
                 {"id": "pression", "name": tr("vue_pression"),
                  "is_default": True, "component": {
                      "gauche": lambda: _etroit(
                          lambda: demographie_vue.render_pression(
                              avec_carte=False)),
-                     "droite": lambda: demographie_vue.carte_population_seule(
-                         hauteur_carte),
+                     "droite": cartes_de(
+                         "pression",
+                         ("population", tr("onglet_population"),
+                          lambda _tr, data, h:
+                              demographie_vue.carte_population_seule(h)),
+                         ("densite", tr("onglet_densite"),
+                          recit.carte_densite)),
                  }},
                 {"id": "ventes", "name": tr("vue_ventes"),
                  "component": portee(demographie_vue.render_ventes)},
-            ]},
-            {"id": "croisements", "name": tr("section_croisements"),
-             "reference": carte_de_section, "tab_items": [
-                {"id": "ouvrages_risque",
-                 "name": tr("vue_ouvrages_risque"), "is_default": True,
-                 "component": portee(croisements_vue.render_ouvrages_risque)},
-                {"id": "maintenance", "name": tr("vue_maintenance"),
-                 "component": portee(croisements_vue.render_maintenance)},
                 {"id": "allocation", "name": tr("vue_allocation"),
-                 "component": portee(croisements_vue.render_allocation)},
+                 "component": {
+                     "gauche": portee(croisements_vue.render_allocation),
+                     "droite": cartes_de(
+                         "allocation",
+                         ("investissement", tr("onglet_investissement"),
+                          recit.carte_investissement)),
+                 }},
+                {"id": "rattrapage", "name": tr("vue_rattrapage"),
+                 "component": recit_(recit.rattrapage, (
+                     "deficit", tr("onglet_deficit"), recit.carte_deficit))},
             ]},
-            {"id": "recommandations", "name": tr("section_recommandations"),
+
+            # ── Acte 4 · Et quand l'eau monte ? ──────────────────────────
+            {"id": "inondation", "name": tr("section_inondation"),
+             "reference": carte_de_section, "tab_items": [
+                {"id": "alea", "name": tr("vue_alea"), "is_default": True,
+                 "component": {
+                     "gauche": lambda: _etroit(
+                         lambda: risque_vue.render_carto(avec_carte=False)),
+                     "droite": cartes_de(
+                         "alea",
+                         ("officiel", tr("onglet_fri_officiel"),
+                          avec(trs, _droite_risque, None, corpus)),
+                         ("quantiles", tr("onglet_fri_quantiles"),
+                          avec(trs, _carte_risque))),
+                 }},
+                {"id": "facteurs", "name": tr("vue_fri_facteurs"),
+                 "component": portee(risque_vue.render_facteurs)},
+                {"id": "ouvrages_risque", "name": tr("vue_ouvrages_risque"),
+                 "component": {
+                     "gauche": portee(croisements_vue.render_ouvrages_risque),
+                     "droite": cartes_de(
+                         "ouvrages",
+                         ("bivariee", tr("onglet_bivariee"),
+                          recit.carte_bivariee)),
+                 }},
+                {"id": "fri", "name": tr("vue_fri"),
+                 "component": recit_(
+                     recit.que_classe_le_fri,
+                     ("officiel", tr("onglet_fri_officiel"),
+                      avec(trs, _droite_risque, None, corpus)),
+                     ("ampute", tr("onglet_fri_sans_pop"),
+                      recit.carte_fri_ampute))},
+            ]},
+
+            # ── Acte 5 · Que faire ? ─────────────────────────────────────
+            {"id": "agir", "name": tr("section_agir"),
              "reference": carte_de_section, "tab_items": [
                 {"id": "priorites_reco", "name": tr("vue_priorites_reco"),
-                 "is_default": True,
-                 "component": portee(recommandations_vue.render_priorites)},
+                 "is_default": True, "component": {
+                     "gauche": portee(recommandations_vue.render_priorites),
+                     "droite": cartes_de(
+                         "priorites",
+                         ("prioritaires", tr("onglet_prioritaires"),
+                          avec(trs, _droite_priorites, None, corpus))),
+                 }},
+                {"id": "facture", "name": tr("vue_facture"),
+                 "component": recit_(recit.facture, (
+                     "facture", tr("onglet_facture"), recit.carte_facture))},
                 {"id": "leviers", "name": tr("vue_leviers"),
                  "component": portee(recommandations_vue.render_leviers)},
             ]},
-            {"id": "donnees", "name": tr("section_donnees"),
-             "reference": carte_de_section, "tab_items": [
+
+            # ── Acte 6 · Ce qu'on sait, ce qu'on ignore ──────────────────
+            {"id": "preuves", "name": tr("section_preuves"),
+             "reference": carte_du_corpus, "tab_items": [
                 {"id": "fichiers", "name": tr("vue_fichiers"),
                  "is_default": True,
                  "component": portee(donnees_vue.render_fichiers)},
@@ -852,10 +1046,7 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
                  "component": portee(donnees_vue.render_recettes)},
                 {"id": "perimetre", "name": tr("vue_perimetre"),
                  "component": portee(donnees_vue.render_perimetre)},
-            ]},
-            {"id": "annexes", "name": tr("section_annexes"),
-             "reference": carte_de_section, "tab_items": [
-                {"id": "preuves", "name": tr("vue_preuves"), "is_default": True,
+                {"id": "preuves", "name": tr("vue_preuves"),
                  "component": portee(annexes_vue.render_preuves)},
                 {"id": "sources", "name": tr("vue_sources"),
                  "component": portee(annexes_vue.render_sources)},
@@ -872,6 +1063,10 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
 def render():
     tr = t("affiche")
     trs = t("synthese")
+    # Le récit a son propre domaine i18n : ses textes sont éditoriaux — des
+    # phrases, pas des étiquettes — et les mêler aux libellés du tableau de
+    # bord aurait rendu illisible le fichier des deux.
+    trr = t("recit")
     brut = datasets()
 
     # Le menu se peint AVANT les colonnes : son sous-titre ne peut pas suivre
@@ -895,7 +1090,7 @@ def render():
     zone = hauteur_colonne_droite(ECHELLE)
     hauteur_carte = maps.hauteur_dans(zone, reserve=RAIL_ONGLETS)
 
-    config = configuration(tr, trs, brut, corpus, hauteur_carte)
+    config = configuration(tr, trs, trr, brut, corpus, hauteur_carte)
 
     render_affiche(
         titre=tr("titre"),

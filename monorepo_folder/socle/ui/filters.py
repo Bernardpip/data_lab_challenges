@@ -341,7 +341,7 @@ def retenu(selection, valeur):
 
 @contextmanager
 def zone(cle, titre=None, sous_titre=None, cles_session=(), libelle_reset=None,
-         icone="search", fond=None):
+         icone="search", fond=None, cles_comptees=None):
     """Surface qui contient une barre de filtres — l'objet « Filtres ».
 
     Les barres posées à nu sur la page ne se distinguaient de rien : trois
@@ -360,10 +360,18 @@ def zone(cle, titre=None, sous_titre=None, cles_session=(), libelle_reset=None,
 
     `cles_session` : les clés de widget que le bouton vide. C'est l'appelant
     qui les connaît — le socle ne devine pas quelles specs la barre a posées.
+
+    `cles_comptees` : les clés qui entrent dans le DÉCOMPTE, quand elles
+    diffèrent de celles qu'on vide. Un curseur d'intervalle porte toujours une
+    valeur — jamais vide, même à pleine amplitude — et se comptait donc comme
+    un filtre actif dès le second rendu : la zone annonçait « 1 » sur une page
+    qui ne filtrait rien. Le bouton doit pourtant le remettre à zéro. Les deux
+    listes sont donc séparées, et l'appelant seul sait si son intervalle est
+    réellement resserré.
     """
 
     actifs = sum(
-        1 for k in cles_session
+        1 for k in (cles_session if cles_comptees is None else cles_comptees)
         if st.session_state.get(k) not in (None, [], (), "")
     )
 

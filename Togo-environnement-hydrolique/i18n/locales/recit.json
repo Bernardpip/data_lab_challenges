@@ -1,0 +1,1274 @@
+{
+  "acte_0": {
+    "fr": "Acte 0 · Le constat",
+    "en": "Act 0 · The finding"
+  },
+  "acte_1": {
+    "fr": "Acte 1 · Où est l'eau ?",
+    "en": "Act 1 · Where is the water?"
+  },
+  "acte_2": {
+    "fr": "Acte 2 · Dans quel état ?",
+    "en": "Act 2 · In what condition?"
+  },
+  "acte_3": {
+    "fr": "Acte 3 · Pour combien d'habitants ?",
+    "en": "Act 3 · For how many people?"
+  },
+  "acte_4": {
+    "fr": "Acte 4 · Et quand l'eau monte ?",
+    "en": "Act 4 · And when the water rises?"
+  },
+  "acte_5": {
+    "fr": "Acte 5 · Que faire ?",
+    "en": "Act 5 · What now?"
+  },
+  "paradoxe_titre": {
+    "fr": "Le risque et l'équipement s'ignorent",
+    "en": "Risk and infrastructure ignore each other"
+  },
+  "paradoxe_texte_1": {
+    "fr": "<b>{exposes}</b> cantons sont classés élevé ou très élevé par le producteur de l'indice. Ils abritent <b>{population}</b> d'habitants. <b>{equipes}</b> d'entre eux portent un ouvrage recensé.",
+    "en": "<b>{exposes}</b> cantons are rated high or very high by the index producer. They are home to <b>{population}</b> people. <b>{equipes}</b> of them carry a recorded facility."
+  },
+  "paradoxe_texte_2": {
+    "fr": "Restent <b>{sans}</b> cantons exposés et dépourvus de tout ouvrage, soit {pop} d'habitants. Ce ne sont pas les moins peuplés du pays : ce sont ceux qu'aucun des deux programmes n'a atteints.",
+    "en": "That leaves <b>{sans}</b> cantons both exposed and without any facility — {pop} people. These are not the country's emptiest places: they are the ones neither programme reached."
+  },
+  "paradoxe_tuile_exposes": {
+    "fr": "Cantons exposés",
+    "en": "Exposed cantons"
+  },
+  "paradoxe_tuile_exposes_detail": {
+    "fr": "{part} % du maillage national",
+    "en": "{part} % of the national mesh"
+  },
+  "paradoxe_tuile_equipes": {
+    "fr": "Exposés et équipés",
+    "en": "Exposed and equipped"
+  },
+  "paradoxe_tuile_equipes_detail": {
+    "fr": "{part} % des cantons exposés",
+    "en": "{part} % of exposed cantons"
+  },
+  "paradoxe_tuile_prioritaires": {
+    "fr": "Exposés sans ouvrage",
+    "en": "Exposed, no facility"
+  },
+  "paradoxe_tuile_prioritaires_detail": {
+    "fr": "l'intersection des deux critères",
+    "en": "the intersection of both criteria"
+  },
+  "paradoxe_carte_titre": {
+    "fr": "Équipement par classe de risque",
+    "en": "Facilities by risk class"
+  },
+  "paradoxe_carte_sous_titre": {
+    "fr": "Cantons équipés et sans ouvrage, dans les classes officielles",
+    "en": "Equipped and unequipped cantons, in the official classes"
+  },
+  "paradoxe_note": {
+    "fr": "Les cantons les plus exposés sont équipés à <b>{part_haute} %</b>, les moins exposés à {part_basse} %. L'équipement ne suit pas le risque — il ne le contredit pas non plus : les deux sont simplement indépendants.",
+    "en": "The most exposed cantons are {part_haute} % equipped, the least exposed {part_basse} %. Infrastructure does not follow risk — nor does it contradict it: the two are simply independent."
+  },
+  "bivariee_00": {
+    "fr": "Risque modéré, équipé",
+    "en": "Moderate risk, equipped"
+  },
+  "bivariee_01": {
+    "fr": "Risque modéré, sans ouvrage",
+    "en": "Moderate risk, no facility"
+  },
+  "bivariee_10": {
+    "fr": "Risque élevé, équipé",
+    "en": "High risk, equipped"
+  },
+  "bivariee_11": {
+    "fr": "Risque élevé, sans ouvrage",
+    "en": "High risk, no facility"
+  },
+  "bivariee_carte_titre": {
+    "fr": "Le croisement, sur le territoire",
+    "en": "The crossing, mapped"
+  },
+  "bivariee_carte_sous_titre": {
+    "fr": "Quatre lectures : le risque officiel croisé à la présence d'un ouvrage",
+    "en": "Four readings: official risk crossed with the presence of a facility"
+  },
+  "bivariee_note": {
+    "fr": "<b>{critiques}</b> cantons cumulent un risque élevé et aucun ouvrage — {population} d'habitants. C'est cette teinte-là que la carte est faite pour montrer.",
+    "en": "<b>{critiques}</b> cantons combine high risk with no facility at all — {population} people. That shade is what this map exists to show."
+  },
+  "limites_titre": {
+    "fr": "Ce que le corpus ne dit pas",
+    "en": "What the corpus does not say"
+  },
+  "limites_texte_1": {
+    "fr": "Le dictionnaire du producteur décrit <b>{decrits}</b> champs pour l'inventaire des forages. Le fichier diffusé en publie <b>{publies}</b>. Les autres existent — ils sont décrits, nommés, typés — mais ils ne sont pas dans les données.",
+    "en": "The producer's data dictionary describes <b>{decrits}</b> fields for the borehole inventory. The published file carries <b>{publies}</b>. The rest exist — described, named, typed — but they are not in the data."
+  },
+  "limites_texte_2": {
+    "fr": "Cette page ouvre le dossier par ses limites, et non par ses résultats. Un tableau de bord qui les garderait pour la fin laisserait le lecteur bâtir une conviction sur des chiffres dont il ignore la portée.",
+    "en": "This page opens with the limits rather than the results. A dashboard that saved them for the end would let the reader build a conviction on figures whose reach they cannot judge."
+  },
+  "limites_tuile_champs": {
+    "fr": "Champs publiés",
+    "en": "Published fields"
+  },
+  "limites_tuile_champs_detail": {
+    "fr": "{part} % du dictionnaire",
+    "en": "{part} % of the dictionary"
+  },
+  "limites_tuile_etat": {
+    "fr": "État de fonctionnement",
+    "en": "Operating status"
+  },
+  "limites_tuile_etat_detail": {
+    "fr": "aucune colonne, dans aucun fichier",
+    "en": "no column, in any file"
+  },
+  "limites_tuile_sans": {
+    "fr": "Cantons sans ouvrage",
+    "en": "Cantons with no facility"
+  },
+  "limites_tuile_sans_detail": {
+    "fr": "absence de donnée ou absence d'ouvrage : indiscernables",
+    "en": "missing data or missing facility: indistinguishable"
+  },
+  "limites_carte_champs_titre": {
+    "fr": "Le dictionnaire face au fichier",
+    "en": "Dictionary versus file"
+  },
+  "limites_carte_champs_sous_titre": {
+    "fr": "Ce qui est décrit, ce qui est diffusé",
+    "en": "What is described, what is released"
+  },
+  "limites_note_champs": {
+    "fr": "<b>{absents}</b> champs décrits ne sont pas diffusés. Parmi eux, la profondeur, le débit et l'organisme gestionnaire — les trois qui auraient permis de parler d'état.",
+    "en": "<b>{absents}</b> described fields are not released. Among them depth, flow rate and operating body — the three that would have allowed a statement about condition."
+  },
+  "limites_carte_impossibles_titre": {
+    "fr": "Trois questions sans réponse",
+    "en": "Three unanswerable questions"
+  },
+  "limites_carte_impossibles_sous_titre": {
+    "fr": "Ce que l'énoncé demande et que les données ne portent pas",
+    "en": "What the brief asks and the data cannot carry"
+  },
+  "limites_impossible_1": {
+    "fr": "<b>Le taux de panne.</b> Aucun fichier ne porte l'état d'un ouvrage, ni une date de dernière intervention. Le calculer supposerait une donnée qui n'existe pas.",
+    "en": "<b>The breakdown rate.</b> No file carries a facility's condition, nor a date of last intervention. Computing it would require data that does not exist."
+  },
+  "limites_impossible_2": {
+    "fr": "<b>Le taux d'abandon.</b> Un ouvrage abandonné ne se distingue pas, dans ces fichiers, d'un ouvrage jamais recensé. Les deux se présentent comme une absence.",
+    "en": "<b>The abandonment rate.</b> In these files an abandoned facility cannot be told apart from one never recorded. Both appear as an absence."
+  },
+  "limites_impossible_3": {
+    "fr": "<b>La population réellement desservie.</b> Le corpus donne une population de canton datée de 2010 et des bénéficiaires déclarés par sous-projet. Aucun des deux ne dit qui puise où.",
+    "en": "<b>The population actually served.</b> The corpus gives a 2010 canton population and self-declared beneficiaries per sub-project. Neither says who draws water where."
+  },
+  "ou_titre": {
+    "fr": "Deux inventaires, deux moitiés de pays",
+    "en": "Two inventories, two halves of a country"
+  },
+  "ou_texte_1": {
+    "fr": "Le corpus réunit deux parcs qui ne se recouvrent pas : <b>{tde}</b> ouvrages de la Togolaise des Eaux, dont {part} % dans la seule région Maritime, et <b>{coso}</b> microprojets COSO, concentrés au Nord.",
+    "en": "The corpus brings together two non-overlapping stocks: <b>{tde}</b> facilities from the national water utility, {part} % of them in Maritime region alone, and <b>{coso}</b> COSO sub-projects, concentrated in the North."
+  },
+  "ou_texte_2": {
+    "fr": "Les additionner produirait un inventaire national qui n'existe pas. Ce sont deux programmes, deux périmètres, deux logiques — et entre les deux, un centre du pays que ni l'un ni l'autre n'a couvert.",
+    "en": "Adding them would produce a national inventory that does not exist. These are two programmes, two perimeters, two rationales — and between them a country centre neither has covered."
+  },
+  "ou_tuile_tde": {
+    "fr": "Ouvrages TdE",
+    "en": "TdE facilities"
+  },
+  "ou_tuile_tde_detail": {
+    "fr": "{regions} régions sur 5",
+    "en": "{regions} of 5 regions"
+  },
+  "ou_tuile_coso": {
+    "fr": "Microprojets COSO",
+    "en": "COSO sub-projects"
+  },
+  "ou_tuile_coso_detail": {
+    "fr": "{situes} portent des coordonnées",
+    "en": "{situes} carry coordinates"
+  },
+  "ou_tuile_sans": {
+    "fr": "Cantons sans ouvrage",
+    "en": "Cantons with no facility"
+  },
+  "ou_tuile_sans_detail": {
+    "fr": "{part} % du maillage",
+    "en": "{part} % of the mesh"
+  },
+  "ou_carte_regions_titre": {
+    "fr": "Les deux parcs, région par région",
+    "en": "Both stocks, region by region"
+  },
+  "ou_carte_regions_sous_titre": {
+    "fr": "Ouvrages recensés par inventaire",
+    "en": "Recorded facilities by inventory"
+  },
+  "ou_note_regions": {
+    "fr": "<b>{part_maritime} %</b> des {tde} ouvrages TdE sont en Maritime ; les {coso} microprojets COSO sont au Nord. Aucune région n'est servie par les deux à la fois.",
+    "en": "<b>{part_maritime} %</b> of the {tde} TdE facilities are in Maritime; the {coso} COSO sub-projects are in the North. No region is served by both."
+  },
+  "ou_carte_types_titre": {
+    "fr": "Ce que le COSO a construit",
+    "en": "What COSO built"
+  },
+  "ou_carte_types_sous_titre": {
+    "fr": "Microprojets par type d'ouvrage",
+    "en": "Sub-projects by facility type"
+  },
+  "ou_note_types": {
+    "fr": "{n} types distincts, dont trois partagent leurs trente-deux premiers caractères. Les libellés sont raccourcis sur ce qui les DISTINGUE — les tronquer aurait fondu trois séries en une.",
+    "en": "{n} distinct types, three of which share their first thirty-two characters. Labels are shortened on what tells them APART — truncating would have merged three series into one."
+  },
+  "ou_carte_etat_titre": {
+    "fr": "Nature et avancement",
+    "en": "Nature and progress"
+  },
+  "ou_carte_etat_sous_titre": {
+    "fr": "Ce que chaque inventaire dit de ses ouvrages",
+    "en": "What each inventory says about its facilities"
+  },
+  "ou_note_nature": {
+    "fr": "<b>{nsp}</b> des {total} ouvrages TdE ne portent aucune nature identifiée — la sentinelle « Nsp » du fichier d'origine. Elle est conservée : l'écarter laisserait croire à un parc entièrement identifié.",
+    "en": "<b>{nsp}</b> of the {total} TdE facilities carry no identified nature — the source file's 'Nsp' sentinel. It is kept: dropping it would suggest a fully identified stock."
+  },
+  "ou_note_avancement": {
+    "fr": "{n} états d'avancement distincts au COSO. C'est le seul suivi de cycle de vie du corpus, et il s'arrête à la réception : rien n'est écrit sur ce que devient l'ouvrage ensuite.",
+    "en": "{n} distinct progress states at COSO. It is the corpus's only life-cycle tracking, and it stops at acceptance: nothing is written about what happens next."
+  },
+  "col_nature": {
+    "fr": "Nature",
+    "en": "Nature"
+  },
+  "col_avancement": {
+    "fr": "Avancement",
+    "en": "Progress"
+  },
+  "entretien_tuile_avec": {
+    "fr": "Avec plan",
+    "en": "With a plan"
+  },
+  "entretien_tuile_avec_detail": {
+    "fr": "{part} % du parc COSO",
+    "en": "{part} % of the COSO stock"
+  },
+  "entretien_tuile_sans": {
+    "fr": "Sans plan",
+    "en": "Without a plan"
+  },
+  "entretien_tuile_sans_detail": {
+    "fr": "aucun entretien déclaré",
+    "en": "no declared upkeep"
+  },
+  "entretien_tuile_fonds": {
+    "fr": "Fonds d'entretien",
+    "en": "Maintenance funds"
+  },
+  "entretien_tuile_fonds_detail": {
+    "fr": "renseignés sur {total} ouvrages",
+    "en": "recorded across {total} facilities"
+  },
+  "investissement_carte_titre": {
+    "fr": "L'investissement par habitant",
+    "en": "Investment per inhabitant"
+  },
+  "investissement_carte_sous_titre": {
+    "fr": "Montants COSO décaissés, rapportés à la population du canton",
+    "en": "COSO amounts disbursed, over canton population"
+  },
+  "investissement_legende": {
+    "fr": "F CFA par habitant",
+    "en": "F CFA per inhabitant"
+  },
+  "investissement_note_carte": {
+    "fr": "{n} cantons dotés. Gini de <b>{gini}</b> sur la dotation par habitant, rapport interdécile de {rapport}. Les cantons blancs n'ont rien reçu — ils ne sont pas à zéro, ils sont hors du programme.",
+    "en": "{n} funded cantons. A Gini of <b>{gini}</b> on per-capita provision, interdecile ratio {rapport}. White cantons received nothing — they are not at zero, they are outside the programme."
+  },
+  "investissement_vide": {
+    "fr": "Aucun canton doté dans ce périmètre.",
+    "en": "No funded canton in this perimeter."
+  },
+  "col_par_habitant": {
+    "fr": "F CFA par habitant",
+    "en": "F CFA per inhabitant"
+  },
+  "densite_titre": {
+    "fr": "Un ouvrage pour combien d'habitants ?",
+    "en": "One facility for how many people?"
+  },
+  "densite_texte_1": {
+    "fr": "Le pays compte un ouvrage recensé pour <b>{national}</b> habitants. La moyenne ne veut rien dire : les {mieux} en comptent un pour {mieux_valeur}, les {pire} un pour <b>{pire_valeur}</b>.",
+    "en": "The country has one recorded facility per <b>{national}</b> inhabitants. The average means nothing: {mieux} has one per {mieux_valeur}, {pire} one per <b>{pire_valeur}</b>."
+  },
+  "densite_texte_2": {
+    "fr": "L'indice de Gini de la dotation par habitant vaut <b>{gini}</b> parmi les cantons dotés. Une répartition strictement proportionnelle à la population donnerait zéro.",
+    "en": "The Gini index of per-capita provision is <b>{gini}</b> among equipped cantons. A distribution strictly proportional to population would give zero."
+  },
+  "densite_carte_titre": {
+    "fr": "Habitants par ouvrage",
+    "en": "Inhabitants per facility"
+  },
+  "densite_carte_sous_titre": {
+    "fr": "Population régionale rapportée aux ouvrages recensés",
+    "en": "Regional population over recorded facilities"
+  },
+  "densite_note": {
+    "fr": "Un rapport de <b>1 à {rapport}</b> sépare la région la mieux dotée de la moins bien dotée. Ce n'est pas un écart de qualité de service : c'est un écart d'existence.",
+    "en": "A ratio of <b>1 to {rapport}</b> separates the best-served region from the least-served. This is not a gap in service quality: it is a gap in existence."
+  },
+  "densite_legende": {
+    "fr": "Ouvrages pour 10 000 habitants",
+    "en": "Facilities per 10,000 people"
+  },
+  "densite_carte_map_titre": {
+    "fr": "Densité d'ouvrages",
+    "en": "Facility density"
+  },
+  "densite_carte_map_sous_titre": {
+    "fr": "Ouvrages pour 10 000 habitants, canton par canton",
+    "en": "Facilities per 10,000 inhabitants, canton by canton"
+  },
+  "densite_note_carte": {
+    "fr": "<b>{sans}</b> cantons sur {total} sont à zéro. La classe la plus claire n'est pas « peu d'ouvrages » : c'est « aucun ».",
+    "en": "<b>{sans}</b> of {total} cantons are at zero. The lightest class does not mean 'few facilities': it means none."
+  },
+  "concentration_carte_titre": {
+    "fr": "Groupés ou étalés ?",
+    "en": "Clustered or spread?"
+  },
+  "concentration_carte_sous_titre": {
+    "fr": "Indice de Clark-Evans — 1 = semis aléatoire, < 1 = agrégé",
+    "en": "Clark-Evans index — 1 = random pattern, < 1 = clustered"
+  },
+  "concentration_note": {
+    "fr": "L'indice vaut <b>{r}</b> pour l'ensemble des ouvrages : la distance moyenne au plus proche voisin est de {observe} km là où un semis aléatoire de même densité en donnerait {attendu}. Les points ne sont pas répartis, ils sont posés en grappes.",
+    "en": "The index is <b>{r}</b> for all facilities: mean nearest-neighbour distance is {observe} km where a random pattern of the same density would give {attendu}. The points are not spread — they come in clusters."
+  },
+  "concentration_vide": {
+    "fr": "Trop peu d'ouvrages situés dans ce périmètre pour mesurer une concentration.",
+    "en": "Too few located facilities in this perimeter to measure clustering."
+  },
+  "inventaire_tde": {
+    "fr": "Ouvrages TdE",
+    "en": "TdE facilities"
+  },
+  "inventaire_coso": {
+    "fr": "Microprojets COSO",
+    "en": "COSO sub-projects"
+  },
+  "inventaire_ensemble": {
+    "fr": "Les deux réunis",
+    "en": "Both combined"
+  },
+  "deserts_titre": {
+    "fr": "La distance, et non plus le décompte",
+    "en": "Distance, no longer a headcount"
+  },
+  "deserts_texte_1": {
+    "fr": "Du milieu d'un canton, le point d'eau recensé le plus proche est à <b>{mediane} km</b> en médiane, et jusqu'à {max} km. <b>{loin}</b> cantons en sont à plus de {seuil} km.",
+    "en": "From the middle of a canton, the nearest recorded water point is <b>{mediane} km</b> away at the median, and up to {max} km. <b>{loin}</b> cantons are more than {seuil} km away."
+  },
+  "deserts_texte_2": {
+    "fr": "Rapporté aux habitants : <b>{part} %</b> de la population vit à moins d'un kilomètre d'un ouvrage recensé. Les {population} d'habitants des cantons les plus éloignés n'ont, eux, rien à moins d'une demi-journée de marche.",
+    "en": "In people terms: <b>{part} %</b> of the population lives within one kilometre of a recorded facility. The {population} people in the most distant cantons have nothing within half a day's walk."
+  },
+  "deserts_tuile_mediane": {
+    "fr": "Distance médiane",
+    "en": "Median distance"
+  },
+  "deserts_tuile_mediane_detail": {
+    "fr": "du milieu du canton au point d'eau le plus proche",
+    "en": "from canton centre to nearest water point"
+  },
+  "deserts_tuile_part": {
+    "fr": "Population éloignée",
+    "en": "Distant population"
+  },
+  "deserts_tuile_part_detail": {
+    "fr": "vit dans un canton à plus de {seuil} km",
+    "en": "lives in a canton more than {seuil} km away"
+  },
+  "deserts_tuile_rayon": {
+    "fr": "À moins d'un kilomètre",
+    "en": "Within one kilometre"
+  },
+  "deserts_tuile_rayon_detail": {
+    "fr": "part de la population, approximation aréale",
+    "en": "share of population, areal approximation"
+  },
+  "deserts_carte_rayons_titre": {
+    "fr": "Population dans le rayon de marche",
+    "en": "Population within walking radius"
+  },
+  "deserts_carte_rayons_sous_titre": {
+    "fr": "Part de la population couverte à 1, 2,5 et 5 km",
+    "en": "Share of population covered at 1, 2.5 and 5 km"
+  },
+  "deserts_rayon_libelle": {
+    "fr": "Moins de {km} km",
+    "en": "Under {km} km"
+  },
+  "deserts_note_rayons": {
+    "fr": "Approximation ASSUMÉE : faute de grille de population, la part d'un canton couverte par les rayons est prise pour la part de ses habitants. L'hypothèse suppose une densité uniforme — elle est fausse, et sous-estime probablement la couverture, les gens se groupant là où est l'eau.",
+    "en": "An ACKNOWLEDGED approximation: with no population grid available, the share of a canton's area covered is taken as the share of its people. That assumes uniform density — which is false, and probably understates coverage, since people gather where the water is."
+  },
+  "deserts_carte_liste_titre": {
+    "fr": "Les cantons les plus éloignés",
+    "en": "The most distant cantons"
+  },
+  "deserts_carte_liste_sous_titre": {
+    "fr": "Distance au point d'eau recensé le plus proche",
+    "en": "Distance to the nearest recorded water point"
+  },
+  "deserts_note_liste": {
+    "fr": "<b>{n}</b> cantons, soit {part} % du maillage, sont à plus de dix kilomètres de tout ouvrage recensé. La mesure ignore les limites administratives : le point le plus proche peut appartenir au canton voisin.",
+    "en": "<b>{n}</b> cantons — {part} % of the mesh — are more than ten kilometres from any recorded facility. The measure ignores administrative borders: the nearest point may belong to the neighbouring canton."
+  },
+  "deserts_legende": {
+    "fr": "Distance au point d'eau",
+    "en": "Distance to water point"
+  },
+  "deserts_carte_map_titre": {
+    "fr": "Les déserts hydrauliques",
+    "en": "Water deserts"
+  },
+  "deserts_carte_map_sous_titre": {
+    "fr": "Distance au point d'eau recensé le plus proche, en kilomètres",
+    "en": "Distance to the nearest recorded water point, in kilometres"
+  },
+  "deserts_note_carte": {
+    "fr": "Médiane nationale : <b>{mediane} km</b>. La carte ne montre pas où sont les ouvrages — elle montre ce qu'il faut parcourir pour en trouver un.",
+    "en": "National median: <b>{mediane} km</b>. This map does not show where facilities are — it shows how far you must go to reach one."
+  },
+  "rayons_carte_titre": {
+    "fr": "Ce que 285 points peuvent desservir",
+    "en": "What 285 points can serve"
+  },
+  "rayons_carte_sous_titre": {
+    "fr": "Tous les ouvrages situés, sur le pays entier",
+    "en": "Every located facility, across the whole country"
+  },
+  "rayons_note_carte": {
+    "fr": "<b>{un} %</b> de la population vit à moins d'un kilomètre de l'un de ces points, {cinq} % à moins de cinq. Le blanc de cette carte n'est pas un vide de données : c'est un vide d'ouvrages.",
+    "en": "<b>{un} %</b> of the population lives within one kilometre of one of these points, {cinq} % within five. The white on this map is not missing data: it is missing infrastructure."
+  },
+  "etat_avertissement_titre": {
+    "fr": "Objectif non calculable en l'état",
+    "en": "Objective not computable as things stand"
+  },
+  "etat_avertissement_texte": {
+    "fr": "L'énoncé demande les taux de fonctionnalité — pannes, abandons — par région. Aucun fichier du corpus ne porte l'état d'un ouvrage. Ce qui suit n'est pas cette mesure : ce sont les substituts les plus proches que les données autorisent, et ils sont nommés comme tels.",
+    "en": "The brief asks for functionality rates — breakdowns, abandonment — by region. No file in the corpus carries a facility's condition. What follows is not that measure: these are the closest proxies the data allows, and they are named as such."
+  },
+  "etat_avertissement_entretien": {
+    "fr": "Un plan de maintenance n'est pas un état de marche. Il dit qu'on a prévu d'entretenir l'ouvrage, non qu'il coule aujourd'hui.",
+    "en": "A maintenance plan is not an operating status. It says upkeep was planned, not that water flows today."
+  },
+  "etat_avertissement_fragilite": {
+    "fr": "Le débit ne dit pas quel forage est en panne. Il dit lequel a le moins de marge avant de l'être.",
+    "en": "Flow rate does not say which borehole is broken. It says which has the least margin before it is."
+  },
+  "etat_avertissement_service": {
+    "fr": "Un ouvrage réceptionné mais non remis n'est pas en panne : il n'a simplement jamais servi.",
+    "en": "A facility accepted but never handed over is not broken: it has simply never been used."
+  },
+  "angle_titre": {
+    "fr": "L'angle mort du corpus",
+    "en": "The corpus blind spot"
+  },
+  "angle_texte_1": {
+    "fr": "Le fichier des forages et châteaux d'eau publie <b>{colonnes} colonnes</b> : le rattachement administratif, un nom, l'organisme, une géométrie. Rien d'autre. Ni état, ni panne, ni date de mise en service, ni débit.",
+    "en": "The boreholes and water-tower file publishes <b>{colonnes} columns</b>: administrative attachment, a name, the operating body, a geometry. Nothing else. No condition, no breakdown, no commissioning date, no flow rate."
+  },
+  "angle_texte_2": {
+    "fr": "Le second inventaire, lui, documente abondamment sa propre exécution — dates de chantier, montants, bénéficiaires — mais s'arrête à la réception. Ce que devient l'ouvrage après n'est écrit nulle part.",
+    "en": "The second inventory documents its own delivery in abundance — works dates, amounts, beneficiaries — but stops at acceptance. What becomes of the facility afterwards is written nowhere."
+  },
+  "angle_tuile_etat": {
+    "fr": "Colonnes d'état",
+    "en": "Condition columns"
+  },
+  "angle_tuile_etat_detail": {
+    "fr": "sur les deux inventaires réunis",
+    "en": "across both inventories combined"
+  },
+  "angle_tuile_plan": {
+    "fr": "Plans de maintenance",
+    "en": "Maintenance plans"
+  },
+  "angle_tuile_plan_detail": {
+    "fr": "sur {total} microprojets",
+    "en": "of {total} sub-projects"
+  },
+  "angle_tuile_debit": {
+    "fr": "Débits renseignés",
+    "en": "Flow rates recorded"
+  },
+  "angle_tuile_debit_detail": {
+    "fr": "sur {total} microprojets",
+    "en": "of {total} sub-projects"
+  },
+  "angle_carte_titre": {
+    "fr": "Ce que le COSO renseigne vraiment",
+    "en": "What COSO actually records"
+  },
+  "angle_carte_sous_titre": {
+    "fr": "Part des lignes portant chaque champ",
+    "en": "Share of rows carrying each field"
+  },
+  "angle_note": {
+    "fr": "Le débit n'est connu que pour <b>{debit} %</b> des ouvrages. Un indicateur bâti dessus décrit ce tiers-là, jamais le parc — et doit le dire à chaque fois.",
+    "en": "Flow rate is known for only <b>{debit} %</b> of facilities. Any indicator built on it describes that third, never the stock — and must say so every time."
+  },
+  "angle_carte_substituts_titre": {
+    "fr": "Les trois substituts retenus",
+    "en": "The three proxies retained"
+  },
+  "angle_carte_substituts_sous_titre": {
+    "fr": "Ce qu'ils mesurent, et ce qu'ils ne mesurent pas",
+    "en": "What they measure, and what they do not"
+  },
+  "angle_substitut_1": {
+    "fr": "<b>Le plan de maintenance.</b> Mesure l'intention d'entretenir. Ne mesure ni l'entretien réalisé, ni l'état de l'ouvrage.",
+    "en": "<b>The maintenance plan.</b> Measures the intent to maintain. Measures neither maintenance done nor the facility's condition."
+  },
+  "angle_substitut_2": {
+    "fr": "<b>Le débit au forage.</b> Mesure la marge hydraulique le jour de l'essai. Un forage faible tombera plus tôt ; il n'est pas tombé pour autant.",
+    "en": "<b>Borehole flow rate.</b> Measures hydraulic margin on test day. A weak borehole fails sooner; that does not mean it has failed."
+  },
+  "angle_substitut_3": {
+    "fr": "<b>Le délai de remise.</b> Mesure le temps où l'ouvrage existe sans servir. C'est le seul des trois qui décrive un service, et non un équipement.",
+    "en": "<b>Handover delay.</b> Measures the time a facility exists without serving. It is the only one of the three describing a service rather than a piece of equipment."
+  },
+  "champ_situe": {
+    "fr": "Coordonnées",
+    "en": "Coordinates"
+  },
+  "champ_debit": {
+    "fr": "Débit",
+    "en": "Flow rate"
+  },
+  "champ_profondeur": {
+    "fr": "Profondeur",
+    "en": "Depth"
+  },
+  "champ_population_desservie": {
+    "fr": "Population desservie",
+    "en": "Population served"
+  },
+  "champ_cout_estime": {
+    "fr": "Coût estimé",
+    "en": "Estimated cost"
+  },
+  "champ_fonds_entretien": {
+    "fr": "Fonds d'entretien",
+    "en": "Maintenance fund"
+  },
+  "champ_plan_maintenance": {
+    "fr": "Plan de maintenance",
+    "en": "Maintenance plan"
+  },
+  "entretien_titre": {
+    "fr": "Qui a prévu d'entretenir ?",
+    "en": "Who planned for upkeep?"
+  },
+  "entretien_texte_1": {
+    "fr": "<b>{avec}</b> microprojets sur {total} portent un plan de maintenance, soit <b>{part} %</b>. C'est la seule variable d'entretien de tout le corpus.",
+    "en": "<b>{avec}</b> of {total} sub-projects carry a maintenance plan — <b>{part} %</b>. It is the corpus's only upkeep variable."
+  },
+  "entretien_texte_2": {
+    "fr": "L'écart entre régions est franc : {haut} à <b>{haut_part} %</b>, {bas} à <b>{bas_part} %</b>. Les effectifs régionaux sont très inégaux et la comparaison doit se lire avec eux — mais un écart de cette ampleur ne s'explique pas par le seul échantillon.",
+    "en": "The regional gap is stark: {haut} at <b>{haut_part} %</b>, {bas} at <b>{bas_part} %</b>. Regional counts are very uneven and the comparison must be read with them — but a gap this wide is not explained by sample size alone."
+  },
+  "entretien_carte_titre": {
+    "fr": "Plans de maintenance par région",
+    "en": "Maintenance plans by region"
+  },
+  "entretien_carte_sous_titre": {
+    "fr": "Ouvrages avec et sans plan",
+    "en": "Facilities with and without a plan"
+  },
+  "entretien_note": {
+    "fr": "<b>{sans}</b> ouvrages — {part} % du parc COSO — n'ont aucun plan d'entretien déclaré. Ce sont eux qui, faute de mesure d'état, constituent le meilleur signalement de risque à cinq ans.",
+    "en": "<b>{sans}</b> facilities — {part} % of the COSO stock — have no declared maintenance plan. Absent any condition measure, these are the best five-year risk signal available."
+  },
+  "entretien_vide": {
+    "fr": "Aucun microprojet dans ce périmètre.",
+    "en": "No sub-project in this perimeter."
+  },
+  "entretien_carte_map_titre": {
+    "fr": "Où manque l'entretien",
+    "en": "Where upkeep is missing"
+  },
+  "entretien_carte_map_sous_titre": {
+    "fr": "Microprojets avec et sans plan de maintenance",
+    "en": "Sub-projects with and without a maintenance plan"
+  },
+  "entretien_note_carte": {
+    "fr": "<b>{sans}</b> ouvrages situés sans plan déclaré, sur {total} dans le parc entier — les autres ne portent pas de coordonnées. La couleur ne dit pas s'ils fonctionnent : elle dit que personne n'a écrit qui les réparera.",
+    "en": "<b>{sans}</b> located facilities with no declared plan, out of {total} across the whole stock — the others carry no coordinates. The colour does not say whether they work: it says nobody wrote down who will repair them."
+  },
+  "legende_avec_plan": {
+    "fr": "Avec plan de maintenance",
+    "en": "With maintenance plan"
+  },
+  "legende_sans_plan": {
+    "fr": "Sans plan de maintenance",
+    "en": "No maintenance plan"
+  },
+  "fragilite_titre": {
+    "fr": "Qui tombera, faute de savoir qui est tombé",
+    "en": "Who will fail, absent knowing who has"
+  },
+  "fragilite_texte_1": {
+    "fr": "Le débit est mesuré sur <b>{renseignes}</b> forages sur {total}. Médiane : <b>{median} m³/h</b>. <b>{fragiles}</b> d'entre eux tirent moins de {seuil} m³/h — le seuil sous lequel une pompe solaire ne tient plus une communauté aux heures de pointe.",
+    "en": "Flow rate is measured on <b>{renseignes}</b> of {total} boreholes. Median: <b>{median} m³/h</b>. <b>{fragiles}</b> of them draw less than {seuil} m³/h — the threshold below which a solar pump can no longer carry a community at peak hours."
+  },
+  "fragilite_texte_2": {
+    "fr": "<b>{aberrants}</b> mesures sont physiquement impossibles — un débit de 8 500 m³/h, un forage de 9 239 mètres. Elles sont écartées du calcul et comptées ici : les retirer en silence laisserait croire à un fichier propre.",
+    "en": "<b>{aberrants}</b> measurements are physically impossible — a flow of 8,500 m³/h, a 9,239-metre borehole. They are excluded from the computation and counted here: dropping them silently would suggest a clean file."
+  },
+  "fragilite_tuile_median": {
+    "fr": "Débit médian",
+    "en": "Median flow rate"
+  },
+  "fragilite_tuile_median_detail": {
+    "fr": "sur {n} forages mesurés",
+    "en": "across {n} measured boreholes"
+  },
+  "fragilite_tuile_fragiles": {
+    "fr": "Forages fragiles",
+    "en": "Fragile boreholes"
+  },
+  "fragilite_tuile_fragiles_detail": {
+    "fr": "sous {seuil} m³/h",
+    "en": "under {seuil} m³/h"
+  },
+  "fragilite_tuile_couverture": {
+    "fr": "Débits connus",
+    "en": "Known flow rates"
+  },
+  "fragilite_tuile_couverture_detail": {
+    "fr": "part du parc COSO mesurée",
+    "en": "share of the COSO stock measured"
+  },
+  "fragilite_carte_regions_titre": {
+    "fr": "Fragilité par région",
+    "en": "Fragility by region"
+  },
+  "fragilite_carte_regions_sous_titre": {
+    "fr": "Part des forages sous le seuil de débit",
+    "en": "Share of boreholes below the flow threshold"
+  },
+  "fragilite_note_regions": {
+    "fr": "{region} affiche <b>{part} %</b> de forages fragiles — sur {n} mesures seulement. Le chiffre désigne un endroit où regarder, pas une conclusion régionale.",
+    "en": "{region} shows <b>{part} %</b> fragile boreholes — on {n} measurements only. The figure points to somewhere worth looking, not to a regional conclusion."
+  },
+  "fragilite_carte_nuage_titre": {
+    "fr": "Forer plus profond donne-t-il plus d'eau ?",
+    "en": "Does drilling deeper yield more water?"
+  },
+  "fragilite_carte_nuage_sous_titre": {
+    "fr": "Débit selon la profondeur, forages mesurés",
+    "en": "Flow rate against depth, measured boreholes"
+  },
+  "fragilite_note_nuage": {
+    "fr": "Sur {n} forages portant les deux mesures, la pente vaut {pente} m³/h par mètre foré, pour un R² de <b>{r2}</b>. La profondeur n'achète pas le débit : c'est la nappe atteinte qui décide, et le corpus ne la nomme pas.",
+    "en": "Across {n} boreholes carrying both measurements, the slope is {pente} m³/h per metre drilled, with an R² of <b>{r2}</b>. Depth does not buy flow: the aquifer reached decides, and the corpus does not name it."
+  },
+  "fragilite_nuage_vide": {
+    "fr": "Trop peu de forages portent à la fois profondeur et débit dans ce périmètre.",
+    "en": "Too few boreholes carry both depth and flow rate in this perimeter."
+  },
+  "fragilite_vide": {
+    "fr": "Aucun débit renseigné dans ce périmètre.",
+    "en": "No flow rate recorded in this perimeter."
+  },
+  "axe_profondeur": {
+    "fr": "Profondeur (m)",
+    "en": "Depth (m)"
+  },
+  "axe_debit": {
+    "fr": "Débit (m³/h)",
+    "en": "Flow rate (m³/h)"
+  },
+  "debit_carte_titre": {
+    "fr": "Le débit, sur le territoire",
+    "en": "Flow rate, mapped"
+  },
+  "debit_carte_sous_titre": {
+    "fr": "Aire du disque proportionnelle au débit mesuré",
+    "en": "Disc area proportional to measured flow"
+  },
+  "debit_note_carte": {
+    "fr": "{n} forages à la fois situés et mesurés — le débit est connu pour 79 ouvrages, mais tous ne portent pas de coordonnées. <b>{fragiles}</b> tirent moins de {seuil} m³/h. Les valeurs impossibles sont écartées : à l'échelle, un débit de 8 500 m³/h aurait couvert la moitié du pays.",
+    "en": "{n} boreholes both located and measured — flow is known for 79 facilities, but not all carry coordinates. <b>{fragiles}</b> draw less than {seuil} m³/h. Impossible values are excluded: at scale, a flow of 8,500 m³/h would have covered half the country."
+  },
+  "service_titre": {
+    "fr": "Construit, payé, et jamais remis",
+    "en": "Built, paid for, never handed over"
+  },
+  "service_texte_1": {
+    "fr": "<b>{receptionnes}</b> ouvrages ont une date de réception technique, <b>{remis}</b> une date de remise à la communauté. <b>{attente}</b> ont été réceptionnés sans jamais être remis.",
+    "en": "<b>{receptionnes}</b> facilities have a technical acceptance date, <b>{remis}</b> a community handover date. <b>{attente}</b> were accepted and never handed over."
+  },
+  "service_texte_2": {
+    "fr": "Quand les deux dates existent, il s'écoule <b>{delai} jours</b> entre elles en médiane, sur {mesures} ouvrages. À l'inverse, {sans} remises sont datées sans réception correspondante : le suivi n'est pas tenu de bout en bout.",
+    "en": "Where both dates exist, the median gap is <b>{delai} days</b>, across {mesures} facilities. Conversely, {sans} handovers are dated with no matching acceptance: the tracking is not kept end to end."
+  },
+  "service_tuile_attente": {
+    "fr": "Reçus, non remis",
+    "en": "Accepted, not handed over"
+  },
+  "service_tuile_attente_detail": {
+    "fr": "sur {receptionnes} réceptions techniques",
+    "en": "of {receptionnes} technical acceptances"
+  },
+  "service_tuile_delai": {
+    "fr": "Délai médian de remise",
+    "en": "Median handover delay"
+  },
+  "service_tuile_delai_detail": {
+    "fr": "soit environ {mois} mois",
+    "en": "about {mois} months"
+  },
+  "service_tuile_sans": {
+    "fr": "Remises sans réception",
+    "en": "Handovers without acceptance"
+  },
+  "service_tuile_sans_detail": {
+    "fr": "défaut de saisie, non de chantier",
+    "en": "a data-entry gap, not a works gap"
+  },
+  "service_carte_titre": {
+    "fr": "Remises et attentes, par région",
+    "en": "Handovers and waits, by region"
+  },
+  "service_carte_sous_titre": {
+    "fr": "Ouvrages remis à la communauté et ouvrages en attente",
+    "en": "Facilities handed over and facilities waiting"
+  },
+  "service_note": {
+    "fr": "<b>{attente}</b> ouvrages attendent leur remise. Un délai médian de {delai} jours n'est pas un retard administratif : c'est plus d'une année pendant laquelle l'ouvrage figure dans les inventaires sans desservir personne.",
+    "en": "<b>{attente}</b> facilities await handover. A median of {delai} days is not administrative slack: it is more than a year during which the facility appears in inventories while serving nobody."
+  },
+  "service_carte_map_titre": {
+    "fr": "Où attendent les ouvrages",
+    "en": "Where facilities wait"
+  },
+  "service_carte_map_sous_titre": {
+    "fr": "Remis à la communauté, ou en attente de remise",
+    "en": "Handed over to the community, or awaiting handover"
+  },
+  "service_note_carte": {
+    "fr": "<b>{attente}</b> ouvrages situés sans date de remise, sur {total} dans le parc entier. Ils existent, ils sont payés, ils sont sur cette carte — et personne n'y puise.",
+    "en": "<b>{attente}</b> located facilities with no handover date, out of {total} across the whole stock. They exist, they are paid for, they are on this map — and nobody draws from them."
+  },
+  "legende_remis": {
+    "fr": "Remis à la communauté",
+    "en": "Handed over"
+  },
+  "legende_en_attente": {
+    "fr": "En attente de remise",
+    "en": "Awaiting handover"
+  },
+  "rattrapage_titre": {
+    "fr": "Combien d'ouvrages manquent ?",
+    "en": "How many facilities are missing?"
+  },
+  "rattrapage_texte_1": {
+    "fr": "Aligner chaque région sur la dotation MÉDIANE du pays — un ouvrage pour <b>{etalon}</b> habitants — demanderait <b>{manquants}</b> ouvrages supplémentaires. L'étalon n'est pas la meilleure région : c'est le niveau que la moitié du pays atteint déjà.",
+    "en": "Bringing every region to the country's MEDIAN provision — one facility per <b>{etalon}</b> people — would require <b>{manquants}</b> additional facilities. The benchmark is not the best region: it is the level half the country already meets."
+  },
+  "rattrapage_texte_2": {
+    "fr": "L'essentiel tient dans une seule région : {region} en concentre <b>{n}</b>. Ce n'est pas un besoin technique — un forage dessert un village, pas un quotient — c'est une inégalité, ramenée à l'unité dans laquelle on budgète.",
+    "en": "Most of it sits in a single region: {region} accounts for <b>{n}</b>. This is not a technical need — a borehole serves a village, not a ratio — it is an inequality, expressed in the unit budgets are written in."
+  },
+  "rattrapage_tuile_manquants": {
+    "fr": "Ouvrages manquants",
+    "en": "Missing facilities"
+  },
+  "rattrapage_tuile_manquants_detail": {
+    "fr": "pour un ouvrage par {etalon} habitants",
+    "en": "for one facility per {etalon} people"
+  },
+  "rattrapage_tuile_etalon": {
+    "fr": "Étalon retenu",
+    "en": "Benchmark used"
+  },
+  "rattrapage_tuile_etalon_detail": {
+    "fr": "médiane des dotations régionales",
+    "en": "median of regional provisions"
+  },
+  "rattrapage_tuile_regions": {
+    "fr": "Régions en déficit",
+    "en": "Regions in deficit"
+  },
+  "rattrapage_tuile_regions_detail": {
+    "fr": "sur {total} régions",
+    "en": "of {total} regions"
+  },
+  "rattrapage_carte_titre": {
+    "fr": "Le déficit, région par région",
+    "en": "The deficit, region by region"
+  },
+  "rattrapage_carte_sous_titre": {
+    "fr": "Ouvrages nécessaires pour atteindre l'étalon",
+    "en": "Facilities needed to reach the benchmark"
+  },
+  "rattrapage_note": {
+    "fr": "<b>{manquants}</b> ouvrages séparent le pays d'une dotation uniforme à {etalon} habitants par ouvrage. Le chiffre est petit parce que l'étalon est modeste — c'est justement ce qui le rend opposable.",
+    "en": "<b>{manquants}</b> facilities stand between the country and uniform provision at {etalon} people per facility. The figure is small because the benchmark is modest — which is precisely what makes it hard to dismiss."
+  },
+  "rattrapage_carte_map_titre": {
+    "fr": "Le déficit sur le territoire",
+    "en": "The deficit, mapped"
+  },
+  "rattrapage_carte_map_sous_titre": {
+    "fr": "Ouvrages manquants, valeur régionale",
+    "en": "Missing facilities, regional value"
+  },
+  "rattrapage_note_carte": {
+    "fr": "<b>{manquants}</b> ouvrages manquants au total, pour un étalon de {etalon} habitants par ouvrage. La teinte est RÉGIONALE : elle ne dit rien du canton qu'elle recouvre.",
+    "en": "<b>{manquants}</b> facilities missing in total, against a benchmark of {etalon} people per facility. The shading is REGIONAL: it says nothing about the canton it covers."
+  },
+  "fri_titre": {
+    "fr": "Ce que le FRI classe vraiment",
+    "en": "What the FRI actually ranks"
+  },
+  "fri_texte_1": {
+    "fr": "L'indice officiel corrèle plus fort avec la population (ρ = <b>{exposition}</b>) qu'avec l'aléa physique (ρ = {alea}). L'objection s'écrit d'elle-même : cet indice classerait des habitants sous un nom d'inondation.",
+    "en": "The official index correlates more strongly with population (ρ = <b>{exposition}</b>) than with physical hazard (ρ = {alea}). The objection writes itself: this index would be ranking people under a flood label."
+  },
+  "fri_texte_2": {
+    "fr": "Nous l'avons mise à l'épreuve en retirant la composante de population et en recalculant le classement sur les <b>{n}</b> cantons où la formule est reproductible. Les cantons se déplacent de <b>{deplacement} places</b> en médiane, et {renouvellement} des {sommet} premiers changent.",
+    "en": "We tested it by removing the population component and recomputing the ranking on the <b>{n}</b> cantons where the formula is reproducible. Cantons move by <b>{deplacement} places</b> at the median, and {renouvellement} of the top {sommet} change."
+  },
+  "fri_texte_3": {
+    "fr": "L'objection ne tient donc pas : le classement amputé reste corrélé à <b>{rho}</b> avec l'indice publié. Nous le publions parce qu'il DÉMENT l'intuition — une analyse qui ne garderait que ses confirmations ne prouverait rien. Au passage, la formule du producteur est reproduite à {complet} : c'est bien une moyenne géométrique.",
+    "en": "The objection therefore does not hold: the amputated ranking still correlates at <b>{rho}</b> with the published index. We publish this because it CONTRADICTS the intuition — an analysis keeping only its confirmations proves nothing. Incidentally, the producer's formula is reproduced at {complet}: it is indeed a geometric mean."
+  },
+  "fri_tuile_exposition": {
+    "fr": "ρ avec la population",
+    "en": "ρ with population"
+  },
+  "fri_tuile_exposition_detail": {
+    "fr": "corrélation de rang, 388 cantons",
+    "en": "rank correlation, 388 cantons"
+  },
+  "fri_tuile_deplacement": {
+    "fr": "Déplacement médian",
+    "en": "Median shift"
+  },
+  "fri_tuile_deplacement_detail": {
+    "fr": "sans la composante population, {n} cantons",
+    "en": "without the population component, {n} cantons"
+  },
+  "fri_tuile_reconstitution": {
+    "fr": "Formule reproduite",
+    "en": "Formula reproduced"
+  },
+  "fri_tuile_reconstitution_detail": {
+    "fr": "ρ entre indice publié et moyenne géométrique",
+    "en": "ρ between published index and geometric mean"
+  },
+  "fri_carte_correlations_titre": {
+    "fr": "Les trois dimensions de l'indice",
+    "en": "The index's three dimensions"
+  },
+  "fri_carte_correlations_sous_titre": {
+    "fr": "Corrélation de rang entre le FRI et chacune",
+    "en": "Rank correlation between the FRI and each"
+  },
+  "fri_note_correlations": {
+    "fr": "L'exposition (ρ = <b>{exposition}</b>) devance l'aléa (ρ = {alea}). Les deux politiques que cela appelle diffèrent : protéger des personnes, ou aménager un bassin.",
+    "en": "Exposure (ρ = <b>{exposition}</b>) leads hazard (ρ = {alea}). The policies these call for differ: protecting people, or managing a basin."
+  },
+  "dimension_alea": {
+    "fr": "Aléa physique",
+    "en": "Physical hazard"
+  },
+  "dimension_exposition": {
+    "fr": "Exposition (population)",
+    "en": "Exposure (population)"
+  },
+  "dimension_vulnerabilite": {
+    "fr": "Vulnérabilité (richesse)",
+    "en": "Vulnerability (wealth)"
+  },
+  "fri_carte_epreuve_titre": {
+    "fr": "L'épreuve : le classement sans la population",
+    "en": "The test: ranking without population"
+  },
+  "fri_carte_epreuve_sous_titre": {
+    "fr": "Rang publié et rang recalculé, cantons reproductibles",
+    "en": "Published rank and recomputed rank, reproducible cantons"
+  },
+  "fri_rang_publie": {
+    "fr": "Rang publié",
+    "en": "Published rank"
+  },
+  "fri_rang_ampute": {
+    "fr": "Rang sans population",
+    "en": "Rank without population"
+  },
+  "fri_note_epreuve": {
+    "fr": "Déplacement médian de <b>{deplacement} places</b>, maximum {max}. Le faisceau reste presque parallèle : retirer la composante ne redessine pas le classement.",
+    "en": "Median shift of <b>{deplacement} places</b>, maximum {max}. The lines stay near-parallel: removing the component does not redraw the ranking."
+  },
+  "fri_epreuve_vide": {
+    "fr": "Aucun canton de ce périmètre ne porte des composantes toutes non nulles : la formule n'y est pas reproductible.",
+    "en": "No canton in this perimeter has all components non-zero: the formula cannot be reproduced here."
+  },
+  "fri_legende_rang": {
+    "fr": "Rang sans la population",
+    "en": "Rank without population"
+  },
+  "fri_carte_map_titre": {
+    "fr": "Le FRI sans la population",
+    "en": "The FRI without population"
+  },
+  "fri_carte_map_sous_titre": {
+    "fr": "Classement recalculé, cantons aux composantes complètes",
+    "en": "Recomputed ranking, cantons with complete components"
+  },
+  "fri_note_carte": {
+    "fr": "<b>{n}</b> cantons sur {total} apparaissent : les autres portent un zéro sur au moins une composante, et un zéro annule une moyenne géométrique. Les peindre à zéro aurait inventé une donnée.",
+    "en": "<b>{n}</b> of {total} cantons appear: the rest carry a zero on at least one component, and a zero annuls a geometric mean. Painting them at zero would have invented data."
+  },
+  "facture_titre": {
+    "fr": "Ce que coûterait le rattrapage",
+    "en": "What catching up would cost"
+  },
+  "facture_texte_1": {
+    "fr": "<b>{ouvrages}</b> ouvrages au prix médian réellement payé — <b>{unitaire} F CFA</b> l'unité — font <b>{total} F CFA</b>. Ce n'est pas un devis : c'est une dépense constatée, multipliée par un déficit mesuré.",
+    "en": "<b>{ouvrages}</b> facilities at the median price actually paid — <b>{unitaire} F CFA</b> apiece — comes to <b>{total} F CFA</b>. This is not a quote: it is observed spending multiplied by a measured deficit."
+  },
+  "facture_texte_2": {
+    "fr": "Et le lieu compte plus que la somme. L'élasticité du coût au nombre de bénéficiaires vaut <b>{coefficient}</b>, pour un R² de {r2} sur {n} ouvrages : un forage coûte le même prix qu'il serve trois cents personnes ou mille huit cents. Choisir où le poser est donc la seule marge de manœuvre GRATUITE du dossier.",
+    "en": "And place matters more than the sum. The elasticity of cost to beneficiary count is <b>{coefficient}</b>, with an R² of {r2} across {n} facilities: a borehole costs the same whether it serves three hundred people or eighteen hundred. Choosing where to sink it is therefore the only FREE lever in this file."
+  },
+  "facture_tuile_total": {
+    "fr": "Coût du rattrapage",
+    "en": "Cost of catching up"
+  },
+  "facture_tuile_total_detail": {
+    "fr": "{ouvrages} ouvrages au prix médian constaté",
+    "en": "{ouvrages} facilities at the observed median price"
+  },
+  "facture_tuile_unitaire": {
+    "fr": "Prix médian d'un ouvrage",
+    "en": "Median facility price"
+  },
+  "facture_tuile_unitaire_detail": {
+    "fr": "montants payés, {n} observations",
+    "en": "amounts paid, {n} observations"
+  },
+  "facture_tuile_r2": {
+    "fr": "R² coût / bénéficiaires",
+    "en": "R² cost / beneficiaries"
+  },
+  "facture_tuile_r2_detail": {
+    "fr": "le coût ne dépend pas de qui il sert",
+    "en": "cost does not depend on who it serves"
+  },
+  "facture_carte_titre": {
+    "fr": "La facture, région par région",
+    "en": "The bill, region by region"
+  },
+  "facture_carte_sous_titre": {
+    "fr": "Déficit multiplié par le prix médian constaté",
+    "en": "Deficit multiplied by the observed median price"
+  },
+  "facture_note": {
+    "fr": "<b>{total} F CFA</b> au total, à {unitaire} l'ouvrage. Aucune économie d'échelle n'est supposée, aucun surcoût d'accès non plus : le prochain ouvrage est compté au prix du précédent.",
+    "en": "<b>{total} F CFA</b> in total, at {unitaire} per facility. No economies of scale are assumed, and no access premium either: the next facility is priced at the last one's cost."
+  },
+  "facture_carte_profil_titre": {
+    "fr": "Le coût par bénéficiaire, par quintile",
+    "en": "Cost per beneficiary, by quintile"
+  },
+  "facture_carte_profil_sous_titre": {
+    "fr": "Ouvrages classés par nombre de bénéficiaires",
+    "en": "Facilities ranked by beneficiary count"
+  },
+  "facture_note_profil": {
+    "fr": "Du quintile le moins peuplé au plus peuplé, le coût par bénéficiaire passe de <b>{haut} F</b> à <b>{bas} F</b>. À dépense identique, le même forage sert jusqu'à six fois plus de monde selon l'endroit — et rien dans les données ne suggère que le choix ait été fait sur ce critère.",
+    "en": "From the least to the most populated quintile, cost per beneficiary falls from <b>{haut} F</b> to <b>{bas} F</b>. For identical spending, the same borehole serves up to six times more people depending on where it goes — and nothing in the data suggests siting followed that criterion."
+  },
+  "facture_carte_map_titre": {
+    "fr": "La facture sur le territoire",
+    "en": "The bill, mapped"
+  },
+  "facture_carte_map_sous_titre": {
+    "fr": "Coût du rattrapage, valeur régionale",
+    "en": "Cost of catching up, regional value"
+  },
+  "facture_note_carte": {
+    "fr": "<b>{total} F CFA</b> pour {ouvrages} ouvrages. La teinte est RÉGIONALE : elle ne désigne aucun canton en particulier, et la liste des priorités reste le seul document opérationnel.",
+    "en": "<b>{total} F CFA</b> for {ouvrages} facilities. The shading is REGIONAL: it points to no particular canton, and the priority list remains the only operational document."
+  },
+  "col_avec_plan": {
+    "fr": "Avec plan",
+    "en": "With plan"
+  },
+  "col_beneficiaires": {
+    "fr": "Bénéficiaires médians",
+    "en": "Median beneficiaries"
+  },
+  "col_canton": {
+    "fr": "Canton",
+    "en": "Canton"
+  },
+  "col_cantons": {
+    "fr": "Cantons",
+    "en": "Cantons"
+  },
+  "col_champ": {
+    "fr": "Champ",
+    "en": "Field"
+  },
+  "col_classe": {
+    "fr": "Classe",
+    "en": "Class"
+  },
+  "col_cout": {
+    "fr": "Coût (F CFA)",
+    "en": "Cost (F CFA)"
+  },
+  "col_cout_beneficiaire": {
+    "fr": "Coût par bénéficiaire",
+    "en": "Cost per beneficiary"
+  },
+  "col_debit_median": {
+    "fr": "Débit médian",
+    "en": "Median flow"
+  },
+  "col_deplacement": {
+    "fr": "Déplacement",
+    "en": "Shift"
+  },
+  "col_dimension": {
+    "fr": "Dimension",
+    "en": "Dimension"
+  },
+  "col_distance": {
+    "fr": "Distance (km)",
+    "en": "Distance (km)"
+  },
+  "col_en_attente": {
+    "fr": "En attente",
+    "en": "Waiting"
+  },
+  "col_equipes": {
+    "fr": "Équipés",
+    "en": "Equipped"
+  },
+  "col_forages": {
+    "fr": "Forages mesurés",
+    "en": "Measured boreholes"
+  },
+  "col_fragiles": {
+    "fr": "Fragiles",
+    "en": "Fragile"
+  },
+  "col_habitants_ouvrage": {
+    "fr": "Habitants par ouvrage",
+    "en": "People per facility"
+  },
+  "col_inventaire": {
+    "fr": "Inventaire",
+    "en": "Inventory"
+  },
+  "col_lecture": {
+    "fr": "Lecture croisée",
+    "en": "Cross reading"
+  },
+  "col_manquants": {
+    "fr": "Manquants",
+    "en": "Missing"
+  },
+  "col_ouvrages": {
+    "fr": "Ouvrages",
+    "en": "Facilities"
+  },
+  "col_p": {
+    "fr": "p",
+    "en": "p"
+  },
+  "col_part": {
+    "fr": "Part (%)",
+    "en": "Share (%)"
+  },
+  "col_part_couverte": {
+    "fr": "Cantons couverts (%)",
+    "en": "Cantons covered (%)"
+  },
+  "col_part_fragiles": {
+    "fr": "Fragiles (%)",
+    "en": "Fragile (%)"
+  },
+  "col_population": {
+    "fr": "Population",
+    "en": "Population"
+  },
+  "col_prefecture": {
+    "fr": "Préfecture",
+    "en": "Prefecture"
+  },
+  "col_quintile": {
+    "fr": "Quintile",
+    "en": "Quintile"
+  },
+  "col_rang_ampute": {
+    "fr": "Rang sans population",
+    "en": "Rank without population"
+  },
+  "col_rang_publie": {
+    "fr": "Rang publié",
+    "en": "Published rank"
+  },
+  "col_rayon": {
+    "fr": "Rayon (km)",
+    "en": "Radius (km)"
+  },
+  "col_receptionnes": {
+    "fr": "Réceptionnés",
+    "en": "Accepted"
+  },
+  "col_region": {
+    "fr": "Région",
+    "en": "Region"
+  },
+  "col_remis": {
+    "fr": "Remis",
+    "en": "Handed over"
+  },
+  "col_renseignes": {
+    "fr": "Renseignés",
+    "en": "Recorded"
+  },
+  "col_requis": {
+    "fr": "Ouvrages requis",
+    "en": "Facilities required"
+  },
+  "col_rho": {
+    "fr": "ρ (Spearman)",
+    "en": "ρ (Spearman)"
+  },
+  "col_risque": {
+    "fr": "Risque (pts)",
+    "en": "Risk (pts)"
+  },
+  "col_sans_ouvrage": {
+    "fr": "Sans ouvrage",
+    "en": "No facility"
+  },
+  "col_sans_plan": {
+    "fr": "Sans plan",
+    "en": "No plan"
+  },
+  "col_type": {
+    "fr": "Type d'ouvrage",
+    "en": "Facility type"
+  },
+  "col_voisin_attendu": {
+    "fr": "Voisin attendu (km)",
+    "en": "Expected neighbour (km)"
+  },
+  "col_voisin_observe": {
+    "fr": "Voisin observé (km)",
+    "en": "Observed neighbour (km)"
+  },
+  "champs_publies": {
+    "fr": "Champs publiés",
+    "en": "Published fields"
+  },
+  "champs_absents": {
+    "fr": "Champs absents",
+    "en": "Missing fields"
+  },
+  "classe_off_tres_faible": {
+    "fr": "Très faible",
+    "en": "Very low"
+  },
+  "classe_off_faible": {
+    "fr": "Faible",
+    "en": "Low"
+  },
+  "classe_off_moyen": {
+    "fr": "Moyen",
+    "en": "Medium"
+  },
+  "classe_off_eleve": {
+    "fr": "Élevé",
+    "en": "High"
+  },
+  "classe_off_tres_eleve": {
+    "fr": "Très élevé",
+    "en": "Very high"
+  },
+  "mini_tde": {
+    "fr": "Ouvrages TdE",
+    "en": "TdE facilities"
+  },
+  "mini_coso": {
+    "fr": "Microprojets COSO",
+    "en": "COSO sub-projects"
+  },
+  "type_boisson": {
+    "fr": "Eau de boisson, communautés",
+    "en": "Drinking water, communities"
+  },
+  "type_maraichage": {
+    "fr": "Maraîchage",
+    "en": "Market gardening"
+  },
+  "type_ecoles": {
+    "fr": "Établissements scolaires",
+    "en": "Schools"
+  },
+  "type_centre": {
+    "fr": "Centres communautaires",
+    "en": "Community centres"
+  },
+  "type_marches": {
+    "fr": "Marchés",
+    "en": "Markets"
+  },
+  "type_salle": {
+    "fr": "Salles de réunion",
+    "en": "Meeting halls"
+  },
+  "type_autre": {
+    "fr": "Autres",
+    "en": "Other"
+  },
+  "unite_cantons": {
+    "fr": "cantons",
+    "en": "cantons"
+  },
+  "unite_fcfa": {
+    "fr": "F CFA",
+    "en": "F CFA"
+  },
+  "unite_habitants": {
+    "fr": "habitants",
+    "en": "inhabitants"
+  },
+  "unite_ouvrages": {
+    "fr": "ouvrages",
+    "en": "facilities"
+  },
+  "unite_places": {
+    "fr": " places",
+    "en": " places"
+  }
+}

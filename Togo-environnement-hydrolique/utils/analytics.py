@@ -674,6 +674,284 @@ def reconstitution_fri(cantons):
     return pd.DataFrame(formes)
 
 
+def _par_region(cadre, **agregats):
+    """Agrégation régionale triée, sans jamais perdre une région à zéro."""
+
+    return (
+        cadre.groupby("region", dropna=False)
+        .agg(**agregats)
+        .reset_index()
+    )
+
+
+def plan_de_maintenance(coso):
+    """Part des ouvrages COSO dotés d'un plan de maintenance, par région.
+
+    **C'est la seule mesure d'entretien de tout le corpus.** Le fichier TdE ne
+    porte ni état, ni panne, ni date de mise en service ; le COSO porte ce
+    booléen. L'objectif « analyser les taux de fonctionnalité » n'est donc pas
+    calculable, et ce qui suit n'en est pas la mesure mais le SUBSTITUT le plus
+    proche : non pas « l'ouvrage fonctionne-t-il », mais « a-t-on prévu de le
+    faire fonctionner ».
+
+    La distinction n'est pas une prudence de forme. Un ouvrage sans plan de
+    maintenance peut très bien couler aujourd'hui ; un ouvrage avec plan peut
+    être à l'arrêt. Le premier a seulement une probabilité plus forte de le
+    rester dans cinq ans, et c'est tout ce que ces données autorisent à dire.
+    """
+
+    agrege = _par_region(
+        coso,
+        ouvrages=("id", "size"),
+        avec_plan=("plan_maintenance", "sum"),
+    )
+    agrege["avec_plan"] = agrege["avec_plan"].astype(int)
+    agrege["sans_plan"] = agrege["ouvrages"] - agrege["avec_plan"]
+    agrege["part"] = 100 * agrege["avec_plan"] / agrege["ouvrages"]
+
+    return agrege.sort_values("part", ascending=False).reset_index(drop=True)
+
+
+# Débit sous lequel un forage est réputé FRAGILE, en m³/h. C'est le premier
+# quartile observé (3,0), et c'est aussi l'ordre de grandeur en dessous duquel
+# un forage à pompe solaire ne tient plus une communauté entière aux heures de
+# pointe. Les deux lectures se rejoignant, le seuil ne dépend pas du choix.
+SEUIL_DEBIT = 3.0
+
+# Bornes de plausibilité PHYSIQUE. Le forage d'eau le plus profond du monde
+# n'atteint pas 3 000 m ; un forage villageois ouest-africain dépasse rarement
+# 150 m. Un débit de 8 500 m³/h serait celui d'un fleuve, non d'un forage.
+# Ces bornes ne « nettoient » pas les données : elles NOMMENT ce qui ne peut
+# pas être vrai, et le comptage de ce qui est écarté fait partie du résultat.
+PROFONDEUR_MAXIMALE = 300.0
+DEBIT_MAXIMAL = 100.0
+
+
+def fragilite_debit(coso):
+    """Distribution du débit des forages, et ce qui n'y est pas croyable.
+
+    Faute d'un état de fonctionnement, le débit est le meilleur prédicteur de
+    panne que le corpus offre : un forage faible s'assèche en saison sèche, se
+    fait surexploiter, et tombe. Il ne dit pas qui est en panne — il dit qui le
+    sera.
+
+    Les valeurs aberrantes sont écartées du calcul ET comptées. Les laisser
+    porterait la moyenne à 132 m³/h pour une médiane de 5 ; les retirer en
+    silence laisserait croire à un fichier propre alors que deux lignes y
+    portent 8 500 m³/h et 9 239 m de profondeur.
+    """
+
+    mesures = coso[["localite", "canton", "region", "type_ouvrage",
+                    "profondeur", "debit"]]
+
+    debits = mesures.dropna(subset=["debit"])
+    aberrants = debits[debits["debit"] > DEBIT_MAXIMAL]
+    retenus = debits[debits["debit"] <= DEBIT_MAXIMAL]
+
+    profondeurs = mesures.dropna(subset=["profondeur"])
+    profondeurs_aberrantes = profondeurs[
+        profondeurs["profondeur"] > PROFONDEUR_MAXIMALE
+    ]
+
+    par_region = _par_region(
+        retenus,
+        forages=("debit", "size"),
+        debit_median=("debit", "median"),
+        fragiles=("debit", lambda serie: int((serie < SEUIL_DEBIT).sum())),
+    )
+    par_region["part_fragiles"] = (
+        100 * par_region["fragiles"] / par_region["forages"]
+    )
+
+    return {
+        "mesures": retenus.reset_index(drop=True),
+        "regions": par_region.sort_values("part_fragiles", ascending=False)
+                             .reset_index(drop=True),
+        "renseignes": int(len(debits)),
+        "total": int(len(coso)),
+        "fragiles": int((retenus["debit"] < SEUIL_DEBIT).sum()),
+        "median": float(retenus["debit"].median()) if len(retenus) else 0.0,
+        "aberrants": int(len(aberrants)),
+        "profondeurs_aberrantes": int(len(profondeurs_aberrantes)),
+        "seuil": SEUIL_DEBIT,
+    }
+
+
+def relation_profondeur_debit(coso):
+    """Forer plus profond donne-t-il plus d'eau ? — la droite, et sa portée.
+
+    La droite est ajustée ICI et non dans la vue : `scatter_fit` la trace, il
+    ne l'estime pas, et une vue qui la calculerait rendrait sa pente
+    invérifiable par le rapport.
+
+    Les valeurs physiquement impossibles sont écartées avant l'ajustement. Un
+    forage de 9 239 m entraînerait la droite à lui seul, et la relation
+    affichée décrirait alors une faute de frappe.
+    """
+
+    cadre = coso[["localite", "canton", "region", "profondeur", "debit"]].dropna(
+        subset=["profondeur", "debit"])
+    cadre = cadre[(cadre["profondeur"] <= PROFONDEUR_MAXIMALE)
+                  & (cadre["debit"] <= DEBIT_MAXIMAL)]
+
+    if len(cadre) < 3:
+        return {"cadre": cadre.reset_index(drop=True), "modele": None,
+                "r2": float("nan"), "n": int(len(cadre))}
+
+    x = cadre["profondeur"].to_numpy(dtype=float)
+    y = cadre["debit"].to_numpy(dtype=float)
+
+    pente, ordonnee = np.polyfit(x, y, 1)
+    residus = y - (ordonnee + pente * x)
+    total = ((y - y.mean()) ** 2).sum()
+
+    return {
+        "cadre": cadre.reset_index(drop=True),
+        "modele": {"ordonnee": float(ordonnee), "pente": float(pente)},
+        "r2": float(1 - (residus ** 2).sum() / total) if total else 0.0,
+        "n": int(len(cadre)),
+    }
+
+
+def mise_en_service(coso):
+    """Le trajet d'un ouvrage entre sa réception technique et sa remise.
+
+    Un ouvrage réceptionné n'est pas un ouvrage en service : il l'est le jour
+    où la communauté en reçoit la charge. Entre les deux, il existe, il est
+    payé, il figure dans les inventaires — et personne n'y puise.
+
+    Trois faits sortent de ces deux colonnes, et aucun n'était visible dans le
+    décompte des ouvrages : le délai médian, le nombre d'ouvrages réceptionnés
+    et TOUJOURS PAS remis, et le nombre de remises datées sans réception —
+    lesquelles ne sont pas un scandale mais un défaut de saisie, et disent la
+    fiabilité de ce suivi.
+    """
+
+    recu = pd.to_datetime(coso["date_of_technical_acceptance_of_work"],
+                          errors="coerce")
+    remis = pd.to_datetime(coso["official_handover_date_to_community"],
+                           errors="coerce")
+
+    cadre = coso.assign(
+        recu=recu, remis=remis, attente_jours=(remis - recu).dt.days,
+        en_attente=recu.notna() & remis.isna(),
+    )
+
+    par_region = _par_region(
+        cadre,
+        ouvrages=("id", "size"),
+        receptionnes=("recu", "count"),
+        remis=("remis", "count"),
+        en_attente=("en_attente", "sum"),
+    )
+    par_region["en_attente"] = par_region["en_attente"].astype(int)
+
+    delais = cadre["attente_jours"].dropna()
+
+    return {
+        "regions": par_region.sort_values("en_attente", ascending=False)
+                             .reset_index(drop=True),
+        "receptionnes": int(recu.notna().sum()),
+        "remis": int(remis.notna().sum()),
+        "en_attente": int(cadre["en_attente"].sum()),
+        "sans_reception": int((remis.notna() & recu.isna()).sum()),
+        "delai_median": float(delais.median()) if len(delais) else 0.0,
+        "delais": delais.reset_index(drop=True),
+        "mesures": int(len(delais)),
+        "anterieurs": int((delais < 0).sum()),
+    }
+
+
+# ─── Le déficit, et ce qu'il coûterait ───────────────────────────────────────
+
+def deficit_ouvrages(cantons, tde, coso):
+    """Ouvrages manquants pour amener chaque région à la médiane nationale.
+
+    Le rapport « habitants par ouvrage » se lit mal : il dit qu'une région est
+    huit fois moins bien dotée qu'une autre, et un décideur ne peut rien
+    commander avec un rapport. Le convertir en NOMBRE D'OUVRAGES rend l'écart
+    exécutable — et vérifiable, puisque le calcul tient en une division.
+
+    L'étalon est la MÉDIANE régionale, non la meilleure région : aligner tout
+    le pays sur la Savane la mieux dotée produirait une facture si grande
+    qu'elle ne serait pas lue. La médiane est le niveau que la moitié du pays
+    atteint déjà — donc atteignable, par construction.
+
+    Ce n'est pas un besoin technique. Un ouvrage dessert un village, pas un
+    quotient ; le vrai besoin dépend de l'habitat, du débit et de la nappe. Ce
+    chiffre mesure une INÉGALITÉ, et la ramène à l'unité dans laquelle on
+    budgète.
+    """
+
+    equipes = pd.concat([tde[["cle_canton"]], coso[["cle_canton"]]])
+    par_canton = equipes.groupby("cle_canton").size().rename("ouvrages")
+
+    cadre = cantons.merge(par_canton, on="cle_canton", how="left")
+    cadre["ouvrages"] = cadre["ouvrages"].fillna(0).astype(int)
+
+    agrege = _par_region(
+        cadre,
+        cantons=("canton", "size"),
+        population=("population", "sum"),
+        ouvrages=("ouvrages", "sum"),
+    )
+    agrege["habitants_par_ouvrage"] = (
+        agrege["population"] / agrege["ouvrages"].replace(0, np.nan)
+    )
+
+    etalon = float(agrege["habitants_par_ouvrage"].median())
+
+    # Le plafond : une région sans aucun ouvrage n'a pas de ratio, et son
+    # déficit est alors la totalité de ce que l'étalon lui prescrirait.
+    requis = np.ceil(agrege["population"] / etalon) if etalon else 0
+    agrege["ouvrages_requis"] = requis.astype(int)
+    agrege["manquants"] = (
+        (agrege["ouvrages_requis"] - agrege["ouvrages"]).clip(lower=0).astype(int)
+    )
+
+    return {
+        "regions": agrege.sort_values("manquants", ascending=False)
+                         .reset_index(drop=True),
+        "etalon": etalon,
+        "manquants": int(agrege["manquants"].sum()),
+        "national": float(cadre["population"].sum() / cadre["ouvrages"].sum())
+        if cadre["ouvrages"].sum() else float("nan"),
+    }
+
+
+def facture_rattrapage(cantons, tde, coso):
+    """Ce que coûterait le rattrapage, région par région, en francs CFA.
+
+    Le prix unitaire est la MÉDIANE des montants réellement payés par le COSO
+    pour un ouvrage — pas un devis, pas une estimation, une dépense constatée.
+    C'est aussi ce qui rend le total défendable : il ne suppose aucune économie
+    d'échelle, aucun surcoût d'accès, seulement que le prochain ouvrage coûtera
+    ce qu'a coûté le précédent.
+
+    Le résultat se lit avec `econometrie.fonction_de_cout` et pas sans lui : le
+    coût d'un ouvrage n'étant pas lié au nombre de ses bénéficiaires, la même
+    facture achète des couvertures très différentes selon les endroits où on la
+    dépense. C'est la seule marge de manœuvre gratuite du dossier.
+    """
+
+    deficit = deficit_ouvrages(cantons, tde, coso)
+    paye = coso.loc[coso["montant_paye"] > 0, "montant_paye"]
+    unitaire = float(paye.median()) if len(paye) else 0.0
+
+    regions = deficit["regions"].copy()
+    regions["cout"] = regions["manquants"] * unitaire
+
+    return {
+        "regions": regions.sort_values("cout", ascending=False)
+                          .reset_index(drop=True),
+        "unitaire": unitaire,
+        "ouvrages": int(regions["manquants"].sum()),
+        "total": float(regions["cout"].sum()),
+        "observations": int(len(paye)),
+        "etalon": deficit["etalon"],
+    }
+
+
 def zeros_composantes(cantons):
     """Combien de cantons portent un zéro, et sur quelle composante.
 

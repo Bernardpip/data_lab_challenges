@@ -72,8 +72,8 @@
     "en": "Summary"
   },
   "section_inondation": {
-    "fr": "Risque",
-    "en": "Risk"
+    "fr": "Inondation",
+    "en": "Flooding"
   },
   "section_croisements": {
     "fr": "Croisements",
@@ -186,5 +186,165 @@
   "realise_par": {
     "fr": "Réalisé par :",
     "en": "Built by:"
+  },
+  "section_constat": {
+    "fr": "Constat",
+    "en": "Finding"
+  },
+  "section_ou": {
+    "fr": "Où est l'eau",
+    "en": "Where"
+  },
+  "section_etat": {
+    "fr": "Quel état",
+    "en": "Condition"
+  },
+  "section_habitants": {
+    "fr": "Habitants",
+    "en": "People"
+  },
+  "section_agir": {
+    "fr": "Que faire",
+    "en": "What now"
+  },
+  "section_preuves": {
+    "fr": "Preuves",
+    "en": "Evidence"
+  },
+  "vue_home": {
+    "fr": "Home",
+    "en": "Home"
+  },
+  "vue_paradoxe": {
+    "fr": "Le paradoxe",
+    "en": "The paradox"
+  },
+  "vue_limites": {
+    "fr": "Les limites",
+    "en": "The limits"
+  },
+  "vue_repartition": {
+    "fr": "Répartition",
+    "en": "Distribution"
+  },
+  "vue_densite": {
+    "fr": "Densité",
+    "en": "Density"
+  },
+  "vue_deserts": {
+    "fr": "Les déserts",
+    "en": "Water deserts"
+  },
+  "vue_angle_mort": {
+    "fr": "Angle mort",
+    "en": "Blind spot"
+  },
+  "vue_entretien": {
+    "fr": "Entretien",
+    "en": "Upkeep"
+  },
+  "vue_fragilite": {
+    "fr": "Fragilité",
+    "en": "Fragility"
+  },
+  "vue_service": {
+    "fr": "Mise en service",
+    "en": "Commissioning"
+  },
+  "vue_rattrapage": {
+    "fr": "Le rattrapage",
+    "en": "Catching up"
+  },
+  "vue_alea": {
+    "fr": "L'aléa",
+    "en": "The hazard"
+  },
+  "vue_fri": {
+    "fr": "Que classe le FRI ?",
+    "en": "What the FRI ranks"
+  },
+  "vue_facture": {
+    "fr": "La facture",
+    "en": "The bill"
+  },
+  "onglet_bivariee": {
+    "fr": "Risque × ouvrage",
+    "en": "Risk × facility"
+  },
+  "onglet_couverture": {
+    "fr": "Couverture du corpus",
+    "en": "Corpus coverage"
+  },
+  "onglet_les_deux": {
+    "fr": "Les deux réseaux",
+    "en": "Both networks"
+  },
+  "onglet_tde": {
+    "fr": "Forages TdE",
+    "en": "TdE boreholes"
+  },
+  "onglet_coso": {
+    "fr": "Microprojets COSO",
+    "en": "COSO sub-projects"
+  },
+  "onglet_densite": {
+    "fr": "Densité",
+    "en": "Density"
+  },
+  "onglet_population": {
+    "fr": "Population",
+    "en": "Population"
+  },
+  "onglet_deserts": {
+    "fr": "Déserts",
+    "en": "Deserts"
+  },
+  "onglet_rayons": {
+    "fr": "Rayons de marche",
+    "en": "Walking radii"
+  },
+  "onglet_entretien": {
+    "fr": "Plans de maintenance",
+    "en": "Maintenance plans"
+  },
+  "onglet_debit": {
+    "fr": "Débit des forages",
+    "en": "Borehole flow"
+  },
+  "onglet_service": {
+    "fr": "Remises",
+    "en": "Handovers"
+  },
+  "onglet_deficit": {
+    "fr": "Déficit d'ouvrages",
+    "en": "Facility deficit"
+  },
+  "onglet_investissement": {
+    "fr": "Investissement",
+    "en": "Investment"
+  },
+  "onglet_fri_officiel": {
+    "fr": "FRI officiel",
+    "en": "Official FRI"
+  },
+  "onglet_fri_quantiles": {
+    "fr": "FRI en quantiles",
+    "en": "FRI by quantiles"
+  },
+  "onglet_fri_sans_pop": {
+    "fr": "Sans la population",
+    "en": "Without population"
+  },
+  "onglet_prioritaires": {
+    "fr": "Cantons prioritaires",
+    "en": "Priority cantons"
+  },
+  "onglet_facture": {
+    "fr": "Coût du rattrapage",
+    "en": "Cost of catching up"
+  },
+  "onglets_cartes": {
+    "fr": "Cartes",
+    "en": "Maps"
   }
 }

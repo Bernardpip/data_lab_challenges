@@ -129,7 +129,7 @@ def table_twin(df, label=None):
 # ─── Magnitude, catégories nominales ────────────────────────────────────────
 
 def bar_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None,
-          trier=True):
+          trier=True, decimals=0):
     """Barres horizontales, catégories NOMINALES → une seule teinte pour toutes.
 
     Colorer chaque barre selon sa valeur re-encoderait la longueur : la teinte
@@ -144,6 +144,11 @@ def bar_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None,
     faible, Très élevé, Faible, Moyen, Élevé » — une échelle mélangée que le
     lecteur relit deux fois avant de comprendre qu'elle ne dit rien. L'ordre
     reçu est alors respecté, la première ligne du cadre en HAUT du graphe.
+
+    `decimals` — décimales de l'étiquette ET de l'infobulle. Le défaut de zéro
+    convient aux effectifs, jamais aux grandeurs bornées : un coefficient de
+    corrélation de 0,80 et un indice de 0,41 s'y affichaient « 1 » et « 0 », et
+    le graphe disait alors le contraire de la donnée.
     """
 
     data = df.sort_values(val, ascending=True) if trier else df.iloc[::-1]
@@ -162,7 +167,7 @@ def bar_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None,
             for label in labels
         ]
 
-    text = [_fr(v) + (f" {unit}" if unit else "") for v in values]
+    text = [_fr(v, decimals) + (f" {unit}" if unit else "") for v in values]
 
     fig = go.Figure(
         go.Bar(
@@ -174,7 +179,8 @@ def bar_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None,
             textposition="outside",
             textfont=dict(size=11, color=INK["secondary"], family=_FONT),
             cliponaxis=False,
-            hovertemplate="%{y} · %{x:,.0f} " + unit + "<extra></extra>",
+            hovertemplate=("%{y} · %{x:,." + str(decimals) + "f} " + unit
+                           + "<extra></extra>"),
         )
     )
 

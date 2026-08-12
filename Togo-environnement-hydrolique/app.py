@@ -47,6 +47,43 @@ from nav_config import NAV_SECTIONS                 # noqa: E402
 # entrait en collision avec celui d'une vue de la synthèse.
 _ONGLETS_RENOMMES = {"priorites": "priorites_reco"}
 
+# L'affiche a ensuite été réordonnée en RÉCIT : ses sections ne sont plus des
+# thèmes — risque, parc, démographie — mais des actes, et les thèmes s'y sont
+# redistribués. Une adresse de console désigne donc un acte, et parfois un
+# onglet qui a changé de section en même temps que de voisins.
+#
+# Ces deux tables sont la mémoire de ce déplacement. Elles ne coûtent que
+# quelques lignes, et sans elles chaque lien publié pendant six mois tomberait
+# sur la page d'accueil sans un mot d'explication.
+_SECTIONS_RECIT = {
+    "synthese": "constat",
+    "parc": "ou",
+    "demographie": "habitants",
+    "croisements": "inondation",
+    "recommandations": "agir",
+    "donnees": "preuves",
+    "annexes": "preuves",
+    "inondation": "inondation",
+}
+
+# Onglets dont la section d'accueil a changé avec le récit : l'identifiant
+# suffit à les retrouver, mais pas à savoir où ils vivent désormais.
+_ONGLETS_DEPLACES = {
+    "diagnostic": ("constat", "home"),
+    "risque": ("inondation", "alea"),
+    "priorites": ("agir", "priorites_reco"),
+    "fri_carto": ("inondation", "alea"),
+    "fri_facteurs": ("inondation", "facteurs"),
+    "tde": ("ou", "repartition"),
+    "coso": ("ou", "repartition"),
+    "technique": ("etat", "fragilite"),
+    "maintenance": ("etat", "entretien"),
+    "allocation": ("habitants", "allocation"),
+    "pression": ("habitants", "pression"),
+    "ventes": ("habitants", "ventes"),
+    "ouvrages_risque": ("inondation", "ouvrages_risque"),
+}
+
 
 def _rediriger_ancienne_route():
     """Traduit une adresse de console en adresse d'affiche, puis recharge."""
@@ -60,11 +97,20 @@ def _rediriger_ancienne_route():
         return False
 
     garde = {cle: params[cle] for cle in ("lang", "h") if cle in params}
-    params.clear()
-    params.update({**garde, "s": "affiche", "sec": section})
 
-    if onglet:
-        params["v"] = _ONGLETS_RENOMMES.get(onglet, onglet)
+    # L'ONGLET commande quand il est connu : il désigne un contenu précis,
+    # là où la section ne désigne qu'un voisinage. Une vue déplacée d'une
+    # section à l'autre serait sinon servie dans son ancien acte, où elle
+    # n'existe plus.
+    acte, vue = _ONGLETS_DEPLACES.get(
+        onglet, (_SECTIONS_RECIT.get(section, "constat"),
+                 _ONGLETS_RENOMMES.get(onglet, onglet)))
+
+    params.clear()
+    params.update({**garde, "s": "affiche", "sec": acte})
+
+    if vue:
+        params["v"] = vue
 
     st.rerun()
 
