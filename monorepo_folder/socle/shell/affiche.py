@@ -973,14 +973,18 @@ def _bandeau_local(reglages):
     if not texte:
         return
 
+    # EN ROUGE. Ce n'est pas une alerte — rien ne va mal —, mais une phrase
+    # qu'on ne lit qu'une fois et qu'il faut donc lire : en gris, sous un
+    # titre, elle passait pour la mention légale qu'on saute. Le rouge la
+    # tient à part de tout le reste de la fenêtre, qui est vert.
     st.markdown(
         f'<div style="display:flex;align-items:flex-start;gap:9px;'
-        f"background:var(--kg-color-surface-secondary,#F5F6F7);"
+        f"background:var(--kg-color-error-light,#FEE2E2);"
+        f"border:1px solid var(--kg-color-error,#EF4444);"
         f"border-radius:10px;padding:9px 12px;margin:0 0 12px;"
         f'font-size:11.5px;line-height:1.5;'
-        f'color:var(--kg-color-text-muted);">'
-        f'<span style="flex:none;margin-top:1px;'
-        f'color:var(--kg-color-primary);">{icone("shield", 14)}</span>'
+        f'color:var(--kg-color-error-dark,#DC2626);">'
+        f'<span style="flex:none;margin-top:1px;">{icone("shield", 14)}</span>'
         f"<span>{texte}</span></div>",
         unsafe_allow_html=True,
     )
@@ -1116,7 +1120,11 @@ _CLE_ONGLET_FENETRE = "_kg_fenetre_onglet"
 def _ecran_accueil(config, fichier, reglages, langue_active):
     """Écran 1 — deux tables : qui regarde, et selon quel profil."""
 
-    _titre_fenetre(reglages.get("titre", ""), reglages.get("note"))
+    # PAS de note sous le titre. Elle expliquait en quatre lignes ce que la
+    # fenêtre montre déjà — deux onglets, une liste, des profils —, et se
+    # lisait une fois pour être sautée ensuite. Ce qui reste dit ce qui ne se
+    # voit pas : où vont ces données.
+    _titre_fenetre(reglages.get("titre", ""))
     _bandeau_local(reglages)
 
     reglages = {**reglages, "onglets": [

@@ -375,10 +375,6 @@
     "fr": "Utilisateurs",
     "en": "Users"
   },
-  "reglages_note": {
-    "fr": "Choisir qui regarde. Ce n'est pas une connexion : aucun mot de passe, et l'adresse d'une section masquée reste atteignable. C'est un sélecteur de profil d'affichage — les trente vues ne servent pas le même lecteur.",
-    "en": "Choose who is looking. This is not a login: no password, and a hidden section stays reachable by its URL. It is a display-profile switcher — the thirty views do not serve the same reader."
-  },
   "reglages_reinitialiser": {
     "fr": "Tout réafficher",
     "en": "Show everything"
@@ -392,7 +388,7 @@
     "en": "Close"
   },
   "reglages_local": {
-    "fr": "Rien n'est envoyé ailleurs. Ces profils tiennent dans un fichier posé \u00e0 c\u00f4t\u00e9 de l'application, hors du d\u00e9p\u00f4t : ni base de donn\u00e9es, ni service tiers, ni compte \u00e0 cr\u00e9er.",
+    "fr": "Rien n'est envoyé ailleurs. Ces profils tiennent dans un fichier posé à côté de l'application, hors du dépôt : ni base de données, ni service tiers, ni compte à créer.",
     "en": "Nothing is sent anywhere. These profiles live in a file next to the app, outside the repository: no database, no third-party service, no account to create."
   },
   "reglages_vide": {
