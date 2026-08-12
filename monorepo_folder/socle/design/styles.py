@@ -1144,12 +1144,19 @@ _CSS_AFFICHE = """
 /* La réserve du menu ne porte plus que sur la colonne GAUCHE — c'est elle
    seule qu'il recouvre. La droite démarre à `--kg-aff-haut`, au ras du menu.
 
-   UNE SEULE valeur de séparation sur toute la page — 16 px — entre le menu et
-   la première carte, entre deux cartes, entre les deux colonnes, et du bord de
-   la fenêtre. La réserve s'écrit donc comme la somme qu'elle est vraiment :
-   hauteur du menu (posée par la prop `hauteur_menu`) plus l'écart. Sa marge
-   haute est déjà celle du corps, elle ne se compte pas deux fois. */
-.st-key-kgaffgauche { margin-top: calc(var(--kg-aff-menu-h, 116px) + 16px); }
+   La réserve s'écrit comme la somme qu'elle est vraiment : hauteur du menu
+   (posée par la prop `hauteur_menu`) plus l'écart qui le sépare de la suite.
+   Sa marge haute est déjà celle du corps, elle ne se compte pas deux fois.
+
+   Cet écart est la MARGE BASSE du menu, et il porte son propre nom. Le
+   bandeau est en `position: fixed` : une marge posée sur lui ne pousserait
+   rien, puisqu'il est sorti du flux — c'est ce qui le suit qui doit lui
+   laisser la place. Il vaut 24 px, contre 16 partout ailleurs : le menu n'est
+   pas une carte parmi les autres, et le détacher un peu plus dit qu'on change
+   de registre en passant de la navigation au contenu. */
+.st-key-kgaffgauche {
+  margin-top: calc(var(--kg-aff-menu-h, 116px) + var(--kg-aff-menu-bas, 24px));
+}
 
 /* L'écart vertical est une VARIABLE : le bandeau d'onglets doit pouvoir le
    reprendre au pixel pour venir se coller à sa carte. */
