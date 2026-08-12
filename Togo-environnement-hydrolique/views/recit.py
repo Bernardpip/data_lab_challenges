@@ -59,16 +59,47 @@ FAIT = STATUS["good"]
 MANQUE = STATUS["critical"]
 
 
-def accroche(paragraphes, titre=None, sur_titre=None):
-    """L'accroche du récit — même bloc que le socle, repère d'acte EN PIED.
+# L'accroche en attente de rendu. Un seul élément à la fois — une vue n'a
+# qu'un propos — mais une liste plutôt qu'un scalaire pour que deux appels
+# accidentels se voient tous les deux au lieu de s'écraser en silence.
+_ACCROCHES = []
 
-    Les douze accroches passent par ici plutôt que d'ajouter chacune le même
-    argument : le placement du repère est une règle du RÉCIT, pas une décision
-    de vue, et une vue ajoutée demain la suit sans qu'on ait à y penser.
+
+def accroche(paragraphes, titre=None, sur_titre=None):
+    """Le bloc éditorial de l'acte — DIFFÉRÉ jusqu'au pied de la colonne.
+
+    Il se déclare en tête du peintre, là où ses chiffres viennent d'être
+    calculés, et se peint en BAS de la colonne : la page ouvre sur les tuiles
+    et les graphes, et la phrase qui les conclut se lit après eux, à sa place
+    de conclusion.
+
+    Pourquoi différer plutôt que déplacer l'appel en fin de fonction : deux
+    vues sortent par un `return` anticipé quand leur mesure est vide, et
+    l'accroche placée après ce retour n'aurait jamais été peinte — le seul cas
+    où le lecteur en aurait le plus besoin. Ici, elle est mise de côté dès
+    qu'elle est déclarée, et `poser_accroches()` la sort quoi qu'il arrive.
     """
 
-    ui.accroche_editoriale(paragraphes, titre=titre, sur_titre=sur_titre,
-                           sur_titre_en_bas=True)
+    _ACCROCHES.append((paragraphes, titre, sur_titre))
+
+
+def oublier_accroches():
+    """Vide la file — à appeler AVANT de peindre une colonne.
+
+    Le module survit d'un rendu à l'autre : une vue qui lèverait une exception
+    entre la déclaration et le rendu laisserait sinon son accroche traîner, et
+    la vue suivante afficherait le propos de la précédente.
+    """
+
+    _ACCROCHES.clear()
+
+
+def poser_accroches():
+    """Peint ce qui a été mis de côté — le dernier geste de la colonne."""
+
+    while _ACCROCHES:
+        paragraphes, titre, sur_titre = _ACCROCHES.pop(0)
+        ui.accroche_editoriale(paragraphes, titre=titre, sur_titre=sur_titre)
 
 
 def onglets_cartes(options, cle, libelle):

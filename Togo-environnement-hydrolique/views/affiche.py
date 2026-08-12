@@ -814,7 +814,16 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             faits = analytics.synthese(data["cantons"], data["tde"],
                                        data["coso"], data["ventes"])
             etat["data"], etat["faits"] = data, faits
+
+            # L'accroche de l'acte se DÉCLARE en tête du peintre, où ses
+            # chiffres sont calculés, et se peint ICI, après les tuiles et les
+            # graphes : la colonne ouvre sur les faits et se referme sur le
+            # propos. On vide la file avant, jamais après — une vue qui
+            # échouerait en cours de route laisserait sinon son accroche à la
+            # suivante.
+            recit.oublier_accroches()
             gauche(trr, data, faits, corpus)
+            recit.poser_accroches()
 
         if not cartes:
             return peindre_gauche
