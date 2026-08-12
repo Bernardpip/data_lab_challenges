@@ -955,6 +955,16 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
         # le socle qui la peint n'écrit aucun mot visible, et un défi qui ne
         # déclare pas ce bloc n'a tout simplement pas de bouton.
         "settings": {
+            # Hauteur FIXE de la fenêtre, en pixels. 640 est la hauteur
+            # MESURÉE du plus grand des cinq écrans — les huit rangées
+            # d'autorisation, leur pied et l'en-tête : à 560, le pied tombait
+            # sous la ligne de flottaison et il fallait défiler pour atteindre
+            # « Fermer ». Fixe, pour que passer d'un écran à l'autre ne fasse
+            # ni grandir la fenêtre ni sauter le bouton qu'on visait.
+            #
+            # Le socle la plafonne à 88 % de la fenêtre : sur un portable plus
+            # court, c'est le corps qui défile, jamais la fenêtre qui déborde.
+            "hauteur": 640,
             "titre": tr("reglages_titre"),
             "note": tr("reglages_note"),
             "vide": tr("reglages_vide"),

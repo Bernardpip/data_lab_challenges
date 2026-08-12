@@ -1236,6 +1236,37 @@ def _styles_fenetre(reglages=None):
         huit cadres empilés donnaient un accordéon de formulaire administratif.
     """
 
+    # HAUTEUR FIXE et fenêtre CENTRÉE — les deux tiennent en quelques règles,
+    # et les deux corrigent le même défaut : la fenêtre changeait de taille et
+    # de position à chaque écran. Passer de la liste aux autorisations la
+    # faisait grandir de trois cents pixels et remonter vers le haut de
+    # l'écran, si bien que le bouton qu'on venait de viser n'était plus là où
+    # on l'avait laissé.
+    #
+    # La hauteur vient de la CONFIGURATION : c'est au défi de savoir combien
+    # ses écrans demandent. Elle est plafonnée à 88 % de la fenêtre — un
+    # nombre écrit en dur déborderait sur un portable, et une fenêtre plus
+    # haute que l'écran n'a plus ni pied ni croix.
+    hauteur = (reglages or {}).get("hauteur")
+
+    if hauteur:
+        st.markdown(
+            f"<style>"
+            # Le conteneur de baseweb aligne son panneau EN HAUT : c'est lui
+            # qui décide, non le panneau.
+            f'[data-testid="stDialog"] > div {{ align-items: center !important; }}'
+            f'[data-testid="stDialog"] > div > div {{'
+            f" height: min({hauteur}px, 88vh) !important;"
+            f" display: flex; flex-direction: column; }}"
+            # Seul le CORPS défile. L'en-tête et la croix restent en place,
+            # sinon la sortie disparaît dès qu'on descend dans une liste.
+            f'[data-testid="stDialog"] > div > div > div:nth-child(2) {{'
+            f" flex: 1 1 auto; overflow-y: auto; overflow-x: hidden;"
+            f" padding-right: 4px; }}"
+            f"</style>",
+            unsafe_allow_html=True,
+        )
+
     st.markdown(
         """
 <style>
