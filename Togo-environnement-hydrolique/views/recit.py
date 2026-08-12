@@ -59,6 +59,18 @@ FAIT = STATUS["good"]
 MANQUE = STATUS["critical"]
 
 
+def accroche(paragraphes, titre=None, sur_titre=None):
+    """L'accroche du récit — même bloc que le socle, repère d'acte EN PIED.
+
+    Les douze accroches passent par ici plutôt que d'ajouter chacune le même
+    argument : le placement du repère est une règle du RÉCIT, pas une décision
+    de vue, et une vue ajoutée demain la suit sans qu'on ait à y penser.
+    """
+
+    ui.accroche_editoriale(paragraphes, titre=titre, sur_titre=sur_titre,
+                           sur_titre_en_bas=True)
+
+
 def onglets_cartes(options, cle, libelle):
     """Le rang d'onglets de la colonne droite, quand une vue porte plusieurs cartes.
 
@@ -85,7 +97,7 @@ def paradoxe(tr, data, faits, corpus):
     exposes = int(hautes["cantons"].sum())
     equipes = int(hautes["equipes"].sum())
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("paradoxe_texte_1", {
             "exposes": ui.fr_number(exposes),
             "population": ui.compact(float(hautes["population"].sum())),
@@ -198,7 +210,7 @@ def limites(tr, data, faits, corpus):
 
     ecart = perimetre.ecart_publication()
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("limites_texte_1", {"decrits": ecart["decrits"],
                                 "publies": ecart["communs"]}),
          tr("limites_texte_2")],
@@ -245,7 +257,7 @@ def repartition(tr, data, faits, corpus):
 
     tde, coso = data["tde"], data["coso"]
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("ou_texte_1", {"tde": ui.fr_number(corpus["tde_total"]),
                            "coso": ui.fr_number(corpus["coso_total"]),
                            "part": ui.fr_number(corpus["tde_part_maritime"], 0)}),
@@ -332,7 +344,7 @@ def densite(tr, data, faits, corpus):
         data["cantons"], data["tde"], data["coso"])
     regions = couverture["regions"]
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("densite_texte_1", {
             "national": ui.fr_number(couverture["national"], 0),
             "pire": str(regions["region"].iloc[-1]),
@@ -442,7 +454,7 @@ def deserts(tr, data, faits, corpus):
         data["cantons"], data["tde"], data["coso"])
     cadre = mesure["cadre"]
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("deserts_texte_1", {
             "mediane": ui.fr_number(mesure["mediane_km"], 0),
             "max": ui.fr_number(float(cadre["distance_km"].max()), 0)
@@ -620,7 +632,7 @@ def angle_mort(tr, data, faits, corpus):
     tde = data["tde"]
     coso = data["coso"]
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("angle_texte_1", {"colonnes": len(tde.columns)}),
          tr("angle_texte_2")],
         titre=tr("angle_titre"), sur_titre=tr("acte_2"),
@@ -675,7 +687,7 @@ def entretien(tr, data, faits, corpus):
     total = int(plans["ouvrages"].sum())
     avec = int(plans["avec_plan"].sum())
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("entretien_texte_1", {
             "avec": ui.fr_number(avec), "total": ui.fr_number(total),
             "part": ui.fr_number(100 * avec / total, 0) if total else "0"}),
@@ -798,7 +810,7 @@ def fragilite(tr, data, faits, corpus):
         ui.note(tr("fragilite_vide"))
         return
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("fragilite_texte_1", {
             "renseignes": ui.fr_number(mesure["renseignes"]),
             "total": ui.fr_number(mesure["total"]),
@@ -908,7 +920,7 @@ def service(tr, data, faits, corpus):
 
     mesure = analytics.mise_en_service(data["coso"])
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("service_texte_1", {
             "receptionnes": ui.fr_number(mesure["receptionnes"]),
             "remis": ui.fr_number(mesure["remis"]),
@@ -983,7 +995,7 @@ def rattrapage(tr, data, faits, corpus):
         data["cantons"], data["tde"], data["coso"])
     regions = deficit["regions"]
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("rattrapage_texte_1", {
             "etalon": ui.fr_number(deficit["etalon"], 0),
             "manquants": ui.fr_number(deficit["manquants"]),
@@ -1152,7 +1164,7 @@ def que_classe_le_fri(tr, data, faits, corpus):
         ligne = correlations[correlations["dimension"] == dimension]
         return float(ligne["rho"].iloc[0]) if len(ligne) else float("nan")
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("fri_texte_1", {
             "exposition": ui.fr_number(rho("exposition"), 2),
             "alea": ui.fr_number(rho("alea"), 2),
@@ -1290,7 +1302,7 @@ def facture(tr, data, faits, corpus):
     elasticite = cout["estimation"]["termes"]
     ligne = elasticite[elasticite["terme"] == "log_beneficiaires"]
 
-    ui.accroche_editoriale(
+    accroche(
         [tr("facture_texte_1", {
             "ouvrages": ui.fr_number(addition["ouvrages"]),
             "unitaire": ui.compact(addition["unitaire"]),

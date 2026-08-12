@@ -225,7 +225,8 @@ def pill(kind, label=None):
     )
 
 
-def accroche_editoriale(paragraphes, titre=None, sur_titre=None):
+def accroche_editoriale(paragraphes, titre=None, sur_titre=None,
+                        sur_titre_en_bas=False):
     """Bloc de texte éditorial, avec les chiffres mis en emphase dans la phrase.
 
     Une conclusion se lit mieux dans une phrase que dans une tuile. Les
@@ -237,16 +238,30 @@ def accroche_editoriale(paragraphes, titre=None, sur_titre=None):
     du <span class="kg-accent">. Les valeurs y arrivent interpolées depuis
     l'i18n, jamais concaténées ici — sinon elles cesseraient de suivre les
     filtres.
+
+    `sur_titre_en_bas` — le sur-titre passe SOUS les paragraphes, séparé d'un
+    filet. En haut, il annonce ; en bas, il situe. Un repère de chapitre —
+    « Acte 2 · Dans quel état ? » — n'a pas à être lu avant le propos : le
+    lecteur sait où il a cliqué, et l'eyebrow lui prenait la première ligne
+    pour le lui répéter. En pied, il devient la signature du passage, et c'est
+    le TITRE qui ouvre le bloc.
     """
 
     entete = ""
 
-    if sur_titre:
-        entete += (
+    def _sur_titre(en_bas):
+        marges = ("margin:14px 0 0;padding-top:12px;"
+                  f"border-top:1px solid {COLORS['borderLight']};"
+                  if en_bas else "margin-bottom:6px;")
+
+        return (
             f'<div style="font-size:11px;letter-spacing:.1em;'
             f'text-transform:uppercase;color:{COLORS["primary"]};'
-            f'margin-bottom:6px;">{sur_titre}</div>'
+            f'{marges}">{sur_titre}</div>'
         )
+
+    if sur_titre and not sur_titre_en_bas:
+        entete += _sur_titre(False)
 
     if titre:
         entete += (
@@ -261,8 +276,11 @@ def accroche_editoriale(paragraphes, titre=None, sur_titre=None):
         for paragraphe in paragraphes
     )
 
+    pied = _sur_titre(True) if sur_titre and sur_titre_en_bas else ""
+
     st.markdown(
-        f'<div class="kg-card" style="padding:22px 24px;">{entete}{corps}</div>',
+        f'<div class="kg-card" style="padding:22px 24px;">'
+        f"{entete}{corps}{pied}</div>",
         unsafe_allow_html=True,
     )
 
