@@ -117,6 +117,17 @@ def main():
     ):
         print(f"  présentation [{code}] · {pages} pages · {chemin.name}")
 
+    # Le PDF est un COMPLÉMENT : s'il ne peut pas être produit ici — machine
+    # sans LibreOffice ni PowerPoint —, l'archive part quand même. Ce qui
+    # serait grave, c'est un PDF périmé à côté d'un PowerPoint à jour : c'est
+    # pourquoi la conversion suit immédiatement la génération.
+    try:
+        from scripts.exporter_pdf import main as exporter_pdf
+
+        exporter_pdf()
+    except SystemExit as raison:
+        print(f"  pas de PDF joint — {raison}")
+
     chemins = fichiers_suivis()
     manquants = [c for c in chemins if not (RACINE / c).exists()]
 

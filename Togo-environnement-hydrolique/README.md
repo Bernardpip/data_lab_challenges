@@ -118,7 +118,8 @@ Les cinq règles de rigueur tenues dans tout le tableau de bord :
 
 ```bash
 python3 scripts/generer_presentation.py     # rapport PPTX, deux langues
-python3 scripts/faire_zip.py                # archive livrable
+python3 scripts/exporter_pdf.py             # les mêmes en PDF
+python3 scripts/faire_zip.py                # archive livrable — enchaîne les deux
 ```
 
 Le rapport est généré depuis les **mêmes fonctions** que le tableau de bord,

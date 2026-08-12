@@ -159,3 +159,17 @@ def style_graphe(graphique, titre=None):
     graphique.font.size = Pt(10)
     graphique.font.color.rgb = ENCRE_SECONDAIRE
     graphique.font.name = POLICE
+
+    # UNE série, UNE couleur. PowerPoint colore par défaut chaque point d'une
+    # teinte différente dès qu'un graphe n'a qu'une série — bleu, rouge, vert,
+    # dans l'ordre de son thème. Trois couleurs pour trois distances de marche
+    # laissent croire à trois catégories de nature différente, et le document
+    # cesse de ressembler au tableau de bord dont il tire ses chiffres. Vu
+    # seulement à l'export PDF : la trame ne montrait que le texte.
+    graphique.plots[0].vary_by_categories = False
+
+    for serie in graphique.series:
+        remplissage = serie.format.fill
+        remplissage.solid()
+        remplissage.fore_color.rgb = SERIE_1
+        serie.format.line.fill.background()
