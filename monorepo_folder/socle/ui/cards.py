@@ -61,10 +61,20 @@ def fr_number(value, decimals=0):
 
 
 def compact(value):
-    """1 284 → « 1 284 » ; 12 900 → « 12,9 k » (contrat stat tile)."""
+    """1 284 → « 1 284 » ; 12 900 → « 12,9 k » ; 3,5e9 → « 3,5 Md ».
+
+    Le MILLIARD manquait, et il se voyait : un montant de 131 708 604 678 F
+    s'écrivait « 131 708,6 M », c'est-à-dire quatre chiffres significatifs de
+    plus que ce qu'une tuile peut porter — et une unité que l'œil doit
+    convertir. Mêmes paliers que `rapport.Langue.compact` : l'écran et le
+    document imprimé disent le même nombre.
+    """
 
     if value is None:
         return "—"
+
+    if abs(value) >= 1_000_000_000:
+        return fr_number(value / 1_000_000_000, 1) + " Md"
 
     if abs(value) >= 1_000_000:
         return fr_number(value / 1_000_000, 1) + " M"

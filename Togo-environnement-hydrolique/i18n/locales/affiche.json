@@ -346,5 +346,25 @@
   "onglets_cartes": {
     "fr": "Cartes",
     "en": "Maps"
+  },
+  "section_proposition": {
+    "fr": "Proposition",
+    "en": "Proposal"
+  },
+  "vue_proposition_ouvrages": {
+    "fr": "Forages et châteaux",
+    "en": "Boreholes and towers"
+  },
+  "vue_proposition_inondations": {
+    "fr": "Inondations",
+    "en": "Flooding"
+  },
+  "onglet_besoin": {
+    "fr": "Où construire",
+    "en": "Where to build"
+  },
+  "onglet_exposes": {
+    "fr": "Cantons à aménager",
+    "en": "Cantons to equip"
   }
 }

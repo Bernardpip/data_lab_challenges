@@ -1270,5 +1270,197 @@
   "unite_places": {
     "fr": " places",
     "en": " places"
+  },
+  "acte_6": {
+    "fr": "Acte 6 · Proposition",
+    "en": "Act 6 · Proposal"
+  },
+  "proposition_ouvrages_titre": {
+    "fr": "Le pays manque de forages et de châteaux d'eau",
+    "en": "The country lacks boreholes and water towers"
+  },
+  "proposition_ouvrages_texte_1": {
+    "fr": "Les deux inventaires publiés totalisent <b>{existants}</b> ouvrages pour <b>{population}</b> d'habitants. Sur ce total, le fichier de la TdE ne recense que <b>{chateaux} châteaux d'eau</b> — les ouvrages qui stockent et mettent en pression. Un réseau sans château distribue au débit de sa pompe, et s'arrête avec elle.",
+    "en": "The two published inventories total <b>{existants}</b> facilities for <b>{population}</b> people. Within that, the utility's file records only <b>{chateaux} water towers</b> — the structures that store water and pressurise it. A network without a tower distributes at its pump's rate, and stops when the pump does."
+  },
+  "proposition_ouvrages_texte_2": {
+    "fr": "À raison d'un forage photovoltaïque pour mille habitants — l'ouvrage que le COSO construit réellement —, il en manque <b>{manquants}</b>, soit <b>{cout} F CFA</b> au prix médian effectivement payé de {unitaire}.",
+    "en": "At one solar borehole per thousand inhabitants — the facility COSO actually builds — <b>{manquants}</b> are missing, that is <b>{cout} F CFA</b> at the median price actually paid of {unitaire}."
+  },
+  "proposition_ouvrages_texte_3": {
+    "fr": "Le seuil de service est POSÉ, non tiré des données : c'est un choix politique, et il commande tout le reste. Les quatre scénarios ci-dessous vont de la norme villageoise à la dotation médiane déjà observée — la facture varie d'un facteur huit cents entre les deux, et c'est ce que ce tableau existe pour montrer.",
+    "en": "The service threshold is ASSUMED, not derived from the data: it is a political choice, and it drives everything else. The four scenarios below span the village standard down to the median provision already observed — the bill varies eight-hundredfold between them, and that is what this table exists to show."
+  },
+  "proposition_norme": {
+    "fr": "1 ouvrage / {n} hab.",
+    "en": "1 facility / {n} inhab."
+  },
+  "proposition_tuile_manquants": {
+    "fr": "Ouvrages manquants",
+    "en": "Missing facilities"
+  },
+  "proposition_tuile_manquants_detail": {
+    "fr": "au seuil d'un ouvrage pour 1 000 habitants",
+    "en": "at one facility per 1,000 people"
+  },
+  "proposition_tuile_cout": {
+    "fr": "Coût du programme",
+    "en": "Programme cost"
+  },
+  "proposition_tuile_cout_detail": {
+    "fr": "au prix médian constaté de {unitaire}",
+    "en": "at the observed median price of {unitaire}"
+  },
+  "proposition_tuile_chateaux": {
+    "fr": "Châteaux d'eau recensés",
+    "en": "Water towers recorded"
+  },
+  "proposition_tuile_chateaux_detail": {
+    "fr": "pour {forages} forages",
+    "en": "against {forages} boreholes"
+  },
+  "proposition_carte_scenarios_titre": {
+    "fr": "Quatre seuils, quatre factures",
+    "en": "Four thresholds, four bills"
+  },
+  "proposition_carte_scenarios_sous_titre": {
+    "fr": "Coût du rattrapage selon le service visé",
+    "en": "Cost of catching up, by service target"
+  },
+  "proposition_note_scenarios": {
+    "fr": "De <b>{bas}</b> à <b>{haut} F CFA</b> selon le seuil retenu. Le dernier scénario tombe à zéro : la dotation médiane DÉJÀ observée est atteinte au niveau national — ce qui manque à ce seuil-là n'est pas un volume d'ouvrages, c'est leur répartition. Aucun de ces chiffres n'est « le » besoin du pays : ils mesurent le prix de quatre ambitions, au même prix unitaire constaté.",
+    "en": "From <b>{bas}</b> to <b>{haut} F CFA</b> depending on the threshold. The last scenario falls to zero: the median provision ALREADY observed is met nationally — what is missing at that level is not a volume of facilities but their distribution. None of these figures is 'the' national need: they price four ambitions, at the same observed unit cost."
+  },
+  "proposition_carte_nature_titre": {
+    "fr": "Forages et châteaux, dans l'inventaire publié",
+    "en": "Boreholes and towers in the published inventory"
+  },
+  "proposition_carte_nature_sous_titre": {
+    "fr": "Nature des ouvrages de la TdE",
+    "en": "Nature of the utility's facilities"
+  },
+  "proposition_note_nature": {
+    "fr": "<b>{chateaux}</b> châteaux d'eau sur {total} ouvrages recensés. Huit ouvrages portent la sentinelle « Nsp » et restent comptés : les écarter laisserait croire à un parc entièrement identifié.",
+    "en": "<b>{chateaux}</b> water towers out of {total} recorded facilities. Eight carry the 'Nsp' sentinel and are kept in the count: dropping them would suggest a fully identified stock."
+  },
+  "proposition_carte_map_titre": {
+    "fr": "Où construire, canton par canton",
+    "en": "Where to build, canton by canton"
+  },
+  "proposition_carte_map_sous_titre": {
+    "fr": "Ouvrages manquants au seuil d'un pour {n} habitants",
+    "en": "Facilities missing at one per {n} inhabitants"
+  },
+  "proposition_note_carte": {
+    "fr": "<b>{total}</b> ouvrages manquants au seuil d'un pour {norme} habitants. Le canton le plus déficitaire est {pire}, avec {max}. La carte suit la POPULATION autant que le manque : c'est la conséquence directe d'un seuil exprimé par habitant.",
+    "en": "<b>{total}</b> facilities missing at one per {norme} inhabitants. The largest gap is {pire}, with {max}. The map follows POPULATION as much as scarcity: that is the direct consequence of a per-capita threshold."
+  },
+  "col_seuil": {
+    "fr": "Seuil de service",
+    "en": "Service threshold"
+  },
+  "col_existants": {
+    "fr": "Existants",
+    "en": "Existing"
+  },
+  "col_hypothese": {
+    "fr": "Hypothèse de coût",
+    "en": "Cost assumption"
+  },
+  "proposition_inondations_avertissement": {
+    "fr": "Le corpus ne porte AUCUN prix d'ouvrage de gestion des eaux pluviales, et aucun inventaire de ces ouvrages. Les montants ci-dessous sont des hypothèses affichées comme telles, jamais des mesures.",
+    "en": "The corpus carries NO price for stormwater-management works, and no inventory of them. The amounts below are assumptions shown as such, never measurements."
+  },
+  "proposition_inondations_titre": {
+    "fr": "Le pays manque d'ouvrages de gestion des inondations",
+    "en": "The country lacks flood-management infrastructure"
+  },
+  "proposition_inondations_texte_1": {
+    "fr": "<b>{cantons}</b> cantons sont classés à risque élevé ou très élevé par le producteur de l'indice, et abritent <b>{population}</b> d'habitants. <b>{sans}</b> d'entre eux ne portent même pas un point d'eau recensé.",
+    "en": "<b>{cantons}</b> cantons are rated high or very high risk by the index producer, and are home to <b>{population}</b> people. <b>{sans}</b> of them do not even carry a recorded water point."
+  },
+  "proposition_inondations_texte_2": {
+    "fr": "Le corpus ne recense aucun ouvrage de gestion des eaux pluviales — ni bassin, ni caniveau, ni digue. Les 218 sous-projets du COSO sont tous des forages ; le fichier de la TdE ne porte que des forages et des châteaux. L'absence n'est pas une preuve d'absence : elle dit qu'aucune donnée ouverte ne les décrit.",
+    "en": "The corpus records no stormwater-management works — no retention basin, no drain, no dyke. All 218 COSO sub-projects are boreholes; the utility's file carries only boreholes and towers. Absence is not proof of absence: it says no open data describes them."
+  },
+  "proposition_inondations_texte_3": {
+    "fr": "Le prix d'un tel aménagement n'existe donc nulle part dans ces fichiers. Plutôt que de transposer le prix d'un forage à un bassin de rétention — ce qui donnerait un chiffre d'apparence mesurée —, la facture est rendue PARAMÉTRIQUE : de <b>{bas} F CFA</b> à <b>{haut} F CFA</b> selon l'hypothèse de coût unitaire retenue.",
+    "en": "The price of such works therefore exists nowhere in these files. Rather than transpose a borehole's price to a retention basin — which would produce a figure with the appearance of a measurement — the bill is PARAMETRIC: from <b>{bas} F CFA</b> to <b>{haut} F CFA</b> depending on the assumed unit cost."
+  },
+  "proposition_hypothese": {
+    "fr": "{cout} F par canton",
+    "en": "{cout} F per canton"
+  },
+  "proposition_inondations_tuile_cantons": {
+    "fr": "Cantons à aménager",
+    "en": "Cantons to equip"
+  },
+  "proposition_inondations_tuile_cantons_detail": {
+    "fr": "classes élevé et très élevé du producteur",
+    "en": "producer's high and very high classes"
+  },
+  "proposition_inondations_tuile_population": {
+    "fr": "Population concernée",
+    "en": "People concerned"
+  },
+  "proposition_inondations_tuile_population_detail": {
+    "fr": "35 % du pays sur 4 % du maillage",
+    "en": "35 % of the country on 4 % of the mesh"
+  },
+  "proposition_inondations_tuile_ouvrages": {
+    "fr": "Ouvrages recensés",
+    "en": "Works recorded"
+  },
+  "proposition_inondations_tuile_ouvrages_detail": {
+    "fr": "aucun fichier du corpus n'en décrit",
+    "en": "no file in the corpus describes any"
+  },
+  "proposition_inondations_carte_titre": {
+    "fr": "La facture, selon l'hypothèse de coût",
+    "en": "The bill, by cost assumption"
+  },
+  "proposition_inondations_carte_sous_titre": {
+    "fr": "Un aménagement par canton exposé",
+    "en": "One scheme per exposed canton"
+  },
+  "proposition_inondations_note": {
+    "fr": "Chaque ligne suppose UN aménagement par canton, sur les {cantons} cantons exposés. L'hypothèse haute couvre un bassin de rétention, la basse un curage de caniveaux — ce ne sont pas les mêmes ouvrages, et l'écart entre les deux mesure notre ignorance, pas une incertitude statistique.",
+    "en": "Each line assumes ONE scheme per canton, across the {cantons} exposed cantons. The high assumption covers a retention basin, the low one drain clearing — these are not the same works, and the gap between them measures our ignorance, not statistical uncertainty."
+  },
+  "proposition_inondations_liste_titre": {
+    "fr": "Les cantons à aménager",
+    "en": "The cantons to equip"
+  },
+  "proposition_inondations_liste_sous_titre": {
+    "fr": "Population des cantons à risque élevé et très élevé",
+    "en": "Population of high and very high risk cantons"
+  },
+  "proposition_inondations_note_liste": {
+    "fr": "<b>{n}</b> cantons, dont <b>{sans}</b> sans aucun ouvrage d'eau recensé. Ces derniers cumulent les deux manques et sont les seuls que ce tableau de bord désigne sans hésitation.",
+    "en": "<b>{n}</b> cantons, <b>{sans}</b> of them without any recorded water facility. These combine both gaps and are the only ones this dashboard names without hesitation."
+  },
+  "proposition_inondations_map_titre": {
+    "fr": "Les cantons à aménager",
+    "en": "Cantons to equip"
+  },
+  "proposition_inondations_map_sous_titre": {
+    "fr": "Classes élevé et très élevé du risque officiel",
+    "en": "High and very high classes of the official risk index"
+  },
+  "proposition_inondations_note_carte": {
+    "fr": "<b>{cantons}</b> cantons, {population} d'habitants. La carte ne dessine pas un programme : elle dessine son PÉRIMÈTRE — ce que les données permettent de délimiter, et où s'arrête ce qu'elles permettent de dire.",
+    "en": "<b>{cantons}</b> cantons, {population} people. This map does not draw a programme: it draws its PERIMETER — what the data allows us to delimit, and where what it allows us to say stops."
+  },
+  "legende_a_amenager": {
+    "fr": "À aménager",
+    "en": "To equip"
+  },
+  "legende_hors_programme": {
+    "fr": "Hors périmètre",
+    "en": "Outside the perimeter"
+  },
+  "unite_milliards": {
+    "fr": "Md F CFA",
+    "en": "bn F CFA"
   }
 }

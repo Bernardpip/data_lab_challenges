@@ -1175,6 +1175,262 @@ def carte_investissement(tr, data, hauteur):
                hauteur=hauteur)
 
 
+# ═══ Acte 6 · Proposition ════════════════════════════════════════════════════
+#
+# Les cinq actes précédents décrivent. Celui-ci PROPOSE, et c'est un régime
+# différent : il faut poser un objectif de service que les données ne portent
+# pas. La règle tenue partout ici — l'hypothèse est écrite en clair, chiffrée à
+# l'écran, et le lecteur voit la facture bouger avec elle. Un seul chiffre
+# aurait fait passer un choix politique pour un résultat de calcul.
+
+
+def _scenarios_lisibles(tr, scenarios):
+    """Les seuils de desserte, en libellés — « 1 ouvrage / 1 000 habitants »."""
+
+    return scenarios.assign(
+        seuil=scenarios["norme"].map(
+            lambda n: tr("proposition_norme", {"n": ui.fr_number(n)})))
+
+
+def proposition_ouvrages(tr, data, faits, corpus):
+    """Ce qu'il manque en forages et en châteaux, et ce que ça coûte."""
+
+    etalon = analytics.deficit_ouvrages(
+        data["cantons"], data["tde"], data["coso"])["etalon"]
+    normes = (*analytics.NORMES_DESSERTE, int(round(etalon)))
+
+    besoin = analytics.besoin_par_norme(
+        data["cantons"], data["tde"], data["coso"], normes=normes)
+    nature = analytics.parc_par_nature(data["tde"])
+    scenarios = besoin["scenarios"]
+
+    # Le scénario du bourg — un forage photovoltaïque pour mille habitants —
+    # sert de référence dans le texte : c'est l'objet que le COSO construit
+    # réellement, au prix qu'il a réellement payé.
+    reference = scenarios[scenarios["norme"] == 1000]
+
+    accroche(
+        [tr("proposition_ouvrages_texte_1", {
+            "existants": ui.fr_number(besoin["existants"]),
+            "population": ui.compact(besoin["population"]),
+            "chateaux": ui.fr_number(nature["chateaux"]),
+        }),
+         tr("proposition_ouvrages_texte_2", {
+             "manquants": ui.fr_number(int(reference["manquants"].iloc[0]))
+             if len(reference) else "—",
+             "cout": ui.compact(float(reference["cout"].iloc[0]))
+             if len(reference) else "—",
+             "unitaire": ui.compact(besoin["unitaire"]),
+         }),
+         tr("proposition_ouvrages_texte_3")],
+        titre=tr("proposition_ouvrages_titre"), sur_titre=tr("acte_6"),
+    )
+
+    ui.stat_tiles([
+        {"value": ui.fr_number(int(reference["manquants"].iloc[0]))
+            if len(reference) else "—",
+         "label": tr("proposition_tuile_manquants"),
+         "delta": tr("proposition_tuile_manquants_detail"), "good": False,
+         "icon": "building-2"},
+        {"value": ui.compact(float(reference["cout"].iloc[0]))
+            if len(reference) else "—", "unit": " F",
+         "label": tr("proposition_tuile_cout"),
+         "delta": tr("proposition_tuile_cout_detail", {
+             "unitaire": ui.compact(besoin["unitaire"])}),
+         "good": None, "icon": "table-2"},
+        {"value": ui.fr_number(nature["chateaux"]),
+         "label": tr("proposition_tuile_chateaux"),
+         "delta": tr("proposition_tuile_chateaux_detail", {
+             "forages": ui.fr_number(nature["forages"])}),
+         "good": False, "icon": "flag"},
+    ])
+
+    with ui.card(tr("proposition_carte_scenarios_titre"),
+                 tr("proposition_carte_scenarios_sous_titre"), "table-2"):
+        lisible = _scenarios_lisibles(tr, scenarios)
+
+        # Le graphe porte les MILLIARDS, non les francs : à 450 090 690 777,
+        # l'étiquette débordait de la barre et se faisait rogner. La table
+        # jumelle garde le franc près, pour qui veut vérifier.
+        # `trier=False` : les seuils ont un ORDRE propre — du plus ambitieux au
+        # plus modeste — et les ranger par facture le mélangerait.
+        charts.bar_h(lisible.assign(milliards=lisible["cout"] / 1e9),
+                     "seuil", "milliards", unit=tr("unite_milliards"),
+                     trier=False, decimals=1)
+        ui.note(tr("proposition_note_scenarios", {
+            "haut": ui.compact(float(scenarios["cout"].max())),
+            "bas": ui.compact(float(scenarios["cout"].min())),
+            "etalon": ui.fr_number(int(scenarios["norme"].max())),
+        }))
+        charts.table_twin(lisible[["seuil", "requis", "existants",
+                                   "manquants", "cout"]].rename(columns={
+            "seuil": tr("col_seuil"), "requis": tr("col_requis"),
+            "existants": tr("col_existants"),
+            "manquants": tr("col_manquants"), "cout": tr("col_cout")}))
+
+    with ui.card(tr("proposition_carte_nature_titre"),
+                 tr("proposition_carte_nature_sous_titre"), "building-2"):
+        charts.bar_h(nature["detail"], "nature", "ouvrages",
+                     unit=tr("unite_ouvrages"))
+        ui.note(tr("proposition_note_nature", {
+            "chateaux": ui.fr_number(nature["chateaux"]),
+            "total": ui.fr_number(nature["total"]),
+        }))
+        charts.table_twin(nature["detail"].rename(columns={
+            "nature": tr("col_nature"), "ouvrages": tr("col_ouvrages")}))
+
+
+def carte_deficit_canton(tr, data, hauteur, norme=1000):
+    """Les ouvrages manquants canton par canton, au seuil du bourg."""
+
+    cadre = analytics.deficit_par_canton(
+        data["cantons"], data["tde"], data["coso"], norme=norme)
+
+    def dessin(h):
+        return maps.choroplethe(
+            cadre, valeur="manquants", cle="carte_recit_besoin",
+            champs=["canton", "prefecture", "population", "manquants"],
+            libelles=[tr("col_canton"), tr("col_prefecture"),
+                      tr("col_population"), tr("col_manquants")],
+            height=h, nombre=5, methode="quantiles",
+        )
+
+    def pied(resultat):
+        bornes, _ = resultat
+
+        if bornes:
+            maps.legende_paliers(bornes, libelle=tr("col_manquants"),
+                                 decimales=0)
+
+        ui.note(tr("proposition_note_carte", {
+            "total": ui.fr_number(int(cadre["manquants"].sum())),
+            "norme": ui.fr_number(norme),
+            "pire": str(cadre.loc[cadre["manquants"].idxmax(), "canton"]),
+            "max": ui.fr_number(int(cadre["manquants"].max())),
+        }))
+
+    maps.carte(tr("proposition_carte_map_titre"), cle="recit_besoin",
+               dessin=dessin, legende=pied,
+               sous_titre=tr("proposition_carte_map_sous_titre",
+                             {"n": ui.fr_number(norme)}),
+               hauteur=hauteur)
+
+
+# Hypothèses de coût d'un aménagement de gestion des eaux pluviales, en francs
+# CFA par canton. Elles ne viennent PAS du corpus — aucun de ses fichiers ne
+# porte le prix d'un tel ouvrage — et couvrent volontairement un ordre de
+# grandeur de 1 à 10, du curage de caniveaux au bassin de rétention.
+COUTS_INONDATION = (50e6, 100e6, 250e6, 500e6)
+
+
+def proposition_inondations(tr, data, faits, corpus):
+    """Ce qu'il manque pour gérer l'eau qui monte — et le prix qu'on ignore."""
+
+    facture = analytics.facture_inondation(data["cantons"], COUTS_INONDATION)
+    prioritaires = analytics.cantons_prioritaires(
+        data["cantons"], data["tde"], data["coso"])
+
+    _avertissement(tr, "proposition_inondations_avertissement")
+
+    accroche(
+        [tr("proposition_inondations_texte_1", {
+            "cantons": ui.fr_number(facture["cantons"]),
+            "population": ui.compact(facture["population"]),
+            "sans": ui.fr_number(len(prioritaires)),
+        }),
+         tr("proposition_inondations_texte_2"),
+         tr("proposition_inondations_texte_3", {
+             "bas": ui.compact(float(facture["scenarios"]["total"].min())),
+             "haut": ui.compact(float(facture["scenarios"]["total"].max())),
+         })],
+        titre=tr("proposition_inondations_titre"), sur_titre=tr("acte_6"),
+    )
+
+    ui.stat_tiles([
+        {"value": ui.fr_number(facture["cantons"]),
+         "label": tr("proposition_inondations_tuile_cantons"),
+         "delta": tr("proposition_inondations_tuile_cantons_detail"),
+         "good": False, "icon": "flag"},
+        {"value": ui.compact(facture["population"]),
+         "label": tr("proposition_inondations_tuile_population"),
+         "delta": tr("proposition_inondations_tuile_population_detail"),
+         "good": False, "icon": "trending-up"},
+        {"value": "0", "label": tr("proposition_inondations_tuile_ouvrages"),
+         "delta": tr("proposition_inondations_tuile_ouvrages_detail"),
+         "good": False, "icon": "search"},
+    ])
+
+    with ui.card(tr("proposition_inondations_carte_titre"),
+                 tr("proposition_inondations_carte_sous_titre"), "table-2"):
+        lisible = facture["scenarios"].assign(
+            hypothese=facture["scenarios"]["unitaire"].map(
+                lambda cout: tr("proposition_hypothese",
+                                {"cout": ui.compact(cout)})))
+
+        charts.bar_h(lisible.assign(milliards=lisible["total"] / 1e9),
+                     "hypothese", "milliards", unit=tr("unite_milliards"),
+                     trier=False, decimals=2)
+        ui.note(tr("proposition_inondations_note", {
+            "cantons": ui.fr_number(facture["cantons"]),
+        }))
+        charts.table_twin(lisible[["hypothese", "cantons", "total"]].rename(
+            columns={"hypothese": tr("col_hypothese"),
+                     "cantons": tr("col_cantons"), "total": tr("col_cout")}))
+
+    with ui.card(tr("proposition_inondations_liste_titre"),
+                 tr("proposition_inondations_liste_sous_titre"), "flag"):
+        charts.sucette_h(facture["liste"], "canton", "population",
+                         unit=tr("unite_habitants"))
+        ui.note(tr("proposition_inondations_note_liste", {
+            "n": ui.fr_number(facture["cantons"]),
+            "sans": ui.fr_number(len(prioritaires)),
+        }))
+        charts.table_twin(facture["liste"].rename(columns={
+            "canton": tr("col_canton"), "prefecture": tr("col_prefecture"),
+            "region": tr("col_region"), "risque_pts": tr("col_risque"),
+            "population": tr("col_population")}))
+
+
+def carte_exposes(tr, data, hauteur):
+    """Les cantons à aménager : classes hautes du risque officiel."""
+
+    cadre = analytics.classer_officiel(data["cantons"])
+    hautes = cadre["classe_officielle"].isin(analytics.CLASSES_HAUTES)
+    cadre = cadre.assign(a_amenager=hautes.astype(int))
+
+    def dessin(h):
+        return maps.choroplethe(
+            cadre, valeur="a_amenager", cle="carte_recit_exposes",
+            champs=["canton", "prefecture", "risque_pts", "population"],
+            libelles=[tr("col_canton"), tr("col_prefecture"),
+                      tr("col_risque"), tr("col_population")],
+            height=h, nombre=2, methode="lineaire",
+            # Deux teintes seulement : la question posée est binaire — ce
+            # canton entre-t-il dans le programme, oui ou non. Une rampe
+            # continue y aurait suggéré des degrés d'urgence que la décision
+            # ne connaît pas.
+            rampe=[BIVARIEE[1], MANQUE], couleur_contour=RISQUE_CONTOUR,
+        )
+
+    def pied(_):
+        maps.legende_series([
+            {"libelle": tr("legende_a_amenager"), "couleur": MANQUE,
+             "detail": ui.fr_number(int(hautes.sum()))},
+            {"libelle": tr("legende_hors_programme"), "couleur": BIVARIEE[1],
+             "detail": ui.fr_number(int((~hautes).sum()))},
+        ])
+        ui.note(tr("proposition_inondations_note_carte", {
+            "cantons": ui.fr_number(int(hautes.sum())),
+            "population": ui.compact(float(
+                cadre.loc[hautes, "population"].sum())),
+        }))
+
+    maps.carte(tr("proposition_inondations_map_titre"), cle="recit_exposes",
+               dessin=dessin, legende=pied,
+               sous_titre=tr("proposition_inondations_map_sous_titre"),
+               hauteur=hauteur)
+
+
 # ═══ Acte 4 · Et quand l'eau monte ? ═════════════════════════════════════════
 
 def que_classe_le_fri(tr, data, faits, corpus):

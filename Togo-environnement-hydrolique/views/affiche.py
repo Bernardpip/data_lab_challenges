@@ -1045,7 +1045,26 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                  "component": portee(recommandations_vue.render_leviers)},
             ]},
 
-            # ── Acte 6 · Ce qu'on sait, ce qu'on ignore ──────────────────
+            # ── Acte 6 · Proposition ─────────────────────────────────────
+            #
+            # Le seul acte qui PROPOSE. Il vient après « Que faire » — les
+            # leviers d'abord, leur chiffrage ensuite — et avant les preuves,
+            # qui ferment le dossier : une proposition se lit pendant qu'on a
+            # encore les constats en tête, pas après l'appareil critique.
+            {"id": "proposition", "name": tr("section_proposition"),
+             "reference": carte_de_section, "tab_items": [
+                {"id": "ouvrages", "name": tr("vue_proposition_ouvrages"),
+                 "is_default": True,
+                 "component": recit_(recit.proposition_ouvrages, (
+                     "besoin", tr("onglet_besoin"),
+                     recit.carte_deficit_canton))},
+                {"id": "inondations",
+                 "name": tr("vue_proposition_inondations"),
+                 "component": recit_(recit.proposition_inondations, (
+                     "exposes", tr("onglet_exposes"), recit.carte_exposes))},
+            ]},
+
+            # ── Acte 7 · Ce qu'on sait, ce qu'on ignore ──────────────────
             {"id": "preuves", "name": tr("section_preuves"),
              "reference": carte_du_corpus, "tab_items": [
                 {"id": "fichiers", "name": tr("vue_fichiers"),

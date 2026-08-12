@@ -952,6 +952,157 @@ def facture_rattrapage(cantons, tde, coso):
     }
 
 
+# ─── Ce qu'il faudrait construire, et ce que ça coûterait ────────────────────
+#
+# Les fonctions qui suivent CHIFFRENT UNE PROPOSITION. Elles sortent donc du
+# régime des autres : partout ailleurs, ce module ne fait que résumer ce que le
+# corpus contient ; ici, il faut poser un objectif de service que les données
+# ne portent pas.
+#
+# La règle qu'on s'impose : **toute hypothèse est un ARGUMENT de fonction, avec
+# sa valeur écrite en clair, et jamais une constante enfouie.** Un lecteur qui
+# conteste le seuil doit pouvoir le déplacer et voir la facture bouger, plutôt
+# que d'avoir à nous croire.
+
+# Seuils de desserte, en habitants par ouvrage. Ils sont POSÉS, non tirés du
+# corpus, et chacun correspond à un objet technique différent :
+#
+#   ·   300 — la norme villageoise classique d'un point d'eau à pompe manuelle ;
+#   · 1 000 — l'ordre de grandeur d'un forage photovoltaïque comme ceux du
+#             COSO, qui dessert un bourg ;
+#   · 5 000 — un plancher volontairement bas, pour montrer que même une
+#             ambition minimale laisse un déficit.
+#
+# Le quatrième scénario n'est pas ici : c'est la MÉDIANE régionale observée,
+# calculée par `deficit_ouvrages`, et c'est le seul qui ne suppose rien.
+NORMES_DESSERTE = (300, 1000, 5000)
+
+
+def prix_unitaire_observe(coso):
+    """Prix médian réellement payé pour un ouvrage COSO, en francs CFA.
+
+    Une dépense CONSTATÉE, jamais un devis. C'est ce qui rend les factures de
+    cette section défendables : elles ne supposent ni économie d'échelle, ni
+    surcoût d'accès — seulement que le prochain forage coûtera ce qu'a coûté
+    le précédent.
+    """
+
+    paye = coso.loc[coso["montant_paye"] > 0, "montant_paye"]
+
+    return float(paye.median()) if len(paye) else 0.0
+
+
+def besoin_par_norme(cantons, tde, coso, normes=NORMES_DESSERTE):
+    """Ouvrages à construire et facture, pour chaque seuil de desserte.
+
+    Un tableau de SCÉNARIOS plutôt qu'un chiffre unique. Le nombre d'ouvrages
+    manquants n'existe pas dans l'absolu : il dépend entièrement du service
+    qu'on vise, et publier une seule valeur reviendrait à faire passer ce choix
+    politique pour un résultat de calcul.
+    """
+
+    population = float(cantons["population"].sum())
+    existants = int(len(tde) + len(coso))
+    unitaire = prix_unitaire_observe(coso)
+
+    lignes = []
+
+    for norme in normes:
+        requis = int(np.ceil(population / norme)) if norme else 0
+        manquants = max(0, requis - existants)
+
+        lignes.append({
+            "norme": int(norme),
+            "requis": requis,
+            "existants": existants,
+            "manquants": manquants,
+            "cout": manquants * unitaire,
+        })
+
+    return {
+        "scenarios": pd.DataFrame(lignes),
+        "unitaire": unitaire,
+        "existants": existants,
+        "population": population,
+    }
+
+
+def deficit_par_canton(cantons, tde, coso, norme=1000):
+    """Ouvrages manquants CANTON PAR CANTON, pour un seuil de desserte donné.
+
+    La maille cantonale est celle des cartes et celle où se décide un chantier.
+    L'agrégat régional dit combien il en faut ; celui-ci dit où.
+    """
+
+    ouvrages = (
+        pd.concat([tde[["cle_canton"]], coso[["cle_canton"]]])
+        .groupby("cle_canton").size().rename("ouvrages").reset_index()
+    )
+
+    cadre = cantons.merge(ouvrages, on="cle_canton", how="left")
+    cadre["ouvrages"] = cadre["ouvrages"].fillna(0).astype(int)
+    cadre["requis"] = np.ceil(cadre["population"] / norme).astype(int)
+    cadre["manquants"] = (cadre["requis"] - cadre["ouvrages"]).clip(lower=0)
+
+    return cadre
+
+
+def parc_par_nature(tde):
+    """Forages, châteaux d'eau, et ce que le fichier ne nomme pas.
+
+    Le château est l'ouvrage qui STOCKE et met en pression ; le forage est
+    celui qui puise. Un réseau sans château distribue au débit de sa pompe, et
+    s'arrête avec elle. L'inventaire publié en compte deux — le chiffre est si
+    petit qu'il faut le dire séparément plutôt que de le noyer dans un total.
+    """
+
+    compte = _compte(tde, "nature")
+    lecture = {str(ligne["nature"]): int(ligne["ouvrages"])
+               for _, ligne in compte.iterrows()}
+
+    return {
+        "detail": compte,
+        "forages": lecture.get("Forage", 0),
+        "chateaux": lecture.get("Château", 0),
+        "non_renseignes": lecture.get(NON_RENSEIGNE, 0),
+        "total": int(len(tde)),
+    }
+
+
+def facture_inondation(cantons, couts_unitaires, classes=None):
+    """Facture d'un aménagement par canton exposé — à coût unitaire POSÉ.
+
+    **Le corpus ne porte aucun prix d'ouvrage de gestion des eaux pluviales.**
+    Ni le COSO, dont les 218 sous-projets sont tous des forages, ni le fichier
+    TdE, ni la couche de risque. Transposer le prix d'un forage à un bassin de
+    rétention serait inventer un chiffre en lui donnant l'apparence d'une
+    mesure.
+
+    La facture est donc rendue PARAMÉTRIQUE : une ligne par hypothèse de coût,
+    et le lecteur choisit celle qu'il peut défendre. C'est la seule forme
+    honnête d'estimation quand le prix manque — elle affiche son ignorance au
+    lieu de la masquer derrière une moyenne.
+    """
+
+    cadre = classer_officiel(cantons)
+    retenus = cadre[cadre["classe_officielle"].isin(classes or CLASSES_HAUTES)]
+
+    lignes = [
+        {"unitaire": float(cout), "cantons": int(len(retenus)),
+         "total": float(cout) * len(retenus)}
+        for cout in couts_unitaires
+    ]
+
+    return {
+        "scenarios": pd.DataFrame(lignes),
+        "cantons": int(len(retenus)),
+        "population": float(retenus["population"].sum()),
+        "liste": retenus[["canton", "prefecture", "region", "risque_pts",
+                          "population"]]
+        .sort_values("risque_pts", ascending=False).reset_index(drop=True),
+    }
+
+
 def zeros_composantes(cantons):
     """Combien de cantons portent un zéro, et sur quelle composante.
 
