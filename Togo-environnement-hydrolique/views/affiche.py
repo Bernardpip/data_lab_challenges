@@ -27,6 +27,9 @@ from views import donnees as donnees_vue
 from views import parc as parc_vue
 from views import recommandations as recommandations_vue
 from views import risque as risque_vue
+from socle.design.marque import datalab_marque
+
+from utils import liens
 from utils.data import datasets, apply_filters
 from utils import analytics, perimetre, barres
 
@@ -693,6 +696,13 @@ def _console(rendu):
     return peindre
 
 
+def _etroit(rendu):
+    """Peint `rendu` dans le contexte de colonne étroite."""
+
+    with barres.colonne_etroite():
+        rendu()
+
+
 def configuration(tr, trs, brut, corpus, hauteur_carte):
     """La configuration déclarative du menu — un seul objet, tout le chemin.
 
@@ -735,9 +745,19 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
         return {"gauche": peindre_gauche, "droite": peindre_droite}
 
     def portee(rendu):
-        """Un onglet PORTÉ de la console — il apporte ses propres filtres."""
+        """Un onglet PORTÉ de la console — il apporte ses propres filtres.
 
-        return rendu
+        Le rendu est enveloppé dans le contexte de COLONNE ÉTROITE : les
+        barres de filtres y renoncent à leur colonne d'appui, qui laissait un
+        tiers de la zone vide dans une colonne de 62 % — vérifié à l'écran sur
+        la vue des forages. La console, elle, garde sa grille à douze unités.
+        """
+
+        def peindre():
+            with barres.colonne_etroite():
+                rendu()
+
+        return peindre
 
     def carte_de_section():
         """Le repli de colonne droite : le risque, dans le périmètre partagé."""
@@ -769,8 +789,8 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
                 # avec la carte de référence de la section.
                 {"id": "fri_carto", "name": tr("vue_fri_carto"),
                  "is_default": True, "component": {
-                     "gauche": lambda: risque_vue.render_carto(
-                         avec_carte=False),
+                     "gauche": lambda: _etroit(
+                         lambda: risque_vue.render_carto(avec_carte=False)),
                      "droite": lambda: risque_vue.carte_seule(hauteur_carte),
                  }},
                 {"id": "fri_facteurs", "name": tr("vue_fri_facteurs"),
@@ -780,11 +800,13 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
              "reference": carte_de_section, "tab_items": [
                 {"id": "tde", "name": tr("vue_tde"), "is_default": True,
                  "component": {
-                     "gauche": lambda: parc_vue.render_tde(avec_carte=False),
+                     "gauche": lambda: _etroit(
+                         lambda: parc_vue.render_tde(avec_carte=False)),
                      "droite": lambda: parc_vue.carte_tde_seule(hauteur_carte),
                  }},
                 {"id": "coso", "name": tr("vue_coso"), "component": {
-                     "gauche": lambda: parc_vue.render_coso(avec_carte=False),
+                     "gauche": lambda: _etroit(
+                         lambda: parc_vue.render_coso(avec_carte=False)),
                      "droite": lambda: parc_vue.carte_coso_seule(hauteur_carte),
                  }},
                 {"id": "technique", "name": tr("vue_technique"),
@@ -794,8 +816,9 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
              "reference": carte_de_section, "tab_items": [
                 {"id": "pression", "name": tr("vue_pression"),
                  "is_default": True, "component": {
-                     "gauche": lambda: demographie_vue.render_pression(
-                         avec_carte=False),
+                     "gauche": lambda: _etroit(
+                         lambda: demographie_vue.render_pression(
+                             avec_carte=False)),
                      "droite": lambda: demographie_vue.carte_population_seule(
                          hauteur_carte),
                  }},
@@ -885,9 +908,24 @@ def render():
         # cet objet. Le socle n'en connaît ni les données ni les vues.
         config=config,
         echelle=ECHELLE,
-        pied_gauche=tr("pied_source"),
-        pied_droit=tr("pied_auteur"),
-
+        # Le pied porte la signature à GAUCHE et la provenance à DROITE :
+        # « @Kokou PIPI | LinkedIn · Portfolio » d'un côté, le laboratoire et
+        # le défi de l'autre. Les adresses viennent toutes de `utils.liens` —
+        # aucune n'est écrite ici, sinon l'en-tête et le pied en tiendraient
+        # deux copies qui divergeraient au premier changement de domaine.
+        pied_gauche=(
+            f'<span class="kg-foot-auteur">{tr("realise_par")}'
+            f' {tr("auteur")}</span>'
+            '<span class="kg-foot-sep">|</span>'
+            + liens.lien("LinkedIn_url")
+            + '<span class="kg-foot-point">·</span>'
+            + liens.lien("Portfolio_url")
+        ),
+        pied_droit=(
+            liens.lien("data_lab_url")
+            + '<span class="kg-foot-sep">/</span>'
+            + liens.lien("data_lab_challenge_url")
+        ),
         # Les neuf réglages d'apparence. Le vert est celui du drapeau
         # togolais ; il désigne le commanditaire, jamais une donnée — aucune
         # série du tableau de bord ne l'emploie.
@@ -910,6 +948,12 @@ def render():
         # La silhouette vient de la MÊME couche que les cartes de la page :
         # un logo dessiné à part pourrait montrer des frontières que les
         # données ne connaissent pas.
+        # La silhouette mène au site de l'institution ; la marque, à celui du
+        # laboratoire. Les deux ouvrent dans un onglet neuf : quitter l'affiche
+        # pour un site externe ferait perdre le périmètre en cours.
+        logo_url="https://www.republiquetogolaise.tg/",
+        marque=datalab_marque(taille=30,
+                              adresse=liens.adresse("data_lab_url")),
         logo=silhouette_svg(brut["cantons"], hauteur=68,
                             couleur=VERT_TOGO, libelle=tr("logo_alt")),
         # ── Les deux colonnes ────────────────────────────────────────────

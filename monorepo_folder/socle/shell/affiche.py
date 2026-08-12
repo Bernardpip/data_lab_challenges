@@ -551,7 +551,8 @@ def quitter(params):
     st.rerun()
 
 
-def _menu(titre, sous_titre, sur_titre, etat, logo):
+def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
+          marque=None):
     """Menu haut : identité et langue sur une ligne, le rail en dessous.
 
     Le menu ne fait plus toute la largeur de la page — il tient dans la colonne
@@ -576,15 +577,31 @@ def _menu(titre, sous_titre, sur_titre, etat, logo):
     entete = st.container(key="kgaffmenu")
 
     with entete:
-        gauche, droite = st.columns([78, 22], gap="small", vertical_alignment="center")
+        # La bascule de langue est descendue dans le rail ; la place qu'elle
+        # occupait revient à la marque du laboratoire — le même lien que porte
+        # la barre de la console, pour que les deux surfaces se signent pareil.
+        if marque:
+            # `marque` est du HTML DÉJÀ COMPOSÉ, non une paire {label, url} :
+            # le logo du laboratoire porte ses propres couleurs et son propre
+            # mot-marque sur deux lignes. Les recomposer ici obligerait le
+            # socle à connaître une marque qui ne lui appartient pas.
+            st.markdown(f'<div class="kg-aff-marque">{marque}</div>',
+                        unsafe_allow_html=True)
 
-        with gauche:
+        if True:
             # Le logo et le bloc de titres forment UNE rangée : posés dans
             # deux colonnes Streamlit, ils se sépareraient dès que la fenêtre
             # se resserre, et le logo passerait au-dessus du titre.
             st.markdown(
                 '<div class="kg-aff-identite">'
-                + (f'<div class="kg-aff-logo">{logo}</div>' if logo else "")
+                # La silhouette mène au site de l'institution qu'elle
+                # représente. `rel="noopener"` est obligatoire avec `_blank` :
+                # sans lui, la page ouverte garde une référence sur celle-ci.
+                + (f'<a class="kg-aff-logo" href="{logo_url}"'
+                   f' target="_blank" rel="noopener noreferrer">{logo}</a>'
+                   if logo and logo_url
+                   else f'<div class="kg-aff-logo">{logo}</div>' if logo
+                   else "")
                 + '<div class="kg-aff-menu-id">'
                 + (f'<div class="kg-aff-surtitre">{sur_titre}</div>'
                    if sur_titre else "")
@@ -595,37 +612,6 @@ def _menu(titre, sous_titre, sur_titre, etat, logo):
                 unsafe_allow_html=True,
             )
 
-        with droite:
-            actions = st.container(key="kgaffactions")
-
-            with actions:
-                # Le conteneur nommé enveloppe RÉELLEMENT les deux boutons :
-                # c'est lui que la feuille cible pour les souder en une
-                # bascule. Un conteneur ouvert autour de colonnes créées
-                # ailleurs n'envelopperait rien.
-                bascule = st.container(key="kgafflang")
-                courante = langue()
-
-                with bascule:
-                    for col, code in zip(
-                        st.columns(len(LANGUES), gap="small"), LANGUES
-                    ):
-                        with col:
-                            if st.button(
-                                code.upper(),
-                                key=f"afflang_{code}",
-                                use_container_width=True,
-                                type=("primary" if code == courante
-                                      else "tertiary"),
-                            ):
-                                definir_langue(code)
-
-        # Seconde rangée : le rail, sur toute la largeur du menu. Les vues ont
-        # des colonnes ÉGALES — un rail dont les segments ont la même largeur
-        # se lit d'un coup, là où des boutons de largeur variable donnent au
-        # plus long l'air d'être le principal. Les sorties, elles, prennent
-        # trois quarts de segment : elles encadrent les vues sans peser autant
-        # qu'elles.
         # UN SEUL rang de navigation, coupé en deux : les entrées de menu à
         # gauche, leurs onglets à droite. Empilés, ils mangeaient une rangée de
         # plus au contenu — or la colonne droite ne défile pas, et tout ce que
@@ -683,6 +669,27 @@ def _menu(titre, sous_titre, sur_titre, etat, logo):
                         elif cible["key"] != etat["onglet"]:
                             menu.aller_a_l_onglet(cible["key"], etat)
 
+            # La bascule de langue ferme la ligne, poussée au bord droit. Elle
+            # garde ses deux boutons plutôt qu'un groupe segmenté : ses cases
+            # sont des ACTIONS — traduire la page — et non un choix parmi une
+            # liste de destinations. Le conteneur nommé enveloppe RÉELLEMENT
+            # les deux boutons, sans quoi la feuille n'aurait rien à souder.
+            with st.container(key="kgafflang"):
+                courante = langue()
+
+                for colonne, code in zip(
+                    st.columns(len(LANGUES), gap="small"), LANGUES
+                ):
+                    with colonne:
+                        if st.button(
+                            code.upper(),
+                            key=f"afflang_{code}",
+                            use_container_width=True,
+                            type=("primary" if code == courante
+                                  else "tertiary"),
+                        ):
+                            definir_langue(code)
+
 
 def render_affiche(titre, config, sous_titre=None,
                    sur_titre=None, pied_gauche=None, pied_droit=None,
@@ -692,7 +699,8 @@ def render_affiche(titre, config, sous_titre=None,
                    couleur_langue_active=None, couleur_langue_inactive=None,
                    couleur_fond_menu=None, couleur_bordure_menu=None,
                    marge_menu=True, ombre_menu=None,
-                   hauteur_menu=None, logo=None,
+                   hauteur_menu=None, logo=None, logo_url=None,
+                   marque=None,
                    separation_colonnes="panneau",
                    colonne_gauche_poids=62, colonne_gauche_fond=None,
                    colonne_gauche_bordure=None,
@@ -860,7 +868,8 @@ def render_affiche(titre, config, sous_titre=None,
     # socle, pour l'emporter sur elle.
     st.markdown(menu.styles(config), unsafe_allow_html=True)
 
-    _menu(titre, sous_titre, sur_titre, etat, logo)
+    _menu(titre, sous_titre, sur_titre, etat, logo,
+          logo_url=logo_url, marque=marque)
 
     corps = st.container(key="kgaffcorps")
 

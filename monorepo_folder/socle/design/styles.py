@@ -932,6 +932,7 @@ _CSS_AFFICHE = """
    haute — c'est toujours une carte, à droite — y gagne la hauteur entière du
    bandeau, soit 130 px qu'aucun réglage d'échelle ne rendait. */
 .st-key-kgaffmenu {
+  position: fixed;
   /* `width: calc(...)` est indispensable : Streamlit impose `width:100%` aux
      blocs de son conteneur vertical, et une marge s'y AJOUTE au lieu de
      rétrécir l'élément — la carte débordait de 32 px et la bascule de langue
@@ -966,8 +967,14 @@ _CSS_AFFICHE = """
 .kg-aff-identite { display: flex; align-items: center; gap: 16px; min-width: 0; }
 .kg-aff-logo {
   flex: 0 0 auto; display: flex; align-items: center;
+  /* Largeur FIXE : la silhouette change d'un défi à l'autre — le Togo est
+     étroit, un pays large le serait moins — et le décalage du rail, calculé
+     dessous, dépend d'elle. Sans cette contrainte, l'alignement du menu
+     varierait avec la forme du pays. */
+  width: 36px; box-sizing: border-box;
   padding-right: 16px; border-right: 1px solid var(--kg-color-border);
 }
+.kg-aff-logo svg { width: 100%; height: auto; }
 .kg-aff-menu-id { min-width: 0; }
 
 .kg-aff-titre {
@@ -1176,7 +1183,10 @@ _CSS_AFFICHE = """
   background: transparent;
   border: none;
   border-radius: 7px;
-  padding: 5px 14px;
+  /* 11 px : mesuré, les deux groupes réclamaient 806 px pour 792
+     disponibles une fois le rail décalé sous le bloc de titres —
+     quatorze de trop, et le menu passait à deux lignes. */
+  padding: 5px 9px;
   min-height: 0;
 }
 
@@ -1214,6 +1224,55 @@ _CSS_AFFICHE = """
    droite. Le groupe de droite est poussé au bord par une marge automatique —
    collé à gauche de sa colonne, il aurait laissé un vide au milieu du menu et
    un autre à sa droite, sans qu'on sache lequel des deux séparait quoi. */
+/* Le rail s'aligne sur le BLOC DE TEXTE, pas sur le bord de la carte. Le logo
+   décale les titres de 49 px — sa largeur, son filet et l'écart qui le sépare
+   du texte, mesurés à l'écran — et un rail resté au bord donnait deux
+   alignements dans un même en-tête : le menu sous le logo, les titres à côté.
+   La règle ne s'applique QUE s'il y a un logo. */
+.st-key-kgaffmenu:has(.kg-aff-logo) .st-key-kgaffrail { padding-left: 49px; }
+
+/* Marque du laboratoire — même lien et mêmes couleurs que la barre de la
+   console : lion rouge, texte d'encre. Ancrée au coin haut droit de la carte,
+   là où se trouvait la bascule de langue. */
+.kg-aff-marque { position: absolute; top: 14px; right: 20px; }
+
+/* Marque Data AI Lab — le logo officiel et son mot-marque sur deux lignes,
+   comme le site les compose. Les couleurs viennent du tracé lui-même : un
+   logo ne prend pas la teinte de son contexte. */
+.kg-marque {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--kg-color-text);
+}
+.kg-marque:hover { opacity: .82; }
+.kg-marque-icone { display: flex; }
+.kg-marque-mot {
+  font-size: 12px; font-weight: 700; line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+/* Pied de l'affiche : il emprunte la grammaire du pied de la CONSOLE —
+   `.kg-foot-lab`, `.kg-foot-link`, `.kg-foot-sep` — plutôt que d'inventer la
+   sienne. Deux surfaces d'une même application ne signent pas de deux façons.
+   Seul l'espacement des séparateurs est repris ici : le pied de la console
+   les serre davantage, ses segments étant plus courts. */
+.kg-aff-pied .kg-foot-sep { margin: 0 8px; }
+.kg-aff-pied .kg-foot-lab,
+.kg-aff-pied .kg-foot-link { font-size: inherit; }
+.kg-foot-auteur { font-weight: 600; color: var(--kg-color-text); }
+/* Le point qui sépare deux liens de MÊME nature est plus discret que la barre
+   qui sépare l'auteur de ses liens : deux séparateurs identiques donneraient
+   trois segments de même rang, alors qu'il y en a deux et une signature. */
+/* Même encre que la barre voisine, et non la couleur des FILETS : celle-ci
+   est faite pour des traits d'un pixel sur fond clair, et le point y
+   disparaissait — vérifié à l'écran, on lisait « LinkedIn  Portfolio » sans
+   rien entre les deux. L'opacité seule le rend plus discret que la barre. */
+.kg-aff-pied .kg-foot-point { opacity: .55; margin: 0 7px; }
+
+/* Le logo devenu lien ne doit rien changer à son apparence : ni soulignement,
+   ni teinte de lien — c'est une image, pas un mot. */
+a.kg-aff-logo { text-decoration: none; color: inherit; }
+a.kg-aff-logo:hover { opacity: .8; }
+
 .st-key-kgaffrail {
   margin: 8px 0 0;
   /* Le conteneur de Streamlit empile ses enfants ; on le remet en ligne. Les
@@ -1222,7 +1281,7 @@ _CSS_AFFICHE = """
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 10px;
 }
 /* Chaque groupe se réduit à son contenu et refuse de s'étirer : sans cela,
    deux enfants à 100 % de large ne tiennent pas sur une ligne, quoi qu'on
@@ -1230,6 +1289,45 @@ _CSS_AFFICHE = """
 .st-key-kgaffrail > div,
 .st-key-kgaffsections,
 .st-key-kgaffvues { margin: 0; width: auto !important; flex: 0 0 auto; }
+
+/* La bascule de langue ferme la ligne : poussée au bord droit, elle sépare
+   visuellement la navigation — à gauche — de l'action de traduire. Les deux
+   groupes de navigation, eux, restent collés : ils se lisent comme un chemin. */
+/* La bascule est ANCRÉE au bord droit du rail, hors du flux. Poussée par une
+   marge automatique, elle se déplaçait avec la longueur des libellés et
+   basculait à la ligne dès qu'une section portait un nom plus long : le seul
+   élément qui ne change jamais de contenu était le seul à bouger. Ancrée, sa
+   position ne dépend plus de ce qu'il y a à sa gauche.
+
+   Le rail lui réserve la place en conséquence — sinon le dernier onglet
+   passerait dessous. */
+.st-key-kgaffrail { position: relative; padding-right: 92px; }
+
+.st-key-kgafflang {
+  position: absolute !important;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: auto !important;
+  margin: 0 !important;
+}
+/* Les deux cases restent côte à côte : `min-width` par défaut les faisait
+   passer l'une sous l'autre dès que le rail manquait de place, et une bascule
+   empilée ne se lit plus comme une bascule. */
+.st-key-kgafflang [data-testid="stHorizontalBlock"] {
+  gap: 2px; width: 84px; flex-wrap: nowrap;
+}
+.st-key-kgafflang [data-testid="stColumn"] { min-width: 0; flex: 1 1 0; }
+.st-key-kgafflang [data-testid="stButton"] > button {
+  border-radius: 7px;
+  padding: 5px 12px;
+  min-height: 0;
+  border: 1px solid var(--kg-color-border-light);
+}
+.st-key-kgafflang [data-testid="stButton"] > button p {
+  font-size: 12px;
+  font-weight: 600;
+}
 
 .st-key-kgaffvues [data-baseweb="button-group"] {
   gap: 2px;
@@ -1245,7 +1343,10 @@ _CSS_AFFICHE = """
   background: transparent;
   border: none;
   border-radius: 7px;
-  padding: 5px 15px;
+  /* 11 px : mesuré, les deux groupes réclamaient 806 px pour 792
+     disponibles une fois le rail décalé sous le bloc de titres —
+     quatorze de trop, et le menu passait à deux lignes. */
+  padding: 5px 9px;
   min-height: 0;
 }
 

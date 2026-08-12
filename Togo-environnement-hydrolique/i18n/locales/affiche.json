@@ -174,5 +174,17 @@
   "vue_affichage": {
     "fr": "Affichage",
     "en": "Display"
+  },
+  "marque_lab": {
+    "fr": "Data AI Lab",
+    "en": "Data AI Lab"
+  },
+  "auteur": {
+    "fr": "Kokou PIPI",
+    "en": "Kokou PIPI"
+  },
+  "realise_par": {
+    "fr": "Réalisé par :",
+    "en": "Built by:"
   }
 }

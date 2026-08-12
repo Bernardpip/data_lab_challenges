@@ -17,6 +17,8 @@ Le référentiel en a 5, le parc TdE 3 (dont 97 % en Maritime), le COSO 3 autres
 jamais une liste unifiée qui laisserait choisir une région où le jeu n'a rien.
 """
 
+from contextlib import contextmanager
+
 from socle.ui import filters
 from socle.i18n.traduction import t
 
@@ -56,6 +58,40 @@ def _spec(colonne, cle, libelle, placeholder, parent=None, aide=None):
     return spec
 
 
+# La largeur disponible n'est pas la même selon la surface : la console occupe
+# toute la page, l'affiche une colonne de 62 %. La grille à douze unités garde
+# les champs à 2/12 et verse le reste dans une colonne d'appui — invisible sur
+# une page large, mais qui laisse un tiers de vide dans une colonne étroite.
+#
+# Le contexte est porté par un drapeau de module plutôt que par un argument :
+# les vues portées sont appelées telles quelles, sans qu'on puisse leur passer
+# quoi que ce soit. Il est posé le temps d'un rendu et retiré ensuite, y compris
+# si le rendu lève.
+_ETROIT = {"actif": False}
+
+
+@contextmanager
+def colonne_etroite():
+    """Le temps de ce bloc, les barres se répartissent toute la largeur."""
+
+    precedent = _ETROIT["actif"]
+    _ETROIT["actif"] = True
+
+    try:
+        yield
+    finally:
+        _ETROIT["actif"] = precedent
+
+
+def _reliquat(demande):
+    """Faut-il garder la colonne d'appui ? `None` s'en remet au contexte."""
+
+    if demande is None:
+        return not _ETROIT["actif"]
+
+    return demande
+
+
 def _dans_zone(cle, cles_session, construire):
     """Toute barre de ce défi se peint dans la zone « Filtres » du socle.
 
@@ -77,7 +113,8 @@ def _dans_zone(cle, cles_session, construire):
         return construire()
 
 
-def territoriale(cadre, avec_commune=False, reliquat=True, cle="territoriale"):
+def territoriale(cadre, avec_commune=False, reliquat=None,
+                 cle="territoriale"):
     """Barre territoriale — région → préfecture → commune, liées en chaîne.
 
     Choisir une région restreint la liste des préfectures à celles qu'elle
@@ -102,7 +139,7 @@ def territoriale(cadre, avec_commune=False, reliquat=True, cle="territoriale"):
     cles = [champ["cle"] for champ in champs]
 
     return _dans_zone(cle, cles, lambda: filters.territoriale(
-        cadre, champs=champs, reliquat=reliquat))
+        cadre, champs=champs, reliquat=_reliquat(reliquat)))
 
 
 def zone_territoriale(cadre, coso=None, cle="affiche"):
@@ -173,7 +210,9 @@ def parc_tde(cadre):
     ]
 
     return _dans_zone("parc_tde", [c["cle"] for c in champs],
-                      lambda: filters.territoriale(cadre, champs=champs))
+                      lambda: filters.territoriale(
+                          cadre, champs=champs,
+                          reliquat=_reliquat(None)))
 
 
 def parc_coso(cadre, avec_annee=True):
@@ -209,7 +248,8 @@ def parc_coso(cadre, avec_annee=True):
         [intervalle["cle"]] if intervalle else [])
 
     return _dans_zone("parc_coso", cles, lambda: filters.territoriale(
-        cadre, champs=champs, intervalle=intervalle))
+        cadre, champs=champs, intervalle=intervalle,
+        reliquat=_reliquat(None)))
 
 
 def periode(series, cle, aide=None, extras=None):

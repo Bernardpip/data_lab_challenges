@@ -64,6 +64,12 @@ COULEURS = {
     "menu_inactive_color": "transparent",
     "tab_active_color": "var(--kg-color-surface)",
     "tab_inactive_color": "transparent",
+    # La bascule de langue prend place dans le même rang que le menu, et se
+    # règle donc au même endroit. Elle garde pourtant sa propre paire : elle ne
+    # mène nulle part — elle traduit — et lui donner la teinte d'une section
+    # laisserait croire qu'on peut « aller » en anglais comme on va au Risque.
+    "lang_active_color": "var(--kg-color-surface)",
+    "lang_inactive_color": "transparent",
 }
 
 
@@ -201,8 +207,9 @@ def _aller(cle, parametre, cle_session, defaut, effacer=()):
     st.rerun()
 
 
-def styles(config, portee_menu="kgaffsections", portee_onglets="kgaffvues"):
-    """Feuille des quatre couleurs — n'écrit QUE ce qui est demandé."""
+def styles(config, portee_menu="kgaffsections", portee_onglets="kgaffvues",
+           portee_langue="kgafflang"):
+    """Feuille des six couleurs — n'écrit QUE ce qui est demandé."""
 
     couleurs = {**COULEURS, **{c: v for c, v in config.items()
                                if c in COULEURS and v}}
@@ -220,6 +227,12 @@ def styles(config, portee_menu="kgaffsections", portee_onglets="kgaffvues"):
         f" background: {couleurs['tab_active_color']}; }}"
         f".st-key-{portee_onglets} {inactif} {{"
         f" background: {couleurs['tab_inactive_color']}; }}"
+        # La bascule est faite de deux `st.button`, non d'un groupe segmenté :
+        # ses deux cases sont des ACTIONS, pas un choix parmi une liste.
+        f'.st-key-{portee_langue} [data-testid="stButton"] > button[kind="primary"] {{'
+        f" background: {couleurs['lang_active_color']}; }}"
+        f'.st-key-{portee_langue} [data-testid="stButton"] > button {{'
+        f" background: {couleurs['lang_inactive_color']}; }}"
         "</style>"
     )
 
