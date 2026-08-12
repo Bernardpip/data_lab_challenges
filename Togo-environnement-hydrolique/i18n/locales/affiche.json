@@ -386,5 +386,13 @@
   "reglages_fermer": {
     "fr": "Fermer",
     "en": "Close"
+  },
+  "reglages_section": {
+    "fr": "Afficher cette section",
+    "en": "Show this section"
+  },
+  "reglages_masquee": {
+    "fr": "masquée",
+    "en": "hidden"
   }
 }

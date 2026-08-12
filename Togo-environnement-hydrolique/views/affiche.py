@@ -950,6 +950,8 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
         "settings": {
             "titre": tr("reglages_titre"),
             "note": tr("reglages_note"),
+            "section": tr("reglages_section"),
+            "masquee": tr("reglages_masquee"),
             "reinitialiser": tr("reglages_reinitialiser"),
             "fermer": tr("reglages_fermer"),
         },

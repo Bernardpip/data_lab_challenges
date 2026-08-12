@@ -737,26 +737,39 @@ def _reglages(config):
         unsafe_allow_html=True,
     )
 
+    # Un DÉPLIANT par section, replié. Les trente-huit cases à plat demandaient
+    # trois écrans de défilement dans une fenêtre qui en fait un : on n'y voyait
+    # jamais la structure qu'on venait régler. Repliées, les sept sections
+    # tiennent d'un coup d'œil, et l'on n'ouvre que celle qu'on veut toucher.
     for entree in config.get("menu_items") or []:
         identifiant = entree.get("id")
+        onglets = entree.get("tab_items") or []
+        vue = menu.visible(entree)
+        vus = sum(1 for o in onglets if menu.visible(o, identifiant))
 
-        vue = st.toggle(f'**{menu.texte(entree.get("name"), active)}**',
-                        value=menu.visible(entree), key=f"reg_{identifiant}")
-        menu.autoriser(entree, vue)
+        # L'en-tête du dépliant PORTE l'état : sans lui, une section masquée ne
+        # se distinguerait d'une autre qu'en l'ouvrant, ce qui annulerait tout
+        # le gain du repli.
+        etiquette = menu.texte(entree.get("name"), active)
+        detail = (f"{vus}/{len(onglets)}" if vue
+                  else (reglages.get("masquee") or "—"))
 
-        # Les onglets d'une section masquée restent RÉGLABLES mais grisés :
-        # les retirer ferait perdre le détail du réglage au premier
-        # basculement de la section, et tout serait à recocher.
-        for onglet in entree.get("tab_items") or []:
-            actif = st.checkbox(
-                menu.texte(onglet.get("name"), active),
-                value=menu.visible(onglet, identifiant),
-                key=f"reg_{identifiant}_{onglet.get('id')}",
-                disabled=not vue,
-            )
-            menu.autoriser(onglet, actif, identifiant)
+        with st.expander(f"**{etiquette}**  ·  {detail}", expanded=False):
+            vue = st.toggle(reglages.get("section") or etiquette, value=vue,
+                            key=f"reg_{identifiant}")
+            menu.autoriser(entree, vue)
 
-        st.markdown('<div style="height:10px;"></div>', unsafe_allow_html=True)
+            # Les onglets d'une section masquée restent RÉGLABLES mais grisés :
+            # les retirer ferait perdre le détail du réglage au premier
+            # basculement de la section, et tout serait à recocher.
+            for onglet in onglets:
+                actif = st.checkbox(
+                    menu.texte(onglet.get("name"), active),
+                    value=menu.visible(onglet, identifiant),
+                    key=f"reg_{identifiant}_{onglet.get('id')}",
+                    disabled=not vue,
+                )
+                menu.autoriser(onglet, actif, identifiant)
 
     gauche, droite = st.columns(2)
 
