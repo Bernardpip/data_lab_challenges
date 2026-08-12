@@ -967,6 +967,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             "hauteur": 640,
             "titre": tr("reglages_titre"),
             "note": tr("reglages_note"),
+            "local": tr("reglages_local"),
             "vide": tr("reglages_vide"),
             "profil_vide": tr("reglages_profil_vide"),
             "colonne_personne": tr("reglages_colonne_personne"),

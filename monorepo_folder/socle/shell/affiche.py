@@ -636,8 +636,12 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
 
             if photo:
                 st.markdown(
+                    # Le bouton se vise en DESCENDANT : il porte une infobulle,
+                    # et Streamlit glisse alors un `stTooltipHoverTarget` entre
+                    # la boîte et lui. `> button` ne désignait donc rien, la
+                    # photo n'arrivait jamais, et le rond restait blanc.
                     "<style>"
-                    '.st-key-kgaffprofil [data-testid="stButton"] > button {'
+                    ".st-key-kgaffprofil button {"
                     f' background-image: url("{photo}");'
                     " background-size: cover; background-position: center;"
                     " color: transparent; }"
@@ -746,32 +750,10 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                         elif cible["key"] != etat["onglet"]:
                             menu.aller_a_l_onglet(cible["key"], etat)
 
-            # Les RÉGLAGES précèdent la bascule, dans leur propre conteneur :
-            # un bouton de plus dans celui de la langue aurait hérité de sa
-            # grille à deux cases et de sa forme de bascule, alors qu'il OUVRE
-            # quelque chose au lieu de choisir entre deux états.
-            if (config or {}).get("settings"):
-                with st.container(key="kgaffreglages"):
-                    # L'icône est un RACCOURCI Streamlit, non le SVG du socle :
-                    # un libellé de bouton est du markdown, qui échappe le HTML
-                    # — le tracé s'y écrivait en clair et débordait sur tout le
-                    # rail, vérifié à l'écran. Le raccourci, lui, est rendu.
-                    if st.button(
-                        (config["settings"].get("icone")
-                         or ":material/settings:"),
-                        key="affreglages",
-                        help=config["settings"].get("droits"),
-                        type="tertiary",
-                    ):
-                        # L'engrenage mène DIRECTEMENT aux droits de qui
-                        # regarde : c'est le geste de quelqu'un qui veut
-                        # ranger son propre menu, pas changer d'identité.
-                        fichier = (config.get("users") or {}).get("fichier")
-                        porteur = (utilisateurs.profil_actif(fichier)
-                                   if fichier else None)
-                        ouvrir_fenetre(("droits", porteur["id"]) if porteur
-                                       else ("liste", None))
-                        st.rerun()
+            # Il n'y a PAS d'engrenage dans le bandeau. Il ouvrait la même
+            # fenêtre que l'avatar, à deux centimètres de lui : deux portes
+            # pour une seule pièce, et il fallait se souvenir de laquelle
+            # menait où. L'avatar reste, parce qu'il dit en plus qui regarde.
 
             # La bascule de langue ferme la ligne, poussée au bord droit. Elle
             # garde ses deux boutons plutôt qu'un groupe segmenté : ses cases
@@ -942,6 +924,32 @@ def _pastille_profil(porteur, langue_active):
     )
 
 
+def _bandeau_local(reglages):
+    """Où vivent ces données — dit dans la fenêtre qui les crée.
+
+    On demande ici un nom, une adresse et une photo. Qui les donne a le droit
+    de savoir où elles vont, et de l'apprendre AVANT de les saisir, non dans
+    une note de bas de page.
+    """
+
+    texte = (reglages or {}).get("local")
+
+    if not texte:
+        return
+
+    st.markdown(
+        f'<div style="display:flex;align-items:flex-start;gap:9px;'
+        f"background:var(--kg-color-surface-secondary,#F5F6F7);"
+        f"border-radius:10px;padding:9px 12px;margin:0 0 12px;"
+        f'font-size:11.5px;line-height:1.5;'
+        f'color:var(--kg-color-text-muted);">'
+        f'<span style="flex:none;margin-top:1px;'
+        f'color:var(--kg-color-primary);">{icone("shield", 14)}</span>'
+        f"<span>{texte}</span></div>",
+        unsafe_allow_html=True,
+    )
+
+
 def _texte_terne(valeur):
     """Une valeur secondaire dans sa colonne — un tiret quand elle manque.
 
@@ -1073,6 +1081,7 @@ def _ecran_accueil(config, fichier, reglages, langue_active):
     """Écran 1 — deux tables : qui regarde, et selon quel profil."""
 
     _titre_fenetre(reglages.get("titre", ""), reglages.get("note"))
+    _bandeau_local(reglages)
 
     reglages = {**reglages, "onglets": [
         ("gens", reglages.get("titre", "")),

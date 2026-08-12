@@ -1250,7 +1250,12 @@ _CSS_AFFICHE = """
   width: auto !important; margin: 0 !important;
   z-index: 5;
 }
-.st-key-kgaffprofil [data-testid="stButton"] > button {
+/* Le bouton se vise en DESCENDANT, non par `> button` : il porte une
+   infobulle, et Streamlit glisse alors un `stTooltipHoverTarget` entre la
+   boîte et lui. La règle ne s'appliquait donc pas, la photo posée en fond
+   n'arrivait jamais, et c'est la règle générale des boutons qui peignait le
+   rond en blanc — vérifié dans le navigateur, `background-image: none`. */
+.st-key-kgaffprofil button {
   width: 34px; height: 34px; min-height: 0; padding: 0;
   border-radius: 50%;
   background-color: var(--kg-color-surface-secondary);
@@ -1258,7 +1263,7 @@ _CSS_AFFICHE = """
   color: var(--kg-color-text-secondary);
   font-size: 12px; font-weight: 650; letter-spacing: .02em;
 }
-.st-key-kgaffprofil [data-testid="stButton"] > button:hover {
+.st-key-kgaffprofil button:hover {
   border-color: var(--kg-color-primary);
   box-shadow: 0 0 0 2px var(--kg-color-primary-light, #E4F0EB);
 }
@@ -1333,36 +1338,7 @@ a.kg-aff-logo:hover { opacity: .8; }
 
    Le rail lui réserve la place en conséquence — sinon le dernier onglet
    passerait dessous. */
-/* Le rail réserve la place des deux ancrés à droite — la bascule de langue et
-   le bouton de réglages —, sinon le dernier onglet passerait dessous. */
-.st-key-kgaffrail { position: relative; padding-right: 126px; }
-
-/* Le bouton de réglages, ancré juste à gauche de la bascule. Il n'entre pas
-   dans le flux du rail : sa position ne dépend donc pas du nombre d'onglets,
-   qui change à chaque section. */
-.st-key-kgaffreglages {
-  position: absolute !important;
-  right: 92px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: auto !important;
-  margin: 0 !important;
-}
-.st-key-kgaffreglages [data-testid="stButton"] > button {
-  padding: 0; width: 30px; height: 30px; min-height: 0;
-  border-radius: 8px;
-  display: inline-flex; align-items: center; justify-content: center;
-  color: var(--kg-color-text-muted);
-  background: transparent; border: 1px solid transparent;
-}
-.st-key-kgaffreglages [data-testid="stButton"] > button:hover {
-  color: var(--kg-color-primary);
-  background: var(--kg-color-surface-secondary);
-  border-color: var(--kg-color-border-light);
-}
-/* Le SVG arrive en HTML dans le libellé du bouton : sans cette règle, il
-   hérite de la hauteur de ligne du texte et décentre l'icône d'un pixel. */
-.st-key-kgaffreglages [data-testid="stButton"] p { line-height: 0; margin: 0; }
+.st-key-kgaffrail { position: relative; padding-right: 86px; }
 
 .st-key-kgafflang {
   position: absolute !important;

@@ -391,6 +391,10 @@
     "fr": "Fermer",
     "en": "Close"
   },
+  "reglages_local": {
+    "fr": "Rien n'est envoyé ailleurs. Ces profils tiennent dans un fichier posé \u00e0 c\u00f4t\u00e9 de l'application, hors du d\u00e9p\u00f4t : ni base de donn\u00e9es, ni service tiers, ni compte \u00e0 cr\u00e9er.",
+    "en": "Nothing is sent anywhere. These profiles live in a file next to the app, outside the repository: no database, no third-party service, no account to create."
+  },
   "reglages_vide": {
     "fr": "Aucun utilisateur pour l'instant. Le premier créé devient l'actif.",
     "en": "No users yet. The first one created becomes the active one."
