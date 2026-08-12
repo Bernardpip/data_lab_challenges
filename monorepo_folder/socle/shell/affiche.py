@@ -841,29 +841,37 @@ def _ligne_utilisateur(tab, personne, fichier, reglages, courant, langue_active)
     est_courant = courant and courant.get("id") == identifiant
     porteur = utilisateurs.profil(fichier, personne.get("profil"))
 
-    identite, action, droits = tab.ligne(identifiant)
+    identite, profil, action, droits = tab.ligne(identifiant)
 
     with identite:
+        # L'IDENTITÉ seule : un visage, un nom, une adresse. Le profil tenait
+        # dans cette cellule, accolé à l'adresse ; il en sortait une ligne
+        # bariolée où deux registres — qui c'est, ce qu'il voit — se
+        # disputaient le même espace. Il a maintenant sa colonne, ce qui rend
+        # aussi les profils comparables d'une ligne à l'autre.
         tab.cellule(
             f'{utilisateurs.texte_sur(personne.get("prenom"))} '
             f'{utilisateurs.texte_sur(personne.get("nom"))}',
-            # L'ADRESSE puis le PROFIL, sur la même ligne : l'adresse identifie
-            # la personne, le profil dit ce qu'elle voit — deux registres qui
-            # se lisent mieux côte à côte qu'empilés.
-            sous=(f'{utilisateurs.texte_sur(personne.get("email"))}'
-                  f'{_pastille_profil(porteur, langue_active, avec_marge=True)}'),
+            sous=utilisateurs.texte_sur(personne.get("email")),
             visuel=utilisateurs.avatar(
-                personne, 34,
+                personne, 32,
                 bordure=("var(--kg-color-primary)" if est_courant else None),
             ),
         )
 
+    with profil:
+        st.markdown(_pastille_profil(porteur, langue_active),
+                    unsafe_allow_html=True)
+
     with action:
-        if st.button((reglages.get("actif") if est_courant
-                      else reglages.get("activer")) or "",
-                     key=f"reg_actif_{identifiant}", use_container_width=True,
-                     disabled=bool(est_courant),
-                     type="primary" if est_courant else "secondary"):
+        # L'état ACTIF n'est pas une action : c'est un fait. Il s'écrivait en
+        # bouton plein et désactivé — la seule chose qu'on ne peut pas cliquer
+        # étant peinte comme la plus cliquable de la table. Une pastille le
+        # dit sans rien promettre, et « Activer » reste seul à être un bouton.
+        if est_courant:
+            st.markdown(_pastille_actif(reglages), unsafe_allow_html=True)
+        elif st.button(reglages.get("activer") or "",
+                       key=f"reg_actif_{identifiant}", type="secondary"):
             utilisateurs.definir_actif(fichier, identifiant)
             st.rerun()
 
@@ -874,21 +882,37 @@ def _ligne_utilisateur(tab, personne, fichier, reglages, courant, langue_active)
             st.rerun()
 
 
-def _pastille_profil(porteur, langue_active, avec_marge=False):
+def _pastille_profil(porteur, langue_active):
     """Le nom du profil, en pastille — ce que la personne voit, d'un coup d'œil."""
 
     if not porteur:
         return ""
 
     return (
-        f'<span style="display:inline-block;'
-        f'{"margin-left:8px;" if avec_marge else ""}'
-        f"padding:0 8px;border-radius:999px;font-size:10px;font-weight:700;"
-        f"letter-spacing:.02em;text-transform:uppercase;vertical-align:1px;"
+        f'<span style="display:inline-block;max-width:100%;'
+        f"padding:0 9px;border-radius:999px;font-size:10px;font-weight:700;"
+        f"line-height:20px;letter-spacing:.03em;text-transform:uppercase;"
+        f"overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
         f"background:var(--kg-color-primary-light,#E4F0EB);"
         f'color:var(--kg-color-primary);">'
         f'{utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))}'
         f"</span>"
+    )
+
+
+def _pastille_actif(reglages):
+    """« Actif » — un point et un mot, à la place d'un bouton qu'on ne clique pas."""
+
+    return (
+        f'<div style="display:flex;justify-content:center;">'
+        f'<span style="display:inline-flex;align-items:center;gap:6px;'
+        f"height:26px;padding:0 12px;border-radius:999px;font-size:11.5px;"
+        f"font-weight:700;letter-spacing:.02em;"
+        f"background:var(--kg-color-primary-light,#E4F0EB);"
+        f'color:var(--kg-color-primary);">'
+        f'<span style="width:6px;height:6px;border-radius:999px;flex:none;'
+        f'background:var(--kg-color-primary);"></span>'
+        f'{utilisateurs.texte_sur(reglages.get("actif"))}</span></div>'
     )
 
 
@@ -926,7 +950,7 @@ def _ligne_profil(tab, porteur, fichier, reglages, langue_active):
                   f'{utilisateurs.texte_sur(porteur.get("cree_le"))} · '
                   f'{_accorde(utilisateurs.porteurs(fichier, identifiant), reglages)}'),
             visuel=(
-                f'<span style="width:34px;height:34px;border-radius:10px;'
+                f'<span style="width:32px;height:32px;border-radius:10px;'
                 f"flex:none;display:inline-flex;align-items:center;"
                 f"justify-content:center;"
                 f"background:var(--kg-color-surface-secondary,#F5F6F7);"
@@ -937,7 +961,7 @@ def _ligne_profil(tab, porteur, fichier, reglages, langue_active):
 
     with action:
         if st.button(reglages.get("configurer", ""),
-                     key=f"reg_conf_{identifiant}", use_container_width=True,
+                     key=f"reg_conf_{identifiant}",
                      # Le profil d'origine ne se règle pas : c'est le recours,
                      # celui qui voit tout quand tous les autres ont été coupés.
                      disabled=verrouille,
@@ -1016,9 +1040,11 @@ def _ecran_accueil(config, fichier, reglages, langue_active):
         # tableau inachevé. Les deux dernières sont centrées sur leur bouton.
         cadre, tab = ui.tableau("reggens", [
             {"cle": "identite", "libelle": reglages.get("colonne_personne", ""),
-             "poids": 6},
+             "poids": 5.6},
+            {"cle": "profil", "libelle": reglages.get("colonne_profil", ""),
+             "poids": 2.4},
             {"cle": "action", "libelle": reglages.get("colonne_etat", ""),
-             "poids": 2, "align": "center"},
+             "poids": 2.2, "align": "center"},
             {"cle": "droits", "libelle": reglages.get("colonne_droits", ""),
              "poids": 1, "align": "center"},
         ])
@@ -1038,7 +1064,7 @@ def _ecran_accueil(config, fichier, reglages, langue_active):
         {"cle": "identite", "libelle": reglages.get("colonne_profil", ""),
          "poids": 6},
         {"cle": "action", "libelle": reglages.get("colonne_acces", ""),
-         "poids": 3, "align": "center"},
+         "poids": 3, "align": "right"},
     ])
 
     with cadre:
@@ -1479,14 +1505,45 @@ def _styles_fenetre(reglages=None):
    coupait en deux dans trente-quatre pixels. La clé visée est celle de
    l'ENGRENAGE seul : « Configurer » y était tombé à son tour et s'écrivait
    « Confi / gurer ». Vérifié à l'écran, deux fois plutôt qu'une. */
-[data-testid="stDialog"] [class*="st-key-reg_droits_"] > div > button {
-  width: 34px; padding: 0; border-radius: 9px;
-  border: 1px solid var(--kg-color-border-light, #ECEEF0);
-  background: #FFFFFF; color: var(--kg-color-text-muted);
+[data-testid="stDialog"] [class*="st-key-reg_droits_"] button {
+  width: 30px !important; height: 30px !important; min-height: 30px !important;
+  padding: 0 !important; border-radius: 8px;
+  border: none; background: transparent; color: var(--kg-color-text-muted);
 }
-[data-testid="stDialog"] [class*="st-key-reg_droits_"] > div > button:hover {
-  border-color: var(--kg-color-primary); color: var(--kg-color-primary);
+[data-testid="stDialog"] [class*="st-key-reg_droits_"] button:hover {
+  color: var(--kg-color-primary);
   background: var(--kg-color-primary-light, #E4F0EB);
+}
+/* Les actions d'une LIGNE sont des pastilles, pas des barres : « Activer »
+   s'étalait sur toute sa colonne et pesait plus lourd que la personne qu'il
+   désignait. On ne fixe ici AUCUNE largeur — c'est ce qui avait coupé
+   « Configurer » en deux — seulement une hauteur, un rembourrage et un rayon,
+   et le libellé décide du reste. */
+/* La boîte du bouton se rétrécit sur son libellé — la pile qui la porte ne
+   l'étire pas —, si bien que la centrer ne déplaçait rien : mesuré, 67 px de
+   boîte dans 126 px de colonne. On lui rend d'abord sa largeur. */
+[data-testid="stDialog"] [class*="st-key-reg_actif_"],
+[data-testid="stDialog"] [class*="st-key-reg_conf_"] {
+  width: 100%;
+}
+[data-testid="stDialog"] [class*="st-key-reg_actif_"] [data-testid="stButton"],
+[data-testid="stDialog"] [class*="st-key-reg_conf_"] [data-testid="stButton"] {
+  display: flex;
+}
+[data-testid="stDialog"] [class*="st-key-reg_actif_"] [data-testid="stButton"] {
+  justify-content: center;
+}
+[data-testid="stDialog"] [class*="st-key-reg_conf_"] [data-testid="stButton"] {
+  justify-content: flex-end;
+}
+[data-testid="stDialog"] [class*="st-key-reg_actif_"] button,
+[data-testid="stDialog"] [class*="st-key-reg_conf_"] button {
+  /* `width: auto` fait tout le travail : Streamlit donne cent pour cent à ses
+     boutons, et la pastille reprenait toute la colonne. Aucune largeur fixe —
+     le libellé décide, et il ne se coupe pas. */
+  width: auto !important; white-space: nowrap;
+  height: 28px !important; min-height: 28px !important;
+  padding: 0 14px; border-radius: 999px; font-size: 12px;
 }
 /* La SUPPRESSION est une action irréversible : elle se signale en rouge, mais
    reste un lien — un bouton plein appellerait le clic qu'on veut éviter. */
