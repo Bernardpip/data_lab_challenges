@@ -997,6 +997,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             "photo_deposer": tr("reglages_photo_deposer"),
             "photo_parcourir": tr("reglages_photo_parcourir"),
             "creer": tr("reglages_creer"),
+            "annuler": tr("reglages_annuler"),
             "nom_requis": tr("reglages_nom_requis"),
             "supprimer": tr("reglages_supprimer"),
             "sans_fichier": tr("reglages_sans_fichier"),

@@ -1019,53 +1019,135 @@ def _ecran_accueil(config, fichier, reglages, langue_active):
             st.rerun()
 
 
+def _pied(*boutons):
+    """Le pied d'un écran — collé au BAS de la fenêtre, aligné à droite.
+
+    Sans lui, un formulaire court laissait son bouton au milieu d'une fenêtre
+    à hauteur fixe, avec deux cents pixels de vide en dessous ; et chaque
+    écran plaçait ses actions ailleurs. Le pied est le même partout, et il ne
+    bouge pas d'un écran à l'autre.
+
+    `boutons` : suite de `(libellé, clé, type, action, désactivé)`, de la moins
+    engageante à la plus engageante — la principale finit donc à droite, sous
+    le pouce.
+    """
+
+    st.markdown('<div style="height:1px;background:var(--kg-color-border-light,'
+                '#ECEEF0);margin:14px 0 12px;"></div>',
+                unsafe_allow_html=True)
+
+    with st.container(key="regpied"):
+        # Une colonne de RESPIRATION à gauche pousse les actions à droite : les
+        # étaler sur toute la largeur donnerait deux boutons de trois cents
+        # pixels pour deux mots.
+        largeurs = [max(1, 9 - 2 * len(boutons))] + [2] * len(boutons)
+        colonnes = st.columns(largeurs, vertical_alignment="center")
+
+        for colonne, (libelle, cle, genre, action, inactif) in zip(
+            colonnes[1:], boutons
+        ):
+            with colonne:
+                if st.button(libelle or "", key=cle, type=genre,
+                             use_container_width=True, disabled=bool(inactif)):
+                    action()
+
+
+def _apercu_photo(photo, reglages):
+    """Le rond de la photo choisie — ou la place qu'elle occupera.
+
+    L'aperçu impose de SORTIR le téléversement du formulaire : dans un
+    `st.form`, aucun widget ne redessine la page avant l'envoi, et l'on ne
+    verrait sa photo qu'une fois la personne créée. Choisir une image n'est
+    de toute façon pas « soumettre ».
+    """
+
+    encodee = utilisateurs.photo_encodee(photo) if photo else None
+
+    if encodee:
+        st.markdown(
+            f'<div style="display:flex;justify-content:center;">'
+            f'{utilisateurs.avatar({"photo": encodee}, 92)}</div>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            f'<div style="display:flex;justify-content:center;">'
+            f'<span style="width:92px;height:92px;border-radius:50%;'
+            f"display:inline-flex;align-items:center;justify-content:center;"
+            f"background:var(--kg-color-surface-secondary,#F5F6F7);"
+            f"border:1px dashed var(--kg-color-border,#DDE1E5);"
+            f'color:var(--kg-color-text-muted);">{icone("user", 30)}</span>'
+            f"</div>",
+            unsafe_allow_html=True,
+        )
+
+    return encodee
+
+
 def _ecran_creation(config, fichier, reglages, langue_active):
-    """Écran 2 — le formulaire d'utilisateur, puis les droits de son profil."""
+    """Écran 2 — le formulaire d'utilisateur, puis retour à la liste."""
 
     _titre_fenetre(reglages.get("creation", ""), reglages.get("creation_note"),
-                   retour=reglages.get("retour"))
+                   retour=reglages.get("retour"), icone_nom="user")
 
     disponibles = utilisateurs.profils(fichier)
     par_identifiant = {p["id"]: p for p in disponibles}
 
-    with st.form("reg_formulaire", border=False):
-        gauche, droite = st.columns([1, 3], vertical_alignment="top")
+    gauche, droite = st.columns([1, 2.6], vertical_alignment="top")
 
-        with gauche:
-            photo = st.file_uploader(reglages.get("photo", ""),
-                                     type=["png", "jpg", "jpeg", "webp"],
-                                     label_visibility="collapsed")
+    with gauche:
+        # L'ordre compte : le ROND d'abord, le bouton dessous. On voit ce
+        # qu'on obtient avant de savoir comment le changer.
+        photo = st.session_state.get("reg_photo")
+        encodee = _apercu_photo(photo, reglages)
+        st.file_uploader(reglages.get("photo", ""),
+                         type=["png", "jpg", "jpeg", "webp"],
+                         key="reg_photo", label_visibility="collapsed")
 
-        with droite:
-            un, deux = st.columns(2)
-            prenom = un.text_input(reglages.get("prenom", ""))
-            nom = deux.text_input(reglages.get("nom", ""))
+    with droite:
+        un, deux = st.columns(2)
+        prenom = un.text_input(reglages.get("prenom", ""), key="reg_prenom")
+        nom = deux.text_input(reglages.get("nom", ""), key="reg_nom")
 
-            # Le PROFIL décide de ce que la personne verra : il est donc
-            # obligatoire, et la liste ne contient que des profils existants.
-            profil_id = st.selectbox(
-                reglages.get("profil", ""), list(par_identifiant),
-                format_func=lambda cle: menu.texte(
-                    par_identifiant[cle].get("nom"), langue_active) or cle,
-            ) if par_identifiant else None
+        # Le PROFIL décide de ce que la personne verra : il est donc
+        # obligatoire, et la liste ne contient que des profils existants.
+        profil_id = st.selectbox(
+            reglages.get("profil", ""), list(par_identifiant),
+            key="reg_profil_choisi",
+            format_func=lambda cle: menu.texte(
+                par_identifiant[cle].get("nom"), langue_active) or cle,
+        ) if par_identifiant else None
 
-            email = st.text_input(reglages.get("email", ""))
-
+        email = st.text_input(reglages.get("email", ""), key="reg_email")
         st.caption(reglages.get("profil_note", ""))
 
-        if st.form_submit_button(reglages.get("creer", ""), type="primary",
-                                 use_container_width=True):
-            # Le PRÉNOM suffit : exiger les quatre champs pour un sélecteur de
-            # profil d'affichage ferait barrage là où il n'y a rien à protéger.
-            if not (prenom or nom).strip():
-                st.warning(reglages.get("nom_requis", ""))
-            else:
-                utilisateurs.ajouter(
-                    fichier, prenom, nom, profil_id, email,
-                    photo=utilisateurs.photo_encodee(photo),
-                )
-                utilisateurs.aller_a("liste")
-                st.rerun()
+    def creer():
+        # Le PRÉNOM suffit : exiger les quatre champs pour un sélecteur de
+        # profil d'affichage ferait barrage là où il n'y a rien à protéger.
+        if not (prenom or nom).strip():
+            st.warning(reglages.get("nom_requis", ""))
+            return
+
+        utilisateurs.ajouter(fichier, prenom, nom, profil_id, email,
+                             photo=encodee)
+
+        # Les champs sont VIDÉS : la fenêtre reste ouverte sur la liste, et
+        # rouvrir le formulaire avec le nom du précédent invite à créer un
+        # doublon.
+        for cle in ("reg_prenom", "reg_nom", "reg_email", "reg_photo"):
+            st.session_state.pop(cle, None)
+
+        utilisateurs.aller_a("liste")
+        st.rerun()
+
+    def annuler():
+        utilisateurs.aller_a("liste")
+        st.rerun()
+
+    _pied(
+        (reglages.get("annuler"), "reg_annuler", "secondary", annuler, False),
+        (reglages.get("creer"), "reg_creer", "primary", creer, False),
+    )
 
 
 def _ecran_profil_creation(config, fichier, reglages):
@@ -1073,21 +1155,30 @@ def _ecran_profil_creation(config, fichier, reglages):
 
     _titre_fenetre(reglages.get("profil_creation", ""),
                    reglages.get("profil_creation_note"),
-                   retour=reglages.get("retour"))
+                   retour=reglages.get("retour"), icone_nom="shield")
 
-    with st.form("reg_profil", border=False):
-        nom = st.text_input(reglages.get("profil_nom", ""))
+    nom = st.text_input(reglages.get("profil_nom", ""), key="reg_profil_nom")
 
-        if st.form_submit_button(reglages.get("creer", ""), type="primary",
-                                 use_container_width=True):
-            if not nom.strip():
-                st.warning(reglages.get("profil_nom_requis", ""))
-            else:
-                identifiant = utilisateurs.ajouter_profil(fichier, nom)
-                # On enchaîne sur les autorisations : un profil créé sans
-                # réglage voit tout, ce qui n'est jamais ce qu'on voulait.
-                utilisateurs.aller_a("droits", identifiant)
-                st.rerun()
+    def creer():
+        if not nom.strip():
+            st.warning(reglages.get("profil_nom_requis", ""))
+            return
+
+        identifiant = utilisateurs.ajouter_profil(fichier, nom)
+        st.session_state.pop("reg_profil_nom", None)
+        # On enchaîne sur les autorisations : un profil créé sans réglage voit
+        # tout, ce qui n'est jamais ce qu'on voulait.
+        utilisateurs.aller_a("droits", identifiant)
+        st.rerun()
+
+    def annuler():
+        utilisateurs.aller_a("liste")
+        st.rerun()
+
+    _pied(
+        (reglages.get("annuler"), "reg_annuler", "secondary", annuler, False),
+        (reglages.get("creer"), "reg_creer", "primary", creer, False),
+    )
 
 
 def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
@@ -1156,43 +1247,29 @@ def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
                                                coche, onglet=cle_onglet)
                         st.rerun()
 
-    st.markdown('<div style="height:1px;background:var(--kg-color-border-light,'
-                '#ECEEF0);margin:10px 0 12px;"></div>',
-                unsafe_allow_html=True)
+    def reinitialiser():
+        utilisateurs.tout_autoriser(fichier, identifiant)
+        st.rerun()
 
-    # La DESTRUCTION à gauche, les actions courantes à droite : c'est la
-    # disposition que tout le monde connaît, et elle éloigne le geste
-    # irréversible de celui qu'on répète.
-    gauche, milieu, droite = st.columns([3, 3, 3])
+    def supprimer():
+        utilisateurs.supprimer_profil(fichier, identifiant)
+        utilisateurs.aller_a("liste")
+        st.rerun()
 
-    with milieu:
-        if reglages.get("reinitialiser") and st.button(
-            reglages["reinitialiser"], use_container_width=True,
-            key="reg_reinit",
-        ):
-            utilisateurs.tout_autoriser(fichier, identifiant)
-            st.rerun()
+    def fermer():
+        _fermer_fenetre()
+        st.rerun()
 
-    with gauche:
-        # La suppression vit ICI, loin du bouton « Configurer » de la carte :
-        # une croix à côté de lui se clique par erreur, et rien ne se défait.
-        # Le profil d'origine, lui, ne se supprime pas.
-        if reglages.get("supprimer") and st.button(
-            reglages["supprimer"], use_container_width=True,
-            key="reg_supprimer", type="tertiary",
-            disabled=bool(porteur.get("verrouille")),
-        ):
-            utilisateurs.supprimer_profil(fichier, identifiant)
-            utilisateurs.aller_a("liste")
-            st.rerun()
-
-    with droite:
-        if reglages.get("fermer") and st.button(
-            reglages["fermer"], use_container_width=True, type="primary",
-            key="reg_fermer",
-        ):
-            _fermer_fenetre()
-            st.rerun()
+    # La SUPPRESSION en premier, donc la plus à gauche : c'est le geste
+    # irréversible, et il s'éloigne ainsi de celui qu'on répète. Le profil
+    # d'origine ne se supprime pas.
+    _pied(
+        (reglages.get("supprimer"), "reg_supprimer", "tertiary", supprimer,
+         bool(porteur.get("verrouille"))),
+        (reglages.get("reinitialiser"), "reg_reinit", "secondary",
+         reinitialiser, False),
+        (reglages.get("fermer"), "reg_fermer", "primary", fermer, False),
+    )
 
 
 # La fenêtre est un ÉTAT de session, non un appel ponctuel. `st.dialog` ne
@@ -1398,6 +1475,52 @@ def _styles_fenetre(reglages=None):
 /* L'interrupteur se cale sur la ligne du nom, non sur le haut du bloc. */
 [data-testid="stDialog"] [data-testid="stToggle"] { margin-top: 7px; }
 [data-testid="stDialog"] [data-testid="stCheckbox"] label { font-size: 13px; }
+
+/* ─── Le pied colle au bas de la fenêtre ──────────────────────────────── */
+/* Le corps a une hauteur définie (il défile) : on en fait une colonne flex,
+   et le pied prend la marge qui reste. Sans cela, un formulaire court laissait
+   ses boutons au milieu, avec deux cents pixels de vide dessous. */
+[data-testid="stDialog"] > div > div > div:nth-child(2) > div,
+[data-testid="stDialog"] > div > div > div:nth-child(2) > div
+  > [data-testid="stVerticalBlock"] {
+  min-height: 100%;
+  display: flex; flex-direction: column;
+}
+/* Streamlit intercale une enveloppe par élément : le pied se trouve deux
+   niveaux sous le bloc étiré, et `margin-top: auto` n'y poussait rien puisque
+   ses parents ne s'étiraient pas — mesuré, ils s'arrêtaient à 417 px dans un
+   corps de 582. On étire donc TOUS ses ancêtres, désignés par `:has()`. */
+[data-testid="stDialog"] [data-testid="stVerticalBlock"]:has(> div > .st-key-regpied),
+[data-testid="stDialog"] [data-testid="stLayoutWrapper"]:has(> [data-testid="stVerticalBlock"] > div > .st-key-regpied),
+[data-testid="stDialog"] [data-testid="stVerticalBlock"]:has(.st-key-regpied),
+[data-testid="stDialog"] [data-testid="stLayoutWrapper"]:has(.st-key-regpied) {
+  flex: 1 1 auto;
+}
+[data-testid="stDialog"] .st-key-regpied {
+  margin-top: auto; flex: 0 0 auto;
+}
+
+/* ─── La zone de photo — un rond, puis un lien ─────────────────────────── */
+/* Le grand cadre pointillé de Streamlit posait une seconde boîte à côté de
+   l'aperçu : deux objets pour une seule action. Il devient une ligne sous le
+   rond, et c'est le rond qui occupe la place. */
+[data-testid="stDialog"] [data-testid="stFileUploaderDropzone"] {
+  min-height: 0 !important; padding: 6px 8px !important;
+  border: none !important; background: transparent !important;
+  justify-content: center;
+}
+[data-testid="stDialog"] [data-testid="stFileUploaderDropzoneInstructions"] {
+  display: none !important;
+}
+[data-testid="stDialog"] [data-testid="stFileUploaderDropzone"] button {
+  height: 28px; min-height: 28px; padding: 0 12px; border-radius: 8px;
+  font-size: 12px;
+}
+/* Le bouton se centre SOUS le rond : baseweb pousse son conteneur à droite,
+   ce qui le décalait d'un tiers de la colonne. */
+[data-testid="stDialog"] [data-testid="stFileUploaderDropzone"] > span {
+  margin: 0 auto;
+}
 
 /* ─── Formulaires ─────────────────────────────────────────────────────── */
 [data-testid="stDialog"] [data-testid="stFileUploaderDropzone"] {

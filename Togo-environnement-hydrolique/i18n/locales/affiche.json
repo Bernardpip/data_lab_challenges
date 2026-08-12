@@ -448,8 +448,8 @@
     "en": "Photo"
   },
   "reglages_creer": {
-    "fr": "Créer  ▸",
-    "en": "Create  ▸"
+    "fr": "Créer",
+    "en": "Create"
   },
   "reglages_nom_requis": {
     "fr": "Il faut au moins un prénom ou un nom.",
@@ -534,5 +534,9 @@
   "reglages_photo_parcourir": {
     "fr": "Parcourir",
     "en": "Browse"
+  },
+  "reglages_annuler": {
+    "fr": "Annuler",
+    "en": "Cancel"
   }
 }
