@@ -8,12 +8,15 @@ plutôt que de dessiner une tendance sur trop peu de points.
 """
 
 # pyrefly: ignore [missing-import]
+import pandas as pd
+# pyrefly: ignore [missing-import]
 import streamlit as st
 
 from socle import ui, charts
 from socle.design.tokens import STATUS, INK
 from socle.i18n.traduction import t
 
+from utils import econometrie
 from utils.data import datasets, apply_filters
 from utils import barres, recettes
 
@@ -200,3 +203,137 @@ def render_maintenance():
             "canton": tr("col_canton"), "prefecture": tr("col_prefecture"),
             "region": tr("col_region"), "risque_pts": tr("col_risque"),
             "population": tr("col_population"), "sans_plan": tr("col_sans_plan")}))
+
+
+def render_allocation():
+    """Ce que les corrélations autorisent à dire de la répartition.
+
+    Le reste du tableau de bord décrit ; cet onglet estime. Il ne demande pas
+    combien d'ouvrages existent, mais ce qui explique qu'un canton en reçoive
+    un — et il répond par des coefficients, des erreurs-types et des effectifs.
+    """
+
+    tr, tc = t("croisements"), t("commun")
+    data = datasets()
+    cantons, tde, coso = data["cantons"], data["tde"], data["coso"]
+
+    cout = econometrie.fonction_de_cout(coso)
+    elast = econometrie.elasticite_investissement(cantons, coso)
+    equipe = econometrie.qui_est_equipe(cantons, tde, coso)
+    couverture = econometrie.couverture_par_region(cantons, tde, coso)
+
+    pente_pop = elast["simple"]["termes"].iloc[1]
+    pente_cout = cout["estimation"]["termes"].iloc[1]
+    plateaux = couverture["regions"].iloc[-1]
+
+    ui.stat_tiles([
+        {"value": ui.fr_number(pente_pop["coefficient"], 2),
+         "label": tr("alloc_tuile_elasticite"),
+         "delta": tr("alloc_tuile_elasticite_detail",
+                     {"n": elast["cantons"]}), "good": False, "icon": "trending-up"},
+        {"value": ui.fr_number(cout["estimation"]["r2"], 3),
+         "label": tr("alloc_tuile_cout"),
+         "delta": tr("alloc_tuile_cout_detail",
+                     {"cout": ui.compact(cout["cout_median"])}),
+         "good": None, "icon": "table-2"},
+        {"value": ui.compact(float(plateaux["habitants_par_ouvrage"])),
+         "label": tr("alloc_tuile_plateaux"),
+         "delta": tr("alloc_tuile_plateaux_detail"), "good": False,
+         "icon": "map-pin"},
+    ])
+
+    # ── 1. Le résultat qui commande les autres ──────────────────────────────
+    with ui.card(tr("alloc_cout_titre"), tr("alloc_cout_sous_titre"), "table-2"):
+        profil = cout["profil"].assign(
+            quintile=cout["profil"]["quintile"].map(
+                lambda q: tr(f"quintile_{q}")))
+
+        charts.bar_h(profil, "quintile", "cout_par_beneficiaire",
+                     unit=tr("unite_fcfa"), trier=False)
+        ui.note(tr("alloc_cout_note", {
+            "coef": ui.fr_number(pente_cout["coefficient"], 3),
+            "t": ui.fr_number(pente_cout["t"], 2),
+            "cout": ui.compact(cout["cout_median"]),
+            "rapport": ui.fr_number(
+                profil["cout_par_beneficiaire"].iloc[0]
+                / profil["cout_par_beneficiaire"].iloc[-1], 0),
+        }))
+        charts.table_twin(profil[["quintile", "ouvrages",
+                                  "beneficiaires_median", "cout_median",
+                                  "cout_par_beneficiaire"]].rename(columns={
+            "quintile": tr("col_quintile"), "ouvrages": tr("col_ouvrages"),
+            "beneficiaires_median": tr("col_beneficiaires"),
+            "cout_median": tr("col_cout"),
+            "cout_par_beneficiaire": tr("col_cout_par_benef")}))
+
+    # ── 2. La règle de répartition ──────────────────────────────────────────
+    with ui.card(tr("alloc_elasticite_titre"), tr("alloc_elasticite_sous_titre"),
+                 "trending-up"):
+        contre = econometrie.contrefactuel_demographique(cantons, coso)
+
+        charts.sucette_h(
+            contre["cadre"].head(8).assign(
+                deficit=-contre["cadre"].head(8)["ecart"] / 1e6),
+            "canton", "deficit", unit=tr("unite_millions"))
+        ui.note(tr("alloc_elasticite_note", {
+            "coef": ui.fr_number(pente_pop["coefficient"], 2),
+            "gain": ui.fr_number(
+                100 * (2 ** pente_pop["coefficient"] - 1), 0),
+            "gini": ui.fr_number(contre["gini"], 2),
+            "interdecile": ui.fr_number(contre["rapport_interdecile"], 1),
+        }))
+        charts.table_twin(contre["cadre"].rename(columns={
+            "canton": tr("col_canton"), "prefecture": tr("col_prefecture"),
+            "population": tr("col_population"), "investi": tr("col_investi"),
+            "equitable": tr("col_equitable"), "ecart": tr("col_ecart"),
+            "par_habitant": tr("col_par_habitant")}))
+
+    # ── 3. Le besoin explique-t-il la dotation ? ────────────────────────────
+    with ui.card(tr("alloc_modele_titre"), tr("alloc_modele_sous_titre"),
+                 "search"):
+        comparaison = pd.DataFrame([
+            {"modele": tr("modele_sans_region"),
+             "variance": 100 * equipe["sans_region"]["r2"]},
+            {"modele": tr("modele_avec_region"),
+             "variance": 100 * equipe["avec_region"]["r2"]},
+        ])
+
+        charts.bar_h(comparaison, "modele", "variance", unit="%", trier=False)
+
+        risque = equipe["avec_region"]["termes"]
+        ligne = risque[risque["terme"] == "risque"].iloc[0]
+        ui.note(tr("alloc_modele_note", {
+            "sans": ui.fr_number(100 * equipe["sans_region"]["r2"], 0),
+            "avec": ui.fr_number(100 * equipe["avec_region"]["r2"], 0),
+            "t": ui.fr_number(abs(ligne["t"]), 2),
+        }))
+        charts.table_twin(equipe["avec_region"]["termes"].round(4).rename(
+            columns={"terme": tr("col_terme"),
+                     "coefficient": tr("col_coefficient"),
+                     "erreur_type": tr("col_erreur_type")}))
+
+    # ── 4. Ce que l'indice classe réellement ────────────────────────────────
+    with ui.card(tr("alloc_fri_titre"), tr("alloc_fri_sous_titre"), "flag"):
+        ordre = econometrie.ce_que_le_fri_ordonne(cantons)
+        lisible = ordre["correlations"].assign(
+            dimension=ordre["correlations"]["dimension"].map(
+                lambda d: tr(f"dimension_{d}")),
+            correlation=ordre["correlations"]["rho"].abs())
+
+        charts.bar_h(lisible, "dimension", "correlation", unit="ρ")
+        ui.note(tr("alloc_fri_note", {
+            "exposition": ui.fr_number(
+                float(ordre["correlations"].loc[
+                    ordre["correlations"]["dimension"] == "exposition",
+                    "rho"].iloc[0]), 2),
+            "alea": ui.fr_number(
+                float(ordre["correlations"].loc[
+                    ordre["correlations"]["dimension"] == "alea",
+                    "rho"].iloc[0]), 2),
+        }))
+        charts.table_twin(ordre["sommet"].rename(columns={
+            "canton": tr("col_canton"), "prefecture": tr("col_prefecture"),
+            "risque_pts": tr("col_risque"),
+            "susceptibilite": tr("col_alea"),
+            "population": tr("col_population"),
+            "rang_alea": tr("col_rang_alea")}))

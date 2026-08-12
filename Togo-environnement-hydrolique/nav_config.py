@@ -57,6 +57,7 @@ NAV_SECTIONS = [
         "items": [
             {"key": "ouvrages_risque", "icon": "search"},
             {"key": "maintenance", "icon": "settings"},
+            {"key": "allocation", "icon": "trending-up"},
         ],
     },
     {

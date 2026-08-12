@@ -69,6 +69,7 @@ CONTENT_REGISTRY = {
 
     "ouvrages_risque": croisements.render_ouvrages_risque,
     "maintenance": croisements.render_maintenance,
+    "allocation": croisements.render_allocation,
 
     "priorites": recommandations.render_priorites,
     "leviers": recommandations.render_leviers,

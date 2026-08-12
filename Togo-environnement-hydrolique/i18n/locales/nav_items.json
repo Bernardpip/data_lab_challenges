@@ -78,5 +78,9 @@
   "preuves": {
     "fr": "Preuves",
     "en": "Evidence"
+  },
+  "allocation": {
+    "fr": "Allocation",
+    "en": "Allocation"
   }
 }
