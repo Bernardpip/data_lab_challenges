@@ -56,7 +56,28 @@ def _spec(colonne, cle, libelle, placeholder, parent=None, aide=None):
     return spec
 
 
-def territoriale(cadre, avec_commune=False, reliquat=True):
+def _dans_zone(cle, cles_session, construire):
+    """Toute barre de ce défi se peint dans la zone « Filtres » du socle.
+
+    L'enrobage est ici, une fois, et non dans chaque vue : une barre nue et
+    une barre encadrée coexistaient selon la page — même corpus, mêmes clés de
+    session, deux apparences. Un utilisateur qui passe d'une vue à l'autre y
+    lisait deux mécanismes différents là où il n'y en a qu'un.
+
+    `cle` distingue les zones entre elles : deux barres sur une même page
+    partageraient sinon le conteneur, donc le compteur et le bouton de remise
+    à zéro de l'autre.
+    """
+
+    tf, tc = t("filtres"), t("commun")
+
+    with filters.zone(cle=cle, titre=tf("zone_titre"),
+                      cles_session=cles_session,
+                      libelle_reset=tc("reinitialiser")):
+        return construire()
+
+
+def territoriale(cadre, avec_commune=False, reliquat=True, cle="territoriale"):
     """Barre territoriale — région → préfecture → commune, liées en chaîne.
 
     Choisir une région restreint la liste des préfectures à celles qu'elle
@@ -78,7 +99,10 @@ def territoriale(cadre, avec_commune=False, reliquat=True):
                   parent="filtre_prefecture", aide=tf("restreint_au_parent"))
         )
 
-    return filters.territoriale(cadre, champs=champs, reliquat=reliquat)
+    cles = [champ["cle"] for champ in champs]
+
+    return _dans_zone(cle, cles, lambda: filters.territoriale(
+        cadre, champs=champs, reliquat=reliquat))
 
 
 def zone_territoriale(cadre, coso=None, cle="affiche"):
@@ -139,14 +163,17 @@ def parc_tde(cadre):
 
     tf, tc = t("filtres"), t("commun")
 
-    return filters.territoriale(cadre, champs=[
+    champs = [
         _spec("region", "filtre_region", tf("region"), tc("toutes")),
         _spec("prefecture", "filtre_prefecture", tf("prefecture"), tc("toutes"),
               parent="filtre_region", aide=tf("restreint_au_parent")),
         _spec("canton", "filtre_canton", tf("canton"), tc("tous"),
               parent="filtre_prefecture", aide=tf("restreint_au_parent")),
         _spec("nature", "filtre_nature", tf("nature"), tc("toutes")),
-    ])
+    ]
+
+    return _dans_zone("parc_tde", [c["cle"] for c in champs],
+                      lambda: filters.territoriale(cadre, champs=champs))
 
 
 def parc_coso(cadre, avec_annee=True):
@@ -178,7 +205,11 @@ def parc_coso(cadre, avec_annee=True):
             "note": _note_intervalle("annee_achevement"),
         }
 
-    return filters.territoriale(cadre, champs=champs, intervalle=intervalle)
+    cles = [c["cle"] for c in champs] + (
+        [intervalle["cle"]] if intervalle else [])
+
+    return _dans_zone("parc_coso", cles, lambda: filters.territoriale(
+        cadre, champs=champs, intervalle=intervalle))
 
 
 def periode(series, cle, aide=None, extras=None):

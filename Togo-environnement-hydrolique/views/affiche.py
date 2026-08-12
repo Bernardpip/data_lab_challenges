@@ -20,6 +20,8 @@ from socle.shell import render_affiche
 from socle.shell.affiche import hauteur_colonne_droite
 from socle.i18n.traduction import t
 
+from views import croisements as croisements_vue
+from views import risque as risque_vue
 from utils.data import datasets, apply_filters
 from utils import analytics, perimetre, barres
 
@@ -622,6 +624,174 @@ def _droite_priorites(tr, data, faits, corpus, hauteur_carte):
 
 
 
+# ─── Portage de la console ───────────────────────────────────────────────────
+#
+# Les sections de la console deviennent le premier rang du menu, ses onglets le
+# second. Le contenu, lui, se répartit selon une règle unique :
+#
+#   · une vue qui portait une CARTE la voit passer à droite, ses graphes
+#     restant à gauche ;
+#   · une vue de graphes purs — dix-sept des vingt et une — garde tout à
+#     gauche, et reçoit à droite la carte de RÉFÉRENCE de sa section.
+#
+# La seconde moitié de la règle n'est pas un remplissage. Une colonne droite
+# vide sur dix-sept vues sur vingt et une aurait fait de l'affiche une page à
+# une colonne avec une bande blanche ; et une carte de référence stable donne
+# au lecteur un repère qui ne bouge pas quand il change d'onglet.
+
+
+def _perimetre_partage(brut):
+    """Le périmètre retenu par la barre de filtres de la vue portée.
+
+    La colonne gauche se peint AVANT la droite : quand elle a fini, les clés
+    de session `filtre_region` et `filtre_prefecture` portent déjà la
+    sélection. La carte de droite les relit plutôt que d'afficher le pays
+    entier — sinon elle contredirait, sans le dire, la colonne d'à côté.
+
+    Ce sont les MÊMES clés que la console : elles sont partagées entre toutes
+    les vues qui portent la même matière, et c'est ce partage qui rend la
+    lecture possible ici sans rien passer d'une colonne à l'autre.
+    """
+
+    cantons = brut["cantons"]
+
+    for colonne, cle in (("region", "filtre_region"),
+                         ("prefecture", "filtre_prefecture")):
+        retenues = st.session_state.get(cle) or []
+
+        if retenues:
+            cantons = cantons[cantons[colonne].isin(retenues)]
+
+    return {**brut, "cantons": cantons}
+
+
+def _carte_reference_risque(tr, data, faits, corpus, hauteur_carte):
+    """La carte de référence des sections qui n'en portent pas : le risque."""
+
+    _carte_risque(tr, data, hauteur_carte)
+
+
+def _console(rendu):
+    """Adapte une vue de console en peintre de colonne gauche.
+
+    La fonction de la console est appelée TELLE QUELLE : elle porte déjà ses
+    tuiles, sa barre de filtres, ses cartes de contenu et ses tableaux
+    jumeaux, le tout traduit et éprouvé. La réécrire pour la loger dans une
+    colonne de 62 % dupliquerait des centaines de lignes pour un résultat
+    identique — et deux copies d'un même calcul finissent toujours par
+    diverger.
+    """
+
+    def peindre(tr, data, faits, corpus):
+        rendu()
+
+    return peindre
+
+
+def configuration(tr, trs, brut, corpus, hauteur_carte):
+    """La configuration déclarative du menu — un seul objet, tout le chemin.
+
+    Les composants sont liés ICI à leurs données : chaque entrée reçoit des
+    fonctions sans argument, prêtes à peindre. Le socle n'a donc rien à savoir
+    du corpus, et la configuration n'a rien à savoir du rendu.
+
+    Une entrée porte en outre sa carte de RÉFÉRENCE : elle vaut pour tous ses
+    onglets, et la déclarer une fois évite qu'un onglet ajouté plus tard
+    l'oublie et laisse la colonne droite vide.
+
+    Les libellés sont passés DÉJÀ TRADUITS plutôt qu'en dictionnaires
+    {fr, en} : la configuration se reconstruit à chaque rendu, donc dans la
+    langue active, et le socle accepte les deux formes. Les textes restent
+    ainsi dans les fichiers i18n du défi, où le contrôle de complétude les
+    trouve — un dictionnaire écrit ici y échapperait.
+    """
+
+    etat = {}
+
+    def propre(gauche, droite=None):
+        """Un onglet de la SYNTHÈSE — filtres de l'affiche, deux colonnes."""
+
+        def peindre_gauche():
+            data = _filtrer(brut)
+            faits = analytics.synthese(data["cantons"], data["tde"],
+                                       data["coso"], data["ventes"])
+            # Les faits sont RECALCULÉS sur le périmètre retenu : les servir
+            # tels que le corpus entier les donne ferait dire « 330 cantons
+            # sans ouvrage » à une page qui n'en montre plus que douze.
+            etat["data"], etat["faits"] = data, faits
+            gauche(trs, data, faits, corpus)
+
+        if droite is None:
+            return peindre_gauche
+
+        def peindre_droite():
+            droite(trs, etat["data"], etat["faits"], corpus, hauteur_carte)
+
+        return {"gauche": peindre_gauche, "droite": peindre_droite}
+
+    def portee(rendu):
+        """Un onglet PORTÉ de la console — il apporte ses propres filtres."""
+
+        return rendu
+
+    def carte_de_section():
+        """Le repli de colonne droite : le risque, dans le périmètre partagé."""
+
+        _carte_risque(trs, _perimetre_partage(brut), hauteur_carte)
+
+    return {
+        "menu_active_color": VERT_TOGO,
+        "menu_inactive_color": "transparent",
+        "tab_active_color": FOND,
+        "tab_inactive_color": "transparent",
+        "menu_items": [
+            {"id": "synthese", "name": tr("section_synthese"),
+             "is_default": True, "reference": None, "tab_items": [
+                {"id": "diagnostic", "name": tr("vue_diagnostic"),
+                 "is_default": True,
+                 "component": propre(_gauche_diagnostic, _droite_diagnostic)},
+                {"id": "risque", "name": tr("vue_risque"),
+                 "component": propre(_gauche_risque, _droite_risque)},
+                {"id": "parc", "name": tr("vue_parc"),
+                 "component": propre(_gauche_parc, _droite_parc)},
+                {"id": "priorites", "name": tr("vue_priorites"),
+                 "component": propre(_gauche_priorites, _droite_priorites)},
+                {"id": "annexes", "name": tr("lien_annexes"),
+                 "url": {"s": "annexes"}},
+            ]},
+            {"id": "inondation", "name": tr("section_inondation"),
+             "reference": carte_de_section, "tab_items": [
+                # La seule vue portée qui déclare ses DEUX colonnes : elle
+                # porte une carte, et la laisser à gauche l'aurait dupliquée
+                # avec la carte de référence de la section.
+                {"id": "fri_carto", "name": tr("vue_fri_carto"),
+                 "is_default": True, "component": {
+                     "gauche": lambda: risque_vue.render_carto(
+                         avec_carte=False),
+                     "droite": lambda: risque_vue.carte_seule(hauteur_carte),
+                 }},
+                {"id": "fri_facteurs", "name": tr("vue_fri_facteurs"),
+                 "component": portee(risque_vue.render_facteurs)},
+                {"id": "annexes", "name": tr("lien_annexes"),
+                 "url": {"s": "annexes"}},
+            ]},
+            {"id": "croisements", "name": tr("section_croisements"),
+             "reference": carte_de_section, "tab_items": [
+                {"id": "ouvrages_risque",
+                 "name": tr("vue_ouvrages_risque"), "is_default": True,
+                 "component": portee(croisements_vue.render_ouvrages_risque)},
+                {"id": "maintenance", "name": tr("vue_maintenance"),
+                 "component": portee(croisements_vue.render_maintenance)},
+                {"id": "allocation", "name": tr("vue_allocation"),
+                 "component": portee(croisements_vue.render_allocation)},
+                {"id": "annexes", "name": tr("lien_annexes"),
+                 "url": {"s": "annexes"}},
+            ]},
+        ],
+    }
+
+
+
 def render():
     tr = t("affiche")
     trs = t("synthese")
@@ -648,44 +818,8 @@ def render():
     zone = hauteur_colonne_droite(ECHELLE)
     hauteur_carte = maps.hauteur_dans(zone, reserve=RAIL_ONGLETS)
 
-    # Une TABLE de vues, et non une cascade de conditions : ajouter une vue
-    # se fait alors en une ligne, et l'oubli d'une des deux colonnes se voit.
-    RENDUS = {
-        "diagnostic": (_gauche_diagnostic, _droite_diagnostic),
-        "risque": (_gauche_risque, _droite_risque),
-        "parc": (_gauche_parc, _droite_parc),
-        "priorites": (_gauche_priorites, _droite_priorites),
-    }
+    config = configuration(tr, trs, brut, corpus, hauteur_carte)
 
-    def gauche(vue):
-        peintre = RENDUS.get(vue)
-
-        if peintre is None:
-            _zone(tr("zone_gauche"), tr(f"vue_{vue}"), 760)
-            return
-
-        data = _filtrer(brut)
-        faits = analytics.synthese(data["cantons"], data["tde"], data["coso"],
-                                   data["ventes"])
-        # Les faits sont RECALCULÉS sur le périmètre retenu : les servir tels
-        # que le corpus entier les donne ferait dire « 330 cantons sans
-        # ouvrage » à une page qui n'en montre plus que douze.
-        etat["data"], etat["faits"] = data, faits
-
-        peintre[0](trs, data, faits, corpus)
-
-    def droite(vue):
-        peintre = RENDUS.get(vue)
-
-        if peintre is None:
-            # La zone entière : la colonne droite démarre au ras du bord haut
-            # et ne défile pas, donc son contenu la remplit ou laisse un vide.
-            _zone(tr("zone_droite"), tr(f"carte_{vue}"), int(zone))
-            return
-
-        peintre[1](trs, etat["data"], etat["faits"], corpus, hauteur_carte)
-
-    # Le sous-titre est CALCULÉ : il suivra les données, comme tout le reste.
     render_affiche(
         titre=tr("titre"),
         sous_titre=tr("sous_titre", {
@@ -693,23 +827,9 @@ def render():
             "ouvrages": corpus["tde_total"] + corpus["coso_total"],
         }),
         sur_titre=tr("sur_titre"),
-        # La PREMIÈRE vue porte l'icône de maison et le libellé « Home » :
-        # c'est elle qu'on ouvre en arrivant, et c'est elle que l'adresse nue
-        # désigne. Un bouton « Home » de plus, à côté d'elle, aurait fait deux
-        # cases pour une seule destination.
-        vues=[{"key": cle, "label": tr(f"vue_{cle}"),
-               "icone": ":material/home:" if cle == VUES[0] else None}
-              for cle in VUES],
-        # La seule SORTIE : les annexes. L'affiche affirme, les annexes
-        # permettent de vérifier — c'est pour cette raison qu'elles avaient
-        # été écartées du menu. Elles n'en restent pas moins à un clic : une
-        # affiche sans porte de sortie oblige à retaper l'adresse.
-        liens=[
-            {"cle": "annexes", "label": tr("lien_annexes"), "place": "fin",
-             "icone": ":material/description:", "params": {"s": "annexes"}},
-        ],
-        rendu_gauche=gauche,
-        rendu_droite=droite,
+        # Tout le chemin — entrées, onglets, composants, couleurs — tient dans
+        # cet objet. Le socle n'en connaît ni les données ni les vues.
+        config=config,
         echelle=ECHELLE,
         pied_gauche=tr("pied_source"),
         pied_droit=tr("pied_auteur"),

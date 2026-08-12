@@ -26,7 +26,14 @@ def _selection():
     return apply_filters(cantons, barres.territoriale(cantons, avec_commune=True))
 
 
-def render_carto():
+def render_carto(avec_carte=True):
+    """`avec_carte=False` laisse la carte à l'appelant.
+
+    L'affiche pose les graphes à gauche et la carte à droite : peindre les deux
+    ici donnerait deux fois la même carte sur la page. La console, elle,
+    n'a qu'une colonne et garde le rendu complet.
+    """
+
     tr, tc = t("risque"), t("commun")
     filtre = _selection()
 
@@ -51,33 +58,33 @@ def render_carto():
          "good": None, "icon": "trending-up"},
     ])
 
-    with ui.card(tr("carte_titre"), tr("carte_sous_titre"), "map-pin"):
-        # Rampe du PRODUCTEUR, relevée au pixel sur la carte officielle : le
-        # lecteur qui connaît le PDF doit reconnaître la même carte.
-        bornes, methode = maps.choroplethe(
-            filtre, valeur="risque_pts", cle="carte_fri",
-            champs=["canton", "prefecture", "region", "risque_pts", "population"],
-            libelles=[tr("col_canton"), tr("col_prefecture"), tr("col_region"),
-                      tr("col_risque"), tr("col_population")],
-            height=980, rampe=RISQUE_OFFICIEL, couleur_contour=RISQUE_CONTOUR,
-        )
+    if avec_carte:
+      with ui.card(tr("carte_titre"), tr("carte_sous_titre"), "map-pin"):
+          # Rampe du PRODUCTEUR, relevée au pixel sur la carte officielle : le
+          # lecteur qui connaît le PDF doit reconnaître la même carte.
+          bornes, methode = maps.choroplethe(
+              filtre, valeur="risque_pts", cle="carte_fri",
+              champs=["canton", "prefecture", "region", "risque_pts", "population"],
+              libelles=[tr("col_canton"), tr("col_prefecture"), tr("col_region"),
+                        tr("col_risque"), tr("col_population")],
+              height=980, rampe=RISQUE_OFFICIEL, couleur_contour=RISQUE_CONTOUR,
+          )
 
-        if bornes:
-            repartition = analytics.repartition_par_classe(
-                filtre, bornes, [tr(f"classe_{i}") for i in range(1, len(bornes))])
+          if bornes:
+              repartition = analytics.repartition_par_classe(
+                  filtre, bornes, [tr(f"classe_{i}") for i in range(1, len(bornes))])
 
-            maps.legende_paliers(
-                bornes, rampe=RISQUE_OFFICIEL, libelle=tr("legende_titre"),
-                unite=" pts", decimales=1,
-                effectifs=repartition["cantons"].tolist(),
-            )
-            ui.note(tr("note_classes", {
-                "nombre": len(bornes) - 1,
-                "bas": ui.fr_number(bornes[0], 1),
-                "haut": ui.fr_number(bornes[-1], 1),
-                "coupure": ui.fr_number(bornes[-2], 1),
-            }))
-
+              maps.legende_paliers(
+                  bornes, rampe=RISQUE_OFFICIEL, libelle=tr("legende_titre"),
+                  unite=" pts", decimales=1,
+                  effectifs=repartition["cantons"].tolist(),
+              )
+              ui.note(tr("note_classes", {
+                  "nombre": len(bornes) - 1,
+                  "bas": ui.fr_number(bornes[0], 1),
+                  "haut": ui.fr_number(bornes[-1], 1),
+                  "coupure": ui.fr_number(bornes[-2], 1),
+              }))
     gauche, droite = st.columns(2, gap="small")
 
     with gauche:
@@ -189,3 +196,50 @@ def render_facteurs():
         charts.table_twin(repartition.rename(columns={
             "classe": tr("col_classe"), "cantons": tr("col_cantons"),
             "population": tr("col_population")}))
+
+
+def carte_seule(hauteur=None):
+    """La seule carte du risque — pour la colonne droite de l'affiche.
+
+    Recalcule la sélection à partir des clés de filtre DÉJÀ posées par la
+    colonne gauche : elles sont partagées, et la gauche se peint d'abord. Rien
+    n'est donc passé d'une colonne à l'autre, et la carte ne peut pas montrer
+    un périmètre que les graphes d'à côté ne montrent pas.
+    """
+
+    tr, tc = t("risque"), t("commun")
+    cantons = datasets()["cantons"]
+
+    for colonne, cle in (("region", "filtre_region"),
+                         ("prefecture", "filtre_prefecture"),
+                         ("commune", "filtre_commune")):
+        retenues = st.session_state.get(cle) or []
+
+        if retenues:
+            cantons = cantons[cantons[colonne].isin(retenues)]
+
+    if cantons.empty:
+        st.info(tc("aucun_resultat"))
+        return
+
+    def dessin(h):
+        return maps.choroplethe(
+            cantons, valeur="risque_pts", cle="carte_fri_droite",
+            champs=["canton", "prefecture", "region", "risque_pts",
+                    "population"],
+            libelles=[tr("col_canton"), tr("col_prefecture"), tr("col_region"),
+                      tr("col_risque"), tr("col_population")],
+            height=h, rampe=RISQUE_OFFICIEL, couleur_contour=RISQUE_CONTOUR,
+        )
+
+    def pied(resultat):
+        bornes, _ = resultat
+
+        if bornes:
+            maps.legende_paliers(bornes, rampe=RISQUE_OFFICIEL,
+                                 libelle=tr("legende_titre"), unite=" pts",
+                                 decimales=1)
+
+    maps.carte(tr("carte_titre"), cle="risque_droite", dessin=dessin,
+               legende=pied, sous_titre=tr("carte_sous_titre"),
+               **({"hauteur": hauteur} if hauteur else {}))

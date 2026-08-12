@@ -1146,6 +1146,150 @@ _CSS_AFFICHE = """
 
 /* L'écart vertical est une VARIABLE : le bandeau d'onglets doit pouvoir le
    reprendre au pixel pour venir se coller à sa carte. */
+/* ── Premier rang du menu : les SECTIONS ───────────────────────────────────
+   Deux rangs de navigation se distinguent par le POIDS, pas par la couleur :
+   les sections portent une surface pleine et un texte plus affirmé, les vues
+   restent un rail léger. Sans cet écart, l'œil lit deux rangées de boutons
+   équivalents et cherche laquelle commande l'autre. */
+/* ── Premier rang : les SECTIONS, en groupe segmenté ───────────────────────
+   Un seul objet, posé à gauche, dont chaque case fait la largeur de son
+   libellé. La rangée de boutons en colonnes égales qui le précédait étirait
+   chaque case à 275 px — trois dalles pour trois mots — et aurait imposé à
+   huit sections la largeur du plus long libellé.
+
+   La case retenue porte le vert de la charte ; les autres restent sur la
+   surface, séparées par un filet. C'est la seule pastille pleine du menu :
+   le second rang, lui, ne porte qu'un trait. */
+.st-key-kgaffsections { margin: 12px 0 4px; }
+
+.st-key-kgaffsections [data-baseweb="button-group"] {
+  gap: 0;
+  background: var(--kg-color-background);
+  border: 1px solid var(--kg-color-border-light);
+  border-radius: 10px;
+  padding: 3px;
+  width: fit-content;
+}
+
+.st-key-kgaffsections [data-testid="stBaseButton-segmented_control"],
+.st-key-kgaffsections [data-testid="stBaseButton-segmented_controlActive"] {
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  padding: 5px 14px;
+  min-height: 0;
+}
+
+.st-key-kgaffsections [data-testid="stBaseButton-segmented_control"] p {
+  color: var(--kg-color-text-secondary);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.st-key-kgaffsections [data-testid="stBaseButton-segmented_control"]:hover {
+  background: var(--kg-color-surface-hover);
+}
+
+.st-key-kgaffsections [data-testid="stBaseButton-segmented_controlActive"] {
+  background: var(--kg-togo-green);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .12);
+}
+
+.st-key-kgaffsections [data-testid="stBaseButton-segmented_controlActive"] p {
+  color: #FFFFFF;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* ── Second rang : les VUES, même groupe segmenté, autre teinte ────────────
+   Même forme que le rang du dessus — un groupe segmenté aux cases dimensionnées
+   sur leur libellé. Il avait d'abord été dessiné en onglets soulignés : deux
+   formes pour deux niveaux d'un même menu, et l'œil y lisait deux composants
+   sans parenté.
+
+   La distinction se fait donc par la COULEUR seule. La section retenue porte
+   le vert plein ; la vue retenue porte une pastille de surface, texte vert et
+   léger relief. Le poids décroît d'un rang à l'autre, la forme ne bouge pas. */
+/* Les deux groupes partagent UNE rangée : les sections à gauche, les vues à
+   droite. Le groupe de droite est poussé au bord par une marge automatique —
+   collé à gauche de sa colonne, il aurait laissé un vide au milieu du menu et
+   un autre à sa droite, sans qu'on sache lequel des deux séparait quoi. */
+.st-key-kgaffrail {
+  margin: 8px 0 0;
+  /* Le conteneur de Streamlit empile ses enfants ; on le remet en ligne. Les
+     deux groupes se touchent alors à l'écart choisi ici, au lieu d'être
+     écartés par la largeur qu'une colonne n'a pas consommée. */
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+/* Chaque groupe se réduit à son contenu et refuse de s'étirer : sans cela,
+   deux enfants à 100 % de large ne tiennent pas sur une ligne, quoi qu'on
+   demande à leur parent. */
+.st-key-kgaffrail > div,
+.st-key-kgaffsections,
+.st-key-kgaffvues { margin: 0; width: auto !important; flex: 0 0 auto; }
+
+.st-key-kgaffvues [data-baseweb="button-group"] {
+  gap: 2px;
+  background: var(--kg-color-background);
+  border: 1px solid var(--kg-color-border-light);
+  border-radius: 10px;
+  padding: 3px;
+  width: fit-content;
+}
+
+.st-key-kgaffvues [data-testid="stBaseButton-segmented_control"],
+.st-key-kgaffvues [data-testid="stBaseButton-segmented_controlActive"] {
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  padding: 5px 15px;
+  min-height: 0;
+}
+
+.st-key-kgaffvues [data-testid="stBaseButton-segmented_control"] p {
+  color: var(--kg-color-text-secondary);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.st-key-kgaffvues [data-testid="stBaseButton-segmented_control"]:hover {
+  background: var(--kg-color-surface-hover);
+}
+
+.st-key-kgaffvues [data-testid="stBaseButton-segmented_controlActive"] {
+  background: var(--kg-color-surface);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .10);
+}
+
+.st-key-kgaffvues [data-testid="stBaseButton-segmented_controlActive"] p {
+  color: var(--kg-togo-green);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* La dernière case du groupe est une SORTIE — elle quitte l'affiche au lieu
+   d'en changer la colonne. Elle partage la forme des vues, et s'en détache par
+   un filet et une encre en retrait : sans cela, un lecteur la prendrait pour
+   une cinquième vue et s'étonnerait que la page entière change. */
+.st-key-kgaffvues [data-baseweb="button-group"] > button:last-child {
+  border-left: 1px solid var(--kg-color-border-light);
+  border-radius: 0 7px 7px 0;
+  margin-left: 4px;
+  padding-left: 16px;
+}
+
+.st-key-kgaffvues [data-baseweb="button-group"] > button:last-child p {
+  color: var(--kg-color-text-muted);
+  font-weight: 500;
+}
+
+.st-key-kgaffvues [data-baseweb="button-group"] > button:last-child:hover p {
+  color: var(--kg-color-text);
+}
+
 .st-key-kgaffcorps { --kg-aff-ecart: 16px; }
 
 /* Gouttière : les colonnes ne portent plus de rembourrage, l'écart entre les

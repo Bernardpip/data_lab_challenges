@@ -66,5 +66,37 @@
   "logo_alt": {
     "fr": "Carte du Togo",
     "en": "Map of Togo"
+  },
+  "section_synthese": {
+    "fr": "Synthèse",
+    "en": "Summary"
+  },
+  "section_inondation": {
+    "fr": "Risque d'inondation",
+    "en": "Flood risk"
+  },
+  "section_croisements": {
+    "fr": "Croisements",
+    "en": "Crossings"
+  },
+  "vue_fri_carto": {
+    "fr": "Cartographie",
+    "en": "Mapping"
+  },
+  "vue_fri_facteurs": {
+    "fr": "Facteurs",
+    "en": "Drivers"
+  },
+  "vue_ouvrages_risque": {
+    "fr": "Ouvrages et risque",
+    "en": "Facilities and risk"
+  },
+  "vue_maintenance": {
+    "fr": "Entretien",
+    "en": "Maintenance"
+  },
+  "vue_allocation": {
+    "fr": "Allocation",
+    "en": "Allocation"
   }
 }

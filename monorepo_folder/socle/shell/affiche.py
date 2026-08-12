@@ -30,11 +30,14 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from socle.design.styles import load_styles_affiche
+from socle.shell import menu
 from socle.i18n import LANGUES
 from socle.i18n.traduction import init_langue, langue, definir_langue
 from socle.ui.cards import reset_cards
 
 PARAM_VUE = "v"
+PARAM_SECTION = "sec"
+_CLE_SECTION = "_affiche_section"
 _CLE_VUE = "_affiche_vue"
 
 # Part de grille d'une sortie dans le rail, une vue valant 1. Trois quarts :
@@ -202,6 +205,11 @@ def _ombre(valeur):
     return paliers.get(valeur, paliers[2])
 
 
+# Hauteur d'un rang de navigation supplémentaire, mesurée à l'écran : bouton
+# de 34 px plus la marge de 16 que le rang porte au-dessus et en dessous.
+RANG_SECTIONS = 50
+
+
 def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
                couleur_vue_active, couleur_vue_inactive,
                couleur_langue_active, couleur_langue_inactive,
@@ -211,7 +219,7 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
                colonne_gauche_poids, colonne_gauche_fond,
                colonne_gauche_bordure,
                colonne_droite_poids, colonne_droite_fond,
-               colonne_droite_bordure):
+               colonne_droite_bordure, rangs_supplementaires=0):
     """Feuille de surcharge du menu — n'écrit QUE ce qui est demandé.
 
     Chaque règle absente laisse le token du socle s'appliquer : passer une
@@ -258,7 +266,12 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
 
     if couleur_vue_inactive:
         regles.append(
-            '.st-key-kgaffvues [data-testid="stButton"] > button {'
+            # Le rang des SECTIONS partage les couleurs du rail : deux
+            # niveaux de navigation dans deux teintes différentes se liraient
+            # comme deux objets sans rapport, et l'un des deux prendrait
+            # l'accent de Streamlit — un violet qui n'est dans aucune charte.
+            '.st-key-kgaffvues [data-testid="stButton"] > button,'
+            '.st-key-kgaffsections [data-testid="stButton"] > button {'
             f" background: {couleur_vue_inactive};"
             f" color: {_encre(couleur_vue_inactive)}; }}"
         )
@@ -266,7 +279,9 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
     if couleur_vue_active:
         regles.append(
             '.st-key-kgaffvues [data-testid="stButton"] > button[kind="primary"],'
-            '.st-key-kgaffvues [data-testid="stButton"] > button[kind="primary"]:hover {'
+            '.st-key-kgaffvues [data-testid="stButton"] > button[kind="primary"]:hover,'
+            '.st-key-kgaffsections [data-testid="stButton"] > button[kind="primary"],'
+            '.st-key-kgaffsections [data-testid="stButton"] > button[kind="primary"]:hover {'
             f" background: {couleur_vue_active};"
             f" color: {_encre(couleur_vue_active)};"
             f" border-color: {couleur_vue_active}; }}"
@@ -391,7 +406,12 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
         # Le menu étant en `fixed`, il ne pousse plus le contenu : la réserve
         # d'espace du corps doit suivre la hauteur demandée, sinon les
         # premières lignes des colonnes passent dessous.
-        regles.append(f":root {{ --kg-aff-menu-h: {hauteur}; }}")
+        # La réserve tient compte des rangs AJOUTÉS depuis. Sans cela, un
+        # menu à deux niveaux garde la réserve d'un menu à un seul, et la
+        # première rangée de tuiles passe sous lui — vérifié à l'écran.
+        reserve = (f"calc({hauteur} + {rangs_supplementaires * RANG_SECTIONS}px)"
+                   if rangs_supplementaires else hauteur)
+        regles.append(f":root {{ --kg-aff-menu-h: {reserve}; }}")
         regles.append(
             '.st-key-kgaffmenu > [data-testid="stVerticalBlock"] { width: 100%; }'
         )
@@ -425,6 +445,57 @@ def vue_active(vues):
         st.session_state[_CLE_VUE] = cles[0]
 
     return st.session_state[_CLE_VUE]
+
+
+def section_active(sections):
+    """Clé de la section courante — même arbitrage que pour la vue.
+
+    Le menu de l'affiche porte désormais DEUX niveaux : les sections en
+    boutons, leurs vues en rail dessous. C'est la structure qu'avait la
+    console — sidebar puis onglets — remontée en haut de page, parce qu'une
+    affiche n'a pas de marge latérale à dépenser en navigation.
+
+    L'URL fait autorité, la session complète : sans cela, un lien partagé
+    rouvrirait la page sur la section mémorisée plutôt que sur celle du lien.
+    """
+
+    cles = [section["key"] for section in sections]
+
+    if not cles:
+        return None
+
+    demandee = st.query_params.get(PARAM_SECTION)
+
+    if demandee in cles:
+        st.session_state[_CLE_SECTION] = demandee
+    elif st.session_state.get(_CLE_SECTION) not in cles:
+        st.session_state[_CLE_SECTION] = cles[0]
+
+    return st.session_state[_CLE_SECTION]
+
+
+def aller_a_section(cle, premiere):
+    """Change de section, et RETOMBE sur sa première vue.
+
+    Garder la vue courante en changeant de section n'aurait pas de sens : les
+    vues ne sont pas partagées, et une clé de vue inconnue de la nouvelle
+    section renverrait sur sa première de toute façon — mais après un rendu
+    inutile. On l'efface donc franchement.
+    """
+
+    if st.session_state.get(_CLE_SECTION) == cle:
+        return
+
+    st.session_state[_CLE_SECTION] = cle
+    st.session_state.pop(_CLE_VUE, None)
+    st.query_params.pop(PARAM_VUE, None)
+
+    if cle == premiere:
+        st.query_params.pop(PARAM_SECTION, None)
+    else:
+        st.query_params[PARAM_SECTION] = cle
+
+    st.rerun()
 
 
 def aller_a(cle, premiere):
@@ -480,7 +551,7 @@ def quitter(params):
     st.rerun()
 
 
-def _menu(titre, sous_titre, sur_titre, vues, active, logo, liens):
+def _menu(titre, sous_titre, sur_titre, etat, logo):
     """Menu haut : identité et langue sur une ligne, le rail en dessous.
 
     Le menu ne fait plus toute la largeur de la page — il tient dans la colonne
@@ -503,8 +574,6 @@ def _menu(titre, sous_titre, sur_titre, vues, active, logo, liens):
     """
 
     entete = st.container(key="kgaffmenu")
-    avant = [lien for lien in (liens or []) if lien.get("place") == "debut"]
-    apres = [lien for lien in (liens or []) if lien.get("place") != "debut"]
 
     with entete:
         gauche, droite = st.columns([78, 22], gap="small", vertical_alignment="center")
@@ -557,51 +626,65 @@ def _menu(titre, sous_titre, sur_titre, vues, active, logo, liens):
         # plus long l'air d'être le principal. Les sorties, elles, prennent
         # trois quarts de segment : elles encadrent les vues sans peser autant
         # qu'elles.
-        rail = st.container(key="kgaffvues")
+        # UN SEUL rang de navigation, coupé en deux : les entrées de menu à
+        # gauche, leurs onglets à droite. Empilés, ils mangeaient une rangée de
+        # plus au contenu — or la colonne droite ne défile pas, et tout ce que
+        # le menu prend, la carte le perd.
+        #
+        # Rien n'est décidé ici : le module `menu` a déjà résolu quelle entrée
+        # et quel onglet sont actifs. Ce bloc ne fait que les peindre.
+        rail = st.container(key="kgaffrail")
 
         with rail:
-            cols = iter(st.columns(
-                [POIDS_SORTIE] * len(avant)
-                + [1] * len(vues)
-                + [POIDS_SORTIE] * len(apres),
-                gap="small",
-            ))
+            entrees = etat["entrees"]
 
-            def sortie(lien):
-                # Chaque sortie a son conteneur nommé : c'est lui que la
-                # feuille cible pour la tenir en retrait de ses voisines, dont
-                # elle partage la rangée mais pas la nature.
-                with next(cols):
-                    with st.container(key=f"kgafflien_{lien['cle']}"):
-                        if st.button(
-                            lien["label"],
-                            key=f"afflien_{lien['cle']}",
-                            icon=lien.get("icone"),
-                            use_container_width=True,
-                            type="tertiary",
-                        ):
-                            quitter(lien.get("params"))
+            if len(entrees) > 1:
+                with st.container(key="kgaffsections"):
+                    libelles = {e["label"]: e["key"] for e in entrees}
+                    courant = next(
+                        (e["label"] for e in entrees if e["key"] == etat["menu"]),
+                        entrees[0]["label"],
+                    )
 
-            for lien in avant:
-                sortie(lien)
+                    choisi = st.segmented_control(
+                        titre or "menu", list(libelles), key="affsections",
+                        default=courant, label_visibility="collapsed",
+                    )
 
-            for vue in vues:
-                with next(cols):
-                    if st.button(
-                        vue["label"],
-                        key=f"affvue_{vue['key']}",
-                        icon=vue.get("icone"),
-                        use_container_width=True,
-                        type=("primary" if vue["key"] == active
-                              else "tertiary"),
-                    ):
-                        aller_a(vue["key"], vues[0]["key"])
+                    # `None` quand l'utilisateur déselectionne : un menu sans
+                    # entrée active n'existe pas, on ignore le geste.
+                    if choisi and libelles[choisi] != etat["menu"]:
+                        menu.aller_au_menu(libelles[choisi], etat)
 
-            for lien in apres:
-                sortie(lien)
+            onglets = etat["onglets"]
+
+            if onglets:
+                with st.container(key="kgaffvues"):
+                    libelles = {o["label"]: o for o in onglets}
+                    courant = next(
+                        (o["label"] for o in onglets
+                         if o["key"] == etat["onglet"]),
+                        onglets[0]["label"],
+                    )
+
+                    choisi = st.segmented_control(
+                        titre or "onglets", list(libelles), key="affvues",
+                        default=courant, label_visibility="collapsed",
+                    )
+
+                    if choisi:
+                        cible = libelles[choisi]
+
+                        # Un onglet qui porte une URL et aucun composant est une
+                        # SORTIE : il quitte l'affiche au lieu d'en changer la
+                        # colonne. Le module tranche, pas le rendu.
+                        if cible.get("url") and not cible.get("component"):
+                            quitter(menu.parametres(cible["url"]))
+                        elif cible["key"] != etat["onglet"]:
+                            menu.aller_a_l_onglet(cible["key"], etat)
 
 
-def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
+def render_affiche(titre, config, sous_titre=None,
                    sur_titre=None, pied_gauche=None, pied_droit=None,
                    couleur_sur_titre=None, couleur_titre=None,
                    couleur_sous_titre=None,
@@ -609,7 +692,7 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
                    couleur_langue_active=None, couleur_langue_inactive=None,
                    couleur_fond_menu=None, couleur_bordure_menu=None,
                    marge_menu=True, ombre_menu=None,
-                   hauteur_menu=None, logo=None, liens=None,
+                   hauteur_menu=None, logo=None,
                    separation_colonnes="panneau",
                    colonne_gauche_poids=62, colonne_gauche_fond=None,
                    colonne_gauche_bordure=None,
@@ -631,8 +714,10 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
     l'ordre. La PREMIÈRE est la vue par défaut : elle s'ouvre à l'arrivée et
     ne s'écrit pas dans l'URL, qui reste l'adresse canonique de la page.
     `icone` est facultative (une icône Material, cf. `st.button`).
-    `rendu_gauche` : fonction (cle_de_vue) -> None, peint la colonne 62 %.
-    `rendu_droite` : fonction (cle_de_vue) -> None, peint la colonne 38 %.
+    `config`       : la configuration déclarative du menu (cf. `shell.menu`).
+    Elle porte les entrées, leurs onglets, leurs composants et les quatre
+    couleurs — sept arguments épars auparavant, qu'il fallait tenir cohérents
+    à la main et dont rien ne vérifiait l'accord.
 
     Les deux colonnes reçoivent la MÊME clé de vue : c'est ce qui fait que la
     carte de droite illustre ce que la gauche affirme. Une carte figée pendant
@@ -658,8 +743,6 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
                                 donc rien à la carte de droite.
         logo                    balisage HTML/SVG posé à gauche du titre
                                 (cf. `socle.charts.maps.silhouette_svg`)
-        liens                   [{cle, label, icone?, place?, params}] — les
-                                SORTIES, posées aux extrémités du rail des
                                 vues. `place` vaut « debut » (avant les vues)
                                 ou « fin », le défaut. `params` est la route
                                 visée (`{"s": "annexes"}`, ou `{}` pour
@@ -684,7 +767,7 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
     plus n'ouvrirait que la possibilité d'un texte illisible.
     """
 
-    if not vues:
+    if not (config or {}).get("menu_items"):
         return
 
     # La langue suit l'URL, comme partout ailleurs.
@@ -708,6 +791,9 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
         separation_colonnes, couleur_separation,
         colonne_gauche_poids, colonne_gauche_fond, colonne_gauche_bordure,
         colonne_droite_poids, colonne_droite_fond, colonne_droite_bordure,
+        # Les deux niveaux partagent une seule rangée : le menu n'est pas
+        # plus haut qu'avant, la réserve du corps ne bouge donc pas.
+        rangs_supplementaires=0,
     )
 
     if surcouche:
@@ -758,9 +844,23 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
             unsafe_allow_html=True,
         )
 
-    active = vue_active(vues)
+    # La configuration est VÉRIFIÉE avant tout rendu : une navigation fausse
+    # se manifeste sinon par un symptôme sans rapport avec sa cause — une case
+    # qui ne répond pas, une colonne vide — et se cherche longtemps.
+    reproches = menu.verifier(config)
 
-    _menu(titre, sous_titre, sur_titre, vues, active, logo, liens)
+    if reproches:
+        raise ValueError(
+            "Configuration de menu invalide :\n  · " + "\n  · ".join(reproches)
+        )
+
+    etat = menu.resoudre(config, langue())
+
+    # Les quatre couleurs de la configuration passent APRÈS la feuille du
+    # socle, pour l'emporter sur elle.
+    st.markdown(menu.styles(config), unsafe_allow_html=True)
+
+    _menu(titre, sous_titre, sur_titre, etat, logo)
 
     corps = st.container(key="kgaffcorps")
 
@@ -776,13 +876,20 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
             boite = st.container(key="kgaffgauche")
 
             with boite:
-                rendu_gauche(active)
+                menu.peindre(etat, "gauche")
 
         with droite:
             boite = st.container(key="kgaffdroite")
 
             with boite:
-                rendu_droite(active)
+                # Le repli de l'ENTRÉE ne sert que si l'onglet n'a rien
+                # déclaré pour cette colonne : une carte valable pour tous les
+                # onglets d'une section se déclare une fois sur la section.
+                if not menu.peindre(etat, "droite"):
+                    repli = menu.reference(etat)
+
+                    if repli:
+                        repli()
 
     if pied_gauche or pied_droit:
         st.markdown(
