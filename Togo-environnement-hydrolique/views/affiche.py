@@ -7,6 +7,8 @@ pour l'instant que le GABARIT : le menu haut, les quatre vues, et deux zones
 marquées. Il sert à valider la structure avant d'y verser quoi que ce soit.
 """
 
+from pathlib import Path
+
 # pyrefly: ignore [missing-import]
 import pandas as pd
 # pyrefly: ignore [missing-import]
@@ -29,6 +31,11 @@ from views import recommandations as recommandations_vue
 from views import risque as risque_vue
 from views import recit
 from socle.design.marque import datalab_marque
+
+# La racine du défi — le fichier des utilisateurs s'y range, à côté du code
+# plutôt que dans un dossier temporaire : il survit alors aux redémarrages du
+# serveur local, ce qui est tout ce qu'on lui demande.
+RACINE = Path(__file__).resolve().parent.parent
 
 from utils import liens
 from utils.data import datasets, apply_filters
@@ -950,10 +957,51 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
         "settings": {
             "titre": tr("reglages_titre"),
             "note": tr("reglages_note"),
-            "section": tr("reglages_section"),
-            "masquee": tr("reglages_masquee"),
+            "vide": tr("reglages_vide"),
+            "ajouter": tr("reglages_ajouter"),
+            "activer": tr("reglages_activer"),
+            "actif": tr("reglages_actif"),
+            "droits": tr("reglages_droits"),
+            "droits_note": tr("reglages_droits_note"),
+            "retour": tr("reglages_retour"),
+            "creation": tr("reglages_creation"),
+            "creation_note": tr("reglages_creation_note"),
+            "prenom": tr("reglages_prenom"),
+            "nom": tr("reglages_nom"),
+            "profil": tr("reglages_profil"),
+            "profil_note": tr("reglages_profil_note"),
+            "email": tr("reglages_email"),
+            "photo": tr("reglages_photo"),
+            "creer": tr("reglages_creer"),
+            "nom_requis": tr("reglages_nom_requis"),
+            "supprimer": tr("reglages_supprimer"),
+            "sans_fichier": tr("reglages_sans_fichier"),
             "reinitialiser": tr("reglages_reinitialiser"),
             "fermer": tr("reglages_fermer"),
+        },
+        # Les UTILISATEURS de l'affiche. Le fichier est hors dépôt : il porte
+        # des noms, des adresses et des photos, qui n'ont rien à faire dans
+        # l'historique d'un livrable public.
+        #
+        # Les profils PRÉREMPLISSENT les autorisations à la création, puis
+        # chacun règle les siennes. Une section absente de la table est
+        # visible : on n'écrit que les exceptions, et une vue ajoutée demain
+        # apparaît chez tout le monde plutôt que de rester cachée chez ceux
+        # dont le fichier date d'avant.
+        "users": {
+            "fichier": RACINE / ".locale" / "utilisateurs.json",
+            "profils": {
+                "analyste": {"name": tr("profil_analyste"),
+                             "autorisations": {}},
+                "decideur": {"name": tr("profil_decideur"), "autorisations": {
+                    "ou": False, "etat": False, "habitants": False,
+                    "inondation": False, "preuves": False,
+                }},
+                "public": {"name": tr("profil_public"), "autorisations": {
+                    "habitants": False, "preuves": False,
+                }},
+                "autre": {"name": tr("profil_autre"), "autorisations": {}},
+            },
         },
         "menu_active_color": VERT_TOGO,
         "menu_inactive_color": "transparent",

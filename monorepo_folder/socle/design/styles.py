@@ -1234,7 +1234,39 @@ _CSS_AFFICHE = """
 /* Marque du laboratoire — même lien et mêmes couleurs que la barre de la
    console : lion rouge, texte d'encre. Ancrée au coin haut droit de la carte,
    là où se trouvait la bascule de langue. */
-.kg-aff-marque { position: absolute; top: 14px; right: 20px; }
+/* Le bloc d'identité qui suit occupe toute la largeur de la carte : sans
+   niveau explicite, il recouvre la marque et l'avatar, qui restent visibles
+   mais cessent d'être cliquables. Vérifié — le clic sur l'avatar était
+   intercepté par un <div> transparent. */
+.kg-aff-marque { position: absolute; top: 14px; right: 20px; z-index: 5; }
+
+/* L'avatar de l'utilisateur actif, ancré JUSTE AVANT la marque. Sa position
+   ne dépend pas de la largeur du mot-marque : celui-ci tient dans un gabarit
+   fixe, et une mise en flux aurait fait sauter l'avatar d'une langue à
+   l'autre. */
+.st-key-kgaffprofil {
+  position: absolute !important;
+  top: 16px; right: 96px;
+  width: auto !important; margin: 0 !important;
+  z-index: 5;
+}
+.st-key-kgaffprofil [data-testid="stButton"] > button {
+  width: 34px; height: 34px; min-height: 0; padding: 0;
+  border-radius: 50%;
+  background-color: var(--kg-color-surface-secondary);
+  border: 1px solid var(--kg-color-border-light);
+  color: var(--kg-color-text-secondary);
+  font-size: 12px; font-weight: 650; letter-spacing: .02em;
+}
+.st-key-kgaffprofil [data-testid="stButton"] > button:hover {
+  border-color: var(--kg-color-primary);
+  box-shadow: 0 0 0 2px var(--kg-color-primary-light, #E4F0EB);
+}
+.st-key-kgaffprofil [data-testid="stButton"] p { line-height: 1; margin: 0; }
+
+/* Les cartes d'utilisateur de la fenêtre : une surface par personne, pour que
+   l'avatar, l'identité et les deux boutons se lisent comme un seul objet. */
+[class*="st-key-regcarte_"] { padding: 6px 10px !important; }
 
 /* Marque Data AI Lab — le logo officiel et son mot-marque sur deux lignes,
    comme le site les compose. Les couleurs viennent du tracé lui-même : un

@@ -181,14 +181,47 @@ def cle_visibilite(element, parent=None):
     return f"{_PREFIXE_VU}{parent + '.' if parent else ''}{identifiant}"
 
 
+# Le fichier d'utilisateurs de l'application, quand elle en déclare un. Posé
+# par `render_affiche` au début du rendu : `visible()` est appelée par le rail,
+# par le routage et par la fenêtre, et lui passer le chemin à chaque fois
+# aurait traversé six signatures pour un réglage qui ne change jamais en cours
+# de page.
+_FICHIER_UTILISATEURS = None
+
+
+def brancher_utilisateurs(fichier):
+    """Déclare d'où viennent les autorisations. `None` rend la main à la session."""
+
+    global _FICHIER_UTILISATEURS
+    _FICHIER_UTILISATEURS = fichier
+
+
 def visible(element, parent=None):
     """L'élément doit-il être affiché ?
 
-    La SESSION l'emporte sur la configuration : l'utilisateur vient de faire
-    un choix dans la fenêtre de réglages, et le lui reprendre au prochain
-    rendu serait incompréhensible. Un rechargement rend la configuration,
-    puisque la session repart à vide.
+    Trois sources, dans cet ordre :
+
+      1. l'UTILISATEUR actif, quand l'application en déclare — c'est lui qui
+         porte les autorisations, et elles survivent au rechargement ;
+      2. la SESSION, sinon : le choix vient d'être fait dans la fenêtre, et le
+         reprendre au rendu suivant serait incompréhensible ;
+      3. la CONFIGURATION du défi — `can_view`, vrai par défaut.
     """
+
+    identifiant = element.get("id")
+
+    if _FICHIER_UTILISATEURS:
+        # pyrefly: ignore [missing-import]
+        from socle.shell import utilisateurs
+
+        personne = utilisateurs.actif(_FICHIER_UTILISATEURS)
+
+        if personne is not None:
+            return utilisateurs.autorise(
+                personne, parent or identifiant,
+                identifiant if parent else None,
+                defaut=bool(element.get("can_view", True)),
+            )
 
     # pyrefly: ignore [missing-attribute]
     retenu = st.session_state.get(cle_visibilite(element, parent))

@@ -30,7 +30,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from socle.design.styles import load_styles_affiche
-from socle.shell import menu
+from socle.shell import menu, utilisateurs
 from socle.i18n import LANGUES
 from socle.i18n.traduction import init_langue, langue, definir_langue
 from socle.ui.cards import reset_cards
@@ -577,6 +577,40 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
     entete = st.container(key="kgaffmenu")
 
     with entete:
+        # L'AVATAR de l'utilisateur actif, posé devant la marque du
+        # laboratoire : les deux appartiennent au bandeau d'identité, l'un
+        # dit qui édite, l'autre qui regarde.
+        #
+        # C'est un vrai bouton, et sa photo est peinte en FOND : un libellé de
+        # bouton Streamlit est du markdown, qui échappe le HTML — une balise
+        # <img> s'y écrirait en clair. Les initiales restent le libellé, et
+        # elles passent en transparent dès qu'une photo les recouvre.
+        fichier_utilisateurs = ((config or {}).get("users") or {}).get("fichier")
+
+        if fichier_utilisateurs:
+            personne = utilisateurs.actif(fichier_utilisateurs)
+            photo = (personne or {}).get("photo")
+
+            if photo:
+                st.markdown(
+                    "<style>"
+                    '.st-key-kgaffprofil [data-testid="stButton"] > button {'
+                    f' background-image: url("{photo}");'
+                    " background-size: cover; background-position: center;"
+                    " color: transparent; }"
+                    "</style>",
+                    unsafe_allow_html=True,
+                )
+
+            with st.container(key="kgaffprofil"):
+                if st.button(
+                    utilisateurs.initiales(personne),
+                    key="affprofil", type="tertiary",
+                    help=((config.get("settings") or {}).get("titre")),
+                ):
+                    ouvrir_fenetre(("liste", None))
+                    st.rerun()
+
         # La bascule de langue est descendue dans le rail ; la place qu'elle
         # occupait revient à la marque du laboratoire — le même lien que porte
         # la barre de la console, pour que les deux surfaces se signent pareil.
@@ -683,10 +717,18 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                         (config["settings"].get("icone")
                          or ":material/settings:"),
                         key="affreglages",
-                        help=config["settings"].get("titre"),
+                        help=config["settings"].get("droits"),
                         type="tertiary",
                     ):
-                        _reglages(config)
+                        # L'engrenage mène DIRECTEMENT aux droits de qui
+                        # regarde : c'est le geste de quelqu'un qui veut
+                        # ranger son propre menu, pas changer d'identité.
+                        fichier = (config.get("users") or {}).get("fichier")
+                        courant = (utilisateurs.actif(fichier)
+                                   if fichier else None)
+                        ouvrir_fenetre(("droits", courant["id"]) if courant
+                                       else ("liste", None))
+                        st.rerun()
 
             # La bascule de langue ferme la ligne, poussée au bord droit. Elle
             # garde ses deux boutons plutôt qu'un groupe segmenté : ses cases
@@ -709,82 +751,230 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                         ):
                             definir_langue(code)
 
+            # La fenêtre se repeint tant qu'elle est demandée. Ici, en fin de
+            # menu : elle a besoin de la configuration, et le rendu du corps
+            # ne doit pas s'intercaler entre le clic et son ouverture.
+            if st.session_state.get(_CLE_FENETRE) and (config or {}).get(
+                "settings"
+            ):
+                _reglages(config)
 
-@st.dialog(" ", width="medium")
-def _reglages(config):
-    """Fenêtre des autorisations d'affichage — sections et onglets.
 
-    Elle ne CACHE pas des données, elle range un menu : les trente vues de
-    l'affiche ne servent pas le même lecteur, et celui qui vient pour la
-    proposition n'a que faire des recettes de nettoyage. C'est écrit dans la
-    fenêtre plutôt que laissé croire à un contrôle d'accès — l'URL d'une
-    section masquée reste atteignable, et doit le rester : une donnée qu'il ne
-    faut pas montrer ne se cache pas dans un menu.
+def _titre_fenetre(titre, note=None, retour=None):
+    """L'en-tête d'un écran de la fenêtre — titre, note, et retour éventuel."""
 
-    Les libellés viennent de la configuration, comme le reste du menu : le
-    socle n'écrit aucun mot visible.
-    """
-
-    reglages = config.get("settings") or {}
-    active = langue()
+    if retour:
+        if st.button(retour, key="reg_retour", type="tertiary"):
+            utilisateurs.aller_a("liste")
+            st.rerun()
 
     st.markdown(
         f'<div style="font-size:var(--kg-fs-xl);font-weight:650;'
-        f'margin:-8px 0 2px;">{reglages.get("titre", "")}</div>'
+        f'margin:{"0" if retour else "-8px"} 0 2px;">{titre}</div>'
         + (f'<div style="font-size:13px;color:var(--kg-color-text-muted);'
-           f'margin-bottom:12px;">{reglages["note"]}</div>'
-           if reglages.get("note") else ""),
+           f'margin-bottom:12px;max-width:62ch;">{note}</div>' if note else ""),
         unsafe_allow_html=True,
     )
 
-    # Un DÉPLIANT par section, replié. Les trente-huit cases à plat demandaient
-    # trois écrans de défilement dans une fenêtre qui en fait un : on n'y voyait
-    # jamais la structure qu'on venait régler. Repliées, les sept sections
-    # tiennent d'un coup d'œil, et l'on n'ouvre que celle qu'on veut toucher.
-    for entree in config.get("menu_items") or []:
-        identifiant = entree.get("id")
-        onglets = entree.get("tab_items") or []
-        vue = menu.visible(entree)
-        vus = sum(1 for o in onglets if menu.visible(o, identifiant))
 
-        # L'en-tête du dépliant PORTE l'état : sans lui, une section masquée ne
-        # se distinguerait d'une autre qu'en l'ouvrant, ce qui annulerait tout
-        # le gain du repli.
-        etiquette = menu.texte(entree.get("name"), active)
-        detail = (f"{vus}/{len(onglets)}" if vue
-                  else (reglages.get("masquee") or "—"))
+def _carte_utilisateur(personne, fichier, reglages, courant):
+    """Une carte de la liste : avatar, identité, activation, réglages.
 
-        with st.expander(f"**{etiquette}**  ·  {detail}", expanded=False):
-            vue = st.toggle(reglages.get("section") or etiquette, value=vue,
-                            key=f"reg_{identifiant}")
-            menu.autoriser(entree, vue)
+    Les deux boutons ne font PAS la même chose, et la carte doit le montrer :
+    « Activer » change qui regarde et recompose le menu ; l'engrenage ouvre les
+    autorisations de cette personne-là, sans la rendre active. Les confondre
+    obligerait à devenir quelqu'un pour régler ce qu'il voit.
+    """
 
-            # Les onglets d'une section masquée restent RÉGLABLES mais grisés :
-            # les retirer ferait perdre le détail du réglage au premier
-            # basculement de la section, et tout serait à recocher.
-            for onglet in onglets:
-                actif = st.checkbox(
-                    menu.texte(onglet.get("name"), active),
-                    value=menu.visible(onglet, identifiant),
-                    key=f"reg_{identifiant}_{onglet.get('id')}",
-                    disabled=not vue,
+    identifiant = personne.get("id")
+    est_courant = courant and courant.get("id") == identifiant
+
+    with st.container(key=f"regcarte_{identifiant}",
+                      border=True):
+        colonnes = st.columns([1, 6, 3], vertical_alignment="center")
+
+        with colonnes[0]:
+            st.markdown(utilisateurs.avatar(personne, 42), unsafe_allow_html=True)
+
+        with colonnes[1]:
+            st.markdown(
+                f'<div style="font-weight:650;line-height:1.3;">'
+                f'{personne.get("prenom", "")} {personne.get("nom", "")}</div>'
+                f'<div style="font-size:12px;color:var(--kg-color-text-muted);'
+                f'overflow-wrap:anywhere;">{personne.get("email", "")}</div>',
+                unsafe_allow_html=True,
+            )
+
+        with colonnes[2]:
+            action, droits = st.columns([3, 1], vertical_alignment="center")
+
+            with action:
+                if st.button(
+                    (reglages.get("actif") if est_courant
+                     else reglages.get("activer")) or "",
+                    key=f"reg_actif_{identifiant}",
+                    use_container_width=True,
+                    disabled=bool(est_courant),
+                    type="primary" if est_courant else "secondary",
+                ):
+                    utilisateurs.definir_actif(fichier, identifiant)
+                    st.rerun()
+
+            with droits:
+                if st.button(":material/settings:",
+                             key=f"reg_droits_{identifiant}",
+                             help=reglages.get("droits"), type="tertiary"):
+                    utilisateurs.aller_a("droits", identifiant)
+                    st.rerun()
+
+
+def _ecran_liste(config, fichier, reglages):
+    """Écran 1 — qui regarde."""
+
+    _titre_fenetre(reglages.get("titre", ""), reglages.get("note"))
+
+    courant = utilisateurs.actif(fichier)
+    gens = utilisateurs.liste(fichier)
+
+    if not gens:
+        st.info(reglages.get("vide", ""))
+
+    for personne in gens:
+        _carte_utilisateur(personne, fichier, reglages, courant)
+
+    if st.button(reglages.get("ajouter", ""), key="reg_ajouter",
+                 use_container_width=True):
+        utilisateurs.aller_a("creation")
+        st.rerun()
+
+
+def _ecran_creation(config, fichier, reglages, langue_active):
+    """Écran 2 — le formulaire, puis les autorisations de la personne créée."""
+
+    _titre_fenetre(reglages.get("creation", ""), reglages.get("creation_note"),
+                   retour=reglages.get("retour"))
+
+    profils = config.get("users", {}).get("profils") or {}
+
+    with st.form("reg_formulaire", border=False):
+        gauche, droite = st.columns([1, 3], vertical_alignment="top")
+
+        with gauche:
+            photo = st.file_uploader(reglages.get("photo", ""),
+                                     type=["png", "jpg", "jpeg", "webp"],
+                                     label_visibility="collapsed")
+
+        with droite:
+            un, deux = st.columns(2)
+            prenom = un.text_input(reglages.get("prenom", ""))
+            nom = deux.text_input(reglages.get("nom", ""))
+
+            profil = st.selectbox(
+                reglages.get("profil", ""), list(profils),
+                format_func=lambda cle: menu.texte(
+                    profils[cle].get("name"), langue_active) or cle,
+            ) if profils else None
+
+            email = st.text_input(reglages.get("email", ""))
+
+        st.caption(reglages.get("profil_note", ""))
+
+        if st.form_submit_button(reglages.get("creer", ""), type="primary",
+                                 use_container_width=True):
+            # Le PRÉNOM suffit : exiger les quatre champs pour un sélecteur de
+            # profil d'affichage ferait barrage là où il n'y a rien à protéger.
+            if not (prenom or nom).strip():
+                st.warning(reglages.get("nom_requis", ""))
+            else:
+                identifiant = utilisateurs.ajouter(
+                    fichier, prenom, nom, profil, email,
+                    photo=utilisateurs.photo_encodee(photo), profils=profils,
                 )
-                menu.autoriser(onglet, actif, identifiant)
+                utilisateurs.aller_a("droits", identifiant)
+                st.rerun()
 
-    gauche, droite = st.columns(2)
+
+def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
+    """Écran 3 — les autorisations d'UNE personne.
+
+    Le nom de la section et son interrupteur tiennent la même ligne ; le
+    dépliant ne contient que les onglets. Un interrupteur logé à l'intérieur
+    obligeait à ouvrir la section pour la couper — soit deux gestes pour un
+    réglage binaire.
+    """
+
+    personne = utilisateurs.trouver(fichier, identifiant)
+
+    if personne is None:
+        utilisateurs.aller_a("liste")
+        st.rerun()
+        return
+
+    _titre_fenetre(
+        f'{reglages.get("droits", "")} — {personne.get("prenom", "")} '
+        f'{personne.get("nom", "")}',
+        reglages.get("droits_note"), retour=reglages.get("retour"),
+    )
+
+    for entree in config.get("menu_items") or []:
+        section = entree.get("id")
+        onglets = entree.get("tab_items") or []
+        vue = utilisateurs.autorise(personne, section,
+                                    defaut=bool(entree.get("can_view", True)))
+
+        ligne, interrupteur = st.columns([8, 2], vertical_alignment="top")
+
+        with interrupteur:
+            choisi = st.toggle(menu.texte(entree.get("name"), langue_active),
+                               value=vue, key=f"reg_{identifiant}_{section}",
+                               label_visibility="collapsed")
+
+            if choisi != vue:
+                utilisateurs.autoriser(fichier, identifiant, section, choisi)
+                st.rerun()
+
+        with ligne:
+            with st.expander(f'**{menu.texte(entree.get("name"), langue_active)}**',
+                             expanded=False):
+                # Les onglets d'une section coupée restent RÉGLABLES mais
+                # grisés : les retirer ferait perdre le détail au premier
+                # basculement, et tout serait à recocher.
+                for onglet in onglets:
+                    cle_onglet = onglet.get("id")
+                    etat_onglet = utilisateurs.autorise(
+                        personne, section, cle_onglet,
+                        defaut=bool(onglet.get("can_view", True)),
+                    )
+                    coche = st.checkbox(
+                        menu.texte(onglet.get("name"), langue_active),
+                        value=etat_onglet, disabled=not choisi,
+                        key=f"reg_{identifiant}_{section}_{cle_onglet}",
+                    )
+
+                    if coche != etat_onglet:
+                        utilisateurs.autoriser(fichier, identifiant, section,
+                                               coche, onglet=cle_onglet)
+                        st.rerun()
+
+    gauche, milieu, droite = st.columns([2, 1, 2])
 
     with gauche:
         if reglages.get("reinitialiser") and st.button(
             reglages["reinitialiser"], use_container_width=True,
             key="reg_reinit",
         ):
-            menu.oublier_autorisations(config)
-            # Les clés des widgets de CETTE fenêtre partent aussi : elles
-            # garderaient sinon l'ancien état et le réécriraient au rendu
-            # suivant, annulant la remise à zéro qu'on vient de demander.
-            for cle in [c for c in st.session_state if c.startswith("reg_")]:
-                del st.session_state[cle]
+            utilisateurs.tout_autoriser(fichier, identifiant)
+            st.rerun()
 
+    with milieu:
+        # La suppression vit ICI, loin du bouton « Activer » de la carte : une
+        # croix à côté de lui se clique par erreur, et rien ne se défait.
+        if reglages.get("supprimer") and st.button(
+            reglages["supprimer"], use_container_width=True,
+            key="reg_supprimer", type="tertiary",
+        ):
+            utilisateurs.supprimer(fichier, identifiant)
+            utilisateurs.aller_a("liste")
             st.rerun()
 
     with droite:
@@ -792,7 +982,83 @@ def _reglages(config):
             reglages["fermer"], use_container_width=True, type="primary",
             key="reg_fermer",
         ):
+            _fermer_fenetre()
             st.rerun()
+
+
+# La fenêtre est un ÉTAT de session, non un appel ponctuel. `st.dialog` ne
+# peint sa fenêtre que pendant le passage où sa fonction est appelée : un
+# `st.rerun()` déclenché DEDANS — changer d'écran, activer quelqu'un — la
+# refermait aussitôt, puisque le passage suivant ne l'appelait plus. On la
+# rappelle donc à chaque rendu tant que le drapeau tient, et la croix de
+# Streamlit l'abaisse par `on_dismiss`.
+_CLE_FENETRE = "_kg_fenetre_ouverte"
+
+
+def _fermer_fenetre():
+    st.session_state[_CLE_FENETRE] = False
+
+
+def ouvrir_fenetre(ouverture=None):
+    """Demande l'ouverture de la fenêtre, éventuellement sur un écran donné."""
+
+    st.session_state[_CLE_FENETRE] = True
+
+    if ouverture:
+        utilisateurs.aller_a(*ouverture)
+
+
+@st.dialog(" ", width="medium", on_dismiss=_fermer_fenetre)
+def _reglages(config, ouverture=None):
+    """La fenêtre — trois écrans, un seul objet : qui regarde, et quoi.
+
+    Elle ne CACHE pas des données, elle range un menu : trente vues ne servent
+    pas le même lecteur, et celui qui vient pour la proposition n'a que faire
+    des recettes de nettoyage. L'adresse d'une section masquée reste
+    atteignable, et doit le rester — une donnée qu'il ne faut pas montrer ne se
+    cache pas dans un menu.
+
+    Les libellés viennent de la configuration, comme le reste du menu : le
+    socle n'écrit aucun mot visible.
+    """
+
+    reglages = config.get("settings") or {}
+    fichier = (config.get("users") or {}).get("fichier")
+    active = langue()
+
+    # Streamlit donne 160 px de largeur MINIMALE à chaque colonne, et enroule
+    # ce qui n'entre pas. Dans une fenêtre de 710 px, une colonne de deux
+    # dixièmes en réclame 142 : elle passait donc à la ligne, et l'interrupteur
+    # se retrouvait au-dessus du nom de sa section au lieu d'être en face.
+    # Vérifié à l'écran — les deux colonnes mesuraient 710 px chacune.
+    st.markdown(
+        "<style>"
+        '[data-testid="stDialog"] [data-testid="stHorizontalBlock"]'
+        " { flex-wrap: nowrap; }"
+        '[data-testid="stDialog"] [data-testid="stColumn"] { min-width: 0; }'
+        # Le dépliant colle à son interrupteur : sans cette reprise, la marge
+        # par défaut décalait l'un de l'autre de six pixels sur la verticale.
+        '[data-testid="stDialog"] [data-testid="stExpander"] details'
+        " { margin: 0; }"
+        "</style>",
+        unsafe_allow_html=True,
+    )
+
+    if ouverture:
+        utilisateurs.aller_a(*ouverture)
+
+    nom_ecran, identifiant = utilisateurs.ecran()
+
+    if not fichier:
+        st.warning(reglages.get("sans_fichier", ""))
+        return
+
+    if nom_ecran == "creation":
+        _ecran_creation(config, fichier, reglages, active)
+    elif nom_ecran == "droits" and identifiant:
+        _ecran_droits(config, fichier, reglages, active, identifiant)
+    else:
+        _ecran_liste(config, fichier, reglages)
 
 
 def render_affiche(titre, config, sous_titre=None,
@@ -975,6 +1241,12 @@ def render_affiche(titre, config, sous_titre=None,
             f"</style>",
             unsafe_allow_html=True,
         )
+
+    # Les autorisations viennent de l'UTILISATEUR actif dès qu'un fichier est
+    # déclaré. Branché avant la résolution de la route : c'est elle qui décide
+    # quelles sections existent, et elle doit déjà voir celles qui sont
+    # coupées.
+    menu.brancher_utilisateurs((config.get("users") or {}).get("fichier"))
 
     # La configuration est VÉRIFIÉE avant tout rendu : une navigation fausse
     # se manifeste sinon par un symptôme sans rapport avec sa cause — une case

@@ -372,12 +372,12 @@
     "en": "The programme"
   },
   "reglages_titre": {
-    "fr": "Ce que vous voulez voir",
-    "en": "What you want to see"
+    "fr": "Utilisateurs",
+    "en": "Users"
   },
   "reglages_note": {
-    "fr": "Range le menu, ne protège rien : une section masquée reste atteignable par son adresse. Les trente vues ne servent pas le même lecteur — celui qui vient pour la proposition n'a que faire des recettes de nettoyage.",
-    "en": "This tidies the menu, it protects nothing: a hidden section stays reachable by its URL. The thirty views do not serve the same reader — whoever comes for the proposal has no use for cleaning recipes."
+    "fr": "Choisir qui regarde. Ce n'est pas une connexion : aucun mot de passe, et l'adresse d'une section masquée reste atteignable. C'est un sélecteur de profil d'affichage — les trente vues ne servent pas le même lecteur.",
+    "en": "Choose who is looking. This is not a login: no password, and a hidden section stays reachable by its URL. It is a display-profile switcher — the thirty views do not serve the same reader."
   },
   "reglages_reinitialiser": {
     "fr": "Tout réafficher",
@@ -387,12 +387,96 @@
     "fr": "Fermer",
     "en": "Close"
   },
-  "reglages_section": {
-    "fr": "Afficher cette section",
-    "en": "Show this section"
+  "reglages_vide": {
+    "fr": "Aucun utilisateur pour l'instant. Le premier créé devient l'actif.",
+    "en": "No users yet. The first one created becomes the active one."
   },
-  "reglages_masquee": {
-    "fr": "masquée",
-    "en": "hidden"
+  "reglages_ajouter": {
+    "fr": "＋  Ajouter un utilisateur",
+    "en": "＋  Add a user"
+  },
+  "reglages_activer": {
+    "fr": "Activer",
+    "en": "Switch to"
+  },
+  "reglages_actif": {
+    "fr": "● Actif",
+    "en": "● Active"
+  },
+  "reglages_droits": {
+    "fr": "Autorisations",
+    "en": "Permissions"
+  },
+  "reglages_droits_note": {
+    "fr": "Ce que cette personne voit du menu. Une section coupée grise ses onglets sans les perdre : on récupère le réglage en la rallumant.",
+    "en": "What this person sees of the menu. A switched-off section greys its tabs without losing them: turn it back on and the settings return."
+  },
+  "reglages_retour": {
+    "fr": "‹  Retour",
+    "en": "‹  Back"
+  },
+  "reglages_creation": {
+    "fr": "Nouvel utilisateur",
+    "en": "New user"
+  },
+  "reglages_creation_note": {
+    "fr": "Le prénom suffit ; le reste s'ajoute plus tard.",
+    "en": "A first name is enough; the rest can come later."
+  },
+  "reglages_prenom": {
+    "fr": "Prénom",
+    "en": "First name"
+  },
+  "reglages_nom": {
+    "fr": "Nom",
+    "en": "Last name"
+  },
+  "reglages_profil": {
+    "fr": "Profil",
+    "en": "Profile"
+  },
+  "reglages_profil_note": {
+    "fr": "Le profil PRÉREMPLIT les autorisations. Elles restent modifiables ensuite, section par section.",
+    "en": "The profile PRE-FILLS the permissions. They stay editable afterwards, section by section."
+  },
+  "reglages_email": {
+    "fr": "E-mail",
+    "en": "E-mail"
+  },
+  "reglages_photo": {
+    "fr": "Photo",
+    "en": "Photo"
+  },
+  "reglages_creer": {
+    "fr": "Créer  ▸",
+    "en": "Create  ▸"
+  },
+  "reglages_nom_requis": {
+    "fr": "Il faut au moins un prénom ou un nom.",
+    "en": "At least a first or last name is required."
+  },
+  "reglages_supprimer": {
+    "fr": "Supprimer",
+    "en": "Delete"
+  },
+  "reglages_sans_fichier": {
+    "fr": "Aucun fichier d'utilisateurs n'est déclaré dans la configuration.",
+    "en": "No users file is declared in the configuration."
+  },
+  "profil_analyste": {
+    "fr": "Analyste — tout le dossier",
+    "en": "Analyst — the whole file"
+  },
+  "profil_decideur": {
+    "fr": "Décideur — constat et proposition",
+    "en": "Decision-maker — finding and proposal"
+  },
+  "profil_public": {
+    "fr": "Public — l'essentiel",
+    "en": "Public — the essentials"
+  },
+  "profil_autre": {
+    "fr": "Autre — tout le dossier",
+    "en": "Other — the whole file"
   }
 }

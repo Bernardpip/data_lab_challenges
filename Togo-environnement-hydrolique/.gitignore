@@ -21,3 +21,8 @@ Thumbs.db
 # Outils
 .playwright-mcp/
 requirement.md
+
+# État local de l'application — noms, adresses et photos des utilisateurs.
+# Il ne part pas dans le dépôt : ce sont des données personnelles, et elles
+# n'ont rien à faire dans l'historique d'un livrable public.
+.locale/
