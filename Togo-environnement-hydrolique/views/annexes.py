@@ -6,11 +6,14 @@ Aucun texte visible ici : tout vient de `i18n/locales/annexes.json`.
 # pyrefly: ignore [missing-import]
 import streamlit as st
 
-from socle import ui
+from socle import ui, charts
 from socle.ui import filters
 from socle.i18n.traduction import t
 
-from utils import contexte
+import pandas as pd
+
+from utils import contexte, analytics, perimetre
+from utils.data import datasets
 
 # Les cinq ressources de l'énoncé, avec leur sigle et leur producteur.
 SOURCES = [
@@ -103,3 +106,96 @@ def render_affichage():
                  tr("affichage_couleur_sous_titre"), "bar-chart-3"):
         st.markdown(tr("affichage_couleur_corps"))
         ui.note(tr("affichage_couleur_note"))
+
+
+def render_preuves():
+    """Ce que la façade affirme, vérifié pièce par pièce.
+
+    L'affiche pose trois constats en une page ; ici chacun est ramené à son
+    fichier et à son décompte. C'est la seule vue du tableau de bord dont le
+    lecteur attendu n'est pas le décideur mais le contradicteur.
+    """
+
+    tr, tc = t("annexes"), t("commun")
+    data = datasets()
+    ecart = perimetre.ecart_publication()
+
+    ui.stat_tiles([
+        {"value": f'{ecart["communs"]} / {ecart["decrits"]}',
+         "label": tr("preuve_tuile_champs"),
+         "delta": tr("preuve_tuile_champs_detail",
+                     {"absents": ecart["absents"]}),
+         "good": False, "icon": "table-2"},
+        {"value": "42 / 388", "label": tr("preuve_tuile_fri"),
+         "delta": tr("preuve_tuile_fri_detail"), "good": None, "icon": "search"},
+        {"value": ui.fr_number(len(analytics.cantons_prioritaires(
+            data["cantons"], data["tde"], data["coso"]))),
+         "label": tr("preuve_tuile_prio"),
+         "delta": tr("preuve_tuile_prio_detail"), "good": False, "icon": "flag"},
+    ])
+
+    # ── Preuve 1 : les champs décrits et non diffusés ───────────────────────
+    with ui.card(tr("preuve_champs_titre"), tr("preuve_champs_sous_titre"),
+                 "table-2"):
+        familles = pd.DataFrame([
+            {"famille": tr(f"famille_{cle}"), "champs": len(noms),
+             "detail": " · ".join(noms)}
+            for cle, noms in ecart["familles"].items() if noms
+        ])
+
+        if not familles.empty:
+            charts.bar_h(familles, "famille", "champs",
+                         unit=tr("unite_champs"))
+
+        ui.note(tr("preuve_champs_note", {
+            "decrits": ecart["decrits"], "publies": ecart["communs"],
+            "absents": ecart["absents"],
+        }))
+
+        # Les NOMS, pas un décompte : « 26 champs manquent » se conteste,
+        # « `fonctionnalite`, `debit`, `maintenance_societe` manquent » se
+        # vérifie en ouvrant le dictionnaire du producteur.
+        for cle, noms in ecart["familles"].items():
+            if noms:
+                st.markdown(f"**{tr(f'famille_{cle}')}** — `" +
+                            "`, `".join(noms) + "`")
+
+    # ── Preuve 2 : les seuils officiels contre les quantiles ────────────────
+    with ui.card(tr("preuve_seuils_titre"), tr("preuve_seuils_sous_titre"),
+                 "flag"):
+        officiel = analytics.population_par_classe(data["cantons"])
+        lisible = officiel.assign(
+            classe=officiel["classe_officielle"].map(
+                lambda c: t("synthese")(f"classe_off_{c}")))
+
+        charts.bar_h(lisible, "classe", "cantons",
+                     unit=tr("unite_cantons"), trier=False)
+        ui.note(tr("preuve_seuils_note"))
+        charts.table_twin(lisible[["classe", "cantons", "population"]].rename(
+            columns={"classe": tr("col_classe"), "cantons": tr("col_cantons"),
+                     "population": tr("col_population")}))
+
+    # ── Preuve 3 : l'indice publié est-il reproductible ? ───────────────────
+    with ui.card(tr("preuve_fri_titre"), tr("preuve_fri_sous_titre"), "search"):
+        formes = analytics.reconstitution_fri(data["cantons"])
+        detail, avec_zero, total = analytics.zeros_composantes(data["cantons"])
+
+        lisible = formes.assign(
+            forme=formes["forme"].map(lambda f: tr(f"forme_{f}")),
+            variance=(100 * formes["r2"]).round(1))
+
+        charts.bar_h(lisible, "forme", "variance", unit="%", trier=False)
+        ui.note(tr("preuve_fri_note", {
+            "sans_zero": int(total - avec_zero), "total": total,
+            "avec_zero": avec_zero,
+        }))
+        charts.table_twin(lisible[["forme", "variance", "cantons"]].rename(
+            columns={"forme": tr("col_forme"), "variance": tr("col_variance"),
+                     "cantons": tr("col_cantons")}))
+
+        ui.note(tr("preuve_fri_zeros", {
+            "urban": int(detail.loc[detail["composante"] == "norm_urban",
+                                    "cantons_a_zero"].iloc[0]),
+            "build": int(detail.loc[detail["composante"] == "norm_build",
+                                    "cantons_a_zero"].iloc[0]),
+        }))

@@ -12,8 +12,8 @@
     "en": "{cantons} cantons mapped · {ouvrages} facilities recorded · opendata.gouv.tg"
   },
   "vue_diagnostic": {
-    "fr": "Diagnostic",
-    "en": "Diagnosis"
+    "fr": "Home",
+    "en": "Home"
   },
   "vue_risque": {
     "fr": "Risque",
@@ -26,6 +26,10 @@
   "vue_priorites": {
     "fr": "Priorités",
     "en": "Priorities"
+  },
+  "lien_annexes": {
+    "fr": "Annexes",
+    "en": "Appendices"
   },
   "carte_diagnostic": {
     "fr": "Risque d'inondation par canton",

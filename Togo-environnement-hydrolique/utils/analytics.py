@@ -10,6 +10,8 @@ Chaque fonction reçoit un cadre DÉJÀ filtré et renvoie soit un DataFrame pr�
 """
 
 # pyrefly: ignore [missing-import]
+import numpy as np
+# pyrefly: ignore [missing-import]
 import pandas as pd
 
 from utils.clean import NON_RENSEIGNE
@@ -326,3 +328,370 @@ def synthese(cantons, tde, coso, ventes):
             ventes.loc[ventes["annee"] == ventes["annee"].max(), "volume_m3"].sum()
         ) if len(ventes) else 0.0,
     }
+
+
+# ─── Classes officielles du producteur ───────────────────────────────────────
+
+# Seuils lus sur la PLANCHE du ministère (`fri-cantons.pdf`), et introuvables
+# ailleurs : ni le GeoPackage ni la note ne les portent. La planche est une
+# image sans un caractère de texte — il a fallu la rendre et la lire.
+#
+# Ils sont FIXES, là où le tableau de bord classait en quintiles. Les deux
+# lectures sont justes et ne répondent pas à la même question : les quintiles
+# donnent un CLASSEMENT (quels cantons sont les pires), les seuils donnent une
+# INTENSITÉ (à partir de quand le risque est élevé). Publier la nôtre sans
+# offrir la sienne exposait le lecteur à croire à une erreur en comparant.
+SEUILS_OFFICIELS = [0.01, 0.10, 0.17, 0.29, 0.44, 0.65]
+CLASSES_OFFICIELLES = ["tres_faible", "faible", "moyen", "eleve", "tres_eleve"]
+
+# Les deux classes hautes : c'est le périmètre que le rapport appelle
+# « exposé », et il vaut mieux le nommer une fois que le réécrire cinq fois.
+CLASSES_HAUTES = ["eleve", "tres_eleve"]
+
+
+def classer_officiel(cantons):
+    """Ajoute la classe officielle de risque à chaque canton.
+
+    Le FRI est stocké en POINTS (×100) par le nettoyage, quand les seuils de
+    la planche sont exprimés dans l'unité d'origine : la division rétablit
+    l'échelle du producteur plutôt que de multiplier ses bornes, pour que les
+    nombres écrits ici soient exactement ceux que la planche imprime.
+    """
+
+    classes = pd.cut(
+        cantons["risque_pts"] / 100,
+        bins=SEUILS_OFFICIELS, labels=CLASSES_OFFICIELLES, include_lowest=True,
+    )
+
+    return cantons.assign(classe_officielle=classes)
+
+
+def population_par_classe(cantons):
+    """Cantons et population par classe officielle — le chiffre du rapport.
+
+    C'est ici que se lit le fait central du défi : 4 % des cantons abritent
+    35 % de la population. Un décompte de cantons seul le manquerait — il
+    donnerait 17 sur 388 et laisserait croire à un problème marginal.
+    """
+
+    cadre = classer_officiel(cantons)
+
+    agrege = (
+        cadre.groupby("classe_officielle", observed=False)
+        .agg(cantons=("canton", "size"), population=("population", "sum"))
+        .reset_index()
+    )
+    total = agrege["population"].sum()
+    agrege["part_population"] = 100 * agrege["population"] / total if total else 0
+
+    return agrege
+
+
+def matrice_risque_equipement(cantons, tde, coso):
+    """Croise la classe de risque et la présence d'un ouvrage — objectif n°4.
+
+    Jointure par les CLÉS d'ouvrages, sans jamais joindre les tables : un
+    canton compte comme équipé dès qu'un ouvrage s'y rattache, quel que soit
+    l'inventaire, et un canton sans ouvrage doit rester dans le cadre — c'est
+    lui que la matrice cherche.
+    """
+
+    equipes = set(tde["cle_canton"]) | set(coso["cle_canton"])
+    cadre = classer_officiel(cantons)
+    cadre = cadre.assign(equipe=cadre["cle_canton"].isin(equipes))
+
+    agrege = (
+        cadre.groupby("classe_officielle", observed=False)
+        .agg(cantons=("canton", "size"), equipes=("equipe", "sum"),
+             population=("population", "sum"))
+        .reset_index()
+    )
+    agrege["sans_ouvrage"] = agrege["cantons"] - agrege["equipes"]
+    agrege["part_equipee"] = (
+        100 * agrege["equipes"] / agrege["cantons"].where(agrege["cantons"] > 0)
+    ).fillna(0)
+
+    return agrege
+
+
+def cantons_prioritaires(cantons, tde, coso):
+    """Les cantons exposés ET dépourvus d'ouvrage recensé — la recommandation.
+
+    La recommandation du défi n'est pas une phrase, c'est cette liste. Elle
+    croise les trois jeux et ne retient que l'intersection des deux critères
+    qu'un décideur peut agir : le risque, qu'il subit, et l'absence d'ouvrage,
+    qu'il peut corriger.
+
+    Triée par population : à risque égal, le canton le plus peuplé passe
+    d'abord — c'est le seul arbitrage que les données autorisent.
+    """
+
+    equipes = set(tde["cle_canton"]) | set(coso["cle_canton"])
+    cadre = classer_officiel(cantons)
+
+    retenus = cadre[
+        cadre["classe_officielle"].isin(CLASSES_HAUTES)
+        & ~cadre["cle_canton"].isin(equipes)
+    ]
+
+    colonnes = ["canton", "prefecture", "region", "risque_pts", "population"]
+
+    return (
+        retenus[colonnes]
+        .sort_values("population", ascending=False)
+        .reset_index(drop=True)
+    )
+
+
+# ─── Ce que le COSO documente de sa propre exécution ─────────────────────────
+
+def delais(coso):
+    """Écart entre la fin PRÉVUE et la fin RÉELLE des travaux, en jours.
+
+    Le fichier porte tout le cycle d'un chantier — signature, lancement, fin
+    prévue, fin réelle, réceptions technique et provisoire, remise à la
+    communauté. C'est un jeu de données de SUIVI, et le tableau de bord n'en
+    lisait que l'année d'achèvement.
+
+    Aucune ligne n'est écartée pour un retard aberrant : un chantier livré
+    655 jours avant sa date prévue signale une date mal saisie, et c'est une
+    information sur la qualité du suivi, pas un point à effacer.
+    """
+
+    prevu = pd.to_datetime(coso["expected_end_date"], errors="coerce")
+    reel = pd.to_datetime(coso["date_achevement"], errors="coerce")
+
+    return coso.assign(retard_jours=(reel - prevu).dt.days)
+
+
+# Les intitulés de type du producteur font jusqu'à 64 caractères et PARTAGENT
+# leurs 32 premiers : « Forages photovoltaïques dans les communautés… », « …
+# dans les établissements scolaires », « … dans les marchés ». Les tronquer
+# pour les faire tenir dans un graphe produisait trois libellés IDENTIQUES, et
+# plotly, qui range par catégorie, fondait les trois séries en une seule barre.
+# On les ramène donc à une clé sur ce qui les DISTINGUE, jamais sur leur début.
+MOTIFS_TYPE = [
+    ("scolaire", "ecoles"),
+    ("maraîch", "maraichage"),
+    ("marché", "marches"),
+    ("centre communautaire", "centre"),
+    ("salle de réunion", "salle"),
+    ("communauté", "boisson"),
+]
+
+
+def cle_type_ouvrage(libelle):
+    """Clé courte d'un type d'ouvrage COSO, pour l'i18n du défi."""
+
+    texte = str(libelle).lower()
+
+    for motif, cle in MOTIFS_TYPE:
+        if motif in texte:
+            return cle
+
+    return "autre"
+
+
+def delais_par_type(coso):
+    """Retard médian par type d'ouvrage — la MÉDIANE, jamais la moyenne.
+
+    La distribution des retards porte des valeurs extrêmes des deux côtés
+    (−655 à +431 jours) : une moyenne y suivrait les erreurs de saisie plutôt
+    que le comportement des chantiers.
+    """
+
+    cadre = delais(coso).dropna(subset=["retard_jours"])
+
+    agrege = (
+        cadre.assign(cle_type=cadre["type_ouvrage"].map(cle_type_ouvrage))
+        .groupby(["cle_type", "type_ouvrage"])
+        .agg(ouvrages=("retard_jours", "size"),
+             retard_median=("retard_jours", "median"),
+             en_retard=("retard_jours", lambda s: int((s > 0).sum())))
+        .reset_index()
+        .sort_values("retard_median", ascending=True)
+    )
+    agrege["part_en_retard"] = 100 * agrege["en_retard"] / agrege["ouvrages"]
+
+    return agrege
+
+
+def chaine_budgetaire(coso):
+    """Estimé → contracté → payé, en francs CFA.
+
+    Les trois montants coexistent dans le fichier et ne disent pas la même
+    chose : ce qui était prévu, ce qui a été signé après mise en concurrence,
+    ce qui a été décaissé. L'écart entre les deux premiers est une marge
+    dégagée ; l'écart entre les deux derniers, un dépassement.
+    """
+
+    etapes = [
+        ("estime", "cout_estime"),
+        ("contracte", "contract_amount_work_companies"),
+        ("paye", "montant_paye"),
+    ]
+
+    return pd.DataFrame([
+        {"etape": nom, "montant": float(coso[colonne].sum()),
+         "ouvrages": int(coso[colonne].notna().sum())}
+        for nom, colonne in etapes if colonne in coso.columns
+    ])
+
+
+def beneficiaires(coso):
+    """Bénéficiaires directs, ventilés par sexe.
+
+    Le fichier les compte séparément, ce qui autorise le seul constat de genre
+    du corpus. Les deux colonnes sont renseignées ensemble ou pas du tout :
+    aucune reconstitution d'un sexe par différence n'est tentée.
+    """
+
+    femmes = float(coso["beneficiaires_femmes"].sum())
+    hommes = float(coso["beneficiaires_hommes"].sum())
+    total = femmes + hommes
+
+    return {
+        "femmes": femmes, "hommes": hommes, "total": total,
+        "part_femmes": 100 * femmes / total if total else 0.0,
+        "renseignes": int(coso["beneficiaires_femmes"].notna().sum()),
+    }
+
+
+def cout_par_beneficiaire(coso):
+    """Coût décaissé rapporté aux bénéficiaires directs, ouvrage par ouvrage.
+
+    Le seul ratio du corpus qui rapporte une dépense à une personne — donc le
+    seul qui permette de chiffrer ce que coûterait la couverture d'un canton
+    de plus. Ne retient que les ouvrages portant LES DEUX mesures : un
+    dénominateur nul produirait un infini, et un dénominateur estimé ferait
+    passer une hypothèse pour une observation.
+    """
+
+    cadre = coso.assign(
+        beneficiaires=coso["beneficiaires_femmes"].fillna(0)
+        + coso["beneficiaires_hommes"].fillna(0)
+    )
+    cadre = cadre[(cadre["beneficiaires"] > 0) & cadre["montant_paye"].notna()]
+    cadre = cadre.assign(
+        cout_beneficiaire=cadre["montant_paye"] / cadre["beneficiaires"]
+    )
+
+    colonnes = ["localite", "canton", "region", "type_ouvrage",
+                "beneficiaires", "montant_paye", "cout_beneficiaire"]
+
+    return cadre[colonnes].reset_index(drop=True)
+
+
+def audit_social(coso):
+    """Tenue de l'audit social et part des femmes parmi les participants.
+
+    Un audit social est la procédure par laquelle la communauté valide
+    l'ouvrage. Son absence n'est pas un manque de donnée : c'est un manque
+    d'audit, et les deux se distinguent ici parce que le fichier date ceux qui
+    ont eu lieu.
+    """
+
+    tenus = coso["number_of_participants_t_in_social_audit"].notna()
+    part_femmes = (
+        100 * coso["number_of_participants_w_in_social_audit"]
+        / coso["number_of_participants_t_in_social_audit"]
+    )
+
+    return {
+        "tenus": int(tenus.sum()),
+        "total": int(len(coso)),
+        "part_tenus": 100 * int(tenus.sum()) / len(coso) if len(coso) else 0.0,
+        "participants_median": float(
+            coso["number_of_participants_t_in_social_audit"].median()
+        ),
+        "part_femmes_mediane": float(part_femmes.median()),
+    }
+
+
+# ─── Reproductibilité de l'indice publié ─────────────────────────────────────
+
+# Les sept composantes normalisées que le GeoPackage publie à côté du FRI.
+COMPOSANTES_FRI = ["norm_fsi", "norm_pop", "norm_rwi", "norm_urban",
+                   "norm_build", "norm_dist_basin", "norm_crop"]
+
+
+def reconstitution_fri(cantons):
+    """Le FRI publié est-il reproductible à partir des composantes publiées ?
+
+    La note du producteur annonce « une moyenne géométrique normalisée ». Cette
+    fonction met l'affirmation à l'épreuve : elle ajuste plusieurs formes et
+    renvoie, pour chacune, la part de variance expliquée.
+
+    Les cantons portant un ZÉRO sur une composante sont ÉCARTÉS des formes
+    multiplicatives, et leur nombre est renvoyé. Un zéro annule un produit et
+    rend le logarithme indéfini ; le remplacer par une valeur minuscule
+    « marche », mais le résultat dépend alors de la valeur choisie — mesuré,
+    le R² passait de 0,86 à 0,92 selon qu'on écrivait 1e-9 ou 1e-6. Un chiffre
+    qui bouge avec une constante d'implémentation n'est pas un chiffre.
+    """
+
+    X = cantons[COMPOSANTES_FRI].to_numpy(dtype=float)
+    y = (cantons["risque_pts"] / 100).to_numpy(dtype=float)
+
+    def part_expliquee(prediction, cible=None):
+        cible = y if cible is None else cible
+        # Un ajustement sur matrice singulière renvoie des coefficients non
+        # finis : la forme est alors déclarée non concluante plutôt que de
+        # laisser un NaN se propager jusqu'au tableau affiché.
+        if not np.all(np.isfinite(prediction)):
+            return float("nan")
+
+        residus = ((cible - prediction) ** 2).sum()
+        total = ((cible - cible.mean()) ** 2).sum()
+        return 1 - residus / total if total else 0.0
+
+    formes = []
+
+    moindres, *_ = np.linalg.lstsq(X, y, rcond=None)
+    formes.append({"forme": "somme_ponderee", "r2": part_expliquee(X @ moindres),
+                   "cantons": len(y)})
+
+    avec_constante = np.c_[X, np.ones(len(y))]
+    p2, *_ = np.linalg.lstsq(avec_constante, y, rcond=None)
+    formes.append({"forme": "somme_constante",
+                   "r2": part_expliquee(avec_constante @ p2), "cantons": len(y)})
+
+    positifs = (X > 0).all(axis=1) & (y > 0)
+    Xp, yp = X[positifs], y[positifs]
+
+    if positifs.sum() > len(COMPOSANTES_FRI):
+        geo = Xp.prod(axis=1) ** (1 / len(COMPOSANTES_FRI))
+        formes.append({"forme": "moyenne_geometrique",
+                       "r2": part_expliquee(geo, yp),
+                       "cantons": int(positifs.sum())})
+
+        journal = np.c_[np.log(Xp), np.ones(len(yp))]
+        p3, *_ = np.linalg.lstsq(journal, np.log(yp), rcond=None)
+        formes.append({"forme": "produit_puissances",
+                       "r2": part_expliquee(np.exp(journal @ p3), yp),
+                       "cantons": int(positifs.sum())})
+
+    return pd.DataFrame(formes)
+
+
+def zeros_composantes(cantons):
+    """Combien de cantons portent un zéro, et sur quelle composante.
+
+    C'est la clé de lecture de `reconstitution_fri` : la moyenne géométrique
+    annoncée par le producteur restitue son indice presque exactement là où
+    toutes les composantes sont non nulles — mais un zéro annule un produit,
+    et 346 cantons sur 388 en portent au moins un, essentiellement parce
+    qu'ils n'ont ni zone urbaine ni bâti recensé. Le FRI y est pourtant publié
+    et non nul : un traitement des zéros existe donc, qui n'est écrit nulle
+    part.
+    """
+
+    X = cantons[COMPOSANTES_FRI]
+    zeros = (X == 0)
+
+    detail = pd.DataFrame({
+        "composante": COMPOSANTES_FRI,
+        "cantons_a_zero": [int(zeros[c].sum()) for c in COMPOSANTES_FRI],
+    }).sort_values("cantons_a_zero", ascending=False).reset_index(drop=True)
+
+    return detail, int(zeros.any(axis=1).sum()), int(len(cantons))

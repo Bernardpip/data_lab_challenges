@@ -37,6 +37,11 @@ from socle.ui.cards import reset_cards
 PARAM_VUE = "v"
 _CLE_VUE = "_affiche_vue"
 
+# Part de grille d'une sortie dans le rail, une vue valant 1. Trois quarts :
+# assez pour qu'un libellé tienne, assez peu pour que les vues restent le
+# sujet de la rangée. À parts égales, « Annexes » pesait autant que « Risque ».
+POIDS_SORTIE = 0.75
+
 # ─── Hauteur de fenêtre ──────────────────────────────────────────────────────
 # La colonne droite ne défile pas : ce qu'on y met doit tenir dans la fenêtre,
 # à la hauteur près. Or une carte Leaflet calcule son zoom pour la hauteur en
@@ -440,19 +445,66 @@ def aller_a(cle, premiere):
     st.rerun()
 
 
-def _menu(titre, sous_titre, sur_titre, vues, active, logo):
-    """Menu haut : identité et langue sur une ligne, les vues en dessous.
+def quitter(params):
+    """Va à une autre route — y compris l'adresse nue de l'affiche elle-même.
+
+    Ce qui décrit le NAVIGATEUR survit : la langue et la hauteur de fenêtre.
+    Ce qui décrit la LECTURE en cours tombe : la vue retenue. C'est cette
+    distinction qui permet à une sortie de ramener à l'affiche, à son point de
+    départ — même destination, mais l'ardoise est nette.
+
+    La hauteur, elle, ne se remesure pas toute seule : le script ne s'exécute
+    qu'au chargement du document et au redimensionnement, or on ne recharge
+    rien ici. L'effacer laisserait la page retomber sur sa hauteur supposée,
+    et la carte perdrait trois cents pixels jusqu'au prochain F5.
+
+    La vue s'efface AUSSI DE LA SESSION. Nettoyer la seule URL ne suffit
+    pas — `vue_active` retombe sur la session quand l'URL est muette, et
+    « Home » depuis la vue Parc rouvrait donc sur Parc.
+
+    Un `st.rerun` suffit — pas de rechargement du document. `app.py` relit `s`
+    au run suivant et monte l'autre coquille : les deux ne peuvent pas
+    coexister dans un même run, mais rien n'empêche d'en changer entre deux.
+    """
+
+    garde = {cle: st.query_params.get(cle)
+             for cle in ("lang", PARAM_HAUTEUR)
+             if st.query_params.get(cle)}
+
+    st.query_params.clear()
+    st.session_state.pop(_CLE_VUE, None)
+
+    for cle, valeur in {**garde, **(params or {})}.items():
+        st.query_params[cle] = valeur
+
+    st.rerun()
+
+
+def _menu(titre, sous_titre, sur_titre, vues, active, logo, liens):
+    """Menu haut : identité et langue sur une ligne, le rail en dessous.
 
     Le menu ne fait plus toute la largeur de la page — il tient dans la colonne
-    gauche. Titre, quatre vues et bascule de langue sur une seule ligne s'y
-    écrasaient : les boutons descendent donc sur une SECONDE rangée, où ils se
-    partagent la largeur entière et se lisent comme le rail d'onglets qu'ils
-    sont. La bascule de langue reste en haut : elle n'est pas une vue, et la
-    ranger avec elles laisserait croire qu'on peut « aller » en anglais comme
-    on va au Risque.
+    gauche. Titre, vues et bascule de langue sur une seule ligne s'y écrasaient :
+    les boutons descendent donc sur une SECONDE rangée, où ils se partagent la
+    largeur entière et se lisent comme le rail d'onglets qu'ils sont.
+
+    Les SORTIES prennent place dans ce même rail, aux extrémités — l'accueil
+    avant les vues, les annexes après :
+
+        [ Accueil | Diagnostic | Risque | Parc | Priorités | Annexes ]
+
+    Elles restent peintes en retrait : une rangée unique donne le chemin
+    complet d'un coup d'œil, la couleur dit lesquelles de ces cases sont des
+    vues de l'affiche et lesquelles en sortent.
+
+    Seule la bascule de langue reste en haut. Elle ne mène nulle part : la
+    ranger dans le rail laisserait croire qu'on peut « aller » en anglais
+    comme on va au Risque.
     """
 
     entete = st.container(key="kgaffmenu")
+    avant = [lien for lien in (liens or []) if lien.get("place") == "debut"]
+    apres = [lien for lien in (liens or []) if lien.get("place") != "debut"]
 
     with entete:
         gauche, droite = st.columns([78, 22], gap="small", vertical_alignment="center")
@@ -499,25 +551,54 @@ def _menu(titre, sous_titre, sur_titre, vues, active, logo):
                             ):
                                 definir_langue(code)
 
-        # Seconde rangée : le rail des vues, sur toute la largeur du menu. Les
-        # colonnes sont égales et les boutons s'y étirent — un rail dont les
-        # segments ont la même largeur se lit d'un coup, là où des boutons de
-        # largeur variable donnent au plus long l'air d'être le principal.
+        # Seconde rangée : le rail, sur toute la largeur du menu. Les vues ont
+        # des colonnes ÉGALES — un rail dont les segments ont la même largeur
+        # se lit d'un coup, là où des boutons de largeur variable donnent au
+        # plus long l'air d'être le principal. Les sorties, elles, prennent
+        # trois quarts de segment : elles encadrent les vues sans peser autant
+        # qu'elles.
         rail = st.container(key="kgaffvues")
 
         with rail:
-            for col, vue in zip(
-                st.columns(len(vues), gap="small"), vues
-            ):
-                with col:
+            cols = iter(st.columns(
+                [POIDS_SORTIE] * len(avant)
+                + [1] * len(vues)
+                + [POIDS_SORTIE] * len(apres),
+                gap="small",
+            ))
+
+            def sortie(lien):
+                # Chaque sortie a son conteneur nommé : c'est lui que la
+                # feuille cible pour la tenir en retrait de ses voisines, dont
+                # elle partage la rangée mais pas la nature.
+                with next(cols):
+                    with st.container(key=f"kgafflien_{lien['cle']}"):
+                        if st.button(
+                            lien["label"],
+                            key=f"afflien_{lien['cle']}",
+                            icon=lien.get("icone"),
+                            use_container_width=True,
+                            type="tertiary",
+                        ):
+                            quitter(lien.get("params"))
+
+            for lien in avant:
+                sortie(lien)
+
+            for vue in vues:
+                with next(cols):
                     if st.button(
                         vue["label"],
                         key=f"affvue_{vue['key']}",
+                        icon=vue.get("icone"),
                         use_container_width=True,
                         type=("primary" if vue["key"] == active
                               else "tertiary"),
                     ):
                         aller_a(vue["key"], vues[0]["key"])
+
+            for lien in apres:
+                sortie(lien)
 
 
 def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
@@ -528,7 +609,7 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
                    couleur_langue_active=None, couleur_langue_inactive=None,
                    couleur_fond_menu=None, couleur_bordure_menu=None,
                    marge_menu=True, ombre_menu=None,
-                   hauteur_menu=None, logo=None,
+                   hauteur_menu=None, logo=None, liens=None,
                    separation_colonnes="panneau",
                    colonne_gauche_poids=62, colonne_gauche_fond=None,
                    colonne_gauche_bordure=None,
@@ -546,7 +627,10 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
     changer aucun rapport entre les éléments. C'est le réglage que l'œil
     attend quand il dit « c'est trop gros », et il se défait en une valeur.
 
-    `vues`         : [{key, label}] — les boutons du menu haut, dans l'ordre.
+    `vues`         : [{key, label, icone?}] — les boutons du rail, dans
+    l'ordre. La PREMIÈRE est la vue par défaut : elle s'ouvre à l'arrivée et
+    ne s'écrit pas dans l'URL, qui reste l'adresse canonique de la page.
+    `icone` est facultative (une icône Material, cf. `st.button`).
     `rendu_gauche` : fonction (cle_de_vue) -> None, peint la colonne 62 %.
     `rendu_droite` : fonction (cle_de_vue) -> None, peint la colonne 38 %.
 
@@ -574,6 +658,13 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
                                 donc rien à la carte de droite.
         logo                    balisage HTML/SVG posé à gauche du titre
                                 (cf. `socle.charts.maps.silhouette_svg`)
+        liens                   [{cle, label, icone?, place?, params}] — les
+                                SORTIES, posées aux extrémités du rail des
+                                vues. `place` vaut « debut » (avant les vues)
+                                ou « fin », le défaut. `params` est la route
+                                visée (`{"s": "annexes"}`, ou `{}` pour
+                                l'accueil) ; la langue est conservée, le reste
+                                de l'URL est abandonné.
         separation_colonnes     « panneau » : la droite dans un cadre en
                                 retrait · True : un filet vertical ·
                                 False : rien, les colonnes coulent
@@ -669,7 +760,7 @@ def render_affiche(titre, vues, rendu_gauche, rendu_droite, sous_titre=None,
 
     active = vue_active(vues)
 
-    _menu(titre, sous_titre, sur_titre, vues, active, logo)
+    _menu(titre, sous_titre, sur_titre, vues, active, logo, liens)
 
     corps = st.container(key="kgaffcorps")
 

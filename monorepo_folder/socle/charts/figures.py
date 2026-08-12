@@ -128,7 +128,8 @@ def table_twin(df, label=None):
 
 # ─── Magnitude, catégories nominales ────────────────────────────────────────
 
-def bar_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None):
+def bar_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None,
+          trier=True):
     """Barres horizontales, catégories NOMINALES → une seule teinte pour toutes.
 
     Colorer chaque barre selon sa valeur re-encoderait la longueur : la teinte
@@ -136,9 +137,16 @@ def bar_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None):
     en forme « emphase » : une barre en couleur, le reste en gris de retrait.
     `height` force la hauteur (colonne étroite) — sinon calculée depuis le
     nombre de barres.
+
+    `trier` — ranger les barres par valeur croissante. À passer FAUX quand la
+    catégorie est ORDINALE : « Très faible · Faible · Moyen · Élevé · Très
+    élevé » a un ordre propre, et le classer par effectif produisait « Très
+    faible, Très élevé, Faible, Moyen, Élevé » — une échelle mélangée que le
+    lecteur relit deux fois avant de comprendre qu'elle ne dit rien. L'ordre
+    reçu est alors respecté, la première ligne du cadre en HAUT du graphe.
     """
 
-    data = df.sort_values(val, ascending=True)
+    data = df.sort_values(val, ascending=True) if trier else df.iloc[::-1]
 
     if max_rows:
         data = data.tail(max_rows)
@@ -596,10 +604,14 @@ def sucette_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None,
         mode="markers+text",
         marker=dict(size=11, color=pleines,
                     line=dict(color=INK["surface"], width=2)),
-        text=[f"  {_fr(v, decimals)}{unit}" for v in values],
+        # L'unité est séparée du nombre, comme partout ailleurs :
+        # « 294 408habitants » se lisait comme un seul mot.
+        text=[f"  {_fr(v, decimals)}" + (f" {unit}" if unit else "")
+              for v in values],
         textposition="middle right",
         textfont=dict(size=11, color=INK["secondary"]),
-        hovertemplate="%{customdata}<br><b>%{x:,}</b>" + unit + "<extra></extra>",
+        hovertemplate=("%{customdata}<br><b>%{x:,}</b>"
+                       + (f" {unit}" if unit else "") + "<extra></extra>"),
         customdata=labels,
         cliponaxis=False,
     ))

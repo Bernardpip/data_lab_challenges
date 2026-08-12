@@ -77,6 +77,7 @@ CONTENT_REGISTRY = {
     "recettes": donnees.render_recettes,
     "perimetre": donnees.render_perimetre,
 
+    "preuves": annexes.render_preuves,
     "sources": annexes.render_sources,
     "methodologie": annexes.render_methodologie,
     "affichage": annexes.render_affichage,

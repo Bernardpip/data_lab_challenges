@@ -95,7 +95,15 @@ def territoriale(cadre, champs, intervalle=None, reliquat=True):
 
         {"colonne": "annee_creation", "cle": "filtre_annee",
          "libelle": tr("annees"),
+         "cadre":   coso,          # facultatif — cf. ci-dessous
          "note": lambda debut, fin, nombre: tf("intervalle_exclut", {...})}
+
+    `cadre` désigne le jeu qui PORTE la colonne, quand elle ne vit pas dans
+    celui que cadrent les listes. Sans lui, une page qui filtre un référentiel
+    de territoires ne pourrait pas offrir de curseur sur une date connue du
+    seul inventaire : il faudrait joindre les deux pour dessiner le curseur, et
+    la jointure écarterait les lignes non rattachées — donc décalerait les
+    bornes affichées.
 
     `note` est appelée uniquement quand l'intervalle est resserré, avec le
     nombre de lignes dont la colonne est vide : les resserrer les écarte
@@ -161,7 +169,14 @@ def territoriale(cadre, champs, intervalle=None, reliquat=True):
         return resultat
 
     colonne = intervalle["colonne"]
-    valeurs = cadre[colonne].dropna()
+    # Le curseur peut cadrer une colonne qui vit AILLEURS que dans le jeu des
+    # listes. Sur une page qui filtre un référentiel de territoires mais dont
+    # la seule date connue appartient à un inventaire, exiger les deux dans le
+    # même cadre obligerait à les joindre pour dessiner un curseur — et une
+    # jointure écarte les lignes non rattachées, donc changerait les bornes.
+    source = intervalle.get("cadre")
+    source = cadre if source is None else source
+    valeurs = source[colonne].dropna()
 
     if valeurs.empty:
         # Rien à cadrer : afficher un curseur mort induirait en erreur.
@@ -170,10 +185,29 @@ def territoriale(cadre, champs, intervalle=None, reliquat=True):
 
     borne_min, borne_max = int(valeurs.min()), int(valeurs.max())
 
+    # La valeur vit dans la SESSION, comme celle des listes liées, et non dans
+    # un `value` passé au widget. Deux raisons, toutes deux constatées :
+    #
+    # · Streamlit garde la position d'un curseur côté navigateur quand sa clé
+    #   de session disparaît. Après une remise à zéro, la poignée restait donc
+    #   sur l'année choisie alors que le filtre était bien levé — un contrôle
+    #   qui ment sur ce qu'il fait vaut moins que pas de contrôle du tout.
+    #
+    # · Les bornes changent d'une page à l'autre pour une même clé partagée.
+    #   Une valeur héritée hors des bornes du jour ferait lever Streamlit ; on
+    #   la recadre ici plutôt que de laisser la page tomber.
+    courant = st.session_state.get(intervalle["cle"])
+    valide = (
+        isinstance(courant, (tuple, list)) and len(courant) == 2
+        and borne_min <= courant[0] <= courant[1] <= borne_max
+    )
+
+    if not valide:
+        st.session_state[intervalle["cle"]] = (borne_min, borne_max)
+
     with colonnes[len(champs)]:
         debut, fin = st.slider(
-            intervalle["libelle"], borne_min, borne_max,
-            value=(borne_min, borne_max), step=1,
+            intervalle["libelle"], borne_min, borne_max, step=1,
             key=intervalle["cle"], help=intervalle.get("aide"),
         )
 
@@ -183,7 +217,7 @@ def territoriale(cadre, champs, intervalle=None, reliquat=True):
     resultat[colonne] = None if plein else (debut, fin)
 
     if not plein and intervalle.get("note"):
-        texte = intervalle["note"](debut, fin, int(cadre[colonne].isna().sum()))
+        texte = intervalle["note"](debut, fin, int(source[colonne].isna().sum()))
 
         if texte:
             note(texte)

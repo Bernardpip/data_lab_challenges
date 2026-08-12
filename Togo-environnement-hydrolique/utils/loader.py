@@ -32,6 +32,36 @@ DATA_DIR = BASE_DIR / "data"
 CRS_AFFICHAGE = "EPSG:4326"
 
 
+def chemin(nom):
+    """Le fichier `nom`, où qu'il se trouve SOUS `data/`.
+
+    Les ressources ont d'abord vécu à plat, puis ont été rangées en
+    `map/`, `planches/`, `projets/`, `series/`. Une déclaration qui figerait
+    le sous-dossier casserait au prochain rangement — et elle a cassé : plus
+    aucun jeu ne se chargeait, sans que rien ne dise pourquoi avant le premier
+    `FileNotFoundError`.
+
+    Le nom de fichier, lui, vient du producteur et ne change pas : c'est donc
+    lui la clé. La recherche descend l'arborescence, et l'erreur, quand il n'y
+    a rien, NOMME ce qui a été cherché plutôt que de citer un chemin qui
+    n'existe pas.
+    """
+
+    direct = DATA_DIR / nom
+
+    if direct.exists():
+        return direct
+
+    for trouve in DATA_DIR.rglob(nom):
+        return trouve
+
+    raise FileNotFoundError(
+        f"« {nom} » est introuvable sous {DATA_DIR}. "
+        f"Sous-dossiers présents : "
+        f"{sorted(d.name for d in DATA_DIR.iterdir() if d.is_dir()) or 'aucun'}."
+    )
+
+
 FICHIERS = {
     # DCEF-TG — châteaux d'eau et forages de la TdE. 67 ouvrages, dont 65 en
     # région Maritime : ce n'est pas un inventaire national.
@@ -79,7 +109,7 @@ def lire_csv(nom, **kwargs):
     différents d'un bloc à l'autre.
     """
 
-    return pd.read_csv(DATA_DIR / nom, encoding="utf-8", low_memory=False, **kwargs)
+    return pd.read_csv(chemin(nom), encoding="utf-8", low_memory=False, **kwargs)
 
 
 def lire_geo(nom):
@@ -90,7 +120,7 @@ def lire_geo(nom):
     interprète toute coordonnée comme des degrés.
     """
 
-    couche = gpd.read_file(DATA_DIR / nom)
+    couche = gpd.read_file(chemin(nom))
 
     if couche.crs is not None and couche.crs.to_string() != CRS_AFFICHAGE:
         couche = couche.to_crs(CRS_AFFICHAGE)
@@ -117,7 +147,12 @@ def poids_des_fichiers():
 
     tous = {**FICHIERS, **FICHIERS_GEO, **FICHIERS_CITES}
 
-    return {
-        cle: (DATA_DIR / nom).stat().st_size if (DATA_DIR / nom).exists() else 0
-        for cle, nom in tous.items()
-    }
+    def poids(nom):
+        # Un fichier absent pèse 0 plutôt que de lever : ce profil doit
+        # s'afficher même quand une ressource CITÉE n'a pas été téléchargée.
+        try:
+            return chemin(nom).stat().st_size
+        except FileNotFoundError:
+            return 0
+
+    return {cle: poids(nom) for cle, nom in tous.items()}

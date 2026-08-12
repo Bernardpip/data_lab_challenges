@@ -80,6 +80,7 @@ NAV_SECTIONS = [
         "key": "annexes",
         "icon": "settings",
         "items": [
+            {"key": "preuves", "icon": "search"},
             {"key": "sources", "icon": "table-2"},
             {"key": "methodologie", "icon": "search"},
             {"key": "affichage", "icon": "settings"},

@@ -1010,6 +1010,31 @@ _CSS_AFFICHE = """
 .st-key-kgafflang { flex: 0 0 auto !important; width: 88px; margin-left: auto; }
 .st-key-kgafflang [data-testid="stColumn"] { flex: 1 1 46px !important; }
 
+/* ── Sorties : les boutons qui QUITTENT l'affiche ───────────────────────
+   Elles encadrent les vues dans le rail — accueil avant, annexes après — et
+   prennent le traitement de la bascule de langue : fond en retrait, creux
+   léger, texte discret. Aucune notion d'état actif : on ne « reste » pas sur
+   une sortie. Peintes comme les vues, elles auraient laissé croire qu'il y a
+   six vues au lieu de quatre.
+
+   Le sélecteur est ancré sur le rail. Sans ce niveau de plus, il pesait
+   exactement le poids de la règle de surcouche qui colore les vues
+   inactives — et à poids égal, c'est la dernière déclarée qui l'emporte,
+   c'est-à-dire la surcouche : les sorties reprenaient le blanc des vues. */
+.st-key-kgaffvues [class*="st-key-kgafflien_"] [data-testid="stButton"] > button,
+[class*="st-key-kgafflien_"] [data-testid="stButton"] > button {
+  background: var(--kg-color-surface-secondary);
+  color: var(--kg-color-text-secondary);
+  font-weight: 520;
+  box-shadow: inset 0 1px 3px rgba(15,23,42,.06);
+}
+.st-key-kgaffvues [class*="st-key-kgafflien_"] [data-testid="stButton"] > button:hover,
+[class*="st-key-kgafflien_"] [data-testid="stButton"] > button:hover {
+  background: var(--kg-color-surface);
+  color: var(--kg-color-text);
+  border-color: var(--kg-color-border-hover);
+}
+
 /* ── Rail des vues, seconde rangée ──────────────────────────────────────
    Les quatre boutons se partagent la largeur du menu à parts égales. Le rail
    se colle au bloc de titres — 12 px, l'écart d'un titre à son contenu, et

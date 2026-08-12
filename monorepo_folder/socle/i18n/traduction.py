@@ -67,7 +67,20 @@ def init_langue():
 
 
 def langue():
-    """Langue active — toujours l'une de LANGUES."""
+    """Langue active — toujours l'une de LANGUES.
+
+    Tant qu'`init_langue` n'a pas tourné, l'URL fait foi. Ce repli n'est pas
+    théorique : une page qui traduit AVANT de monter sa coquille — c'est le
+    cas de l'affiche, dont le titre et le sous-titre sont calculés pour être
+    passés au socle — lisait une session encore vide, retombait sur le
+    français, et n'affichait l'anglais qu'au premier rerun. Un lien partagé
+    en `?lang=en` s'ouvrait donc en français.
+    """
+
+    if _CLE_SESSION not in st.session_state:
+        demandee = st.query_params.get(PARAM_LANGUE)
+
+        return demandee if demandee in LANGUES else LANGUE_PAR_DEFAUT
 
     return st.session_state.get(_CLE_SESSION, LANGUE_PAR_DEFAUT)
 

@@ -31,6 +31,10 @@
     "fr": "Année d'achèvement",
     "en": "Completion year"
   },
+  "annee_coso_seule": {
+    "fr": "Ne restreint que les microprojets COSO : le référentiel des cantons et le parc TdE ne portent aucune date.",
+    "en": "Restricts COSO microprojects only: neither the canton reference nor the TdE inventory carries a date."
+  },
   "periode": {
     "fr": "Période",
     "en": "Period"

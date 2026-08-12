@@ -21,6 +21,29 @@ from socle.ui import filters
 from socle.i18n.traduction import t
 
 
+def _note_intervalle(champ):
+    """Avertissement d'un intervalle — SEULEMENT s'il écarte vraiment.
+
+    Resserrer un intervalle écarte mécaniquement les lignes dont la colonne
+    est vide, et il vaut mieux le dire. Encore faut-il qu'il y en ait : sur un
+    jeu entièrement daté, la phrase annonçait « exclut également les 0
+    ouvrages dont la date n'est pas renseignée » — un avertissement sans objet,
+    qui fait douter d'une perte imaginaire.
+    """
+
+    tf = t("filtres")
+
+    def note(debut, fin, nombre):
+        if not nombre:
+            return None
+
+        return tf("intervalle_exclut", {
+            "debut": debut, "fin": fin, "nombre": nombre, "champ": tf(champ),
+        })
+
+    return note
+
+
 def _spec(colonne, cle, libelle, placeholder, parent=None, aide=None):
     spec = {"colonne": colonne, "cle": cle, "libelle": libelle,
             "placeholder": placeholder}
@@ -58,23 +81,57 @@ def territoriale(cadre, avec_commune=False, reliquat=True):
     return filters.territoriale(cadre, champs=champs, reliquat=reliquat)
 
 
-def zone_territoriale(cadre, cle="affiche"):
-    """La barre territoriale, posée dans la zone « Filtres » du socle.
+def zone_territoriale(cadre, coso=None, cle="affiche"):
+    """La barre de l'affiche, posée dans la zone « Filtres » du socle.
+
+    Quatre champs : région → préfecture → canton, liés en chaîne, plus
+    l'année d'achèvement des travaux.
+
+    Le canton ferme la chaîne territoriale — c'est la maille du corpus, celle
+    que les cartes dessinent, et la seule qui permette de descendre sous la
+    préfecture sans quitter la page.
+
+    L'année, elle, ne vit QUE dans l'inventaire COSO : le référentiel des
+    cantons ne porte aucune date, et le parc TdE non plus. Le curseur la lit
+    donc dans `coso` — d'où ce second cadre — et ne restreint que lui. Le
+    prétendre général ferait croire qu'une carte de risque a une date.
 
     Les clés de session restent celles des autres vues : une région choisie
     ici suit l'utilisateur jusqu'au tableau de bord complet, et le bouton de
-    remise à zéro les vide toutes les deux.
+    remise à zéro les vide toutes.
     """
 
     tf, tc = t("filtres"), t("commun")
-    cles = ["filtre_region", "filtre_prefecture"]
+    cles = ["filtre_region", "filtre_prefecture", "filtre_canton",
+            "filtre_annee"]
+
+    champs = [
+        _spec("region", "filtre_region", tf("region"), tc("toutes")),
+        _spec("prefecture", "filtre_prefecture", tf("prefecture"), tc("toutes"),
+              parent="filtre_region", aide=tf("restreint_au_parent")),
+        _spec("canton", "filtre_canton", tf("canton"), tc("tous"),
+              parent="filtre_prefecture", aide=tf("restreint_au_parent")),
+    ]
+
+    intervalle = None
+
+    if coso is not None and coso["annee_achevement"].notna().any():
+        intervalle = {
+            "colonne": "annee_achevement",
+            "cadre": coso,
+            "cle": "filtre_annee",
+            "libelle": tf("annee_achevement"),
+            "aide": tf("annee_coso_seule"),
+            "note": _note_intervalle("annee_achevement"),
+        }
 
     # Aucun sous-titre : une zone nommée « Filtres » n'a pas besoin qu'on
     # explique ce que fait un filtre.
     with filters.zone(cle=cle, titre=tf("zone_titre"),
                       cles_session=cles, libelle_reset=tc("reinitialiser")):
         # Colonne de 62 % : pas de colonne d'appui, elle se replierait.
-        return territoriale(cadre, reliquat=False)
+        return filters.territoriale(cadre, champs=champs,
+                                    intervalle=intervalle, reliquat=False)
 
 
 def parc_tde(cadre):
@@ -118,10 +175,7 @@ def parc_coso(cadre, avec_annee=True):
             "colonne": "annee_achevement",
             "cle": "filtre_annee",
             "libelle": tf("annee_achevement"),
-            "note": lambda debut, fin, nombre: tf("intervalle_exclut", {
-                "debut": debut, "fin": fin, "nombre": nombre,
-                "champ": tf("annee_achevement"),
-            }),
+            "note": _note_intervalle("annee_achevement"),
         }
 
     return filters.territoriale(cadre, champs=champs, intervalle=intervalle)

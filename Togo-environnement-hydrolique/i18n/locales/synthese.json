@@ -398,5 +398,289 @@
   "onglets_cartes": {
     "fr": "Choisir la carte",
     "en": "Choose the map"
+  },
+  "classe_off_tres_faible": {
+    "fr": "Très faible",
+    "en": "Very low"
+  },
+  "classe_off_faible": {
+    "fr": "Faible",
+    "en": "Low"
+  },
+  "classe_off_moyen": {
+    "fr": "Moyen",
+    "en": "Medium"
+  },
+  "classe_off_eleve": {
+    "fr": "Élevé",
+    "en": "High"
+  },
+  "classe_off_tres_eleve": {
+    "fr": "Très élevé",
+    "en": "Very high"
+  },
+  "legende_officielle": {
+    "fr": "Indice de risque — seuils du producteur",
+    "en": "Risk index — the producer's thresholds"
+  },
+  "risque_tuile_cantons": {
+    "fr": "Cantons à risque élevé",
+    "en": "High-risk cantons"
+  },
+  "risque_tuile_cantons_detail": {
+    "fr": "{part} % du maillage national",
+    "en": "{part} % of the national grid"
+  },
+  "risque_tuile_population": {
+    "fr": "Habitants exposés",
+    "en": "Exposed inhabitants"
+  },
+  "risque_tuile_population_detail": {
+    "fr": "{part} % de la population du pays",
+    "en": "{part} % of the country's population"
+  },
+  "risque_tuile_median": {
+    "fr": "Risque médian",
+    "en": "Median risk"
+  },
+  "risque_tuile_median_detail": {
+    "fr": "maximum à {canton}, {max} pts",
+    "en": "peak at {canton}, {max} pts"
+  },
+  "risque_carte_titre": {
+    "fr": "Le risque d'inondation, classes officielles",
+    "en": "Flood risk, official classes"
+  },
+  "risque_carte_sous_titre": {
+    "fr": "Les seuils du ministère, relevés sur sa planche cartographique",
+    "en": "The ministry's thresholds, read off its map plate"
+  },
+  "risque_note_carte": {
+    "fr": "Ces bornes sont fixes — 0,01 · 0,10 · 0,17 · 0,29 · 0,44 · 0,65 — et non des quantiles. Elles ne figurent dans aucun fichier du corpus : elles ont été relevées sur la planche PDF, une image sans un caractère de texte.",
+    "en": "These breaks are fixed — 0.01 · 0.10 · 0.17 · 0.29 · 0.44 · 0.65 — not quantiles. They appear in no file of the corpus: they were read off the PDF plate, an image without a single character of text."
+  },
+  "risque_carte_classes_titre": {
+    "fr": "Quatre pour cent des cantons, un tiers du pays",
+    "en": "Four percent of cantons, a third of the country"
+  },
+  "risque_carte_classes_sous_titre": {
+    "fr": "Population par classe officielle de risque",
+    "en": "Population by official risk class"
+  },
+  "risque_note_classes": {
+    "fr": "Les <b>{cantons}</b> cantons classés élevé ou très élevé représentent {part_cantons} % du maillage et <b>{part_pop} %</b> de la population. Compter les cantons ferait passer le sujet pour marginal ; compter les habitants dit l'inverse.",
+    "en": "The <b>{cantons}</b> cantons rated high or very high account for {part_cantons} % of the grid and <b>{part_pop} %</b> of the population. Counting cantons would make this look marginal; counting people says the opposite."
+  },
+  "risque_carte_matrice_titre": {
+    "fr": "Le risque est-il couvert par les ouvrages ?",
+    "en": "Is the risk covered by facilities?"
+  },
+  "risque_carte_matrice_sous_titre": {
+    "fr": "Cantons équipés et non équipés, par classe de risque",
+    "en": "Equipped and unequipped cantons, by risk class"
+  },
+  "risque_note_matrice": {
+    "fr": "Les classes les plus exposées ne sont pas mieux couvertes que les autres : {part} % de leurs cantons portent un ouvrage recensé. L'inventaire ne suit pas le risque — il suit les projets qui l'ont produit.",
+    "en": "The most exposed classes are no better covered than the rest: {part} % of their cantons hold a recorded facility. The inventory does not follow risk — it follows the projects that produced it."
+  },
+  "parc_tuile_retard": {
+    "fr": "Chantiers en retard",
+    "en": "Delayed works"
+  },
+  "parc_tuile_retard_detail": {
+    "fr": "sur {total} comparables · médiane {median} jours",
+    "en": "of {total} comparable · median {median} days"
+  },
+  "parc_tuile_beneficiaires": {
+    "fr": "Bénéficiaires directs",
+    "en": "Direct beneficiaries"
+  },
+  "parc_tuile_beneficiaires_detail": {
+    "fr": "dont {part} % de femmes",
+    "en": "of whom {part} % women"
+  },
+  "parc_tuile_paye": {
+    "fr": "Montant décaissé",
+    "en": "Amount disbursed"
+  },
+  "parc_tuile_paye_detail": {
+    "fr": "francs CFA, 218 microprojets",
+    "en": "CFA francs, 218 micro-projects"
+  },
+  "parc_carte_delais_titre": {
+    "fr": "Ce que le suivi dit des chantiers",
+    "en": "What the monitoring says about the works"
+  },
+  "parc_carte_delais_sous_titre": {
+    "fr": "Retard médian entre fin prévue et fin réelle, par type d'ouvrage",
+    "en": "Median delay between planned and actual completion, by facility type"
+  },
+  "parc_note_delais": {
+    "fr": "<b>{en_retard}</b> chantiers sur {total} finissent après la date prévue, avec un retard médian de <b>{median} jours</b>. Le fichier date tout le cycle — signature, lancement, réceptions, remise — et personne ne l'avait lu.",
+    "en": "<b>{en_retard}</b> of {total} works finish after the planned date, with a median delay of <b>{median} days</b>. The file dates the whole cycle — signature, launch, acceptances, handover — and no one had read it."
+  },
+  "parc_carte_budget_titre": {
+    "fr": "Estimé, contracté, payé",
+    "en": "Estimated, contracted, paid"
+  },
+  "parc_carte_budget_sous_titre": {
+    "fr": "Les trois montants que le fichier porte, et qui ne disent pas la même chose",
+    "en": "The three amounts the file carries, which do not say the same thing"
+  },
+  "parc_note_budget": {
+    "fr": "L'estimation portait {estime} FCFA, les contrats signés {contracte} — soit <b>{ecart} % de moins</b>. Cet écart est une marge dégagée à la mise en concurrence, pas une économie de réalisation.",
+    "en": "The estimate stood at {estime} FCFA, the signed contracts at {contracte} — <b>{ecart} % less</b>. That gap is a margin released at tender, not a saving on delivery."
+  },
+  "etape_estime": {
+    "fr": "Estimé",
+    "en": "Estimated"
+  },
+  "etape_contracte": {
+    "fr": "Contracté",
+    "en": "Contracted"
+  },
+  "etape_paye": {
+    "fr": "Payé",
+    "en": "Paid"
+  },
+  "prio_tuile_cantons": {
+    "fr": "Cantons prioritaires",
+    "en": "Priority cantons"
+  },
+  "prio_tuile_cantons_detail": {
+    "fr": "exposés, et sans aucun ouvrage recensé",
+    "en": "exposed, and with no recorded facility"
+  },
+  "prio_tuile_population": {
+    "fr": "Habitants concernés",
+    "en": "Inhabitants concerned"
+  },
+  "prio_tuile_population_detail": {
+    "fr": "dans ces cantons",
+    "en": "in those cantons"
+  },
+  "prio_tuile_cout": {
+    "fr": "Coût par bénéficiaire",
+    "en": "Cost per beneficiary"
+  },
+  "prio_tuile_cout_detail": {
+    "fr": "médiane observée sur {n} ouvrages COSO",
+    "en": "median observed across {n} COSO facilities"
+  },
+  "prio_carte_titre": {
+    "fr": "Où aller en premier",
+    "en": "Where to go first"
+  },
+  "prio_carte_sous_titre": {
+    "fr": "Les cantons exposés que l'inventaire ne couvre pas",
+    "en": "Exposed cantons the inventory does not cover"
+  },
+  "prio_note_carte": {
+    "fr": "<b>{n}</b> cantons réunissent les deux seuls critères que les données autorisent : un risque élevé, subi, et l'absence d'ouvrage, corrigeable.",
+    "en": "<b>{n}</b> cantons meet the only two criteria the data allows: high risk, endured, and no facility, fixable."
+  },
+  "prio_carte_liste_titre": {
+    "fr": "La recommandation n'est pas une phrase",
+    "en": "The recommendation is not a sentence"
+  },
+  "prio_carte_liste_sous_titre": {
+    "fr": "Cantons exposés sans ouvrage, du plus peuplé au moins peuplé",
+    "en": "Exposed cantons without a facility, most populated first"
+  },
+  "prio_note_liste": {
+    "fr": "<b>{n}</b> cantons, <b>{population}</b> habitants. À risque égal, le plus peuplé passe d'abord : c'est le seul arbitrage que le corpus permet de fonder.",
+    "en": "<b>{n}</b> cantons, <b>{population}</b> inhabitants. At equal risk, the most populated comes first: that is the only trade-off the corpus can ground."
+  },
+  "prio_carte_leviers_titre": {
+    "fr": "Trois leviers, par coût croissant",
+    "en": "Three levers, in increasing order of cost"
+  },
+  "prio_carte_leviers_sous_titre": {
+    "fr": "Chacun découle d'un chiffre de cette page",
+    "en": "Each follows from a figure on this page"
+  },
+  "prio_levier_1": {
+    "fr": "<b>Republier</b> les 26 champs décrits et non diffusés du parc TdE. La donnée est collectée : son dictionnaire la décrit. Le coût est celui d'une exportation, pas d'une enquête.",
+    "en": "<b>Republish</b> the 26 described but undiffused fields of the TdE stock. The data is collected: its dictionary describes it. The cost is that of an export, not a survey."
+  },
+  "prio_levier_2": {
+    "fr": "<b>Étendre l'inventaire</b> aux {cantons} cantons prioritaires. Recenser l'existant précède toute construction : on ne peut pas décider d'un forage là où l'on ignore ce qui existe déjà.",
+    "en": "<b>Extend the inventory</b> to the {cantons} priority cantons. Recording what exists precedes any construction: no borehole can be decided where existing works are unknown."
+  },
+  "prio_levier_3": {
+    "fr": "<b>Construire</b>, à un coût médian observé de {cout} FCFA par bénéficiaire direct sur le parc COSO. C'est le seul ordre de grandeur que ce corpus autorise à avancer.",
+    "en": "<b>Build</b>, at a median observed cost of {cout} FCFA per direct beneficiary across the COSO stock. That is the only order of magnitude this corpus allows us to put forward."
+  },
+  "col_equipes": {
+    "fr": "Cantons équipés",
+    "en": "Equipped cantons"
+  },
+  "col_sans_ouvrage": {
+    "fr": "Sans ouvrage",
+    "en": "Without facility"
+  },
+  "col_type": {
+    "fr": "Type d'ouvrage",
+    "en": "Facility type"
+  },
+  "col_retard": {
+    "fr": "Retard médian (j)",
+    "en": "Median delay (d)"
+  },
+  "col_en_retard": {
+    "fr": "En retard",
+    "en": "Delayed"
+  },
+  "col_etape": {
+    "fr": "Étape",
+    "en": "Stage"
+  },
+  "col_montant": {
+    "fr": "Montant (FCFA)",
+    "en": "Amount (FCFA)"
+  },
+  "unite_habitants": {
+    "fr": "habitants",
+    "en": "inhabitants"
+  },
+  "unite_cantons": {
+    "fr": "cantons",
+    "en": "cantons"
+  },
+  "unite_jours": {
+    "fr": "jours",
+    "en": "days"
+  },
+  "unite_fcfa": {
+    "fr": "FCFA",
+    "en": "FCFA"
+  },
+  "type_boisson": {
+    "fr": "Eau de boisson, communautés",
+    "en": "Drinking water, communities"
+  },
+  "type_maraichage": {
+    "fr": "Activités maraîchères",
+    "en": "Market gardening"
+  },
+  "type_ecoles": {
+    "fr": "Établissements scolaires",
+    "en": "Schools"
+  },
+  "type_centre": {
+    "fr": "Centre communautaire",
+    "en": "Community centre"
+  },
+  "type_marches": {
+    "fr": "Marchés",
+    "en": "Markets"
+  },
+  "type_salle": {
+    "fr": "Salle de réunion",
+    "en": "Meeting hall"
+  },
+  "type_autre": {
+    "fr": "Autre",
+    "en": "Other"
   }
 }

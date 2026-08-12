@@ -157,7 +157,7 @@ def paliers(valeurs, nombre=5, methode="quantiles"):
 
 def choroplethe(gdf, valeur, cle, champs=None, libelles=None, height=980,
                 nombre=5, methode="quantiles", message_vide=None, contour=True,
-                rampe=None, couleur_contour=None):
+                rampe=None, couleur_contour=None, bornes=None):
     """Une surface par entité, teintée selon `valeur` — MAGNITUDE sur territoire.
 
     Rampe SÉQUENTIELLE à une seule teinte : la magnitude se lit dans la
@@ -169,6 +169,14 @@ def choroplethe(gdf, valeur, cle, champs=None, libelles=None, height=980,
     la valeur exacte d'une entité — la teinte ne donne qu'un rang — d'où
     l'obligation, côté vue, d'accompagner la carte de `table_twin()`.
 
+    `bornes` — coupures IMPOSÉES, dans l'unité de `valeur`. Sans elles, la
+    carte classe en quantiles, ce qui donne un CLASSEMENT (quels territoires
+    sont les pires) et non une INTENSITÉ (à partir de quand c'est grave). Or un
+    producteur publie souvent ses propres seuils, fixes : les ignorer produit
+    une carte juste que personne ne peut comparer à la carte officielle — même
+    territoire, même palette, teintes différentes, et le lecteur conclut à une
+    erreur. Quand elles sont fournies, `methode` et `nombre` ne servent plus.
+
     Renvoie (bornes, méthode) pour que la vue puisse énoncer ses classes.
     """
 
@@ -178,7 +186,10 @@ def choroplethe(gdf, valeur, cle, champs=None, libelles=None, height=980,
         st.info(message_vide or t("commun")("aucun_point_localise"))
         return [], methode
 
-    bornes, methode = paliers(situes[valeur], nombre, methode)
+    if bornes:
+        bornes, methode = list(bornes), "imposee"
+    else:
+        bornes, methode = paliers(situes[valeur], nombre, methode)
 
     # La rampe par défaut est le séquentiel du socle. Une rampe de PRODUCTEUR
     # (cf. `tokens.RISQUE_OFFICIEL`) se passe en argument : la carte se

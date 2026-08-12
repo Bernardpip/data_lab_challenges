@@ -105,18 +105,36 @@ def ecart_dictionnaire(dictionnaire, fichier, colonne_nom, familles=None):
     decrits = set(noms)
     publies = set(fichier.columns.astype(str).str.strip())
 
+    manquants = sorted(decrits - publies)
+
+    # Les familles ne regroupent QUE des champs absents : un thème qui
+    # compterait aussi les champs publiés ferait un graphe dont les barres ne
+    # totalisent pas le nombre annoncé juste au-dessus, et le lecteur y verrait
+    # une contradiction là où il n'y a qu'un périmètre différent.
     groupes = {}
+    classes = set()
 
     for libelle, motif in (familles or {}).items():
-        groupes[libelle] = sorted(
-            noms[noms.map(normaliser).str.contains(motif, regex=True)]
+        retenus = sorted(
+            n for n in manquants
+            if re.search(motif, normaliser(n))
         )
+        groupes[libelle] = retenus
+        classes.update(retenus)
+
+    # Le reliquat porte un nom : sans lui, la somme des familles reste sous le
+    # total sans qu'on sache ce qui manque à l'appel.
+    reste = [n for n in manquants if n not in classes]
+
+    if reste:
+        groupes["autres"] = reste
 
     return {
         "decrits": len(decrits),
         "publies": len(publies),
         "communs": len(decrits & publies),
-        "absents": len(decrits - publies),
+        "absents": len(manquants),
+        "absents_noms": manquants,
         "part_publiee": len(decrits & publies) / len(decrits) * 100 if decrits else 0,
         "familles": groupes,
     }
