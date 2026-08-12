@@ -32,7 +32,7 @@ from socle.design.marque import datalab_marque
 
 from utils import liens
 from utils.data import datasets, apply_filters
-from utils import analytics, perimetre, barres
+from utils import analytics, perimetre, barres, charte
 
 # Les quatre vues du menu haut. « Données » et « Annexes » en sont écartées :
 # elles servent à vérifier, pas à convaincre, et restent accessibles depuis le
@@ -70,6 +70,48 @@ ECHELLE = 0.85
 # connu de `maps.hauteur_dans`, qui est seul à savoir de quoi une carte est
 # faite.
 RAIL_ONGLETS = 43
+
+
+def _charte_visuelle():
+    """Les trois couleurs du drapeau, posées là où elles disent quelque chose.
+
+    Deux endroits seulement, et c'est délibéré : le reste de la page tire sa
+    couleur des DONNÉES, et une interface qui rivalise avec ses graphes leur
+    prend leur seul moyen d'expression.
+
+      · le BANDEAU sous l'en-tête — vert, jaune, rouge, dans l'ordre du
+        drapeau. Il nomme le pays sans écrire son nom une deuxième fois, et
+        c'est la seule surface de la page qui ne porte aucune donnée ;
+      · le SURVOL des entrées de menu, en vert très clair : un rang de sept
+        actes sans retour au survol ne dit pas qu'il est cliquable.
+
+    Injecté depuis le défi et non depuis le socle : le drapeau togolais n'a
+    rien à faire dans un gabarit que d'autres défis emploieront.
+    """
+
+    st.markdown(
+        "<style>"
+        # `position: fixed` sur le menu fait de lui un bloc de référence :
+        # l'ancrage en bas suffit, sans toucher au flux.
+        ".st-key-kgaffmenu::after {"
+        ' content: ""; position: absolute; left: 0; right: 0; bottom: 0;'
+        f" height: 3px; background: {charte.BANDEAU};"
+        # Les coins suivent ceux de la carte, sinon la bande dépasse de deux
+        # pixels à gauche et à droite — visible sur fond clair.
+        " border-radius: 0 0 var(--kg-radius-lg, 12px)"
+        " var(--kg-radius-lg, 12px);"
+        " pointer-events: none; }"
+        # Le survol ne touche QUE les entrées inactives : repeindre l'active
+        # la ferait clignoter au passage de la souris.
+        '.st-key-kgaffsections [data-testid="stBaseButton-segmented_control"]'
+        f":hover {{ background: {charte.VERT_CLAIR} !important;"
+        f" color: {charte.VERT} !important; }}"
+        '.st-key-kgaffvues [data-testid="stBaseButton-segmented_control"]'
+        f":hover {{ background: {charte.VERT_CLAIR} !important;"
+        f" color: {charte.VERT} !important; }}"
+        "</style>",
+        unsafe_allow_html=True,
+    )
 
 
 def _zone(libelle, detail, hauteur):
@@ -161,8 +203,11 @@ def _gauche_diagnostic(tr, data, faits, corpus):
          "delta": tr("tuile_sans_ouvrage_detail",
                      {"part": ui.fr_number(faits["part_sans_ouvrage"], 0)}),
          "good": False, "icon": "search"},
+        # « attention » et non « False » : sept champs sur trente-trois n'est
+        # pas une mauvaise nouvelle, c'est une limite de ce qu'on peut lire.
         {"value": "7 / 33", "label": tr("tuile_publies"),
-         "delta": tr("tuile_publies_detail"), "good": False, "icon": "table-2"},
+         "delta": tr("tuile_publies_detail"), "good": "attention",
+         "icon": "table-2"},
     ])
 
     with ui.card(tr("carte_parcs_titre"), tr("carte_parcs_sous_titre"),
@@ -1109,6 +1154,8 @@ def render():
     # bord aurait rendu illisible le fichier des deux.
     trr = t("recit")
     brut = datasets()
+
+    _charte_visuelle()
 
     # Le menu se peint AVANT les colonnes : son sous-titre ne peut pas suivre
     # un filtre qui n'a pas encore été lu. Il annonce donc le CORPUS, ce qui

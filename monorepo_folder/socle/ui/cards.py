@@ -8,7 +8,7 @@ import streamlit as st
 from contextlib import contextmanager
 
 from socle.design.icons import icon
-from socle.design.tokens import COLORS, STATUS
+from socle.design.tokens import COLORS, STATUS, STATUS_LIGHT
 
 
 # ─── Carte de contenu ───────────────────────────────────────────────────────
@@ -122,10 +122,32 @@ def repere_externe(item):
 
 # ─── Stat tiles ─────────────────────────────────────────────────────────────
 
+# Les quatre états d'une tuile, et leur teinte. `good` accepte donc quatre
+# valeurs et non deux :
+#
+#   True         favorable            vert
+#   False        défavorable          rouge
+#   "attention"  réserve de lecture   jaune — le chiffre est juste, mais il ne
+#                                     dit pas ce qu'on croit : une part
+#                                     calculée sur un tiers du parc, une
+#                                     hypothèse de coût, un champ à moitié
+#                                     renseigné.
+#   None         descriptif           aucune teinte
+#
+# Le jaune manquait, et son absence poussait à peindre en ROUGE des tuiles qui
+# ne signalent aucun échec — « débits connus : 36 % » n'est pas une mauvaise
+# nouvelle, c'est une limite de lecture.
+_ETATS_TUILE = {
+    True: "good",
+    False: "critical",
+    "attention": "warning",
+}
+
+
 def stat_tiles(tiles):
     """Rangée de tuiles. Chaque tuile :
     `label`, `value`, `unit`, `delta` (texte), `direction` ('up'|'down'|None),
-    `good` (bool : le sens est-il favorable), `icon`.
+    `good` (True | False | "attention" | None — cf. `_ETATS_TUILE`), `icon`.
     """
 
     # La rangée est enveloppée dans un conteneur CLÉ, seul moyen de la viser
@@ -163,23 +185,20 @@ def stat_tiles(tiles):
         cols = st.columns(len(tiles), gap="small")
 
     for col, tile in zip(cols, tiles):
+        # `good` absent → favorable, par compatibilité. `good=None` EXPLICITE
+        # → aucune teinte : une ligne de détail purement descriptive (« 5
+        # régions · 32 préfectures ») affichée en vert se lit comme une bonne
+        # nouvelle qu'elle n'annonce pas.
+        etat = _ETATS_TUILE.get(tile.get("good", True))
+        teinte = STATUS[etat] if etat else COLORS["textMuted"]
         delta_html = ""
 
         if tile.get("delta"):
-            # `good` absent → favorable, par compatibilité. `good=None`
-            # EXPLICITE → teinte neutre : une ligne de détail purement
-            # descriptive (« 5 régions · 32 préfectures ») affichée en vert
-            # se lit comme une bonne nouvelle qu'elle n'annonce pas.
-            good = tile.get("good", True)
-            color = (
-                COLORS["textMuted"] if good is None
-                else STATUS["good"] if good else STATUS["critical"]
-            )
             arrow = "" if not tile.get("direction") else (
                 "▲ " if tile["direction"] == "up" else "▼ "
             )
             delta_html = (
-                f'<div class="kg-tile-delta" style="color:{color};">'
+                f'<div class="kg-tile-delta" style="color:{teinte};">'
                 f'{arrow}{tile["delta"]}</div>'
             )
 
@@ -189,10 +208,21 @@ def stat_tiles(tiles):
         )
         ico = icon(tile["icon"], 13) if tile.get("icon") else ""
 
+        # La teinte porte sur le FOND et sur un rail de gauche, jamais sur le
+        # chiffre : un grand nombre en couleur se lit comme un lien, et sa
+        # valeur passe après sa couleur. L'encre reste noire, la surface parle.
+        fond = (
+            f'background:{STATUS_LIGHT[etat]};'
+            f'border-color:{STATUS_LIGHT[etat]};'
+            f'box-shadow:inset 3px 0 0 {STATUS[etat]};'
+            if etat else ""
+        )
+
         with col:
             st.markdown(
-                '<div class="kg-tile">'
-                f'<div class="kg-tile-label">{ico}{tile["label"]}</div>'
+                f'<div class="kg-tile" style="{fond}">'
+                f'<div class="kg-tile-label" style="color:{teinte};">'
+                f'{ico}{tile["label"]}</div>'
                 f'<div class="kg-tile-value">{tile["value"]}{unit}</div>'
                 f"{delta_html}"
                 "</div>",

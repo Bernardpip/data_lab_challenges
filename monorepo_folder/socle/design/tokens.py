@@ -223,6 +223,19 @@ STATUS = {
     "critical": "#d03b3b",
 }
 
+# Les mêmes, en SURFACE. Un statut porté par la seule couleur d'un mot se voit
+# mal dans une rangée de tuiles : l'œil parcourt les grands chiffres et saute
+# la ligne de détail. Une teinte de fond fait lire le statut avant le chiffre.
+#
+# Assez claires pour qu'un texte d'encre reste à plus de 12:1 dessus : ce sont
+# des FONDS, jamais de l'encre, et rien d'autre ne doit s'y écrire en couleur.
+STATUS_LIGHT = {
+    "good": "#E8F5E9",
+    "warning": "#FDF6DF",
+    "serious": "#FCEEE7",
+    "critical": "#FBEBEB",
+}
+
 # Encre & chrome des graphes — repris des tokens zendho pour que le chart
 # s'assoie dans l'UI sans jurer.
 INK = {

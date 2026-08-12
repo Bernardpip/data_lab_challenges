@@ -27,6 +27,8 @@ import streamlit as st
 from socle.ui import filters
 from socle.i18n.traduction import t
 
+from utils import charte
+
 
 def _note_intervalle(champ):
     """Avertissement d'un intervalle — SEULEMENT s'il écarte vraiment.
@@ -112,9 +114,13 @@ def _dans_zone(cle, cles_session, construire):
 
     tf, tc = t("filtres"), t("commun")
 
+    # Les MÊMES couleurs que la barre de l'affiche : les vues portées ont
+    # leur propre zone, et deux zones de teintes différentes sur des pages
+    # voisines se liraient comme deux objets distincts.
     with filters.zone(cle=cle, titre=tf("zone_titre"),
                       cles_session=cles_session,
-                      libelle_reset=tc("reinitialiser")):
+                      libelle_reset=tc("reinitialiser"),
+                      **_couleurs_de_zone()):
         return construire()
 
 
@@ -145,6 +151,22 @@ def territoriale(cadre, avec_commune=False, reliquat=None,
 
     return _dans_zone(cle, cles, lambda: filters.territoriale(
         cadre, champs=champs, reliquat=_reliquat(reliquat)))
+
+
+def _couleurs_de_zone():
+    """Les trois couleurs de la zone de filtres, tirées du drapeau.
+
+    L'icône NOMME la zone — vert de marque. Le compteur AVERTIT : la page ne
+    montre plus le corpus entier, et c'est la première chose à savoir quand un
+    chiffre surprend. La remise à zéro DÉFAIT — rouge, au survol seulement,
+    parce qu'un lien rouge en permanence se lit comme une erreur.
+    """
+
+    return {
+        "couleur_icone": charte.VERT,
+        "couleur_compteur": (charte.JAUNE_CLAIR, charte.JAUNE),
+        "couleur_reset": charte.ROUGE,
+    }
 
 
 def _annee_resserree(coso, cle):
@@ -241,7 +263,8 @@ def zone_territoriale(cadre, coso=None, cle="affiche", annees_extra=None):
     # explique ce que fait un filtre.
     with filters.zone(cle=cle, titre=tf("zone_titre"),
                       cles_session=cles, cles_comptees=comptees,
-                      libelle_reset=tc("reinitialiser")):
+                      libelle_reset=tc("reinitialiser"),
+                      **_couleurs_de_zone()):
         # Colonne de 62 % : pas de colonne d'appui, elle se replierait.
         return filters.territoriale(cadre, champs=champs,
                                     intervalle=intervalle, reliquat=False)

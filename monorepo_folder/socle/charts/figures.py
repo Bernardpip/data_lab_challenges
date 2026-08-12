@@ -186,8 +186,16 @@ def bar_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None,
 
     fig.update_layout(**_base_layout(height or max(140, len(labels) * _ROW_H + 30)))
     # Toutes les barres sont étiquetées → l'axe de valeur ferait doublon.
-    fig.update_xaxes(**_axis(show_grid=False), visible=False,
-                     range=[0, max(values) * 1.18 if values else 1])
+    # L'axe part de zéro SAUF si une valeur est négative : bornée à [0, max],
+    # une barre négative sortait du cadre avec son étiquette, et la ligne
+    # s'affichait vide — un ρ de −0,12 disparaissait sans rien signaler. Une
+    # magnitude signée appelle `diverging_bar` ; ce garde-fou évite seulement
+    # qu'un appel mal choisi efface une donnée en silence.
+    fig.update_xaxes(
+        **_axis(show_grid=False), visible=False,
+        range=[min(0, min(values) * 1.18) if values else 0,
+               max(0, max(values) * 1.18) if values else 1],
+    )
     fig.update_yaxes(**_category_axis())
 
     _show(fig)

@@ -254,7 +254,7 @@ def limites(tr, data, faits, corpus):
          "label": tr("limites_tuile_champs"),
          "delta": tr("limites_tuile_champs_detail", {
              "part": ui.fr_number(ecart["part_publiee"], 0)}),
-         "good": False, "icon": "table-2"},
+         "good": "attention", "icon": "table-2"},
         {"value": "0", "label": tr("limites_tuile_etat"),
          "delta": tr("limites_tuile_etat_detail"), "good": False,
          "icon": "search"},
@@ -517,7 +517,9 @@ def deserts(tr, data, faits, corpus):
             float(rayons.loc[rayons["rayon_km"] == 1, "part"].iloc[0]), 1)
             if len(rayons) else "—", "unit": " %",
          "label": tr("deserts_tuile_rayon"),
-         "delta": tr("deserts_tuile_rayon_detail"), "good": False,
+         # Le chiffre est juste, l'hypothèse de densité uniforme ne l'est pas :
+         # c'est une réserve de lecture, pas un échec.
+         "delta": tr("deserts_tuile_rayon_detail"), "good": "attention",
          "icon": "search"},
     ])
 
@@ -680,7 +682,7 @@ def angle_mort(tr, data, faits, corpus):
         {"value": ui.fr_number(int(coso["debit"].notna().sum())),
          "label": tr("angle_tuile_debit"),
          "delta": tr("angle_tuile_debit_detail", {"total": len(coso)}),
-         "good": False, "icon": "table-2"},
+         "good": "attention", "icon": "table-2"},
     ])
 
     with ui.card(tr("angle_carte_titre"), tr("angle_carte_sous_titre"),
@@ -872,7 +874,7 @@ def fragilite(tr, data, faits, corpus):
             100 * mesure["renseignes"] / mesure["total"], 0)
             if mesure["total"] else "0", "unit": " %",
          "label": tr("fragilite_tuile_couverture"),
-         "delta": tr("fragilite_tuile_couverture_detail"), "good": False,
+         "delta": tr("fragilite_tuile_couverture_detail"), "good": "attention",
          "icon": "table-2"},
     ])
 
@@ -979,7 +981,7 @@ def service(tr, data, faits, corpus):
          "good": False, "icon": "trending-up"},
         {"value": ui.fr_number(mesure["sans_reception"]),
          "label": tr("service_tuile_sans"),
-         "delta": tr("service_tuile_sans_detail"), "good": False,
+         "delta": tr("service_tuile_sans_detail"), "good": "attention",
          "icon": "table-2"},
     ])
 
@@ -1497,7 +1499,9 @@ def proposition_ouvrages(tr, data, faits, corpus):
          "label": tr("proposition_tuile_cout"),
          "delta": tr("proposition_tuile_cout_detail", {
              "unitaire": ui.compact(besoin["unitaire"])}),
-         "good": None, "icon": "table-2"},
+         # Le prix unitaire est constaté, le SEUIL de service est posé : la
+         # facture dépend d'une hypothèse, et la tuile doit le dire.
+         "good": "attention", "icon": "table-2"},
         {"value": ui.fr_number(nature["chateaux"]),
          "label": tr("proposition_tuile_chateaux"),
          "delta": tr("proposition_tuile_chateaux_detail", {
@@ -1845,7 +1849,12 @@ def que_classe_le_fri(tr, data, faits, corpus):
             dimension=correlations["dimension"].map(
                 lambda cle: tr(f"dimension_{cle}")))
 
-        charts.bar_h(lisible, "dimension", "rho", unit="", decimals=2)
+        # Forme DIVERGENTE : la vulnérabilité corrèle NÉGATIVEMENT (−0,12), et
+        # une barre partant de zéro vers la droite ne peut pas le montrer. Le
+        # signe est ici le résultat — les cantons les plus pauvres ne sont pas
+        # les plus exposés, ce qui contredit l'intuition que l'indice porte.
+        charts.diverging_bar(lisible["dimension"].tolist(),
+                             lisible["rho"].tolist(), unit="", height=170)
         ui.note(tr("fri_note_correlations", {
             "exposition": ui.fr_number(rho("exposition"), 2),
             "alea": ui.fr_number(rho("alea"), 2),

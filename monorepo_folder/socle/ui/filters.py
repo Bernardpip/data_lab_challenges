@@ -341,7 +341,8 @@ def retenu(selection, valeur):
 
 @contextmanager
 def zone(cle, titre=None, sous_titre=None, cles_session=(), libelle_reset=None,
-         icone="search", fond=None, cles_comptees=None):
+         icone="search", fond=None, cles_comptees=None, couleur_icone=None,
+         couleur_compteur=None, couleur_reset=None):
     """Surface qui contient une barre de filtres — l'objet « Filtres ».
 
     Les barres posées à nu sur la page ne se distinguaient de rien : trois
@@ -360,6 +361,13 @@ def zone(cle, titre=None, sous_titre=None, cles_session=(), libelle_reset=None,
 
     `cles_session` : les clés de widget que le bouton vide. C'est l'appelant
     qui les connaît — le socle ne devine pas quelles specs la barre a posées.
+
+    `couleur_icone` / `couleur_compteur` / `couleur_reset` : les trois seuls
+    endroits de la zone où une couleur porte du sens. L'icône NOMME la zone —
+    c'est la teinte de marque. Le compteur AVERTIT : la page ne montre plus le
+    corpus entier, et c'est la première chose à savoir quand un chiffre
+    surprend. La remise à zéro DÉFAIT. Les trois sont passées par l'appelant,
+    parce qu'un socle ne connaît pas la charte du défi qui l'emploie.
 
     `cles_comptees` : les clés qui entrent dans le DÉCOMPTE, quand elles
     diffèrent de celles qu'on vide. Un curseur d'intervalle porte toujours une
@@ -405,7 +413,7 @@ f".st-key-{nom} {{ background: {surface}; padding: 14px 16px 12px;"
         f" background: transparent; border: none; padding: 2px 6px;"
         f" color: {COLORS['textSecondary']}; font-size: 12px; }}"
         f'.st-key-{nom} [data-testid="stBaseButton-secondary"]:hover {{'
-        f" color: {COLORS['primary']}; }}"
+        f" color: {couleur_reset or COLORS['primary']}; }}"
         f"</style>",
         unsafe_allow_html=True,
     )
@@ -420,13 +428,17 @@ f".st-key-{nom} {{ background: {surface}; padding: 14px 16px 12px;"
                 compteur = (
                     f'<span style="margin-left:8px;padding:1px 8px;'
                     f'border-radius:999px;font-size:11px;font-weight:600;'
-                    f'background:{COLORS["primaryLight"]};'
-                    f'color:{COLORS["primaryDark"]};">{actifs}</span>'
+                    f'background:{couleur_compteur[0] if couleur_compteur else COLORS["primaryLight"]};'
+                    f'color:{couleur_compteur[1] if couleur_compteur else COLORS["primaryDark"]};">'
+                    f'{actifs}</span>'
                     if actifs else ""
                 )
                 st.markdown(
                     f'<div style="display:flex;align-items:center;gap:8px;'
-                    f'margin-bottom:2px;">{icon(icone, 15)}'
+                    f'margin-bottom:2px;">'
+                    f'<span style="display:inline-flex;color:'
+                    f'{couleur_icone or COLORS["textSecondary"]};">'
+                    f'{icon(icone, 15)}</span>'
                     f'<span style="font-size:13px;font-weight:600;'
                     f'color:{COLORS["text"]};">{titre}</span>{compteur}</div>'
                     + (f'<div style="font-size:12px;'
