@@ -589,7 +589,11 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
 
         if fichier_utilisateurs:
             personne = utilisateurs.actif(fichier_utilisateurs)
-            photo = (personne or {}).get("photo")
+            # La photo est VALIDÉE avant d'entrer dans la feuille de style :
+            # une chaîne forgée sortirait de son `url("…")` pour écrire
+            # n'importe quelle règle. `photo_sure` n'accepte qu'une image de
+            # données en base64, et rend `None` pour tout le reste.
+            photo = utilisateurs.photo_sure(personne)
 
             if photo:
                 st.markdown(
@@ -797,11 +801,18 @@ def _carte_utilisateur(personne, fichier, reglages, courant):
             st.markdown(utilisateurs.avatar(personne, 42), unsafe_allow_html=True)
 
         with colonnes[1]:
+            # ÉCHAPPÉS : ces trois champs sont saisis par un humain, écrits
+            # dans un fichier qui s'édite à la main, et rendus ici en HTML
+            # brut. Un nom contenant une balise s'exécuterait chez tous ceux
+            # qui ouvrent la fenêtre — signalé par la revue de sécurité, et
+            # c'était juste.
             st.markdown(
                 f'<div style="font-weight:650;line-height:1.3;">'
-                f'{personne.get("prenom", "")} {personne.get("nom", "")}</div>'
+                f'{utilisateurs.texte_sur(personne.get("prenom"))} '
+                f'{utilisateurs.texte_sur(personne.get("nom"))}</div>'
                 f'<div style="font-size:12px;color:var(--kg-color-text-muted);'
-                f'overflow-wrap:anywhere;">{personne.get("email", "")}</div>',
+                f'overflow-wrap:anywhere;">'
+                f'{utilisateurs.texte_sur(personne.get("email"))}</div>',
                 unsafe_allow_html=True,
             )
 
@@ -911,8 +922,9 @@ def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
         return
 
     _titre_fenetre(
-        f'{reglages.get("droits", "")} — {personne.get("prenom", "")} '
-        f'{personne.get("nom", "")}',
+        f'{reglages.get("droits", "")} — '
+        f'{utilisateurs.texte_sur(personne.get("prenom"))} '
+        f'{utilisateurs.texte_sur(personne.get("nom"))}',
         reglages.get("droits_note"), retour=reglages.get("retour"),
     )
 

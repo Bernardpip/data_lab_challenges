@@ -23,6 +23,7 @@ DEPLOIEMENT, et ce n'est pas un défaut qu'on peut corriger ici.
 """
 
 import base64
+import html
 import json
 import re
 import unicodedata
@@ -237,6 +238,32 @@ def tout_autoriser(fichier, identifiant):
 
 # ─── L'avatar ────────────────────────────────────────────────────────────────
 
+# Une image de données, et RIEN D'AUTRE. Le fichier des utilisateurs
+# s'édite à la main : une valeur de photo forgée sortirait sinon de son
+# `url("…")` pour écrire n'importe quelle règle dans la feuille de style, ou
+# de son attribut `src` pour poser un gestionnaire d'événement. On ne
+# désinfecte pas la chaîne — on refuse tout ce qui n'a pas exactement cette
+# forme.
+_IMAGE_DONNEES = re.compile(
+    r"^data:image/(png|jpe?g|webp);base64,[A-Za-z0-9+/]+={0,2}$")
+
+
+def photo_sure(personne):
+    """La photo si elle est une image de données valide, sinon rien.
+
+    Appelée par TOUS les rendus — l'avatar, la carte, le fond du bouton
+    d'en-tête. Une seule porte d'entrée : la validation faite à l'écriture
+    seule ne protégerait pas un fichier arrivé d'ailleurs.
+    """
+
+    photo = (personne or {}).get("photo")
+
+    if not isinstance(photo, str) or not _IMAGE_DONNEES.match(photo):
+        return None
+
+    return photo
+
+
 def initiales(personne):
     if not personne:
         return "··"
@@ -244,7 +271,9 @@ def initiales(personne):
     lettres = [(personne.get("prenom") or " ")[:1],
                (personne.get("nom") or " ")[:1]]
 
-    return "".join(lettres).upper().strip() or "··"
+    # ÉCHAPPÉES : ce sont des caractères saisis par un humain, et ils partent
+    # dans du HTML. Une initiale « < » y ouvrirait une balise.
+    return html.escape("".join(lettres).upper().strip()) or "··"
 
 
 def avatar(personne, taille=28, bordure=None):
@@ -262,10 +291,12 @@ def avatar(personne, taille=28, bordure=None):
         f"justify-content:center;overflow:hidden;{trait}"
     )
 
-    if personne and personne.get("photo"):
+    photo = photo_sure(personne)
+
+    if photo:
         return (
             f'<span style="{commun}">'
-            f'<img src="{personne["photo"]}" alt="" '
+            f'<img src="{html.escape(photo, quote=True)}" alt="" '
             f'style="width:100%;height:100%;object-fit:cover;"></span>'
         )
 
@@ -275,6 +306,17 @@ def avatar(personne, taille=28, bordure=None):
         f'font-size:{max(9, round(taille * 0.38))}px;letter-spacing:.02em;">'
         f"{initiales(personne)}</span>"
     )
+
+
+def texte_sur(valeur):
+    """Un champ saisi, rendu inoffensif pour l'interpolation dans du HTML.
+
+    Les vues de ce socle composent leur mise en forme à la main et rendent
+    avec `unsafe_allow_html` : un nom, un prénom ou une adresse qui y entre
+    sans passer par ici s'exécute chez tous ceux qui ouvrent la fenêtre.
+    """
+
+    return html.escape(str(valeur or ""))
 
 
 def photo_encodee(fichier_televerse):
