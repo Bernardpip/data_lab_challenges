@@ -51,6 +51,21 @@ class Langue:
 
         return texte
 
+    def compact(self, valeur):
+        """Grand nombre abrégé — « 2,9 M », « 228,6 k ».
+
+        Un rapport de dix pages n'a pas la place d'écrire 2 882 836 dans une
+        tuile de chiffre-clé, et la précision n'y sert à rien : l'ordre de
+        grandeur est ce qu'on retient. Les mêmes seuils que `ui.compact` du
+        tableau de bord, pour que les deux disent le même nombre.
+        """
+
+        for seuil, suffixe in ((1e9, "Md"), (1e6, "M"), (1e3, "k")):
+            if abs(valeur) >= seuil:
+                return f"{self.nb(valeur / seuil, 1)} {suffixe}"
+
+        return self.nb(valeur)
+
     def pct(self, valeur, decimales=0):
         """Pourcentage — espace insécable typographique dans les deux langues,
         par cohérence avec le tableau de bord."""

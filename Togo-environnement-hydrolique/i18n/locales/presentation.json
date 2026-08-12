@@ -1,11 +1,538 @@
 {
-  "fichier": {"fr": "Rapport_hydro-gabarit", "en": "Report_hydro-gabarit"},
-  "pied": {"fr": "Accès à l'eau potable au Togo · page {page}", "en": "Access to drinking water in Togo · page {page}"},
-
-  "p1_titre": {"fr": "Accès à l'eau potable au Togo", "en": "Access to drinking water in Togo"},
-  "p1_sous_titre": {"fr": "Données ouvertes — opendata.gouv.tg", "en": "Open data — opendata.gouv.tg"},
-  "p1_auteur": {"fr": "Kokou PIPI", "en": "Kokou PIPI"},
-
-  "p2_titre": {"fr": "Données, nettoyage et démarche", "en": "Data, cleaning and method"},
-  "p2_sous_titre": {"fr": "Ce que le corpus permet, et ce qu'il ne permet pas", "en": "What the corpus allows, and what it does not"}
+  "fichier": {
+    "fr": "Togo_Eau_Assainissement_Rapport",
+    "en": "Togo_Water_Sanitation_Report"
+  },
+  "pied": {
+    "fr": "Accès à l'eau potable au Togo · page {page}",
+    "en": "Access to drinking water in Togo · page {page}"
+  },
+  "p1_titre": {
+    "fr": "L'eau que le Togo ne compte pas",
+    "en": "The water Togo does not count"
+  },
+  "p1_sous_titre": {
+    "fr": "Accès à l'eau potable, risque d'inondation et allocation des ouvrages · Data Challenge Environnement",
+    "en": "Drinking water access, flood risk and facility allocation · Environment Data Challenge"
+  },
+  "p1_auteur": {
+    "fr": "Réalisé par Kokou PIPI · Données ouvertes du Togo — opendata.gouv.tg",
+    "en": "Built by Kokou PIPI · Togo open data — opendata.gouv.tg"
+  },
+  "p2_titre": {
+    "fr": "Données, nettoyage, démarche",
+    "en": "Data, cleaning, approach"
+  },
+  "p2_sous_titre": {
+    "fr": "Sept ressources exploitées, une clé de jointure, et ce qu'on a refusé de faire",
+    "en": "Seven resources used, one join key, and what we refused to do"
+  },
+  "p1_accroche": {
+    "fr": "{cantons} cantons cartographiés. Quatre pour cent d'entre eux abritent {part} % de la population, et l'inventaire national ne les couvre pas.",
+    "en": "{cantons} cantons mapped. Four percent of them hold {part} % of the population, and the national inventory does not cover them."
+  },
+  "p2_t1": {
+    "fr": "Jeux chargés",
+    "en": "Datasets loaded"
+  },
+  "p2_t1_d": {
+    "fr": "cinq tabulaires, deux couches géographiques",
+    "en": "five tabular, two geographic layers"
+  },
+  "p2_t2": {
+    "fr": "Cantons du référentiel",
+    "en": "Cantons in the reference"
+  },
+  "p2_t2_d": {
+    "fr": "la seule maille exhaustive du corpus",
+    "en": "the corpus's only exhaustive grid"
+  },
+  "p2_t3": {
+    "fr": "Ouvrages recensés",
+    "en": "Recorded facilities"
+  },
+  "p2_t3_d": {
+    "fr": "deux inventaires disjoints, jamais additionnés",
+    "en": "two disjoint inventories, never summed"
+  },
+  "p2_t4": {
+    "fr": "Champs TdE publiés",
+    "en": "TdE fields published"
+  },
+  "p2_t4_d": {
+    "fr": "sur ceux que son dictionnaire décrit",
+    "en": "of those its dictionary describes"
+  },
+  "p2_etape_1_nom": {
+    "fr": "La clé de jointure",
+    "en": "The join key"
+  },
+  "p2_etape_1_q": {
+    "fr": "Sur quoi relier trois producteurs différents ?",
+    "en": "What links three different producers?"
+  },
+  "p2_etape_1_r": {
+    "fr": "Le nom de canton, normalisé",
+    "en": "The canton name, normalised"
+  },
+  "p2_etape_1_l": {
+    "fr": "Aucun identifiant commun n'existe entre les jeux. Le nom normalisé rattache 67 ouvrages TdE sur 67 et 191 microprojets COSO sur 218 — les 27 restants sont conservés et comptés, jamais rattachés au hasard.",
+    "en": "No shared identifier exists across the datasets. The normalised name matches 67 of 67 TdE facilities and 191 of 218 COSO micro-projects — the remaining 27 are kept and counted, never matched at random."
+  },
+  "p2_etape_2_nom": {
+    "fr": "Les zéros sont la donnée",
+    "en": "Zeros are the data"
+  },
+  "p2_etape_2_q": {
+    "fr": "Que faire des cantons sans ouvrage ?",
+    "en": "What about cantons with no facility?"
+  },
+  "p2_etape_2_r": {
+    "fr": "Jointure gauche, systématiquement",
+    "en": "Left join, systematically"
+  },
+  "p2_etape_2_l": {
+    "fr": "Une jointure interne les ferait disparaître, et le tableau de bord montrerait un pays entièrement équipé. C'est l'absence qui porte le constat.",
+    "en": "An inner join would erase them, and the dashboard would show a fully equipped country. It is the absence that carries the finding."
+  },
+  "p2_etape_3_nom": {
+    "fr": "Ce qu'on n'a pas fait",
+    "en": "What we did not do"
+  },
+  "p2_etape_3_q": {
+    "fr": "Quelles tentations écartées ?",
+    "en": "Which temptations set aside?"
+  },
+  "p2_etape_3_r": {
+    "fr": "Aucun total national d'ouvrages",
+    "en": "No national facility total"
+  },
+  "p2_etape_3_l": {
+    "fr": "Les deux parcs couvrent des territoires disjoints — 97 % des TdE en Maritime, les COSO au Nord. Les additionner fabriquerait un inventaire qui n'existe pas.",
+    "en": "The two stocks cover disjoint territories — 97 % of TdE in Maritime, COSO in the North. Adding them would fabricate an inventory that does not exist."
+  },
+  "p3_titre": {
+    "fr": "Quatre pour cent des cantons, un tiers du pays",
+    "en": "Four percent of cantons, a third of the country"
+  },
+  "p3_sous_titre": {
+    "fr": "Population par classe officielle de risque d'inondation",
+    "en": "Population by official flood-risk class"
+  },
+  "p3_graphe": {
+    "fr": "Habitants",
+    "en": "Inhabitants"
+  },
+  "p3_t1": {
+    "fr": "Cantons à risque élevé",
+    "en": "High-risk cantons"
+  },
+  "p3_t1_d": {
+    "fr": "{part} % du maillage national",
+    "en": "{part} % of the national grid"
+  },
+  "p3_t2": {
+    "fr": "Habitants exposés",
+    "en": "Exposed inhabitants"
+  },
+  "p3_t2_d": {
+    "fr": "{part} % de la population",
+    "en": "{part} % of the population"
+  },
+  "p3_lecture_nom": {
+    "fr": "Ce que ce graphe interdit de dire",
+    "en": "What this chart forbids saying"
+  },
+  "p3_lecture_q": {
+    "fr": "« Le risque est marginal » ?",
+    "en": "« The risk is marginal » ?"
+  },
+  "p3_lecture_r": {
+    "fr": "Non — il est concentré",
+    "en": "No — it is concentrated"
+  },
+  "p3_lecture_l": {
+    "fr": "Compter les cantons donnerait 17 sur 388 et ferait passer le sujet pour anecdotique. Compter les habitants dit l'inverse.",
+    "en": "Counting cantons would give 17 of 388 and make this look anecdotal. Counting people says the opposite."
+  },
+  "p4_titre": {
+    "fr": "Ce que le corpus ne dit pas",
+    "en": "What the corpus does not say"
+  },
+  "p4_sous_titre": {
+    "fr": "Deux informations manquantes, toutes deux méthodologiques",
+    "en": "Two missing pieces, both methodological"
+  },
+  "p4_a_nom": {
+    "fr": "Les seuils de classification",
+    "en": "The classification breaks"
+  },
+  "p4_a_q": {
+    "fr": "Où passent les classes de la carte officielle ?",
+    "en": "Where do the official map's classes fall?"
+  },
+  "p4_a_r": {
+    "fr": "Sur une planche PDF sans texte",
+    "en": "On a PDF plate with no text"
+  },
+  "p4_a_l": {
+    "fr": "Les bornes 0,01 · 0,10 · 0,17 · 0,29 · 0,44 · 0,65 ne figurent dans aucun fichier du corpus. Elles ont été relevées en rendant l'image. Sans elles, notre carte serait juste et incomparable à celle du ministère.",
+    "en": "The breaks 0.01 · 0.10 · 0.17 · 0.29 · 0.44 · 0.65 appear in no file of the corpus. They were read by rendering the image. Without them our map would be correct and incomparable with the ministry's."
+  },
+  "p4_b_nom": {
+    "fr": "La formule de l'indice",
+    "en": "The index formula"
+  },
+  "p4_b_q": {
+    "fr": "Le FRI publié est-il reproductible ?",
+    "en": "Is the published FRI reproducible?"
+  },
+  "p4_b_r": {
+    "fr": "Oui, là où il est défini",
+    "en": "Yes, where it is defined"
+  },
+  "p4_b_l": {
+    "fr": "La moyenne géométrique annoncée restitue l'indice sur les cantons dont les sept composantes sont non nulles. Sur les autres, un zéro annule le produit — et l'indice y est pourtant publié. Le traitement des zéros n'est écrit nulle part.",
+    "en": "The announced geometric mean reproduces the index on cantons whose seven components are non-zero. On the others, a zero cancels the product — yet the index is published there. The handling of zeros is written nowhere."
+  },
+  "p4_t1": {
+    "fr": "Cantons où la formule tient",
+    "en": "Cantons where the formula holds"
+  },
+  "p4_t1_d": {
+    "fr": "les autres portent au moins un zéro",
+    "en": "the others carry at least one zero"
+  },
+  "p4_t2": {
+    "fr": "Champs décrits, non diffusés",
+    "en": "Fields described, not released"
+  },
+  "p4_t2_d": {
+    "fr": "sur {decrits} que le dictionnaire décrit",
+    "en": "of {decrits} the dictionary describes"
+  },
+  "p5_titre": {
+    "fr": "La pression démographique face à l'inventaire",
+    "en": "Demographic pressure against the inventory"
+  },
+  "p5_sous_titre": {
+    "fr": "Habitants par ouvrage recensé, région par région",
+    "en": "Inhabitants per recorded facility, region by region"
+  },
+  "p5_graphe": {
+    "fr": "Habitants par ouvrage",
+    "en": "Inhabitants per facility"
+  },
+  "p5_t1": {
+    "fr": "Plateaux",
+    "en": "Plateaux"
+  },
+  "p5_t1_d": {
+    "fr": "habitants pour un seul ouvrage recensé",
+    "en": "inhabitants for a single recorded facility"
+  },
+  "p5_lecture_nom": {
+    "fr": "Ce que la moyenne cache",
+    "en": "What the average hides"
+  },
+  "p5_lecture_q": {
+    "fr": "Une moyenne nationale suffit-elle ?",
+    "en": "Is a national average enough?"
+  },
+  "p5_lecture_r": {
+    "fr": "{national} habitants par ouvrage",
+    "en": "{national} inhabitants per facility"
+  },
+  "p5_lecture_l": {
+    "fr": "Elle recouvre un rapport de 1 à 245 entre les Savanes, où un programme a concentré ses microprojets, et les Plateaux, que l'inventaire ignore presque entièrement.",
+    "en": "It covers a 1-to-245 ratio between Savanes, where a programme concentrated its micro-projects, and Plateaux, which the inventory almost entirely ignores."
+  },
+  "p6_titre": {
+    "fr": "Le risque est-il couvert par les ouvrages ?",
+    "en": "Is the risk covered by facilities?"
+  },
+  "p6_sous_titre": {
+    "fr": "Part des cantons équipés, par classe de risque",
+    "en": "Share of equipped cantons, by risk class"
+  },
+  "p6_graphe": {
+    "fr": "Part équipée (%)",
+    "en": "Equipped share (%)"
+  },
+  "p6_a_nom": {
+    "fr": "Ce qui explique la dotation",
+    "en": "What explains the allocation"
+  },
+  "p6_a_q": {
+    "fr": "Le besoin ou le périmètre du programme ?",
+    "en": "Need, or the programme perimeter?"
+  },
+  "p6_a_r": {
+    "fr": "{sans} % expliqués par le besoin, {avec} % avec la région",
+    "en": "{sans} % explained by need, {avec} % with region"
+  },
+  "p6_a_l": {
+    "fr": "Population, risque et richesse expliquent peu. Ajouter la région quadruple le pouvoir explicatif sans que le risque devienne significatif : la dotation suit le découpage des programmes, non l'exposition qu'ils invoquent.",
+    "en": "Population, risk and wealth explain little. Adding region quadruples explanatory power without risk becoming significant: allocation follows programme boundaries, not the exposure they invoke."
+  },
+  "p6_t1": {
+    "fr": "Cantons prioritaires",
+    "en": "Priority cantons"
+  },
+  "p6_t1_d": {
+    "fr": "exposés et sans ouvrage — {population} habitants",
+    "en": "exposed and unequipped — {population} inhabitants"
+  },
+  "p7_titre": {
+    "fr": "Le coût d'un forage ne dépend pas de ceux qu'il sert",
+    "en": "A borehole's cost does not depend on whom it serves"
+  },
+  "p7_sous_titre": {
+    "fr": "Coût par bénéficiaire, par quintile de population desservie",
+    "en": "Cost per beneficiary, by quintile of population served"
+  },
+  "p7_graphe": {
+    "fr": "FCFA par bénéficiaire",
+    "en": "CFA per beneficiary"
+  },
+  "p7_q1": {
+    "fr": "Q1 — moins desservis",
+    "en": "Q1 — least served"
+  },
+  "p7_q2": {
+    "fr": "Q2",
+    "en": "Q2"
+  },
+  "p7_q3": {
+    "fr": "Q3",
+    "en": "Q3"
+  },
+  "p7_q4": {
+    "fr": "Q4",
+    "en": "Q4"
+  },
+  "p7_q5": {
+    "fr": "Q5 — plus desservis",
+    "en": "Q5 — most served"
+  },
+  "p7_t1": {
+    "fr": "Coût médian d'un ouvrage",
+    "en": "Median facility cost"
+  },
+  "p7_t1_d": {
+    "fr": "quel que soit le nombre de bénéficiaires",
+    "en": "whatever the number of beneficiaries"
+  },
+  "p7_lecture_nom": {
+    "fr": "Une variable de décision",
+    "en": "A decision variable"
+  },
+  "p7_lecture_q": {
+    "fr": "D'où vient l'écart de coût par habitant ?",
+    "en": "Where does the per-head cost gap come from?"
+  },
+  "p7_lecture_r": {
+    "fr": "{rapport} fois, du premier au dernier quintile",
+    "en": "{rapport}-fold, from first to last quintile"
+  },
+  "p7_lecture_l": {
+    "fr": "L'élasticité du coût au nombre de bénéficiaires est statistiquement nulle : le coût par habitant ne dépend que du lieu choisi. C'est une contrainte qu'on subit, ou un levier qu'on actionne.",
+    "en": "The elasticity of cost to beneficiaries is statistically nil: cost per head depends only on the site chosen. That is either a constraint endured, or a lever pulled."
+  },
+  "p8_titre": {
+    "fr": "L'argent suit-il les habitants ?",
+    "en": "Does the money follow the people?"
+  },
+  "p8_sous_titre": {
+    "fr": "Ce que la répartition observée dit d'elle-même",
+    "en": "What the observed allocation says about itself"
+  },
+  "p8_t1": {
+    "fr": "Élasticité à la population",
+    "en": "Elasticity to population"
+  },
+  "p8_t1_d": {
+    "fr": "estimée sur {n} cantons dotés",
+    "en": "estimated on {n} funded cantons"
+  },
+  "p8_t2": {
+    "fr": "Gini par habitant",
+    "en": "Gini per inhabitant"
+  },
+  "p8_t2_d": {
+    "fr": "rapport interdécile de {rapport}",
+    "en": "interdecile ratio of {rapport}"
+  },
+  "p8_t3": {
+    "fr": "Montant décaissé",
+    "en": "Amount disbursed"
+  },
+  "p8_t3_d": {
+    "fr": "{ecart} % sous l'estimation initiale",
+    "en": "{ecart} % below the initial estimate"
+  },
+  "p8_a_nom": {
+    "fr": "Une dotation régressive",
+    "en": "A regressive allocation"
+  },
+  "p8_a_q": {
+    "fr": "Un canton deux fois plus peuplé reçoit-il deux fois plus ?",
+    "en": "Does a canton twice as populated get twice as much?"
+  },
+  "p8_a_r": {
+    "fr": "Non : 46 % de plus, pas le double",
+    "en": "No: 46 % more, not double"
+  },
+  "p8_a_l": {
+    "fr": "Combiné au coût plat de la page précédente, cet écart coûte des bénéficiaires sans économiser un franc. La clé démographique n'est pas une recommandation — c'est l'étalon le plus neutre disponible.",
+    "en": "Combined with the flat cost on the previous page, this gap costs beneficiaries without saving a franc. The demographic key is not a recommendation — it is the most neutral yardstick available."
+  },
+  "p8_b_nom": {
+    "fr": "Une marge déjà dégagée",
+    "en": "A margin already released"
+  },
+  "p8_b_q": {
+    "fr": "Que dit l'écart entre estimation et contrats ?",
+    "en": "What does the estimate-to-contract gap say?"
+  },
+  "p8_b_r": {
+    "fr": "La mise en concurrence a tenu",
+    "en": "Competitive tendering held"
+  },
+  "p8_b_l": {
+    "fr": "L'estimation portait 4,2 milliards, les contrats signés 3,5. Cet écart est une marge dégagée à l'appel d'offres, pas une économie de réalisation : le montant payé colle aux contrats.",
+    "en": "The estimate stood at 4.2 billion, signed contracts at 3.5. That gap is a margin released at tender, not a delivery saving: the amount paid tracks the contracts."
+  },
+  "p9_titre": {
+    "fr": "Trois leviers, par coût croissant",
+    "en": "Three levers, in increasing cost"
+  },
+  "p9_sous_titre": {
+    "fr": "Chacun découle d'un chiffre de ce rapport, aucun d'une opinion",
+    "en": "Each follows from a figure in this report, none from an opinion"
+  },
+  "p9_l1_nom": {
+    "fr": "1 · Republier",
+    "en": "1 · Republish"
+  },
+  "p9_l1_q": {
+    "fr": "Que coûte la donnée manquante ?",
+    "en": "What does the missing data cost?"
+  },
+  "p9_l1_r": {
+    "fr": "{absents} champs décrits et non diffusés",
+    "en": "{absents} fields described and not released"
+  },
+  "p9_l1_l": {
+    "fr": "L'état de fonctionnement, le débit, la profondeur et la société de maintenance figurent au dictionnaire du producteur : ils sont collectés. Le coût est celui d'une exportation, pas d'une enquête.",
+    "en": "Operating condition, flow rate, depth and maintenance company appear in the producer's dictionary: they are collected. The cost is that of an export, not a survey."
+  },
+  "p9_l2_nom": {
+    "fr": "2 · Étendre l'inventaire",
+    "en": "2 · Extend the inventory"
+  },
+  "p9_l2_q": {
+    "fr": "Où recenser en priorité ?",
+    "en": "Where to record first?"
+  },
+  "p9_l2_r": {
+    "fr": "{cantons} cantons exposés et non couverts",
+    "en": "{cantons} exposed and uncovered cantons"
+  },
+  "p9_l2_l": {
+    "fr": "Recenser l'existant précède toute construction : on ne peut pas décider d'un forage là où l'on ignore ce qui existe déjà. Le coût est celui d'une campagne de terrain.",
+    "en": "Recording what exists precedes any construction: no borehole can be decided where existing works are unknown. The cost is that of a field campaign."
+  },
+  "p9_l3_nom": {
+    "fr": "3 · Construire",
+    "en": "3 · Build"
+  },
+  "p9_l3_q": {
+    "fr": "À quel ordre de grandeur ?",
+    "en": "At what order of magnitude?"
+  },
+  "p9_l3_r": {
+    "fr": "{cout} FCFA par bénéficiaire direct",
+    "en": "{cout} CFA per direct beneficiary"
+  },
+  "p9_l3_l": {
+    "fr": "Médiane observée sur le parc COSO. Puisque le coût d'un ouvrage ne dépend pas de sa population desservie, siter en zone dense divise mécaniquement ce ratio.",
+    "en": "Median observed across the COSO stock. Since a facility's cost does not depend on the population it serves, siting in a dense area mechanically divides this ratio."
+  },
+  "p10_titre": {
+    "fr": "Ce que ce corpus établit, et ce qu'il refuse",
+    "en": "What this corpus establishes, and what it refuses"
+  },
+  "p10_sous_titre": {
+    "fr": "Deux conclusions, trois limites assumées",
+    "en": "Two conclusions, three acknowledged limits"
+  },
+  "p10_a_nom": {
+    "fr": "Ce qui est établi",
+    "en": "What is established"
+  },
+  "p10_a_q": {
+    "fr": "Que peut-on affirmer sans réserve ?",
+    "en": "What can be stated without reservation?"
+  },
+  "p10_a_r": {
+    "fr": "Le risque est concentré, la dotation ne l'est pas",
+    "en": "Risk is concentrated, funding is not"
+  },
+  "p10_a_l": {
+    "fr": "Dix-sept cantons abritent un tiers du pays ; le risque n'explique pas qui reçoit un ouvrage ; et le coût d'un forage est indépendant du nombre de personnes qu'il dessert. Ces trois résultats tiennent sur les données publiées.",
+    "en": "Seventeen cantons hold a third of the country; risk does not explain who receives a facility; and a borehole's cost is independent of how many it serves. These three results hold on the published data."
+  },
+  "p10_b_nom": {
+    "fr": "Ce qui reste impossible",
+    "en": "What remains impossible"
+  },
+  "p10_b_q": {
+    "fr": "Quel objectif de l'énoncé n'est pas atteignable ?",
+    "en": "Which stated objective is unreachable?"
+  },
+  "p10_b_r": {
+    "fr": "Les taux de fonctionnalité",
+    "en": "Functionality rates"
+  },
+  "p10_b_l": {
+    "fr": "Aucun champ de panne, d'abandon ou de mise en service ne figure dans le corpus publié. Ce n'est pas une donnée jamais collectée : le dictionnaire du producteur la décrit. C'est une donnée collectée et non diffusée.",
+    "en": "No breakdown, abandonment or commissioning field appears in the published corpus. This is not data that was never collected: the producer's dictionary describes it. It is data collected and not released."
+  },
+  "p10_limites_titre": {
+    "fr": "Trois limites que ce rapport assume",
+    "en": "Three limits this report accepts"
+  },
+  "p10_limite_1": {
+    "fr": "Les estimations n'identifient aucun effet causal — ni assignation aléatoire, ni discontinuité, ni instrument. Ce sont des associations conditionnelles, et leur intérêt tient à ce qu'elles survivent, ou non, aux effets fixes de région.",
+    "en": "The estimates identify no causal effect — no random assignment, no discontinuity, no instrument. They are conditional associations, and their value lies in whether they survive region fixed effects."
+  },
+  "p10_limite_2": {
+    "fr": "Le parc COSO couvre trois régions du Nord et le parc TdE la seule Maritime : aucune inférence nationale ne peut être tirée de leur exécution.",
+    "en": "The COSO stock covers three northern regions and the TdE stock Maritime alone: no national inference can be drawn from their execution."
+  },
+  "p10_limite_3": {
+    "fr": "Les deux sources de population — recensement 2010 et estimation satellitaire 2022 — ne sont pas comparables terme à terme ; leur écart mesure autant la méthode que la démographie.",
+    "en": "The two population sources — 2010 census and 2022 satellite estimate — are not comparable term by term; their gap measures method as much as demography."
+  },
+  "classe_tres_faible": {
+    "fr": "Très faible",
+    "en": "Very low"
+  },
+  "classe_faible": {
+    "fr": "Faible",
+    "en": "Low"
+  },
+  "classe_moyen": {
+    "fr": "Moyen",
+    "en": "Medium"
+  },
+  "classe_eleve": {
+    "fr": "Élevé",
+    "en": "High"
+  },
+  "classe_tres_eleve": {
+    "fr": "Très élevé",
+    "en": "Very high"
+  }
 }

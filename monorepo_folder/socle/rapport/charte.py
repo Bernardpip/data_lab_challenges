@@ -37,6 +37,11 @@ ENCRE = rgb(COLORS["text"])
 ENCRE_SECONDAIRE = rgb(COLORS["textSecondary"])
 MUTED = rgb(COLORS["textMuted"])
 PRIMAIRE = rgb(COLORS["primary"])
+# Encre d'ALERTE, pour les chiffres qui portent un constat défavorable. Elle
+# vient du même jeu de statuts que les pastilles de l'écran : un rapport qui
+# invente son rouge cesse d'être la version imprimée du tableau de bord.
+DANGER = rgb(STATUS["critical"])
+SUCCES = rgb(STATUS["good"])
 SURFACE = rgb(COLORS["surface"])
 ROUGE = rgb(STATUS["critical"])
 
