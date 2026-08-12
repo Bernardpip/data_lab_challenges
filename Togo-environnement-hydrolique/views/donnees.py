@@ -17,7 +17,7 @@ from socle.ui import filters
 from socle.i18n.traduction import t
 
 from utils.data import datasets
-from utils import profils, recettes, perimetre
+from utils import loader, profils, recettes, perimetre
 
 PASTILLE = {"honore": "good", "partiel": "warning", "impossible": "critical"}
 
@@ -194,3 +194,117 @@ def render_perimetre():
         }))
         charts.table_twin(cadre.rename(columns={
             "famille": tr("col_famille"), "champs": tr("col_champs")}))
+
+
+# ─── Les planches ────────────────────────────────────────────────────────────
+#
+# Quatre PDF et deux images accompagnent le corpus, et n'étaient visibles nulle
+# part : le tableau de bord les citait dans ses sources sans jamais les montrer.
+# Or ce sont des pièces à conviction. La planche des cantons est celle où les
+# six seuils officiels ont été RELEVÉS À L'ŒIL, faute de figurer dans un
+# fichier ; les deux cartes image sont ce que le producteur publie comme
+# rendu de référence, et c'est à elles que nos cartes doivent ressembler.
+PLANCHES = [
+    {"cle": "fri_cantons", "fichier": "fri-cantons.pdf", "genre": "pdf"},
+    {"cle": "fri_1km", "fichier": "fri-1km.pdf", "genre": "pdf"},
+    {"cle": "fri_500m", "fichier": "fri-500m.pdf", "genre": "pdf"},
+    {"cle": "fsi_2", "fichier": "fsi-2.pdf", "genre": "pdf"},
+    {"cle": "fri_map", "fichier": "fri-map.png", "genre": "image"},
+    {"cle": "fsi_map", "fichier": "fsi-map.png", "genre": "image"},
+]
+
+URL_ISRI = ("https://opendata.gouv.tg/fr/datasets/"
+            "indices-de-susceptibilite-fsi-et-de-risque-dinondation-fri-au-togo/")
+
+
+@st.cache_data(show_spinner=False)
+def _apercu(chemin, empreinte, largeur=1400):
+    """Une image du corpus, réduite pour l'écran — en mémoire, jamais sur disque.
+
+    Les deux planches font 7 086 et 4 724 pixels de côté, pour huit mégaoctets
+    chacune : les envoyer telles quelles au navigateur coûterait plus que tout
+    le reste de la page. `empreinte` — taille et date du fichier — entre dans
+    la clé de cache pour qu'une planche remplacée soit relue.
+    """
+
+    from PIL import Image
+
+    image = Image.open(chemin)
+
+    if image.width > largeur:
+        hauteur = round(image.height * largeur / image.width)
+        image = image.resize((largeur, hauteur), Image.LANCZOS)
+
+    return image.convert("RGB")
+
+
+def render_planches():
+    """Les planches du producteur — ce qu'il publie en image, et pourquoi."""
+
+    tr, tc = t("donnees"), t("commun")
+
+    genres = ["pdf", "image"]
+    selection = filters.choix([{
+        "cle": "filtre_genre", "libelle": tr("filtre_genre"),
+        "options": [tr(f"genre_{g}") for g in genres],
+        "placeholder": tc("tous"),
+    }])
+    retenus = selection["filtre_genre"]
+
+    presentes = []
+
+    for planche in PLANCHES:
+        try:
+            chemin = loader.chemin(planche["fichier"])
+        except FileNotFoundError:
+            continue
+
+        presentes.append({**planche, "chemin": chemin,
+                          "octets": chemin.stat().st_size})
+
+    ui.stat_tiles([
+        {"value": ui.fr_number(sum(1 for p in presentes if p["genre"] == "pdf")),
+         "label": tr("tuile_planches"), "delta": tr("tuile_planches_detail", {
+             "mo": ui.fr_number(sum(_mega(p["octets"]) for p in presentes
+                                    if p["genre"] == "pdf"), 0)}),
+         "good": None, "icon": "file-text"},
+        {"value": ui.fr_number(sum(1 for p in presentes
+                                   if p["genre"] == "image")),
+         "label": tr("tuile_images"), "delta": tr("tuile_images_detail"),
+         "good": None, "icon": "map"},
+        {"value": "6", "label": tr("tuile_seuils"),
+         "delta": tr("tuile_seuils_detail"), "good": False, "icon": "search"},
+    ])
+
+    for planche in presentes:
+        libelle_genre = tr(f"genre_{planche['genre']}")
+
+        if retenus and libelle_genre not in retenus:
+            continue
+
+        with ui.card(tr(f"planche_{planche['cle']}_titre"),
+                     tr(f"planche_{planche['cle']}_sous_titre"),
+                     "file-text" if planche["genre"] == "pdf" else "map"):
+            st.markdown(ui.pill("neutral", planche["fichier"]),
+                        unsafe_allow_html=True)
+            st.markdown(tr("planche_poids", {
+                "mo": ui.fr_number(_mega(planche["octets"]), 1),
+                "genre": libelle_genre,
+            }))
+            ui.note(tr(f"planche_{planche['cle']}_lecture"))
+
+            # L'image est MONTRÉE, le PDF seulement situé : un navigateur
+            # n'affiche pas une planche de vingt mégaoctets sans la
+            # télécharger d'abord, et la télécharger d'office pour un onglet
+            # qu'on ne fait que traverser serait le meilleur moyen de le
+            # rendre lent.
+            if planche["genre"] == "image":
+                marque = planche["chemin"].stat()
+                st.image(_apercu(str(planche["chemin"]),
+                                 (marque.st_size, marque.st_mtime)),
+                         use_container_width=True)
+            else:
+                st.markdown(tr("planche_chemin", {
+                    "chemin": f"data/planches/{planche['fichier']}"}))
+
+            st.markdown(f"[{tr('planche_portail')}]({URL_ISRI})")

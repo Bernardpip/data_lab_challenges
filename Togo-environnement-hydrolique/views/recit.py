@@ -35,8 +35,15 @@ import streamlit as st
 
 from socle import ui, charts
 from socle.charts import maps
+from socle.design import tokens
 from socle.design.tokens import (RISQUE_OFFICIEL, RISQUE_CONTOUR, SERIES,
                                  STATUS, ORDINAL)
+
+# La teinte de l'ABSENCE — ni claire ni foncée, hors de la rampe. Un canton
+# sans ouvrage recensé n'est pas un canton faiblement doté : le distinguer par
+# la couleur, et non par le bas d'un dégradé, empêche de le lire comme une
+# petite quantité.
+ABSENCE = "#E4E7EB"
 
 from utils import analytics, accessibilite, econometrie
 
@@ -452,6 +459,18 @@ def carte_densite(tr, data, hauteur):
         / couverture["population"].replace(0, np.nan)
     ).fillna({"pour_10000": 0})
 
+    # Les QUANTILES ne peuvent rien classer ici : 330 cantons sur 388 sont à
+    # zéro, si bien que les cinq coupures tombaient toutes sur zéro et que le
+    # pays entier prenait la même teinte — une carte parfaitement vide, vérifié
+    # à l'écran. Le zéro n'est pas une petite valeur, c'est une absence : il a
+    # sa classe et sa teinte neutre, et les quartiles se calculent sur les
+    # seuls cantons qui portent un ouvrage.
+    porteurs = cadre.loc[cadre["pour_10000"] > 0, "pour_10000"]
+    coupures = (maps.paliers(porteurs, 4, "quantiles")[0]
+                if len(porteurs) >= 4 else [])
+    bornes_densite = [0.0, *coupures] if coupures else None
+    rampe = [ABSENCE, *tokens.SEQUENTIAL] if bornes_densite else None
+
     def dessin(h):
         return maps.choroplethe(
             cadre, valeur="pour_10000", cle="carte_recit_densite",
@@ -459,14 +478,15 @@ def carte_densite(tr, data, hauteur):
             libelles=[tr("col_canton"), tr("col_prefecture"),
                       tr("col_ouvrages"), tr("col_population")],
             height=h, nombre=5, methode="quantiles",
+            bornes=bornes_densite, rampe=rampe,
         )
 
     def pied(resultat):
         bornes, _ = resultat
 
         if bornes:
-            maps.legende_paliers(bornes, libelle=tr("densite_legende"),
-                                 decimales=2)
+            maps.legende_paliers(bornes, rampe=rampe,
+                                 libelle=tr("densite_legende"), decimales=2)
 
         ui.note(tr("densite_note_carte", {
             "sans": ui.fr_number(int((cadre["ouvrages"] == 0).sum())),

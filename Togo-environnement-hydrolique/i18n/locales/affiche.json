@@ -151,6 +151,10 @@
     "fr": "Fichiers",
     "en": "Files"
   },
+  "vue_planches": {
+    "fr": "Planches",
+    "en": "Plates"
+  },
   "vue_recettes": {
     "fr": "Recettes",
     "en": "Recipes"

@@ -470,5 +470,125 @@
   "famille_autres": {
     "fr": "Identifiants et remarques",
     "en": "Identifiers and remarks"
+  },
+  "filtre_genre": {
+    "fr": "Nature de la planche",
+    "en": "Plate type"
+  },
+  "genre_pdf": {
+    "fr": "Planche PDF",
+    "en": "PDF plate"
+  },
+  "genre_image": {
+    "fr": "Carte image",
+    "en": "Image map"
+  },
+  "tuile_planches": {
+    "fr": "Planches PDF",
+    "en": "PDF plates"
+  },
+  "tuile_planches_detail": {
+    "fr": "{mo} Mo — aucune n'est lisible par une machine",
+    "en": "{mo} MB — none machine-readable"
+  },
+  "tuile_images": {
+    "fr": "Cartes image",
+    "en": "Image maps"
+  },
+  "tuile_images_detail": {
+    "fr": "le rendu de référence du producteur",
+    "en": "the producer's reference rendering"
+  },
+  "tuile_seuils": {
+    "fr": "Seuils relevés à l'œil",
+    "en": "Thresholds read by eye"
+  },
+  "tuile_seuils_detail": {
+    "fr": "aucun fichier du corpus ne les porte",
+    "en": "no file in the corpus carries them"
+  },
+  "planche_poids": {
+    "fr": "{genre} · {mo} Mo",
+    "en": "{genre} · {mo} MB"
+  },
+  "planche_chemin": {
+    "fr": "Dans l'archive : `{chemin}`",
+    "en": "In the archive: `{chemin}`"
+  },
+  "planche_portail": {
+    "fr": "Voir le jeu ISRI-TG sur le portail",
+    "en": "See the ISRI-TG dataset on the portal"
+  },
+  "planche_fri_cantons_titre": {
+    "fr": "Risque d'inondation par canton",
+    "en": "Flood risk by canton"
+  },
+  "planche_fri_cantons_sous_titre": {
+    "fr": "La planche officielle, à la maille des 388 cantons",
+    "en": "The official plate, at the 388-canton grid"
+  },
+  "planche_fri_cantons_lecture": {
+    "fr": "C'est sur cette planche que les six seuils de la classification officielle — 0,01 · 0,10 · 0,17 · 0,29 · 0,44 · 0,65 — ont été relevés : ils ne figurent dans aucun fichier du corpus. Un A4 sans un seul caractère de texte sélectionnable, donc rien qu'une machine puisse lire.",
+    "en": "This is the plate where the six official classification thresholds — 0.01 · 0.10 · 0.17 · 0.29 · 0.44 · 0.65 — were read off: they appear in no file of the corpus. An A4 sheet without a single selectable character, so nothing a machine can read."
+  },
+  "planche_fri_1km_titre": {
+    "fr": "Risque d'inondation, maille 1 km",
+    "en": "Flood risk, 1 km grid"
+  },
+  "planche_fri_1km_sous_titre": {
+    "fr": "57 738 mailles, imprimées",
+    "en": "57,738 cells, printed"
+  },
+  "planche_fri_1km_lecture": {
+    "fr": "La grille correspondante est fournie en GeoPackage, mais aucun navigateur ne dessine 57 738 polygones : le tableau de bord la cite et s'en tient à la maille cantonale, qui, elle, s'affiche.",
+    "en": "The matching grid ships as a GeoPackage, but no browser draws 57,738 polygons: the dashboard cites it and sticks to the canton grid, which does display."
+  },
+  "planche_fri_500m_titre": {
+    "fr": "Risque d'inondation, maille 500 m",
+    "en": "Flood risk, 500 m grid"
+  },
+  "planche_fri_500m_sous_titre": {
+    "fr": "228 953 mailles, imprimées",
+    "en": "228,953 cells, printed"
+  },
+  "planche_fri_500m_lecture": {
+    "fr": "Même remarque, à quatre fois la résolution : 55 Mo de GeoPackage pour une carte que l'impression rend lisible et que l'écran ne rendrait pas.",
+    "en": "Same remark, at four times the resolution: 55 MB of GeoPackage for a map that print makes readable and a screen would not."
+  },
+  "planche_fsi_2_titre": {
+    "fr": "Susceptibilité aux inondations",
+    "en": "Flood susceptibility"
+  },
+  "planche_fsi_2_sous_titre": {
+    "fr": "L'indice physique, avant pondération",
+    "en": "The physical index, before weighting"
+  },
+  "planche_fsi_2_lecture": {
+    "fr": "Le FSI ne décrit que le terrain — pente, sols, distance au réseau hydrographique. C'est le FRI qui y ajoute la population et le bâti. Distinguer les deux est ce qui permet de dire que l'indice publié ne classe pas seulement les cantons peuplés.",
+    "en": "The FSI describes ground only — slope, soils, distance to the drainage network. The FRI is what adds population and buildings. Telling the two apart is what allows saying the published index does not merely rank populous cantons."
+  },
+  "planche_fri_map_titre": {
+    "fr": "Carte de référence du FRI",
+    "en": "FRI reference map"
+  },
+  "planche_fri_map_sous_titre": {
+    "fr": "Le rendu que publie le producteur",
+    "en": "The rendering the producer publishes"
+  },
+  "planche_fri_map_lecture": {
+    "fr": "C'est à cette image que la carte du risque de ce tableau de bord doit ressembler : mêmes classes, mêmes teintes, même territoire. Les nôtres reprennent la rampe officielle pour rendre la comparaison possible.",
+    "en": "This is the image the risk map in this dashboard must resemble: same classes, same colours, same territory. Ours reuse the official ramp so the comparison can be made."
+  },
+  "planche_fsi_map_titre": {
+    "fr": "Carte de référence du FSI",
+    "en": "FSI reference map"
+  },
+  "planche_fsi_map_sous_titre": {
+    "fr": "La susceptibilité, au pixel de 30 m",
+    "en": "Susceptibility, at 30 m pixels"
+  },
+  "planche_fsi_map_lecture": {
+    "fr": "Le raster correspondant pèse 82 Mo, et il est livré deux fois — en `.tif` et zippé. Le tableau de bord ne le charge pas : il montre cette image, qui en dit autant sans immobiliser la mémoire du navigateur.",
+    "en": "The matching raster weighs 82 MB, and ships twice — as `.tif` and zipped. The dashboard does not load it: it shows this image, which says as much without tying up the browser's memory."
   }
 }

@@ -908,10 +908,26 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
 
         return peindre
 
-    def carte_de_section():
-        """Le repli de colonne droite : le risque, dans le périmètre partagé."""
+    def repli(peintre, traducteur=None):
+        """La carte de repli d'un ACTE — celle de son sujet, pas une carte passe-partout.
 
-        _carte_risque(trs, _perimetre_partage(brut), hauteur_carte)
+        Un onglet qui n'apporte pas sa carte tombe sur celle-ci. Une seule
+        carte servait pour tous les actes — le risque d'inondation —, et elle
+        réapparaissait dans cinq vues qui parlaient d'autre chose : ventes
+        d'eau, facteurs de l'indice, leviers d'action. Le lecteur y voyait la
+        même image partout, donc plus rien.
+
+        Le périmètre vient des clés de session posées par la barre de filtres
+        de la colonne gauche : la carte montre ce que les graphes d'à côté
+        montrent, sans que rien ne transite d'une colonne à l'autre.
+        """
+
+        parle = traducteur or trr
+
+        def peindre():
+            peintre(parle, _perimetre_partage(brut), hauteur_carte)
+
+        return peindre
 
     def carte_du_corpus():
         """Le repli de l'acte des preuves : ce que le corpus couvre."""
@@ -1058,7 +1074,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
 
             # ── Acte 1 · Où est l'eau ? ──────────────────────────────────
             {"id": "ou", "can_view": True, "name": tr("section_ou"),
-             "reference": carte_de_section, "tab_items": [
+             "reference": repli(recit.carte_deserts), "tab_items": [
                 {"id": "repartition", "can_view": True, "name": tr("vue_repartition"),
                  "is_default": True,
                  "component": recit_(
@@ -1086,7 +1102,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
 
             # ── Acte 2 · Dans quel état ? ────────────────────────────────
             {"id": "etat", "can_view": True, "name": tr("section_etat"),
-             "reference": carte_de_section, "tab_items": [
+             "reference": repli(recit.carte_entretien), "tab_items": [
                 {"id": "angle_mort", "can_view": True, "name": tr("vue_angle_mort"),
                  "is_default": True,
                  "component": recit_(recit.angle_mort, (
@@ -1106,7 +1122,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
 
             # ── Acte 3 · Pour combien d'habitants ? ──────────────────────
             {"id": "habitants", "can_view": True, "name": tr("section_habitants"),
-             "reference": carte_de_section, "tab_items": [
+             "reference": repli(recit.carte_densite), "tab_items": [
                 {"id": "pression", "can_view": True, "name": tr("vue_pression"),
                  "is_default": True, "component": {
                      "gauche": lambda: _etroit(
@@ -1136,8 +1152,10 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             ]},
 
             # ── Acte 4 · Et quand l'eau monte ? ──────────────────────────
+            # La carte du RISQUE reste ici, et nulle part ailleurs : c'est
+            # l'acte dont elle est le sujet.
             {"id": "inondation", "can_view": True, "name": tr("section_inondation"),
-             "reference": carte_de_section, "tab_items": [
+             "reference": repli(_carte_risque, trs), "tab_items": [
                 {"id": "alea", "can_view": True, "name": tr("vue_alea"), "is_default": True,
                  "component": {
                      "gauche": lambda: _etroit(
@@ -1170,7 +1188,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
 
             # ── Acte 5 · Que faire ? ─────────────────────────────────────
             {"id": "agir", "can_view": True, "name": tr("section_agir"),
-             "reference": carte_de_section, "tab_items": [
+             "reference": repli(recit.carte_deficit), "tab_items": [
                 {"id": "priorites_reco", "can_view": True, "name": tr("vue_priorites_reco"),
                  "is_default": True, "component": {
                      "gauche": portee(recommandations_vue.render_priorites),
@@ -1193,7 +1211,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             # qui ferment le dossier : une proposition se lit pendant qu'on a
             # encore les constats en tête, pas après l'appareil critique.
             {"id": "proposition", "can_view": True, "name": tr("section_proposition"),
-             "reference": carte_de_section, "tab_items": [
+             "reference": repli(recit.carte_programme_ouvrages), "tab_items": [
                 {"id": "ouvrages", "can_view": True, "name": tr("vue_proposition_ouvrages"),
                  "is_default": True,
                  "component": recit_(
@@ -1221,6 +1239,11 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                 {"id": "fichiers", "can_view": True, "name": tr("vue_fichiers"),
                  "is_default": True,
                  "component": portee(donnees_vue.render_fichiers)},
+                # Les PLANCHES suivent les fichiers : ce sont des pièces du
+                # corpus au même titre, et la seule qui porte les seuils
+                # officiels — relevés à l'œil, faute de fichier qui les écrive.
+                {"id": "planches", "can_view": True, "name": tr("vue_planches"),
+                 "component": portee(donnees_vue.render_planches)},
                 {"id": "recettes", "can_view": True, "name": tr("vue_recettes"),
                  "component": portee(donnees_vue.render_recettes)},
                 {"id": "perimetre", "can_view": True, "name": tr("vue_perimetre"),
