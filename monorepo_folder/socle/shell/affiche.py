@@ -643,8 +643,15 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                     "<style>"
                     ".st-key-kgaffprofil button {"
                     f' background-image: url("{photo}");'
-                    " background-size: cover; background-position: center;"
-                    " color: transparent; }"
+                    " background-size: cover; background-position: center; }"
+                    # Les initiales s'effacent en TOUT ÉTAT, et le `!important`
+                    # n'est pas un ornement : au survol, Streamlit repose sa
+                    # couleur de texte sur le bouton, et le nom réapparaissait
+                    # par-dessus le visage — deux « AT » l'un sur l'autre, l'un
+                    # blanc dans l'image, l'autre noir devant elle.
+                    ".st-key-kgaffprofil button,"
+                    ".st-key-kgaffprofil button * { color: transparent"
+                    " !important; }"
                     "</style>",
                     unsafe_allow_html=True,
                 )

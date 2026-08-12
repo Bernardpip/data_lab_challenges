@@ -1247,13 +1247,28 @@ _CSS_AFFICHE = """
    intercepté par un <div> transparent. */
 .kg-aff-marque { position: absolute; top: 14px; right: 20px; z-index: 5; }
 
+/* La marque s'ancre au BANDEAU, et non à l'enveloppe que Streamlit glisse
+   autour d'elle : celle-ci commence quinze pixels plus bas, si bien que deux
+   éléments écrits l'un et l'autre `top: 14px` — la marque et l'avatar — ne
+   tombaient pas à la même hauteur. Mesuré : treize pixels d'écart entre leurs
+   centres. Rendue statique, l'enveloppe cesse d'être le repère. */
+.st-key-kgaffmenu [data-testid="stElementContainer"]:has(.kg-aff-marque) {
+  position: static;
+}
+
 /* L'avatar de l'utilisateur actif, ancré JUSTE AVANT la marque. Sa position
    ne dépend pas de la largeur du mot-marque : celui-ci tient dans un gabarit
    fixe, et une mise en flux aurait fait sauter l'avatar d'une langue à
    l'autre. */
+/* Il se cale sur la MARQUE, et non sur le haut du bandeau : posé à seize
+   pixels quand elle en prend quatorze, son centre tombait onze pixels au-dessus
+   du sien — mesuré — et l'œil lisait deux objets décalés au lieu d'une rangée.
+   Il prend donc la même origine haute qu'elle, la hauteur de ses deux lignes,
+   et centre son rond dedans : si la marque grandit, il suit. */
 .st-key-kgaffprofil {
   position: absolute !important;
-  top: 16px; right: 96px;
+  top: 14px; right: 90px; height: 36px;
+  display: flex; align-items: center;
   width: auto !important; margin: 0 !important;
   z-index: 5;
 }
