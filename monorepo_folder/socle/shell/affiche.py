@@ -841,23 +841,25 @@ def _ligne_utilisateur(tab, personne, fichier, reglages, courant, langue_active)
     est_courant = courant and courant.get("id") == identifiant
     porteur = utilisateurs.profil(fichier, personne.get("profil"))
 
-    identite, profil, action, droits = tab.ligne(identifiant)
+    identite, adresse, profil, action, droits = tab.ligne(identifiant)
 
     with identite:
-        # L'IDENTITÉ seule : un visage, un nom, une adresse. Le profil tenait
-        # dans cette cellule, accolé à l'adresse ; il en sortait une ligne
-        # bariolée où deux registres — qui c'est, ce qu'il voit — se
-        # disputaient le même espace. Il a maintenant sa colonne, ce qui rend
-        # aussi les profils comparables d'une ligne à l'autre.
+        # UNE colonne, UN registre. L'adresse et le profil tenaient tous deux
+        # dans cette cellule, accolés sous le nom ; il en sortait une ligne
+        # bariolée où « qui c'est » et « ce qu'il voit » se disputaient le même
+        # espace, et où rien ne se comparait d'une ligne à l'autre.
         tab.cellule(
             f'{utilisateurs.texte_sur(personne.get("prenom"))} '
             f'{utilisateurs.texte_sur(personne.get("nom"))}',
-            sous=utilisateurs.texte_sur(personne.get("email")),
             visuel=utilisateurs.avatar(
                 personne, 32,
                 bordure=("var(--kg-color-primary)" if est_courant else None),
             ),
         )
+
+    with adresse:
+        st.markdown(_texte_terne(personne.get("email")),
+                    unsafe_allow_html=True)
 
     with profil:
         st.markdown(_pastille_profil(porteur, langue_active),
@@ -888,15 +890,38 @@ def _pastille_profil(porteur, langue_active):
     if not porteur:
         return ""
 
+    # La pastille vit dans un BLOC en flex, et non seule dans sa cellule : posée
+    # sur une ligne de texte, elle repose sur la ligne de base et gardait sous
+    # elle la place d'un jambage — trois pixels qui la faisaient monter par
+    # rapport au nom d'à côté. Mesuré, puis vérifié à zéro.
     return (
-        f'<span style="display:inline-block;max-width:100%;'
+        f'<div style="display:flex;align-items:center;min-width:0;">'
+        f'<span style="display:block;max-width:100%;'
         f"padding:0 9px;border-radius:999px;font-size:10px;font-weight:700;"
         f"line-height:20px;letter-spacing:.03em;text-transform:uppercase;"
         f"overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
         f"background:var(--kg-color-primary-light,#E4F0EB);"
         f'color:var(--kg-color-primary);">'
         f'{utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))}'
-        f"</span>"
+        f"</span></div>"
+    )
+
+
+def _texte_terne(valeur):
+    """Une valeur secondaire dans sa colonne — un tiret quand elle manque.
+
+    Laisser la case vide donnerait une colonne trouée, qu'on lit comme un
+    défaut d'affichage plutôt que comme une absence de renseignement.
+    """
+
+    if not valeur:
+        return ('<span style="color:var(--kg-color-border,#DDE1E5);">—</span>')
+
+    return (
+        f'<span style="display:block;font-size:12px;line-height:1.4;'
+        f"color:var(--kg-color-text-muted);overflow:hidden;"
+        f'text-overflow:ellipsis;white-space:nowrap;">'
+        f"{utilisateurs.texte_sur(valeur)}</span>"
     )
 
 
@@ -1040,13 +1065,18 @@ def _ecran_accueil(config, fichier, reglages, langue_active):
         # tableau inachevé. Les deux dernières sont centrées sur leur bouton.
         cadre, tab = ui.tableau("reggens", [
             {"cle": "identite", "libelle": reglages.get("colonne_personne", ""),
-             "poids": 5.6},
+             "poids": 4.2},
+            {"cle": "adresse", "libelle": reglages.get("colonne_email", ""),
+             "poids": 3.9},
             {"cle": "profil", "libelle": reglages.get("colonne_profil", ""),
-             "poids": 2.4},
+             "poids": 2.6},
             {"cle": "action", "libelle": reglages.get("colonne_etat", ""),
              "poids": 2.2, "align": "center"},
+            # La dernière colonne ne tient qu'un engrenage, mais elle porte
+            # aussi son intitulé : à moins d'un poids et trois, « Droits » s'y
+            # écrivait « Droi… ».
             {"cle": "droits", "libelle": reglages.get("colonne_droits", ""),
-             "poids": 1, "align": "center"},
+             "poids": 1.3, "align": "center"},
         ])
 
         with cadre:
@@ -1544,6 +1574,14 @@ def _styles_fenetre(reglages=None):
   width: auto !important; white-space: nowrap;
   height: 28px !important; min-height: 28px !important;
   padding: 0 14px; border-radius: 999px; font-size: 12px;
+}
+/* Une ADRESSE n'est pas un lien. Le markdown de Streamlit les reconnaît et les
+   habille en bleu souligné : dans une colonne de table, cela donnait six liens
+   qui appelaient le clic pour ouvrir un logiciel de courrier. Le texte reprend
+   la teinte de sa cellule. */
+[data-testid="stDialog"] [class*="st-key-kgtabreggensligne"] a {
+  color: inherit !important; text-decoration: none !important;
+  pointer-events: none;
 }
 /* La SUPPRESSION est une action irréversible : elle se signale en rouge, mais
    reste un lien — un bouton plein appellerait le clic qu'on veut éviter. */

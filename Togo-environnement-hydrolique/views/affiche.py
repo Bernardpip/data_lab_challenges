@@ -970,6 +970,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             "vide": tr("reglages_vide"),
             "profil_vide": tr("reglages_profil_vide"),
             "colonne_personne": tr("reglages_colonne_personne"),
+            "colonne_email": tr("reglages_colonne_email"),
             "colonne_profil": tr("reglages_colonne_profil"),
             "colonne_etat": tr("reglages_colonne_etat"),
             "colonne_droits": tr("reglages_colonne_droits"),

@@ -87,6 +87,22 @@ def _styles(nom, hauteur_ligne):
         f'.st-key-{nom} [data-testid="stHorizontalBlock"] {{'
         f" flex-wrap: nowrap; gap: 10px; }}"
         f'.st-key-{nom} [data-testid="stColumn"] {{ min-width: 0; }}'
+        # Le contenu d'une cellule est CENTRÉ sur la hauteur de la ligne, mais
+        # ce que Streamlit centre n'était pas ce qu'on voit : la boîte de la
+        # cellule mesurait dix-neuf pixels pour un contenu de trente-deux, qui
+        # débordait par le bas — avatar et nom tombaient six pixels sous la
+        # pastille d'à côté.
+        #
+        # La cause tient en une ligne de la feuille de Streamlit :
+        # `margin-bottom: -13px` sur le conteneur du markdown. C'est un
+        # contrepoids — il annule la marge basse du paragraphe qu'il attend.
+        # Une cellule n'écrit pas de paragraphe : le contrepoids restait seul,
+        # et rabotait la boîte de treize pixels. On le retire ici, et l'on
+        # neutralise la marge du paragraphe pour les cellules qui en ont un.
+        f'.st-key-{nom} [class*="st-key-{nom}ligne"] '
+        f'[data-testid="stMarkdownContainer"] {{ margin-bottom: 0; }}'
+        f'.st-key-{nom} [class*="st-key-{nom}ligne"] '
+        f'[data-testid="stMarkdownContainer"] > p {{ margin: 0; }}'
         "</style>"
     )
 
