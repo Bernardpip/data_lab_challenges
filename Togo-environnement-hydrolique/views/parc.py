@@ -19,7 +19,14 @@ from utils.data import datasets, apply_filters
 from utils import analytics, barres
 
 
-def render_tde():
+def render_tde(avec_carte=True):
+    """`avec_carte=False` laisse la carte à l'appelant.
+
+    L'affiche la pose dans sa colonne droite ; la console, qui n'a
+    qu'une colonne, garde le rendu complet. Sans ce réglage, la même
+    carte apparaissait deux fois sur l'écran de l'affiche.
+    """
+
     tr, tc = t("parc"), t("commun")
     data = datasets()
     filtre = apply_filters(data["tde"], barres.parc_tde(data["tde"]))
@@ -44,9 +51,13 @@ def render_tde():
          "delta": tr("tde_tuile_champs_detail"), "good": False, "icon": "table-2"},
     ])
 
-    gauche, droite = st.columns([2, 1], gap="small")
+    # Sans la carte, le reste occupe toute la largeur : garder la grille à
+    # deux colonnes laisserait un tiers de vide et serrerait les graphes.
+    colonnes = (st.columns([2, 1], gap="small") if avec_carte
+                else [None, st.container()])
 
-    with gauche:
+    if avec_carte:
+      with colonnes[0]:
         with ui.card(tr("tde_carte_titre"), tr("tde_carte_sous_titre"), "map-pin"):
             maps.points(
                 filtre, cle="carte_tde", height=560,
@@ -62,7 +73,7 @@ def render_tde():
                 "cantons": ui.fr_number(int(filtre["canton"].nunique())),
             }))
 
-    with droite:
+    with colonnes[1]:
         with ui.card(tr("tde_carte_nature_titre"),
                      tr("tde_carte_nature_sous_titre"), "building-2"):
             nature = analytics.tde_par_nature(filtre)
@@ -84,7 +95,14 @@ def render_tde():
                 "region": tr("col_region"), "ouvrages": tr("col_ouvrages")}))
 
 
-def render_coso():
+def render_coso(avec_carte=True):
+    """`avec_carte=False` laisse la carte à l'appelant.
+
+    L'affiche la pose dans sa colonne droite ; la console, qui n'a
+    qu'une colonne, garde le rendu complet. Sans ce réglage, la même
+    carte apparaissait deux fois sur l'écran de l'affiche.
+    """
+
     tr, tc = t("parc"), t("commun")
     data = datasets()
     filtre = apply_filters(data["coso"], barres.parc_coso(data["coso"]))
@@ -118,9 +136,11 @@ def render_coso():
          "good": None, "icon": "trending-up"},
     ])
 
-    gauche, droite = st.columns([2, 1], gap="small")
+    colonnes = (st.columns([2, 1], gap="small") if avec_carte
+                else [None, st.container()])
 
-    with gauche:
+    if avec_carte:
+      with colonnes[0]:
         with ui.card(tr("coso_carte_titre"), tr("coso_carte_sous_titre"), "map-pin"):
             maps.points(
                 filtre[filtre["situe"]], cle="carte_coso", height=560,
@@ -139,7 +159,7 @@ def render_coso():
                 "absents": ui.fr_number(len(filtre) - situes),
             }))
 
-    with droite:
+    with colonnes[1]:
         with ui.card(tr("coso_carte_type_titre"), tr("coso_carte_type_sous_titre"),
                      "building-2"):
             types = analytics.coso_par_type(filtre)
@@ -210,3 +230,77 @@ def render_technique():
             charts.table_twin(lisible.rename(columns={
                 "champ": tr("col_champ"), "renseignes": tr("col_renseignes"),
                 "total": tr("col_total"), "part": tr("col_part")}))
+
+
+def _restreindre(cadre, colonnes):
+    """Applique les filtres DÉJÀ posés par la colonne gauche.
+
+    Les clés de session sont partagées, et la gauche se peint d'abord : la
+    carte de droite les relit plutôt que de recevoir un cadre par argument.
+    Rien ne circule ainsi entre les deux colonnes, et aucune ne peut montrer
+    un périmètre que l'autre ignore.
+    """
+
+    for colonne, cle in colonnes:
+        retenues = st.session_state.get(cle) or []
+
+        if retenues and colonne in cadre.columns:
+            cadre = cadre[cadre[colonne].isin(retenues)]
+
+    return cadre
+
+
+def carte_tde_seule(hauteur=None):
+    """Les forages TdE, pour la colonne droite de l'affiche."""
+
+    tr, tc = t("parc"), t("commun")
+    filtre = _restreindre(datasets()["tde"], (
+        ("region", "filtre_region"), ("prefecture", "filtre_prefecture"),
+        ("canton", "filtre_canton"), ("nature", "filtre_nature")))
+
+    def dessin(h):
+        maps.points(
+            filtre, cle="carte_tde_droite", height=h,
+            message_vide=tc("aucun_point_localise"),
+            infobulle=lambda row: (
+                f'<b>{row["ouvrage"]}</b><br>'
+                f'{row["canton"]} · {row["prefecture"]}'),
+        )
+
+    def pied(_):
+        ui.note(tr("tde_note_carte", {
+            "total": ui.fr_number(len(filtre)),
+            "cantons": ui.fr_number(int(filtre["canton"].nunique())),
+        }))
+
+    maps.carte(tr("tde_carte_titre"), cle="tde_droite", dessin=dessin,
+               legende=pied, sous_titre=tr("tde_carte_sous_titre"),
+               **({"hauteur": hauteur} if hauteur else {}))
+
+
+def carte_coso_seule(hauteur=None):
+    """Les microprojets COSO localisés, pour la colonne droite."""
+
+    tr, tc = t("parc"), t("commun")
+    filtre = _restreindre(datasets()["coso"], (
+        ("region", "filtre_region"), ("prefecture", "filtre_prefecture"),
+        ("type_ouvrage", "filtre_type"), ("travaux", "filtre_travaux")))
+    situes = filtre[filtre["situe"]]
+
+    def dessin(h):
+        maps.points(
+            situes, cle="carte_coso_droite", height=h,
+            message_vide=tc("aucun_point_localise"),
+            infobulle=lambda row: (
+                f'<b>{row["localite"]}</b><br>{row["type_ouvrage"]}'),
+        )
+
+    def pied(_):
+        ui.note(tr("coso_note_carte", {
+            "situes": ui.fr_number(len(situes)),
+            "total": ui.fr_number(len(filtre)),
+        }))
+
+    maps.carte(tr("coso_carte_titre"), cle="coso_droite", dessin=dessin,
+               legende=pied, sous_titre=tr("coso_carte_sous_titre"),
+               **({"hauteur": hauteur} if hauteur else {}))

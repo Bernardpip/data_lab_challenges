@@ -72,8 +72,8 @@
     "en": "Summary"
   },
   "section_inondation": {
-    "fr": "Risque d'inondation",
-    "en": "Flood risk"
+    "fr": "Risque",
+    "en": "Risk"
   },
   "section_croisements": {
     "fr": "Croisements",
@@ -98,5 +98,81 @@
   "vue_allocation": {
     "fr": "Allocation",
     "en": "Allocation"
+  },
+  "section_parc": {
+    "fr": "Parc",
+    "en": "Stock"
+  },
+  "section_demographie": {
+    "fr": "Population",
+    "en": "Population"
+  },
+  "section_recommandations": {
+    "fr": "Actions",
+    "en": "Actions"
+  },
+  "section_donnees": {
+    "fr": "Données",
+    "en": "Data"
+  },
+  "section_annexes": {
+    "fr": "Annexes",
+    "en": "Appendix"
+  },
+  "vue_tde": {
+    "fr": "Forages TdE",
+    "en": "TdE boreholes"
+  },
+  "vue_coso": {
+    "fr": "Microprojets COSO",
+    "en": "COSO micro-projects"
+  },
+  "vue_technique": {
+    "fr": "Technique",
+    "en": "Technical"
+  },
+  "vue_pression": {
+    "fr": "Pression",
+    "en": "Pressure"
+  },
+  "vue_ventes": {
+    "fr": "Ventes d'eau",
+    "en": "Water sales"
+  },
+  "vue_priorites_reco": {
+    "fr": "Priorités",
+    "en": "Priorities"
+  },
+  "vue_leviers": {
+    "fr": "Leviers",
+    "en": "Levers"
+  },
+  "vue_fichiers": {
+    "fr": "Fichiers",
+    "en": "Files"
+  },
+  "vue_recettes": {
+    "fr": "Recettes",
+    "en": "Recipes"
+  },
+  "vue_perimetre": {
+    "fr": "Périmètre",
+    "en": "Scope"
+  },
+  "vue_preuves": {
+    "fr": "Preuves",
+    "en": "Evidence"
+  },
+  "vue_sources": {
+    "fr": "Sources",
+    "en": "Sources"
+  },
+  "vue_methodologie": {
+    "fr": "Méthodologie",
+    "en": "Method"
+  },
+  "vue_affichage": {
+    "fr": "Affichage",
+    "en": "Display"
   }
 }

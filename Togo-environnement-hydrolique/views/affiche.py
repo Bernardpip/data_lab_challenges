@@ -20,7 +20,12 @@ from socle.shell import render_affiche
 from socle.shell.affiche import hauteur_colonne_droite
 from socle.i18n.traduction import t
 
+from views import annexes as annexes_vue
 from views import croisements as croisements_vue
+from views import demographie as demographie_vue
+from views import donnees as donnees_vue
+from views import parc as parc_vue
+from views import recommandations as recommandations_vue
 from views import risque as risque_vue
 from utils.data import datasets, apply_filters
 from utils import analytics, perimetre, barres
@@ -756,8 +761,6 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
                  "component": propre(_gauche_parc, _droite_parc)},
                 {"id": "priorites", "name": tr("vue_priorites"),
                  "component": propre(_gauche_priorites, _droite_priorites)},
-                {"id": "annexes", "name": tr("lien_annexes"),
-                 "url": {"s": "annexes"}},
             ]},
             {"id": "inondation", "name": tr("section_inondation"),
              "reference": carte_de_section, "tab_items": [
@@ -772,8 +775,32 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
                  }},
                 {"id": "fri_facteurs", "name": tr("vue_fri_facteurs"),
                  "component": portee(risque_vue.render_facteurs)},
-                {"id": "annexes", "name": tr("lien_annexes"),
-                 "url": {"s": "annexes"}},
+            ]},
+            {"id": "parc", "name": tr("section_parc"),
+             "reference": carte_de_section, "tab_items": [
+                {"id": "tde", "name": tr("vue_tde"), "is_default": True,
+                 "component": {
+                     "gauche": lambda: parc_vue.render_tde(avec_carte=False),
+                     "droite": lambda: parc_vue.carte_tde_seule(hauteur_carte),
+                 }},
+                {"id": "coso", "name": tr("vue_coso"), "component": {
+                     "gauche": lambda: parc_vue.render_coso(avec_carte=False),
+                     "droite": lambda: parc_vue.carte_coso_seule(hauteur_carte),
+                 }},
+                {"id": "technique", "name": tr("vue_technique"),
+                 "component": portee(parc_vue.render_technique)},
+            ]},
+            {"id": "demographie", "name": tr("section_demographie"),
+             "reference": carte_de_section, "tab_items": [
+                {"id": "pression", "name": tr("vue_pression"),
+                 "is_default": True, "component": {
+                     "gauche": lambda: demographie_vue.render_pression(
+                         avec_carte=False),
+                     "droite": lambda: demographie_vue.carte_population_seule(
+                         hauteur_carte),
+                 }},
+                {"id": "ventes", "name": tr("vue_ventes"),
+                 "component": portee(demographie_vue.render_ventes)},
             ]},
             {"id": "croisements", "name": tr("section_croisements"),
              "reference": carte_de_section, "tab_items": [
@@ -784,8 +811,35 @@ def configuration(tr, trs, brut, corpus, hauteur_carte):
                  "component": portee(croisements_vue.render_maintenance)},
                 {"id": "allocation", "name": tr("vue_allocation"),
                  "component": portee(croisements_vue.render_allocation)},
-                {"id": "annexes", "name": tr("lien_annexes"),
-                 "url": {"s": "annexes"}},
+            ]},
+            {"id": "recommandations", "name": tr("section_recommandations"),
+             "reference": carte_de_section, "tab_items": [
+                {"id": "priorites_reco", "name": tr("vue_priorites_reco"),
+                 "is_default": True,
+                 "component": portee(recommandations_vue.render_priorites)},
+                {"id": "leviers", "name": tr("vue_leviers"),
+                 "component": portee(recommandations_vue.render_leviers)},
+            ]},
+            {"id": "donnees", "name": tr("section_donnees"),
+             "reference": carte_de_section, "tab_items": [
+                {"id": "fichiers", "name": tr("vue_fichiers"),
+                 "is_default": True,
+                 "component": portee(donnees_vue.render_fichiers)},
+                {"id": "recettes", "name": tr("vue_recettes"),
+                 "component": portee(donnees_vue.render_recettes)},
+                {"id": "perimetre", "name": tr("vue_perimetre"),
+                 "component": portee(donnees_vue.render_perimetre)},
+            ]},
+            {"id": "annexes", "name": tr("section_annexes"),
+             "reference": carte_de_section, "tab_items": [
+                {"id": "preuves", "name": tr("vue_preuves"), "is_default": True,
+                 "component": portee(annexes_vue.render_preuves)},
+                {"id": "sources", "name": tr("vue_sources"),
+                 "component": portee(annexes_vue.render_sources)},
+                {"id": "methodologie", "name": tr("vue_methodologie"),
+                 "component": portee(annexes_vue.render_methodologie)},
+                {"id": "affichage", "name": tr("vue_affichage"),
+                 "component": portee(annexes_vue.render_affichage)},
             ]},
         ],
     }

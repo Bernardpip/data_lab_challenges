@@ -18,7 +18,14 @@ from utils.data import datasets, apply_filters
 from utils import analytics, barres, recettes
 
 
-def render_pression():
+def render_pression(avec_carte=True):
+    """`avec_carte=False` laisse la carte à l'appelant.
+
+    L'affiche la pose dans sa colonne droite ; la console garde le rendu
+    complet. Ici la carte n'est pas dans une colonne : la rendre optionnelle
+    suffit, rien d'autre ne se réorganise.
+    """
+
     tr, tc = t("demographie"), t("commun")
     data = datasets()
     cantons = data["cantons"]
@@ -46,19 +53,20 @@ def render_pression():
          "good": False, "icon": "flag"},
     ])
 
-    with ui.card(tr("carte_population_titre"), tr("carte_population_sous_titre"),
-                 "map-pin"):
-        maps.choroplethe(
-            filtre, valeur="population", cle="carte_population",
-            champs=["canton", "prefecture", "population", "risque_pts"],
-            libelles=[tr("col_canton"), tr("col_prefecture"),
-                      tr("col_population"), tr("col_risque")],
-            height=560,
-        )
-        ui.note(tr("note_population", {
-            "premier": str(filtre.loc[filtre["population"].idxmax(), "canton"]),
-            "habitants": ui.compact(float(filtre["population"].max())),
-        }))
+    if avec_carte:
+      with ui.card(tr("carte_population_titre"), tr("carte_population_sous_titre"),
+                   "map-pin"):
+          maps.choroplethe(
+              filtre, valeur="population", cle="carte_population",
+              champs=["canton", "prefecture", "population", "risque_pts"],
+              libelles=[tr("col_canton"), tr("col_prefecture"),
+                        tr("col_population"), tr("col_risque")],
+              height=560,
+          )
+          ui.note(tr("note_population", {
+              "premier": str(filtre.loc[filtre["population"].idxmax(), "canton"]),
+              "habitants": ui.compact(float(filtre["population"].max())),
+          }))
 
     recette = recettes.croisement_equipement_population(
         filtre, data["tde"], data["coso"])
@@ -69,6 +77,7 @@ def render_pression():
 
     # Deux classements reliés : la forme dit QUI change de place entre
     # population et équipement, ce que deux graphes côte à côte ne disent pas.
+
     with ui.card(tr("carte_pentes_titre"), tr("carte_pentes_sous_titre"), "search"):
         complet = recette["table"]
         rang_pop = complet["population"].rank(ascending=False, method="first")
@@ -164,3 +173,30 @@ def render_ventes():
         ui.note(tr("note_national"))
         charts.table_twin(derniere.rename(columns={
             "categorie": tr("col_categorie"), "volume_m3": tr("col_volume")}))
+
+
+def carte_population_seule(hauteur=None):
+    """La population par canton, pour la colonne droite de l'affiche."""
+
+    tr = t("demographie")
+    cantons = datasets()["cantons"]
+
+    for colonne, cle in (("region", "filtre_region"),
+                         ("prefecture", "filtre_prefecture")):
+        retenues = st.session_state.get(cle) or []
+
+        if retenues:
+            cantons = cantons[cantons[colonne].isin(retenues)]
+
+    def dessin(h):
+        maps.choroplethe(
+            cantons, valeur="population", cle="carte_population_droite",
+            champs=["canton", "prefecture", "population", "risque_pts"],
+            libelles=[tr("col_canton"), tr("col_prefecture"),
+                      tr("col_population"), tr("col_risque")],
+            height=h,
+        )
+
+    maps.carte(tr("carte_population_titre"), cle="population_droite",
+               dessin=dessin, sous_titre=tr("carte_population_sous_titre"),
+               **({"hauteur": hauteur} if hauteur else {}))
