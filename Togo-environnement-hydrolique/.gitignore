@@ -11,6 +11,15 @@ __pycache__/
 # Livrable reconstructible — le zip se régénère depuis le dépôt
 *.zip
 
+# Sauf sous data/ : là, un zip est une RESSOURCE, téléchargée du portail et
+# irremplaçable. C'est le fichier de la susceptibilité brute — 76 Mo —, et il
+# est sorti du dépôt deux fois sans que rien ne le signale : au premier commit,
+# puis le jour du rangement en `data/map/`, quand l'exception écrite au dépôt
+# parent ne visait plus le bon niveau. Elle est ici aussi, désormais, parce
+# que c'est ce fichier-ci que git consulte en dernier — et donc lui qui
+# tranche.
+!data/**/*.zip
+
 # Systèmes de fichiers
 .DS_Store
 Thumbs.db

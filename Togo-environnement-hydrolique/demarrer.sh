@@ -20,8 +20,8 @@ if [ -t 1 ]; then
     gras="\033[1m"; normal="\033[0m"; rouge="\033[31m"; vert="\033[32m"
 fi
 
-printf "\n${gras}  Adéquation formation-emploi au Togo${normal}\n"
-printf "  Data Challenge Éducation · Défi 2\n\n"
+printf "\n${gras}  Accès à l'eau potable au Togo${normal}\n"
+printf "  Data Challenge Environnement · Eau et hydraulique\n\n"
 
 # ─── 1. Trouver Python ───────────────────────────────────────────────────────
 # Un environnement virtuel déjà présent dans le dossier prime : c'est là que

@@ -17,8 +17,14 @@ __pycache__/
 # ci-dessus a écarté fsi-brut-geotiff.zip (76 Mo) au premier commit — un
 # corpus amputé sans que rien ne le signale, exactement ce qu'un `.gitignore`
 # large fait de pire.
-!**/datasets/*.zip
-!**/data/*.zip
+#
+# L'exception descend TOUTE l'arborescence (`**`), et pas seulement le premier
+# niveau : le même fichier est ressorti du dépôt en silence le jour où le
+# corpus a été rangé en `data/map/`, parce que la règle ne visait que
+# `data/*.zip`. Une exception qui dépend de l'endroit où l'on range se
+# retourne contre soi au premier rangement.
+!**/datasets/**/*.zip
+!**/data/**/*.zip
 
 # Systèmes de fichiers
 .DS_Store

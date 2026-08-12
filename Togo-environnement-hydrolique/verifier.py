@@ -41,10 +41,44 @@ ESSENTIELLES = {
     "python-pptx": "pptx",
 }
 
+# Le corpus, ressource par ressource, sous son nom de téléchargement. Ne
+# renommez rien : le nom d'origine est la trace de la ressource sur le portail,
+# et c'est lui qui la rend retrouvable — c'est aussi par lui que l'application
+# la cherche, où qu'elle soit rangée sous `data/`.
+#
+# Deux listes, parce que deux conséquences distinctes. Ce qui manque dans la
+# première empêche le tableau de bord de s'ouvrir ; ce qui manque dans la
+# seconde ne se voit que dans l'onglet des sources, où le fichier est cité
+# sans être affiché. Confondre les deux ferait échouer un diagnostic pour
+# l'absence d'un raster de 82 Mo que rien ne lit.
+#
+# Miroir de `utils/loader.py` : si vous ajoutez une ressource là-bas,
+# ajoutez-la ici. Ce script ne peut pas l'importer — il tourne AVANT
+# l'installation des bibliothèques, donc sans pandas ni geopandas.
 FICHIERS_DONNEES = [
-    # Un nom de fichier par ressource du corpus, tel que téléchargé.
-    # Ne pas renommer les fichiers : le nom d'origine est la trace de la
-    # ressource sur le portail, et c'est lui qui rend le corpus retrouvable.
+    # (nom, texte ?) — un CSV se lit et se compte, un GeoPackage ne se lit
+    # qu'avec une bibliothèque, et le compter par lignes le déclarerait
+    # « illisible » à tort.
+    ("file-chateaux-deau-forages-tde-19-12-2024-18-55-00.csv", True),
+    ("chateaux-deau-forages-tde.csv", True),
+    ("subprojects-sector-eau-hydraulique.csv", True),
+    ("observationdata-mfcialc.csv", True),
+    ("observationdata-sapxctg.csv", True),
+    ("projet-coso-eau.geojson", True),
+    ("fri-cantons.gpkg", False),
+]
+
+FICHIERS_CITES = [
+    ("fri-grid-1km.gpkg", False),
+    ("fri-grid-500m.gpkg", False),
+    ("fsi_brut.tif", False),
+    ("fsi-brut-geotiff.zip", False),
+    ("fri-1km.pdf", False),
+    ("fri-500m.pdf", False),
+    ("fri-cantons.pdf", False),
+    ("fsi-2.pdf", False),
+    ("fri-map.png", False),
+    ("fsi-map.png", False),
 ]
 
 
@@ -210,33 +244,26 @@ def verifier_donnees():
         print("       L'archive a probablement été décompressée partiellement.")
         return False
 
-    absents, illisibles, lignes_totales = [], [], 0
+    absents, illisibles, lignes_totales, octets = [], [], 0, 0
 
-    for nom in FICHIERS_DONNEES:
-        chemin = dossier / nom
+    for nom, texte in FICHIERS_DONNEES:
+        chemin = _trouver(dossier, nom)
 
-        if not chemin.exists():
+        if chemin is None:
             absents.append(nom)
             continue
 
-        try:
-            # Lecture réelle, pas seulement un test d'existence : un fichier
-            # tronqué ou mal encodé passerait sinon pour valide.
-            with chemin.open(encoding="utf-8") as flux:
-                nombre = sum(1 for _ in flux)
+        octets += chemin.stat().st_size
+        souci = _controler(chemin, texte)
 
-            if nombre < 2:
-                illisibles.append((nom, "vide ou sans données"))
-            else:
-                lignes_totales += nombre - 1
-        except UnicodeDecodeError:
-            illisibles.append((nom, "encodage non UTF-8"))
-        except OSError as erreur:
-            illisibles.append((nom, str(erreur)))
+        if isinstance(souci, str):
+            illisibles.append((nom, souci))
+        else:
+            lignes_totales += souci
 
     trouves = len(FICHIERS_DONNEES) - len(absents)
     print(ok(f"{trouves}/{len(FICHIERS_DONNEES)} fichiers présents, "
-             f"{lignes_totales} lignes de données au total")
+             f"{lignes_totales} lignes de données et {_poids(octets)}")
           if not absents else echec(f"{len(absents)} fichier(s) absent(s)"))
 
     for nom in absents:
@@ -244,6 +271,23 @@ def verifier_donnees():
 
     for nom, raison in illisibles:
         print(alerte(f"{nom[:60]} — {raison}"))
+
+    # Les ressources CITÉES ne bloquent rien : le tableau de bord les nomme
+    # dans ses sources — les grilles fines, le raster, les planches — sans
+    # jamais les ouvrir. Leur absence se dit, elle ne fait pas échouer.
+    cites_absents = [nom for nom, _ in FICHIERS_CITES
+                     if _trouver(dossier, nom) is None]
+
+    if cites_absents:
+        print(alerte(f"{len(cites_absents)}/{len(FICHIERS_CITES)} ressources "
+                     f"citées absentes — le tableau de bord s'ouvre quand même,"
+                     f" mais l'onglet Sources renverra vers des fichiers que "
+                     f"cette copie n'a pas"))
+        for nom in cites_absents:
+            print(f"       manque : {nom[:70]}")
+    else:
+        print(ok(f"{len(FICHIERS_CITES)}/{len(FICHIERS_CITES)} ressources "
+                 f"citées également présentes — le corpus est complet"))
 
     if absents:
         print()
@@ -253,6 +297,63 @@ def verifier_donnees():
         return False
 
     return not illisibles
+
+
+def _trouver(dossier, nom):
+    """Le fichier `nom`, où qu'il soit rangé SOUS `data/`.
+
+    Comme `utils.loader.chemin`, et pour la même raison : le corpus a d'abord
+    vécu à plat, puis en `map/`, `planches/`, `projets/`, `series/`. Un
+    diagnostic qui figerait le sous-dossier annoncerait un corpus incomplet au
+    prochain rangement, alors que rien n'aurait disparu.
+    """
+
+    direct = dossier / nom
+
+    if direct.exists():
+        return direct
+
+    for trouve in dossier.rglob(nom):
+        return trouve
+
+    return None
+
+
+def _controler(chemin, texte):
+    """Le nombre de lignes de données, ou la raison pour laquelle il manque.
+
+    Un fichier n'est pas déclaré valide sur sa seule présence : décompression
+    interrompue, transfert par un outil qui « répare » l'encodage, disque
+    plein — tout cela laisse un fichier bien nommé et inutilisable.
+
+    Les binaires — GeoPackage, raster, planches — ne se comptent pas en
+    lignes. On vérifie qu'ils ne sont pas vides et l'on s'arrête là : lire
+    quatre-vingts mégaoctets pour un diagnostic censé durer une seconde
+    coûterait plus cher que ce qu'il rapporte.
+    """
+
+    try:
+        if not texte:
+            return 0 if chemin.stat().st_size else "fichier vide"
+
+        with chemin.open(encoding="utf-8") as flux:
+            nombre = sum(1 for _ in flux)
+
+        return nombre - 1 if nombre >= 2 else "vide ou sans données"
+    except UnicodeDecodeError:
+        return "encodage non UTF-8"
+    except OSError as erreur:
+        return str(erreur)
+
+
+def _poids(octets):
+    """Un poids lisible — le corpus se compte en centaines de mégaoctets."""
+
+    for unite, seuil in (("Go", 1024 ** 3), ("Mo", 1024 ** 2), ("ko", 1024)):
+        if octets >= seuil:
+            return f"{octets / seuil:.1f} {unite}".replace(".", ",")
+
+    return f"{octets} octets"
 
 
 # ─── Recommandations d'affichage ─────────────────────────────────────────────

@@ -51,8 +51,13 @@ class Langue:
 
         return texte
 
+    # Le milliard change d'abréviation d'une langue à l'autre : « Md » est
+    # français, et un lecteur anglophone lit « 27.6 Md » comme une coquille.
+    # Le million et le millier, eux, s'écrivent pareil des deux côtés.
+    MILLIARD = {"fr": "Md", "en": "bn"}
+
     def compact(self, valeur):
-        """Grand nombre abrégé — « 2,9 M », « 228,6 k ».
+        """Grand nombre abrégé — « 2,9 M », « 228,6 k », « 27,6 Md ».
 
         Un rapport de dix pages n'a pas la place d'écrire 2 882 836 dans une
         tuile de chiffre-clé, et la précision n'y sert à rien : l'ordre de
@@ -60,7 +65,9 @@ class Langue:
         tableau de bord, pour que les deux disent le même nombre.
         """
 
-        for seuil, suffixe in ((1e9, "Md"), (1e6, "M"), (1e3, "k")):
+        milliard = self.MILLIARD.get(self.code, self.MILLIARD["en"])
+
+        for seuil, suffixe in ((1e9, milliard), (1e6, "M"), (1e3, "k")):
             if abs(valeur) >= seuil:
                 return f"{self.nb(valeur / seuil, 1)} {suffixe}"
 

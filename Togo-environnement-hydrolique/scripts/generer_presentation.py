@@ -64,6 +64,7 @@ def page_1_couverture(prs, c, lg):
     charte.texte(cadre, lg.t("p1_accroche", {
         "cantons": lg.nb(c["cantons"]),
         "part": lg.nb(c["part_pop_exposee"], 0),
+        "distance": lg.nb(c["distance_mediane"], 0),
     }), taille=13, couleur=charte.ENCRE, espace_apres=26)
     charte.texte(cadre, lg.t("p1_auteur"), taille=12, couleur=charte.MUTED)
 
@@ -96,60 +97,74 @@ def page_2_demarche(prs, c, lg):
     charte.pied(slide, 2, lg)
 
 
-def page_3_concentration(prs, c, lg):
-    """Le constat structurant : 4 % des cantons, 35 % du pays."""
+def page_3_distance(prs, c, lg):
+    """Objectif 1 — cartographier la répartition : à quelle distance est l'eau.
+
+    La première question du sujet n'est pas « combien d'ouvrages ? » mais « où
+    sont-ils ? ». La réponse tient à une distance, et elle est mesurée sur la
+    projection métrique du pays, ouvrage par ouvrage.
+    """
 
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     charte.titre_page(slide, 3, lg.t("p3_titre"), lg.t("p3_sous_titre"))
 
     _barres(slide, prs, lg, Inches(0.6), Inches(1.8), Inches(7.3), Inches(4.6),
-            categories=[lg.t(f"classe_{cle}") for cle in c["classes_cles"]],
-            valeurs=c["classes_population"], titre=lg.t("p3_graphe"))
+            categories=[lg.t("p3_r1"), lg.t("p3_r2"), lg.t("p3_r3")],
+            valeurs=c["rayons_part"], titre=lg.t("p3_graphe"))
 
     charte.bloc_constat(
         slide, Inches(8.3), Inches(2.0), Inches(4.3), Inches(1.4),
-        valeur=lg.nb(c["cantons_exposes"]), libelle=lg.t("p3_t1"),
-        detail=lg.t("p3_t1_d", {"part": lg.nb(c["part_cantons_exposes"], 0)}),
-        couleur=charte.DANGER,
+        valeur=f'{lg.nb(c["distance_mediane"], 0)} km', libelle=lg.t("p3_t1"),
+        detail=lg.t("p3_t1_d"), couleur=charte.DANGER,
     )
     charte.bloc_constat(
         slide, Inches(8.3), Inches(3.5), Inches(4.3), Inches(1.4),
-        valeur=lg.compact(c["population_exposee"]), libelle=lg.t("p3_t2"),
-        detail=lg.t("p3_t2_d", {"part": lg.nb(c["part_pop_exposee"], 0)}),
+        valeur=lg.nb(c["cantons_loin"]), libelle=lg.t("p3_t2"),
+        detail=lg.t("p3_t2_d", {"part": lg.nb(c["part_pop_loin"], 0)}),
         couleur=charte.DANGER,
     )
     charte.bloc_analyse(
         slide, Inches(8.3), Inches(5.0), Inches(4.3), Inches(1.5),
         nom=lg.t("p3_lecture_nom"), question=lg.t("p3_lecture_q"),
-        resultat=lg.t("p3_lecture_r"), lecture=lg.t("p3_lecture_l"),
+        resultat=lg.t("p3_lecture_r", {"r": lg.nb(c["clark_evans"], 2)}),
+        lecture=lg.t("p3_lecture_l"),
     )
 
     charte.pied(slide, 3, lg)
 
 
-def page_4_seuils(prs, c, lg):
-    """Ce que le corpus ne dit pas : les seuils officiels, et la méthode."""
+def page_4_etat(prs, c, lg):
+    """Objectif 2 — le taux de fonctionnalité, et pourquoi il ne se calcule pas.
+
+    C'est la page la plus importante du rapport, et la seule qui répond « non ».
+    Le sujet demande des taux de panne par région ; aucun champ du corpus ne
+    porte l'état d'un ouvrage. Deux substituts existent, ils sont nommés comme
+    tels, et ce qu'ils ne remplacent pas est écrit.
+    """
 
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     charte.titre_page(slide, 4, lg.t("p4_titre"), lg.t("p4_sous_titre"))
 
-    for index, cle in enumerate(("p4_a", "p4_b")):
-        charte.bloc_analyse(
-            slide, Inches(0.6), Inches(1.9 + index * 2.3), Inches(6.0),
-            Inches(2.1), nom=lg.t(f"{cle}_nom"), question=lg.t(f"{cle}_q"),
-            resultat=lg.t(f"{cle}_r"), lecture=lg.t(f"{cle}_l"),
-        )
+    _barres(slide, prs, lg, Inches(0.6), Inches(1.8), Inches(7.3), Inches(4.6),
+            categories=c["maintenance_regions"], valeurs=c["maintenance_parts"],
+            titre=lg.t("p4_graphe"))
 
     charte.bloc_constat(
-        slide, Inches(7.1), Inches(2.0), Inches(5.5), Inches(1.5),
-        valeur=f'{c["fri_reproductible"]} / {c["cantons"]}',
-        libelle=lg.t("p4_t1"), detail=lg.t("p4_t1_d"),
+        slide, Inches(8.3), Inches(2.0), Inches(4.3), Inches(1.4),
+        valeur=lg.nb(c["absents"]), libelle=lg.t("p4_t1"),
+        detail=lg.t("p4_t1_d", {"decrits": c["decrits"]}),
+        couleur=charte.DANGER,
     )
     charte.bloc_constat(
-        slide, Inches(7.1), Inches(3.7), Inches(5.5), Inches(1.5),
-        valeur=lg.nb(c["absents"]), libelle=lg.t("p4_t2"),
-        detail=lg.t("p4_t2_d", {"decrits": c["decrits"]}),
+        slide, Inches(8.3), Inches(3.5), Inches(4.3), Inches(1.4),
+        valeur=lg.nb(c["en_attente"]), libelle=lg.t("p4_t2"),
+        detail=lg.t("p4_t2_d", {"delai": lg.nb(c["delai_remise"], 0)}),
         couleur=charte.DANGER,
+    )
+    charte.bloc_analyse(
+        slide, Inches(8.3), Inches(5.0), Inches(4.3), Inches(1.5),
+        nom=lg.t("p4_lecture_nom"), question=lg.t("p4_lecture_q"),
+        resultat=lg.t("p4_lecture_r"), lecture=lg.t("p4_lecture_l"),
     )
 
     charte.pied(slide, 4, lg)
@@ -181,37 +196,61 @@ def page_5_couverture(prs, c, lg):
     charte.pied(slide, 5, lg)
 
 
-def page_6_croisement(prs, c, lg):
-    """Le croisement attendu : le risque est-il couvert ?"""
+def page_6_risque(prs, c, lg):
+    """Objectif 4 — croiser le risque d'inondation et les ouvrages.
+
+    Deux résultats sur la même page, parce qu'ils se répondent : le risque est
+    CONCENTRÉ — dix-sept cantons, un tiers du pays —, et il n'explique pas qui
+    reçoit un ouvrage. Le troisième bloc désamorce l'objection qui vient
+    aussitôt : l'indice officiel ne classerait-il pas simplement les cantons
+    peuplés ? Non, et c'est mesuré.
+    """
 
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     charte.titre_page(slide, 6, lg.t("p6_titre"), lg.t("p6_sous_titre"))
 
     _barres(slide, prs, lg, Inches(0.6), Inches(1.8), Inches(7.3), Inches(4.6),
             categories=[lg.t(f"classe_{cle}") for cle in c["classes_cles"]],
-            valeurs=c["classes_part_equipee"], titre=lg.t("p6_graphe"))
+            valeurs=c["classes_population"], titre=lg.t("p6_graphe"))
 
+    charte.bloc_constat(
+        slide, Inches(8.3), Inches(1.9), Inches(4.3), Inches(1.3),
+        valeur=lg.nb(c["cantons_exposes"]), libelle=lg.t("p6_t1"),
+        detail=lg.t("p6_t1_d", {
+            "part": lg.nb(c["part_cantons_exposes"], 0),
+            "population": lg.compact(c["population_exposee"])}),
+        couleur=charte.DANGER,
+    )
     charte.bloc_analyse(
-        slide, Inches(8.3), Inches(2.0), Inches(4.3), Inches(2.2),
+        slide, Inches(8.3), Inches(3.35), Inches(4.3), Inches(1.5),
         nom=lg.t("p6_a_nom"), question=lg.t("p6_a_q"),
         resultat=lg.t("p6_a_r", {
             "sans": lg.nb(100 * c["r2_besoin"], 0),
             "avec": lg.nb(100 * c["r2_region"], 0)}),
-        lecture=lg.t("p6_a_l"),
-    )
-    charte.bloc_constat(
-        slide, Inches(8.3), Inches(4.5), Inches(4.3), Inches(1.6),
-        valeur=lg.nb(c["prioritaires"]), libelle=lg.t("p6_t1"),
-        detail=lg.t("p6_t1_d", {
+        lecture=lg.t("p6_a_l", {
+            "cantons": lg.nb(c["prioritaires"]),
             "population": lg.compact(c["population_prioritaire"])}),
-        couleur=charte.DANGER,
+    )
+    charte.bloc_analyse(
+        slide, Inches(8.3), Inches(5.0), Inches(4.3), Inches(1.5),
+        nom=lg.t("p6_b_nom"), question=lg.t("p6_b_q"),
+        resultat=lg.t("p6_b_r", {"rho": lg.nb(c["rho_ampute"], 2)}),
+        lecture=lg.t("p6_b_l", {
+            "places": lg.nb(c["deplacement_median"], 0),
+            "cantons": lg.nb(c["fri_reproductible"])}),
     )
 
     charte.pied(slide, 6, lg)
 
 
 def page_7_cout(prs, c, lg):
-    """Le résultat qui commande les autres : le coût est plat."""
+    """Le résultat qui commande les autres : le coût est plat, la dotation non.
+
+    Deux pages n'en font qu'une, et elles y gagnent : le coût par bénéficiaire
+    varie de un à quinze SANS que le coût d'un ouvrage bouge, et l'argent ne
+    suit pas les habitants. Le premier fait est une variable de décision ; le
+    second dit qu'on ne s'en sert pas.
+    """
 
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     charte.titre_page(slide, 7, lg.t("p7_titre"), lg.t("p7_sous_titre"))
@@ -221,70 +260,110 @@ def page_7_cout(prs, c, lg):
             valeurs=c["cout_par_quintile"], titre=lg.t("p7_graphe"))
 
     charte.bloc_constat(
-        slide, Inches(8.3), Inches(2.0), Inches(4.3), Inches(1.4),
+        slide, Inches(8.3), Inches(1.9), Inches(4.3), Inches(1.3),
         valeur=lg.compact(c["cout_median"]), libelle=lg.t("p7_t1"),
         detail=lg.t("p7_t1_d"),
     )
+    charte.bloc_constat(
+        slide, Inches(8.3), Inches(3.35), Inches(4.3), Inches(1.3),
+        valeur=lg.nb(c["elasticite"], 2), libelle=lg.t("p7_t2"),
+        detail=lg.t("p7_t2_d", {"n": c["cantons_dotes"],
+                                "gini": lg.nb(c["gini"], 2)}),
+        couleur=charte.DANGER,
+    )
     charte.bloc_analyse(
-        slide, Inches(8.3), Inches(3.6), Inches(4.3), Inches(2.8),
+        slide, Inches(8.3), Inches(4.8), Inches(4.3), Inches(1.7),
         nom=lg.t("p7_lecture_nom"), question=lg.t("p7_lecture_q"),
         resultat=lg.t("p7_lecture_r", {"rapport": lg.nb(c["ecart_cout"], 0)}),
-        lecture=lg.t("p7_lecture_l"),
+        lecture=lg.t("p7_lecture_l", {
+            "ecart": lg.nb(c["ecart_appel_offres"], 0),
+            "paye": lg.compact(c["budget_paye"])}),
     )
 
     charte.pied(slide, 7, lg)
 
 
-def page_8_allocation(prs, c, lg):
-    """L'argent suit-il les habitants ? Non — et cela coûte des bénéficiaires."""
+def page_8_rattrapage(prs, c, lg):
+    """Objectif 5, premier volet — combien d'ouvrages manquent, et à quel prix.
+
+    Trois scénarios plutôt qu'un chiffre : le nombre d'ouvrages à construire
+    dépend entièrement du seuil de desserte qu'on se donne, et ce seuil est un
+    CHOIX politique, pas un résultat. Le prix unitaire, lui, est observé — la
+    médiane de ce que le COSO a réellement payé.
+    """
 
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     charte.titre_page(slide, 8, lg.t("p8_titre"), lg.t("p8_sous_titre"))
 
-    charte.bloc_constat(
-        slide, Inches(0.6), Inches(1.9), Inches(3.9), Inches(1.5),
-        valeur=lg.nb(c["elasticite"], 2), libelle=lg.t("p8_t1"),
-        detail=lg.t("p8_t1_d", {"n": c["cantons_dotes"]}), couleur=charte.DANGER,
-    )
-    charte.bloc_constat(
-        slide, Inches(4.7), Inches(1.9), Inches(3.9), Inches(1.5),
-        valeur=lg.nb(c["gini"], 2), libelle=lg.t("p8_t2"),
-        detail=lg.t("p8_t2_d", {"rapport": lg.nb(c["interdecile"], 1)}),
-    )
-    charte.bloc_constat(
-        slide, Inches(8.8), Inches(1.9), Inches(3.8), Inches(1.5),
-        valeur=lg.compact(c["budget_paye"]), libelle=lg.t("p8_t3"),
-        detail=lg.t("p8_t3_d", {"ecart": lg.nb(c["ecart_appel_offres"], 0)}),
-    )
+    _barres(slide, prs, lg, Inches(0.6), Inches(1.8), Inches(7.3), Inches(4.6),
+            categories=[lg.t("p8_n1"), lg.t("p8_n2"), lg.t("p8_n3")],
+            valeurs=c["scenarios_manquants"], titre=lg.t("p8_graphe"))
 
-    for index, cle in enumerate(("p8_a", "p8_b")):
-        charte.bloc_analyse(
-            slide, Inches(0.6 + index * 6.3), Inches(3.7), Inches(6.0),
-            Inches(2.5), nom=lg.t(f"{cle}_nom"), question=lg.t(f"{cle}_q"),
-            resultat=lg.t(f"{cle}_r"), lecture=lg.t(f"{cle}_l"),
-        )
+    charte.bloc_constat(
+        slide, Inches(8.3), Inches(1.9), Inches(4.3), Inches(1.3),
+        valeur=lg.nb(c["manquants_mediane"]), libelle=lg.t("p8_t1"),
+        detail=lg.t("p8_t1_d", {"cout": lg.compact(c["cout_mediane"])}),
+    )
+    charte.bloc_constat(
+        slide, Inches(8.3), Inches(3.35), Inches(4.3), Inches(1.3),
+        valeur=lg.compact(c["scenarios_cout"][1]), libelle=lg.t("p8_t2"),
+        detail=lg.t("p8_t2_d", {
+            "ouvrages": lg.nb(c["scenarios_manquants"][1])}),
+        couleur=charte.DANGER,
+    )
+    charte.bloc_analyse(
+        slide, Inches(8.3), Inches(4.8), Inches(4.3), Inches(1.7),
+        nom=lg.t("p8_lecture_nom"), question=lg.t("p8_lecture_q"),
+        resultat=lg.t("p8_lecture_r", {
+            "unitaire": lg.compact(c["cout_unitaire"])}),
+        lecture=lg.t("p8_lecture_l", {"observations": c["observations_cout"]}),
+    )
 
     charte.pied(slide, 8, lg)
 
 
-def page_9_leviers(prs, c, lg):
-    """Trois leviers, par coût croissant."""
+def page_9_programmes(prs, c, lg):
+    """Objectif 5, second volet — deux programmes datés, et leur entretien.
+
+    Une recommandation qui ne porte ni montant ni calendrier n'engage personne.
+    Ces deux-ci portent les deux, canton par canton, et disent lequel de leurs
+    nombres est OBSERVÉ et lequel est POSÉ : le coût d'un forage vient du
+    corpus, celui d'un aménagement contre les crues n'y figure nulle part.
+    """
 
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     charte.titre_page(slide, 9, lg.t("p9_titre"), lg.t("p9_sous_titre"))
 
-    for index in range(1, 4):
-        charte.bloc_analyse(
-            slide, Inches(0.6), Inches(1.85 + (index - 1) * 1.65),
-            Inches(12.1), Inches(1.5),
-            nom=lg.t(f"p9_l{index}_nom"), question=lg.t(f"p9_l{index}_q"),
-            resultat=lg.t(f"p9_l{index}_r", {
-                "cantons": lg.nb(c["prioritaires"]),
-                "absents": lg.nb(c["absents"]),
-                "cout": lg.nb(c["cout_beneficiaire"], 0),
-            }),
-            lecture=lg.t(f"p9_l{index}_l"),
-        )
+    _barres(slide, prs, lg, Inches(0.6), Inches(1.8), Inches(7.3), Inches(4.6),
+            categories=[str(annee) for annee in c["programme_annees"]],
+            valeurs=c["programme_montants"], titre=lg.t("p9_graphe"))
+
+    charte.bloc_constat(
+        slide, Inches(8.3), Inches(1.9), Inches(4.3), Inches(1.3),
+        valeur=lg.compact(c["programme_total"]), libelle=lg.t("p9_t1"),
+        detail=lg.t("p9_t1_d", {
+            "ouvrages": lg.nb(c["programme_ouvrages"]),
+            "horizon": c["programme_horizon"],
+            "norme": lg.nb(c["programme_norme"])}),
+    )
+    charte.bloc_constat(
+        slide, Inches(8.3), Inches(3.35), Inches(4.3), Inches(1.3),
+        valeur=lg.compact(c["inondation_total"]), libelle=lg.t("p9_t2"),
+        detail=lg.t("p9_t2_d", {
+            "cantons": lg.nb(c["inondation_cantons"]),
+            "horizon": c["inondation_horizon"],
+            "unitaire": lg.compact(c["inondation_unitaire"])}),
+        couleur=charte.DANGER,
+    )
+    charte.bloc_analyse(
+        slide, Inches(8.3), Inches(4.8), Inches(4.3), Inches(1.7),
+        nom=lg.t("p9_lecture_nom"), question=lg.t("p9_lecture_q"),
+        resultat=lg.t("p9_lecture_r", {
+            "part": lg.nb(c["entretien_part_observee"], 0)}),
+        lecture=lg.t("p9_lecture_l", {
+            "provision": lg.nb(c["entretien_taux_observe"], 2),
+            "haut": lg.nb(c["entretien_part_haute"], 0)}),
+    )
 
     charte.pied(slide, 9, lg)
 
@@ -341,13 +420,13 @@ def _barres(slide, prs, lg, gauche, haut, largeur, hauteur, categories,
 PAGES = [
     page_1_couverture,
     page_2_demarche,
-    page_3_concentration,
-    page_4_seuils,
+    page_3_distance,
+    page_4_etat,
     page_5_couverture,
-    page_6_croisement,
+    page_6_risque,
     page_7_cout,
-    page_8_allocation,
-    page_9_leviers,
+    page_8_rattrapage,
+    page_9_programmes,
     page_10_conclusion,
 ]
 
@@ -362,7 +441,7 @@ def collecter():
     """
 
     from utils.data import datasets
-    from utils import analytics, econometrie, perimetre
+    from utils import accessibilite, analytics, econometrie, perimetre
 
     data = datasets()
     cantons, tde, coso = data["cantons"], data["tde"], data["coso"]
@@ -381,6 +460,30 @@ def collecter():
     reconstitution = analytics.reconstitution_fri(cantons)
 
     ecart = perimetre.ecart_publication()
+
+    # OBJECTIF 1 — la distance. Mesurée en mètres sur la projection UTM 31N,
+    # au point représentatif de chaque canton : un centroïde tomberait hors
+    # des cantons en croissant, et la distance serait fausse là où elle compte.
+    rayons = accessibilite.rayons_de_marche(cantons, tde, coso)
+    loin = accessibilite.deserts(cantons, tde, coso)
+    voisinage = accessibilite.concentration(cantons, tde, coso)
+    ensemble = voisinage[voisinage["inventaire"] == "ensemble"]
+
+    # OBJECTIF 2 — l'état, par ses deux seuls substituts.
+    maintenance = analytics.plan_de_maintenance(coso)
+    service = analytics.mise_en_service(coso)
+
+    # OBJECTIF 4 — l'indice classe-t-il autre chose que la population ?
+    ampute = econometrie.fri_sans_population(cantons)
+
+    # OBJECTIF 5 — le rattrapage, les deux programmes, et l'entretien.
+    deficit = analytics.facture_rattrapage(cantons, tde, coso)
+    normes = analytics.besoin_par_norme(cantons, tde, coso)
+    programme = analytics.programme_ouvrages(cantons, tde, coso)
+    inondations = analytics.programme_inondations(cantons, tde, coso)
+    observe = analytics.taux_entretien_observe(coso)
+    entretien = analytics.entretien_scenarios(
+        programme, observe=observe["part_mediane"])
     budget = analytics.chaine_budgetaire(coso).set_index("etape")["montant"]
     profil = cout["profil"]["cout_par_beneficiaire"]
 
@@ -432,6 +535,50 @@ def collecter():
         "budget_paye": float(budget["paye"]),
         "ecart_appel_offres": 100 * (
             1 - budget["contracte"] / budget["estime"]),
+
+        "rayons_part": rayons["part"].round(1).tolist(),
+        "rayons_km": rayons["rayon_km"].tolist(),
+        "distance_mediane": loin["mediane_km"],
+        "cantons_loin": len(loin["cantons"]),
+        "seuil_loin": loin["seuil_km"],
+        "part_pop_loin": loin["part_population"],
+        "clark_evans": float(ensemble["R"].iloc[0]),
+
+        "maintenance_regions": maintenance["region"].tolist(),
+        "maintenance_parts": maintenance["part"].round(1).tolist(),
+        "en_attente": service["en_attente"],
+        "delai_remise": service["delai_median"],
+        "receptionnes": service["receptionnes"],
+
+        "rho_ampute": ampute["rho_ampute"],
+        "deplacement_median": ampute["deplacement_median"],
+
+        "manquants_mediane": deficit["ouvrages"],
+        "cout_mediane": deficit["total"],
+        "cout_unitaire": deficit["unitaire"],
+        "observations_cout": deficit["observations"],
+        "scenarios_normes": normes["scenarios"]["norme"].tolist(),
+        "scenarios_manquants": normes["scenarios"]["manquants"].tolist(),
+        "scenarios_cout": normes["scenarios"]["cout"].tolist(),
+
+        "programme_annees": programme["annees"]["annee"].tolist(),
+        "programme_montants": (
+            programme["annees"]["montant"] / 1e9).round(2).tolist(),
+        "programme_total": programme["total"],
+        "programme_ouvrages": programme["ouvrages"],
+        "programme_horizon": programme["horizon"],
+        "programme_norme": programme["norme"],
+
+        "inondation_total": inondations["total"],
+        "inondation_cantons": inondations["cantons"],
+        "inondation_horizon": inondations["horizon"],
+        "inondation_unitaire": inondations["unitaire"],
+
+        "entretien_taux_observe": 100 * observe["part_mediane"],
+        "entretien_part_observee": float(
+            entretien["part_investissement"].iloc[0]),
+        "entretien_part_haute": float(
+            entretien["part_investissement"].iloc[-1]),
     }
 
 

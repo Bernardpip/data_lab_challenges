@@ -9,8 +9,8 @@ setlocal
 cd /d "%~dp0"
 
 echo.
-echo   Adequation formation-emploi au Togo
-echo   Data Challenge Education . Defi 2
+echo   Acces a l'eau potable au Togo
+echo   Data Challenge Environnement . Eau et hydraulique
 echo.
 
 REM --- 1. Trouver Python -----------------------------------------------------
