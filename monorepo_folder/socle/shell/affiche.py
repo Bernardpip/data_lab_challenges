@@ -34,6 +34,7 @@ from socle.shell import menu, utilisateurs
 from socle.i18n import LANGUES
 from socle.i18n.traduction import init_langue, langue, definir_langue
 from socle.ui.cards import reset_cards
+from socle.design.icons import icon as icone
 
 PARAM_VUE = "v"
 PARAM_SECTION = "sec"
@@ -210,6 +211,25 @@ def _ombre(valeur):
 RANG_SECTIONS = 50
 
 
+def _eclaircir(couleur, part=0.90):
+    """Une teinte mélangée à du blanc — la version « claire » d'une couleur.
+
+    Calculée plutôt que demandée : un défi qui passe sa couleur de marque ne
+    doit pas avoir à passer aussi sa déclinaison pâle, qui n'est qu'un fond de
+    survol et de pastille.
+    """
+
+    couleur = (couleur or "").strip()
+
+    if not couleur.startswith("#") or len(couleur) != 7:
+        return couleur
+
+    canaux = [int(couleur[i:i + 2], 16) for i in (1, 3, 5)]
+    melange = [round(c + (255 - c) * part) for c in canaux]
+
+    return "#%02X%02X%02X" % tuple(melange)
+
+
 def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
                couleur_vue_active, couleur_vue_inactive,
                couleur_langue_active, couleur_langue_inactive,
@@ -219,7 +239,8 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
                colonne_gauche_poids, colonne_gauche_fond,
                colonne_gauche_bordure,
                colonne_droite_poids, colonne_droite_fond,
-               colonne_droite_bordure, rangs_supplementaires=0):
+               colonne_droite_bordure, rangs_supplementaires=0,
+               couleur_primaire=None):
     """Feuille de surcharge du menu — n'écrit QUE ce qui est demandé.
 
     Chaque règle absente laisse le token du socle s'appliquer : passer une
@@ -228,6 +249,18 @@ def _surcouche(couleur_sur_titre, couleur_titre, couleur_sous_titre,
     """
 
     regles = []
+
+    if couleur_primaire:
+        # La teinte PRIMAIRE du socle, réécrite par le défi. Elle habille les
+        # liens, les anneaux de focus et les accents ; laissée à l'indigo du
+        # design system, elle mettait du violet dans une page qui n'en contient
+        # nulle part ailleurs. Déclarée ici et non dans la feuille du défi :
+        # à spécificité égale, c'est la dernière écrite qui gagne, et la
+        # surcouche est la dernière.
+        regles.append(
+            f":root {{ --kg-color-primary: {couleur_primaire};"
+            f" --kg-color-primary-light: {_eclaircir(couleur_primaire)}; }}"
+        )
 
     # Le menu ne couvre que la colonne gauche : il doit donc suivre le partage
     # des colonnes. La part se déclare comme VARIABLE et non comme largeur
@@ -764,8 +797,13 @@ def _menu(titre, sous_titre, sur_titre, etat, logo, logo_url=None,
                 _reglages(config)
 
 
-def _titre_fenetre(titre, note=None, retour=None):
-    """L'en-tête d'un écran de la fenêtre — titre, note, et retour éventuel."""
+def _titre_fenetre(titre, note=None, retour=None, icone_nom="users"):
+    """L'en-tête d'un écran — pastille d'icône, titre, note, retour éventuel.
+
+    La pastille n'est pas un ornement : c'est elle qui donne à la fenêtre un
+    premier repère visuel, là où deux lignes de texte empilées ressemblaient à
+    n'importe quel paragraphe.
+    """
 
     if retour:
         if st.button(retour, key="reg_retour", type="tertiary"):
@@ -773,10 +811,19 @@ def _titre_fenetre(titre, note=None, retour=None):
             st.rerun()
 
     st.markdown(
-        f'<div style="font-size:var(--kg-fs-xl);font-weight:650;'
-        f'margin:{"0" if retour else "-8px"} 0 2px;">{titre}</div>'
-        + (f'<div style="font-size:13px;color:var(--kg-color-text-muted);'
-           f'margin-bottom:12px;max-width:62ch;">{note}</div>' if note else ""),
+        f'<div style="display:flex;align-items:center;gap:11px;'
+        f'margin:{"2px" if retour else "-6px"} 0 8px;">'
+        f'<span style="width:34px;height:34px;border-radius:10px;flex:none;'
+        f"display:inline-flex;align-items:center;justify-content:center;"
+        f"background:var(--kg-color-primary-light,#E4F0EB);"
+        f'color:var(--kg-color-primary);">{icone(icone_nom, 17)}</span>'
+        f'<span style="font-size:var(--kg-fs-xl);font-weight:650;'
+        f'line-height:1.2;">{titre}</span></div>'
+        + (f'<div style="font-size:12.5px;line-height:1.55;'
+           f'color:var(--kg-color-text-muted);margin:0 0 14px;'
+           f'max-width:64ch;">{note}</div>' if note else "")
+        + '<div style="height:1px;background:var(--kg-color-border-light,'
+          '#ECEEF0);margin:0 0 12px;"></div>',
         unsafe_allow_html=True,
     )
 
@@ -793,26 +840,56 @@ def _carte_utilisateur(personne, fichier, reglages, courant, langue_active):
     est_courant = courant and courant.get("id") == identifiant
     porteur = utilisateurs.profil(fichier, personne.get("profil"))
 
-    with st.container(key=f"regcarte_{identifiant}", border=True):
+    if est_courant:
+        # Streamlit ne laisse pas poser de classe sur un conteneur : la carte
+        # active se vise donc par sa CLÉ, et la règle s'écrit au moment où
+        # l'on sait laquelle l'est.
+        st.markdown(
+            f"<style>"
+            f'[data-testid="stDialog"] .st-key-regcarte_{identifiant} {{'
+            f" background: var(--kg-color-primary-light) !important;"
+            f" border-color: var(--kg-color-primary) !important;"
+            f" box-shadow: inset 3px 0 0 var(--kg-color-primary) !important;"
+            f" }}"
+            f"</style>",
+            unsafe_allow_html=True,
+        )
+
+    with st.container(key=f"regcarte_{identifiant}", border=False):
         colonnes = st.columns([1, 6, 3], vertical_alignment="center")
 
         with colonnes[0]:
-            st.markdown(utilisateurs.avatar(personne, 42), unsafe_allow_html=True)
+            st.markdown(
+                utilisateurs.avatar(
+                    personne, 44,
+                    # L'anneau vert redit l'activité à hauteur d'avatar : le
+                    # bouton est à l'autre bout de la carte, et l'œil qui
+                    # descend la liste ne le suit pas.
+                    bordure=("var(--kg-color-primary)" if est_courant
+                             else "var(--kg-color-border-light,#ECEEF0)"),
+                ),
+                unsafe_allow_html=True,
+            )
 
         with colonnes[1]:
             st.markdown(
-                f'<div style="font-weight:650;line-height:1.3;">'
+                f'<div style="font-size:14.5px;font-weight:650;'
+                f'line-height:1.25;">'
                 f'{utilisateurs.texte_sur(personne.get("prenom"))} '
                 f'{utilisateurs.texte_sur(personne.get("nom"))}</div>'
                 f'<div style="font-size:12px;color:var(--kg-color-text-muted);'
-                f'overflow-wrap:anywhere;">'
+                f'overflow-wrap:anywhere;line-height:1.4;">'
                 f'{utilisateurs.texte_sur(personne.get("email"))}</div>'
-                # Le PROFIL sur la carte : sans lui, deux personnes aux droits
-                # opposés se ressemblent trait pour trait.
-                f'<div style="font-size:11px;margin-top:3px;'
-                f'color:var(--kg-color-primary);font-weight:600;">'
+                # Le PROFIL en PASTILLE : sans lui, deux personnes aux droits
+                # opposés se ressemblent trait pour trait — et en texte nu, il
+                # se confondait avec l'adresse juste au-dessus.
+                f'<span style="display:inline-block;margin-top:5px;'
+                f"padding:1px 9px;border-radius:999px;font-size:10.5px;"
+                f"font-weight:700;letter-spacing:.02em;text-transform:uppercase;"
+                f"background:var(--kg-color-primary-light,#E4F0EB);"
+                f'color:var(--kg-color-primary);">'
                 f'{utilisateurs.texte_sur(menu.texte((porteur or {}).get("nom"), langue_active))}'
-                f'</div>',
+                f'</span>',
                 unsafe_allow_html=True,
             )
 
@@ -859,19 +936,38 @@ def _carte_profil(porteur, fichier, reglages, langue_active):
     identifiant = porteur.get("id")
     verrouille = bool(porteur.get("verrouille"))
 
-    with st.container(key=f"regprofil_{identifiant}", border=True):
-        gauche, droite = st.columns([7, 3], vertical_alignment="center")
+    with st.container(key=f"regprofil_{identifiant}", border=False):
+        marque, gauche, droite = st.columns([1, 6, 3],
+                                            vertical_alignment="center")
+
+        with marque:
+            # La même pastille que l'en-tête, en plus petit : les deux objets
+            # de cette fenêtre — une personne, un profil — se distinguent alors
+            # d'un coup d'œil dans une liste.
+            st.markdown(
+                f'<span style="width:38px;height:38px;border-radius:11px;'
+                f"display:inline-flex;align-items:center;justify-content:center;"
+                f"background:var(--kg-color-surface-secondary,#F5F6F7);"
+                f'color:var(--kg-color-text-secondary);">'
+                f'{icone("shield" if verrouille else "settings", 17)}</span>',
+                unsafe_allow_html=True,
+            )
 
         with gauche:
             st.markdown(
-                f'<div style="font-weight:650;line-height:1.3;">'
+                f'<div style="font-size:14.5px;font-weight:650;'
+                f'line-height:1.25;">'
                 f'{utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))}'
-                + (f' <span style="font-size:11px;font-weight:500;'
+                + (f' <span style="margin-left:4px;padding:1px 8px;'
+                   f"border-radius:999px;font-size:10px;font-weight:700;"
+                   f"letter-spacing:.02em;text-transform:uppercase;"
+                   f"background:var(--kg-color-surface-secondary,#F5F6F7);"
                    f'color:var(--kg-color-text-muted);">'
-                   f'· {reglages.get("verrouille", "")}</span>'
+                   f'{reglages.get("verrouille", "")}</span>'
                    if verrouille else "")
                 + f'</div>'
-                f'<div style="font-size:12px;color:var(--kg-color-text-muted);">'
+                f'<div style="font-size:12px;color:var(--kg-color-text-muted);'
+                f'line-height:1.4;">'
                 f'{reglages.get("cree_le", "")} '
                 f'{utilisateurs.texte_sur(porteur.get("cree_le"))} · '
                 f'{_accorde(utilisateurs.porteurs(fichier, identifiant), reglages)}'
@@ -1060,9 +1156,16 @@ def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
                                                coche, onglet=cle_onglet)
                         st.rerun()
 
-    gauche, milieu, droite = st.columns([2, 1, 2])
+    st.markdown('<div style="height:1px;background:var(--kg-color-border-light,'
+                '#ECEEF0);margin:10px 0 12px;"></div>',
+                unsafe_allow_html=True)
 
-    with gauche:
+    # La DESTRUCTION à gauche, les actions courantes à droite : c'est la
+    # disposition que tout le monde connaît, et elle éloigne le geste
+    # irréversible de celui qu'on répète.
+    gauche, milieu, droite = st.columns([3, 3, 3])
+
+    with milieu:
         if reglages.get("reinitialiser") and st.button(
             reglages["reinitialiser"], use_container_width=True,
             key="reg_reinit",
@@ -1070,7 +1173,7 @@ def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
             utilisateurs.tout_autoriser(fichier, identifiant)
             st.rerun()
 
-    with milieu:
+    with gauche:
         # La suppression vit ICI, loin du bouton « Configurer » de la carte :
         # une croix à côté de lui se clique par erreur, et rien ne se défait.
         # Le profil d'origine, lui, ne se supprime pas.
@@ -1114,6 +1217,198 @@ def ouvrir_fenetre(ouverture=None):
         utilisateurs.aller_a(*ouverture)
 
 
+def _styles_fenetre(reglages=None):
+    """La feuille de la fenêtre — elle n'existe qu'ici, et pour de bonnes raisons.
+
+    Les widgets de Streamlit sortent en gabarit d'atelier : une case, un
+    interrupteur, un cadre gris, chacun avec sa hauteur et son rembourrage. Mis
+    bout à bout dans une fenêtre, ils donnent une liste de contrôles, pas une
+    interface — et cette fenêtre est la seule de l'application où l'on ne
+    regarde AUCUNE donnée. Elle doit donc se tenir toute seule.
+
+    Trois partis pris, et ils tiennent la page entière :
+
+      · les CARTES portent la hiérarchie — avatar, identité, action —, avec un
+        état d'activité lisible sans lire : rail vert et fond teinté ;
+      · les ONGLETS reprennent la forme segmentée du rail du menu, pour que
+        l'objet se reconnaisse d'une surface à l'autre ;
+      · les RANGÉES d'autorisation sont des lignes de tableau, pas des boîtes :
+        huit cadres empilés donnaient un accordéon de formulaire administratif.
+    """
+
+    st.markdown(
+        """
+<style>
+/* ─── Chrome de la fenêtre ─────────────────────────────────────────────── */
+[data-testid="stDialog"] > div > div { border-radius: 16px; }
+[data-testid="stDialog"] [data-testid="stVerticalBlock"] { gap: 0.55rem; }
+
+/* Streamlit donne 160 px de largeur MINIMALE à chaque colonne et enroule ce
+   qui n'entre pas : dans une fenêtre de 710 px, une colonne de deux dixièmes
+   en réclamait 142 et passait à la ligne — l'interrupteur se retrouvait
+   au-dessus du nom de sa section. Mesuré : les deux colonnes faisaient 710 px
+   chacune. */
+[data-testid="stDialog"] [data-testid="stHorizontalBlock"] { flex-wrap: nowrap; }
+[data-testid="stDialog"] [data-testid="stColumn"] { min-width: 0; }
+
+/* ─── Onglets — la forme segmentée du rail du menu ─────────────────────── */
+[data-testid="stDialog"] [data-baseweb="tab-list"] {
+  /* Le bandeau épouse ses deux cases : étiré sur toute la largeur, il
+     laissait une bande grise vide sur les deux tiers de la fenêtre. */
+  display: inline-flex; width: fit-content;
+  gap: 3px; padding: 3px; border-radius: 10px;
+  background: var(--kg-color-surface-secondary, #F5F6F7);
+  border-bottom: none !important;
+  margin-bottom: 14px;
+}
+[data-testid="stDialog"] [data-baseweb="tab-list"] button[role="tab"] {
+  border-radius: 8px; padding: 5px 16px; height: auto;
+  font-size: 13px; font-weight: 600; color: var(--kg-color-text-muted);
+  background: transparent; border: none;
+}
+[data-testid="stDialog"] [data-baseweb="tab-list"] button[aria-selected="true"] {
+  background: #FFFFFF; color: var(--kg-color-text);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .10);
+}
+/* Le trait glissant de baseweb ferait doublon avec la case blanche. */
+[data-testid="stDialog"] [data-baseweb="tab-highlight"],
+[data-testid="stDialog"] [data-baseweb="tab-border"] { display: none !important; }
+
+/* ─── Cartes — utilisateurs et profils ─────────────────────────────────── */
+[data-testid="stDialog"] [class*="st-key-regcarte_"],
+[data-testid="stDialog"] [class*="st-key-regprofil_"] {
+  border: 1px solid var(--kg-color-border-light, #ECEEF0) !important;
+  border-radius: 12px !important;
+  padding: 10px 14px !important;
+  background: #FFFFFF;
+  transition: border-color .15s, box-shadow .15s;
+}
+[data-testid="stDialog"] [class*="st-key-regcarte_"]:hover,
+[data-testid="stDialog"] [class*="st-key-regprofil_"]:hover {
+  border-color: var(--kg-color-primary) !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, .06);
+}
+/* La carte ACTIVE — rail à gauche et fond teinté — est peinte à la volée,
+   depuis `_carte_utilisateur` : Streamlit ne laisse pas poser de classe sur
+   un conteneur, et seule sa clé permet de la viser. */
+
+/* ─── Boutons de la fenêtre ────────────────────────────────────────────── */
+[data-testid="stDialog"] [data-testid="stButton"] > button {
+  height: 34px; min-height: 34px; border-radius: 9px;
+  font-size: 13px; font-weight: 600;
+}
+[data-testid="stDialog"] [data-testid="stButton"] > button[kind="secondary"] {
+  background: #FFFFFF; border: 1px solid var(--kg-color-border, #DDE1E5);
+  color: var(--kg-color-text-secondary);
+}
+[data-testid="stDialog"] [data-testid="stButton"] > button[kind="secondary"]:hover {
+  border-color: var(--kg-color-primary); color: var(--kg-color-primary);
+}
+/* Le bouton d'ICÔNE est un carré — visé par sa clé, non par son type : le
+   type « tertiaire » sert aussi à des boutons de texte, et « Supprimer » s'y
+   coupait en deux dans trente-quatre pixels. Vérifié à l'écran. */
+[data-testid="stDialog"] [class*="st-key-reg_droits_"] > div > button,
+[data-testid="stDialog"] [class*="st-key-reg_conf_"] > div > button {
+  width: 34px; padding: 0; border-radius: 9px;
+  border: 1px solid var(--kg-color-border-light, #ECEEF0);
+  background: #FFFFFF; color: var(--kg-color-text-muted);
+}
+[data-testid="stDialog"] [class*="st-key-reg_droits_"] > div > button:hover,
+[data-testid="stDialog"] [class*="st-key-reg_conf_"] > div > button:hover {
+  border-color: var(--kg-color-primary); color: var(--kg-color-primary);
+  background: var(--kg-color-primary-light, #E4F0EB);
+}
+/* La SUPPRESSION est une action irréversible : elle se signale en rouge, mais
+   reste un lien — un bouton plein appellerait le clic qu'on veut éviter. */
+[data-testid="stDialog"] .st-key-reg_supprimer [data-testid="stButton"] > button {
+  border: none; background: transparent;
+  color: var(--kg-color-text-muted); font-weight: 500;
+}
+[data-testid="stDialog"] .st-key-reg_supprimer [data-testid="stButton"] > button:hover {
+  color: #C8102E; background: #FBE4E8;
+}
+/* Le retour est un LIEN, pas une case : il défait, il ne lance rien. */
+[data-testid="stDialog"] .st-key-reg_retour [data-testid="stButton"] > button {
+  width: auto !important; border: none !important; background: transparent !important;
+  padding: 0 !important; color: var(--kg-color-text-muted) !important;
+  font-weight: 500 !important;
+}
+[data-testid="stDialog"] .st-key-reg_retour [data-testid="stButton"] > button:hover {
+  color: var(--kg-color-primary) !important;
+}
+/* Le bouton « ajouter » : une zone d'accueil, pas un bouton plein. */
+[data-testid="stDialog"] .st-key-reg_ajouter [data-testid="stButton"] > button,
+[data-testid="stDialog"] .st-key-reg_ajouter_profil [data-testid="stButton"] > button {
+  height: 42px; border: 1px dashed var(--kg-color-border, #DDE1E5);
+  background: transparent; color: var(--kg-color-text-secondary);
+}
+[data-testid="stDialog"] .st-key-reg_ajouter [data-testid="stButton"] > button:hover,
+[data-testid="stDialog"] .st-key-reg_ajouter_profil [data-testid="stButton"] > button:hover {
+  border-color: var(--kg-color-primary); color: var(--kg-color-primary);
+  background: var(--kg-color-primary-light, #E4F0EB);
+}
+
+/* ─── Rangées d'autorisation — des lignes, pas des boîtes ──────────────── */
+[data-testid="stDialog"] [data-testid="stExpander"] details {
+  margin: 0; border: none; background: transparent;
+  border-bottom: 1px solid var(--kg-color-border-light, #ECEEF0);
+  border-radius: 0;
+}
+[data-testid="stDialog"] [data-testid="stExpander"] summary {
+  padding: 9px 4px; font-size: 14px;
+}
+[data-testid="stDialog"] [data-testid="stExpander"] summary:hover {
+  color: var(--kg-color-primary);
+}
+[data-testid="stDialog"] [data-testid="stExpander"] details > div {
+  padding: 4px 4px 12px 22px;
+  background: transparent; border: none;
+}
+/* L'interrupteur se cale sur la ligne du nom, non sur le haut du bloc. */
+[data-testid="stDialog"] [data-testid="stToggle"] { margin-top: 7px; }
+[data-testid="stDialog"] [data-testid="stCheckbox"] label { font-size: 13px; }
+
+/* ─── Formulaires ─────────────────────────────────────────────────────── */
+[data-testid="stDialog"] [data-testid="stFileUploaderDropzone"] {
+  border-radius: 12px; border-style: dashed; padding: 10px;
+  min-height: 96px;
+}
+[data-testid="stDialog"] label p { font-size: 12px !important; font-weight: 600;
+  color: var(--kg-color-text-muted); }
+</style>
+""",
+        unsafe_allow_html=True,
+    )
+
+    # Les trois phrases de la zone de dépôt appartiennent à Streamlit et
+    # s'affichent en ANGLAIS dans une fenêtre entièrement française. Aucune API
+    # ne les traduit : on masque les siennes et on écrit les nôtres en
+    # pseudo-éléments. Les textes viennent de la configuration, comme partout
+    # ailleurs — le socle continue de n'écrire aucun mot visible.
+    depot = (reglages or {}).get("photo_deposer")
+    parcourir = (reglages or {}).get("photo_parcourir")
+
+    if not (depot or parcourir):
+        return
+
+    st.markdown(
+        "<style>"
+        '[data-testid="stDialog"] [data-testid="stFileUploaderDropzoneInstructions"]'
+        " > div > span { display: none; }"
+        + (f'[data-testid="stDialog"]'
+           f' [data-testid="stFileUploaderDropzoneInstructions"] > div::before'
+           f' {{ content: "{depot}"; font-size: 12.5px;'
+           f" color: var(--kg-color-text-secondary); }}" if depot else "")
+        + (f'[data-testid="stDialog"] [data-testid="stFileUploaderDropzone"]'
+           f' button {{ font-size: 0; }}'
+           f'[data-testid="stDialog"] [data-testid="stFileUploaderDropzone"]'
+           f' button::after {{ content: "{parcourir}"; font-size: 13px; }}'
+           if parcourir else "")
+        + "</style>",
+        unsafe_allow_html=True,
+    )
+
+
 @st.dialog(" ", width="medium", on_dismiss=_fermer_fenetre)
 def _reglages(config, ouverture=None):
     """La fenêtre — utilisateurs, profils, et ce que chaque profil montre.
@@ -1132,21 +1427,7 @@ def _reglages(config, ouverture=None):
     fichier = (config.get("users") or {}).get("fichier")
     active = langue()
 
-    # Streamlit donne 160 px de largeur MINIMALE à chaque colonne, et enroule
-    # ce qui n'entre pas. Dans une fenêtre de 710 px, une colonne de deux
-    # dixièmes en réclame 142 : elle passait donc à la ligne, et l'interrupteur
-    # se retrouvait au-dessus du nom de sa section au lieu d'être en face.
-    # Vérifié à l'écran — les deux colonnes mesuraient 710 px chacune.
-    st.markdown(
-        "<style>"
-        '[data-testid="stDialog"] [data-testid="stHorizontalBlock"]'
-        " { flex-wrap: nowrap; }"
-        '[data-testid="stDialog"] [data-testid="stColumn"] { min-width: 0; }'
-        '[data-testid="stDialog"] [data-testid="stExpander"] details'
-        " { margin: 0; }"
-        "</style>",
-        unsafe_allow_html=True,
-    )
+    _styles_fenetre(reglages)
 
     if ouverture:
         utilisateurs.aller_a(*ouverture)
@@ -1174,6 +1455,7 @@ def render_affiche(titre, config, sous_titre=None,
                    couleur_vue_active=None, couleur_vue_inactive=None,
                    couleur_langue_active=None, couleur_langue_inactive=None,
                    couleur_fond_menu=None, couleur_bordure_menu=None,
+                   couleur_primaire=None,
                    marge_menu=True, ombre_menu=None,
                    hauteur_menu=None, logo=None, logo_url=None,
                    marque=None,
@@ -1278,6 +1560,7 @@ def render_affiche(titre, config, sous_titre=None,
         # Les deux niveaux partagent une seule rangée : le menu n'est pas
         # plus haut qu'avant, la réserve du corps ne bouge donc pas.
         rangs_supplementaires=0,
+        couleur_primaire=couleur_primaire,
     )
 
     if surcouche:

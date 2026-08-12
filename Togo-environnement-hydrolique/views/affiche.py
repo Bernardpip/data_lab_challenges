@@ -984,6 +984,8 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
             "verrouille_note": tr("reglages_verrouille_note"),
             "email": tr("reglages_email"),
             "photo": tr("reglages_photo"),
+            "photo_deposer": tr("reglages_photo_deposer"),
+            "photo_parcourir": tr("reglages_photo_parcourir"),
             "creer": tr("reglages_creer"),
             "nom_requis": tr("reglages_nom_requis"),
             "supprimer": tr("reglages_supprimer"),
@@ -1293,6 +1295,10 @@ def render():
         # commanditaire, et un fond teinté sous des onglets eux-mêmes blancs
         # créait deux surfaces claires qui se disputaient le regard.
         couleur_fond_menu=FOND,
+        # La teinte primaire du socle suit la charte du défi : elle habille
+        # les liens, les anneaux de focus et les accents des widgets que le
+        # socle ne peint pas lui-même.
+        couleur_primaire=charte.VERT,
         couleur_bordure_menu="#E2E8F0",
         marge_menu=True,
         # 0 aucune · 1 discrète · 2 la charte · 3 marquée.

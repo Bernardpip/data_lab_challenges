@@ -7,7 +7,12 @@
 
 [theme]
 base = "light"
-primaryColor = "#6366F1"
+# Le vert du drapeau togolais, et non l'indigo du design system : ce défi a
+# une charte — vert, jaune, rouge —, et la couleur PRIMAIRE de Streamlit teint
+# tout ce que le socle ne peint pas lui-même : interrupteurs, cases, curseurs,
+# boutons d'action. Laissée à l'indigo, elle mettait du violet dans une page
+# qui n'en contient nulle part ailleurs.
+primaryColor = "#006A4E"
 backgroundColor = "#F0F0F0"
 secondaryBackgroundColor = "#FCFCFC"
 textColor = "#0F172A"

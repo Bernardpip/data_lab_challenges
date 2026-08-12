@@ -436,8 +436,8 @@
     "en": "Profile"
   },
   "reglages_profil_note": {
-    "fr": "Le profil PRÉREMPLIT les autorisations. Elles restent modifiables ensuite, section par section.",
-    "en": "The profile PRE-FILLS the permissions. They stay editable afterwards, section by section."
+    "fr": "Le profil DÉCIDE de ce que la personne verra. Il se règle depuis l'onglet Profils, et le régler vaut pour tous ceux qui le portent.",
+    "en": "The profile DECIDES what this person will see. It is set from the Profiles tab, and setting it applies to everyone carrying it."
   },
   "reglages_email": {
     "fr": "E-mail",
@@ -526,5 +526,13 @@
   "reglages_porteur": {
     "fr": "utilisateur",
     "en": "user"
+  },
+  "reglages_photo_deposer": {
+    "fr": "Déposez une image ici",
+    "en": "Drop an image here"
+  },
+  "reglages_photo_parcourir": {
+    "fr": "Parcourir",
+    "en": "Browse"
   }
 }
