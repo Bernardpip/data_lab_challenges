@@ -1055,13 +1055,21 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
              "reference": carte_de_section, "tab_items": [
                 {"id": "ouvrages", "name": tr("vue_proposition_ouvrages"),
                  "is_default": True,
-                 "component": recit_(recit.proposition_ouvrages, (
-                     "besoin", tr("onglet_besoin"),
-                     recit.carte_deficit_canton))},
+                 "component": recit_(
+                     recit.proposition_ouvrages,
+                     # Le PROGRAMME d'abord : c'est la proposition. La carte du
+                     # besoin reste derrière, comme sa justification.
+                     ("programme", tr("onglet_programme"),
+                      recit.carte_programme_ouvrages),
+                     ("besoin", tr("onglet_besoin"),
+                      recit.carte_deficit_canton))},
                 {"id": "inondations",
                  "name": tr("vue_proposition_inondations"),
-                 "component": recit_(recit.proposition_inondations, (
-                     "exposes", tr("onglet_exposes"), recit.carte_exposes))},
+                 "component": recit_(
+                     recit.proposition_inondations,
+                     ("programme", tr("onglet_programme"),
+                      recit.carte_programme_inondations),
+                     ("exposes", tr("onglet_exposes"), recit.carte_exposes))},
             ]},
 
             # ── Acte 7 · Ce qu'on sait, ce qu'on ignore ──────────────────

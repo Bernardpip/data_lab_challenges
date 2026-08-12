@@ -1103,6 +1103,208 @@ def facture_inondation(cantons, couts_unitaires, classes=None):
     }
 
 
+# ─── Du besoin au PROGRAMME : où, combien, et quand ──────────────────────────
+#
+# Un besoin chiffré n'est pas encore une proposition. Tant qu'on écrit « il
+# manque 1 350 ouvrages pour 22,5 milliards », personne ne peut ni contester ni
+# exécuter : ni le lieu, ni l'ordre, ni l'année n'y figurent.
+#
+# Ce qui suit transforme le besoin en CALENDRIER. Trois décisions, toutes
+# exposées en arguments :
+#
+#   · l'ORDRE — par urgence, et l'urgence se lit dans le corpus : un canton à
+#     risque élevé qui n'a aucun ouvrage passe avant tout le monde ;
+#   · le RYTHME — un budget annuel, obtenu en étalant la facture sur un
+#     horizon. Un programme qui ne dit pas son rythme n'est pas datable ;
+#   · le LIEU — un point à l'intérieur du canton, et rien de plus fin : le
+#     corpus ne porte aucune donnée d'habitat, de nappe ou de foncier, et
+#     prétendre placer un forage au mètre serait une fiction.
+
+# Rang d'urgence, du plus au moins pressant. L'ordre est LEXICOGRAPHIQUE et non
+# une somme pondérée : des poids inventés (« le risque vaut 3, l'absence
+# d'ouvrage 2 ») donneraient un classement invérifiable, alors qu'une
+# succession de critères se relit et se conteste ligne à ligne.
+URGENCES = ["expose_sans_ouvrage", "expose", "sans_ouvrage", "autres"]
+
+
+def _urgence(ligne):
+    """La classe d'urgence d'un canton — cf. `URGENCES`."""
+
+    expose = ligne["classe_officielle"] in CLASSES_HAUTES
+    sans = ligne["ouvrages"] == 0
+
+    if expose and sans:
+        return "expose_sans_ouvrage"
+
+    if expose:
+        return "expose"
+
+    return "sans_ouvrage" if sans else "autres"
+
+
+def _etaler(cadre, horizon, debut, colonne="montant"):
+    """Répartit les lignes DÉJÀ ORDONNÉES sur `horizon` années.
+
+    Le critère est le BUDGET, non le nombre de chantiers : on avance dans la
+    liste jusqu'à épuiser l'enveloppe de l'année, puis on passe à la suivante.
+    Découper en tranches d'effectif égal aurait mis la même année un canton à
+    un ouvrage et un canton à quarante.
+
+    La dernière année absorbe les arrondis : sans ce plafond, un centime de
+    dépassement créerait une sixième année à un seul chantier.
+    """
+
+    total = float(cadre[colonne].sum())
+
+    if not len(cadre) or total <= 0 or horizon < 1:
+        return cadre.assign(annee=debut)
+
+    enveloppe = total / horizon
+    cumul = cadre[colonne].cumsum()
+
+    # `ceil(cumul / enveloppe)` donne le rang de l'année, 1 pour la première.
+    rangs = np.ceil(cumul / enveloppe).clip(1, horizon).astype(int)
+
+    return cadre.assign(annee=debut + rangs - 1)
+
+
+def programme_ouvrages(cantons, tde, coso, norme=5000, horizon=5, debut=2027):
+    """Le programme d'ouvrages : un chantier par canton, daté et chiffré.
+
+    `norme`   habitants par ouvrage visés — c'est l'ambition, et elle est POSÉE.
+    `horizon` nombre d'années du programme.
+    `debut`   première année.
+
+    Chaque ligne porte un point SITUÉ à l'intérieur du canton — son point
+    représentatif, choisi parce qu'un centroïde tombe hors du polygone sur les
+    cantons en croissant, et qu'un chantier hors de son canton ne veut rien
+    dire.
+    """
+
+    cadre = deficit_par_canton(cantons, tde, coso, norme=norme)
+    cadre = classer_officiel(cadre)
+    cadre = cadre[cadre["manquants"] > 0].copy()
+
+    if cadre.empty:
+        return {"cadre": cadre, "annees": pd.DataFrame(), "total": 0.0,
+                "unitaire": prix_unitaire_observe(coso), "ouvrages": 0,
+                "horizon": horizon, "debut": debut, "norme": norme}
+
+    unitaire = prix_unitaire_observe(coso)
+    cadre["montant"] = cadre["manquants"] * unitaire
+    cadre["urgence"] = cadre.apply(_urgence, axis=1)
+    cadre["rang_urgence"] = cadre["urgence"].map(
+        {nom: rang for rang, nom in enumerate(URGENCES)})
+
+    # À urgence égale, le canton le plus peuplé d'abord : c'est le seul
+    # arbitrage que les données autorisent, et il maximise le nombre de
+    # personnes servies à budget donné — le coût d'un ouvrage ne dépendant pas
+    # de ceux qu'il sert (cf. `econometrie.fonction_de_cout`).
+    cadre = cadre.sort_values(["rang_urgence", "population"],
+                              ascending=[True, False]).reset_index(drop=True)
+    cadre = _etaler(cadre, horizon, debut)
+
+    cadre = _situer(cadre)
+
+    return {
+        "cadre": cadre,
+        "annees": _par_annee(cadre, "manquants"),
+        "total": float(cadre["montant"].sum()),
+        "ouvrages": int(cadre["manquants"].sum()),
+        "unitaire": unitaire,
+        "horizon": horizon, "debut": debut, "norme": norme,
+    }
+
+
+def programme_inondations(cantons, tde, coso, cout_unitaire=250e6, horizon=3,
+                          debut=2027):
+    """Le programme d'aménagement des cantons exposés, daté et chiffré.
+
+    `cout_unitaire` est une HYPOTHÈSE — le corpus ne porte aucun prix
+    d'ouvrage de gestion des eaux pluviales — et c'est pour cela qu'il est le
+    premier argument : le lecteur doit pouvoir le remplacer par le sien et
+    voir le calendrier entier se recalculer.
+
+    Trois ans et non cinq : dix-sept cantons ne justifient pas un programme
+    décennal, et l'aléa, lui, n'attend pas.
+    """
+
+    ouvrages = (
+        pd.concat([tde[["cle_canton"]], coso[["cle_canton"]]])
+        .groupby("cle_canton").size().rename("ouvrages").reset_index()
+    )
+
+    cadre = classer_officiel(cantons).merge(ouvrages, on="cle_canton",
+                                            how="left")
+    cadre["ouvrages"] = cadre["ouvrages"].fillna(0).astype(int)
+    cadre = cadre[cadre["classe_officielle"].isin(CLASSES_HAUTES)].copy()
+
+    if cadre.empty:
+        return {"cadre": cadre, "annees": pd.DataFrame(), "total": 0.0,
+                "unitaire": cout_unitaire, "cantons": 0,
+                "horizon": horizon, "debut": debut}
+
+    cadre["montant"] = float(cout_unitaire)
+    cadre["urgence"] = cadre.apply(_urgence, axis=1)
+    cadre["rang_urgence"] = cadre["urgence"].map(
+        {nom: rang for rang, nom in enumerate(URGENCES)})
+
+    # Le RISQUE départage ici, non la population : le programme traite un aléa,
+    # et le canton le plus exposé passe d'abord quel que soit son poids
+    # démographique. C'est l'inverse de l'arbitrage retenu pour les forages, et
+    # c'est voulu — les deux programmes ne poursuivent pas le même but.
+    cadre = cadre.sort_values(["rang_urgence", "risque_pts"],
+                              ascending=[True, False]).reset_index(drop=True)
+    cadre = _etaler(cadre, horizon, debut)
+
+    cadre = _situer(cadre)
+    cadre["manquants"] = 1
+
+    return {
+        "cadre": cadre,
+        "annees": _par_annee(cadre, "manquants"),
+        "total": float(cadre["montant"].sum()),
+        "cantons": int(len(cadre)),
+        "unitaire": float(cout_unitaire),
+        "horizon": horizon, "debut": debut,
+    }
+
+
+def _situer(cadre):
+    """Ajoute à chaque ligne un point situé DANS son canton.
+
+    Le point REPRÉSENTATIF, jamais le centroïde : sur un canton en croissant —
+    les cantons lagunaires du sud en sont —, le centroïde tombe hors du
+    polygone, et un chantier posé hors de son propre canton ne veut rien dire.
+
+    Le point est pris sur le cadre lui-même, sans passer par une jointure :
+    `cle_canton` n'est PAS unique — deux cantons nommés Gamé, l'un dans le Zio,
+    l'autre dans l'Amou, partagent la même clé — et indexer dessus lève une
+    erreur de réindexation. Le corpus le signale par sa colonne
+    `canton_unique`, qui vaut faux pour ces deux lignes.
+    """
+
+    points = cadre.geometry.representative_point()
+
+    return cadre.assign(lon=points.x.to_numpy(), lat=points.y.to_numpy())
+
+
+def _par_annee(cadre, colonne_ouvrages):
+    """Le calendrier vu par année : chantiers, ouvrages, montant."""
+
+    agrege = (
+        cadre.groupby("annee")
+        .agg(cantons=("canton", "size"),
+             ouvrages=(colonne_ouvrages, "sum"),
+             montant=("montant", "sum"))
+        .reset_index()
+        .sort_values("annee")
+    )
+    agrege["cumul"] = agrege["montant"].cumsum()
+
+    return agrege
+
+
 def zeros_composantes(cantons):
     """Combien de cantons portent un zéro, et sur quelle composante.
 

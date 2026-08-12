@@ -35,7 +35,8 @@ import streamlit as st
 
 from socle import ui, charts
 from socle.charts import maps
-from socle.design.tokens import RISQUE_OFFICIEL, RISQUE_CONTOUR, SERIES, STATUS
+from socle.design.tokens import (RISQUE_OFFICIEL, RISQUE_CONTOUR, SERIES,
+                                 STATUS, ORDINAL)
 
 from utils import analytics, accessibilite, econometrie
 
@@ -1192,6 +1193,147 @@ def _scenarios_lisibles(tr, scenarios):
             lambda n: tr("proposition_norme", {"n": ui.fr_number(n)})))
 
 
+# Le PROGRAMME que l'affiche propose, et ses trois paramètres. Ils sont ici,
+# en clair, parce qu'ils sont contestables : un lecteur qui juge le seuil trop
+# modeste ou l'horizon trop long doit voir où le changer.
+#
+# 1 ouvrage pour 5 000 habitants : le plus bas des quatre seuils du tableau, et
+# le seul dont la facture — 27,6 Md sur cinq ans, soit 5,5 Md par an — reste du
+# même ordre que ce qu'un programme sectoriel engage réellement. Viser le seuil
+# villageois donnerait 450 Md, c'est-à-dire un document que personne n'ouvre.
+NORME_PROGRAMME = 5000
+HORIZON_OUVRAGES = 5
+HORIZON_INONDATIONS = 3
+PREMIERE_ANNEE = 2027
+
+
+def _calendrier(tr, programme, cle_note, parametres=None):
+    """Le calendrier du programme — dépense par année, et cumul.
+
+    Colonnes verticales et non barres horizontales : l'axe est le TEMPS, il a
+    un sens de lecture, et le coucher obligerait à le relire de bas en haut.
+    """
+
+    annees = programme["annees"]
+
+    if annees.empty:
+        return
+
+    with ui.card(tr("programme_calendrier_titre"),
+                 tr("programme_calendrier_sous_titre", {
+                     "debut": programme["debut"],
+                     "fin": programme["debut"] + programme["horizon"] - 1}),
+                 "trending-up"):
+        charts.column_series(
+            annees["annee"].astype(int).tolist(),
+            (annees["montant"] / 1e9).tolist(),
+            unit=tr("unite_milliards"), height=240, decimals=1,
+        )
+        ui.note(tr(cle_note, {**(parametres or {}),
+                              "annuel": ui.compact(
+                                  float(annees["montant"].mean())),
+                              "total": ui.compact(programme["total"]),
+                              "debut": programme["debut"],
+                              "fin": programme["debut"]
+                              + programme["horizon"] - 1}))
+        charts.table_twin(annees[["annee", "cantons", "ouvrages",
+                                  "montant", "cumul"]].rename(columns={
+            "annee": tr("col_annee"), "cantons": tr("col_cantons"),
+            "ouvrages": tr("col_ouvrages"), "montant": tr("col_montant"),
+            "cumul": tr("col_cumul")}))
+
+
+def _chantiers(tr, programme, colonnes=None):
+    """La liste des chantiers — canton, ouvrages, montant, année."""
+
+    cadre = programme["cadre"]
+
+    if cadre.empty:
+        return
+
+    with ui.card(tr("programme_chantiers_titre"),
+                 tr("programme_chantiers_sous_titre"), "flag"):
+        lisible = cadre.assign(
+            urgence=cadre["urgence"].map(lambda cle: tr(f"urgence_{cle}")))
+
+        charts.table_twin(
+            lisible[colonnes or ["canton", "prefecture", "region", "urgence",
+                                 "manquants", "montant", "annee"]].rename(
+                columns={
+                    "canton": tr("col_canton"),
+                    "prefecture": tr("col_prefecture"),
+                    "region": tr("col_region"), "urgence": tr("col_urgence"),
+                    "manquants": tr("col_ouvrages"),
+                    "montant": tr("col_montant"), "annee": tr("col_annee")}),
+            label=tr("programme_chantiers_table"))
+        ui.note(tr("programme_chantiers_note", {
+            "chantiers": ui.fr_number(len(cadre)),
+            "premiere": ui.fr_number(int(
+                (cadre["annee"] == cadre["annee"].min()).sum())),
+            "debut": programme["debut"],
+        }))
+
+
+def _carte_programme(tr, programme, cle, titre, sous_titre, hauteur, fond,
+                     note, detail):
+    """Les chantiers du programme, situés et datés.
+
+    Une couche par ANNÉE, du plus foncé au plus clair : la couleur porte le
+    calendrier, ce qu'aucune choroplèthe de besoin ne pouvait dire. Le montant
+    et le nombre d'ouvrages vivent dans l'infobulle — les écrire sur la carte
+    aurait donné trois cents étiquettes empilées.
+
+    Le point est le point REPRÉSENTATIF du canton, jamais un site réel : le
+    corpus ne porte ni habitat, ni nappe, ni foncier. Il dit DANS QUEL CANTON
+    construire, et la vue le dit aussi, en toutes lettres.
+    """
+
+    cadre = programme["cadre"]
+
+    if cadre.empty:
+        return
+
+    annees = sorted(cadre["annee"].unique())
+
+    # Les teintes sont ÉTALÉES sur toute la rampe plutôt que prises dans
+    # l'ordre : à trois années, les trois premières teintes de l'ordinal se
+    # ressemblaient trop pour qu'on distingue 2027 de 2028 sur la carte.
+    # Rampe inversée — la plus foncée à la première année : l'urgence se lit
+    # dans l'intensité, et c'est elle qu'on veut voir en premier.
+    rampe = list(reversed(ORDINAL))
+    pas = (len(rampe) - 1) / max(len(annees) - 1, 1)
+    teintes = [rampe[min(int(round(index * pas)), len(rampe) - 1)]
+               for index in range(len(annees))]
+
+    def dessin(h):
+        maps.points_multi(
+            [
+                {"df": cadre[cadre["annee"] == annee],
+                 "libelle": str(int(annee)),
+                 # Les couches sont peintes dans l'ordre reçu : les dernières
+                 # années d'abord, pour que les premières — les urgentes —
+                 # restent au-dessus là où deux chantiers se recouvrent.
+                 "couleur": teintes[index],
+                 "rayon": 6,
+                 "infobulle": (lambda ligne: detail(ligne))}
+                for index, annee in reversed(list(enumerate(annees)))
+            ],
+            cle=f"carte_{cle}", fond=fond, height=h,
+        )
+
+    def pied(_):
+        maps.legende_series([
+            {"libelle": str(int(annee)),
+             "couleur": teintes[index],
+             "detail": ui.fr_number(int((cadre["annee"] == annee).sum()))}
+            for index, annee in enumerate(annees)
+        ], libelle=tr("programme_legende"))
+        ui.note(note)
+
+    maps.carte(titre, cle=cle, dessin=dessin, legende=pied,
+               sous_titre=sous_titre, hauteur=hauteur)
+
+
 def proposition_ouvrages(tr, data, faits, corpus):
     """Ce qu'il manque en forages et en châteaux, et ce que ça coûte."""
 
@@ -1268,6 +1410,18 @@ def proposition_ouvrages(tr, data, faits, corpus):
             "existants": tr("col_existants"),
             "manquants": tr("col_manquants"), "cout": tr("col_cout")}))
 
+    programme = analytics.programme_ouvrages(
+        data["cantons"], data["tde"], data["coso"],
+        norme=NORME_PROGRAMME, horizon=HORIZON_OUVRAGES,
+        debut=PREMIERE_ANNEE)
+
+    _calendrier(tr, programme, "programme_ouvrages_note", {
+        "ouvrages": ui.fr_number(programme["ouvrages"]),
+        "cantons": ui.fr_number(len(programme["cadre"])),
+        "norme": ui.fr_number(programme["norme"]),
+    })
+    _chantiers(tr, programme)
+
     with ui.card(tr("proposition_carte_nature_titre"),
                  tr("proposition_carte_nature_sous_titre"), "building-2"):
         charts.bar_h(nature["detail"], "nature", "ouvrages",
@@ -1278,6 +1432,67 @@ def proposition_ouvrages(tr, data, faits, corpus):
         }))
         charts.table_twin(nature["detail"].rename(columns={
             "nature": tr("col_nature"), "ouvrages": tr("col_ouvrages")}))
+
+
+def carte_programme_ouvrages(tr, data, hauteur):
+    """Les chantiers d'ouvrages, situés dans leur canton et datés."""
+
+    programme = analytics.programme_ouvrages(
+        data["cantons"], data["tde"], data["coso"],
+        norme=NORME_PROGRAMME, horizon=HORIZON_OUVRAGES,
+        debut=PREMIERE_ANNEE)
+
+    _carte_programme(
+        tr, programme, "recit_prog_ouvrages",
+        tr("programme_ouvrages_map_titre", {
+            "debut": programme["debut"],
+            "fin": programme["debut"] + programme["horizon"] - 1}),
+        tr("programme_ouvrages_map_sous_titre", {
+            "debut": programme["debut"],
+            "fin": programme["debut"] + programme["horizon"] - 1}),
+        hauteur, data["cantons"],
+        tr("programme_ouvrages_note_carte", {
+            "chantiers": ui.fr_number(len(programme["cadre"])),
+            "ouvrages": ui.fr_number(programme["ouvrages"]),
+            "total": ui.compact(programme["total"]),
+        }),
+        lambda ligne: (
+            f'<b>{ligne["canton"]}</b> · {ligne["prefecture"]}<br>'
+            f'{ui.fr_number(int(ligne["manquants"]))} '
+            f'{tr("unite_ouvrages")}<br>'
+            f'{ui.compact(float(ligne["montant"]))} F CFA<br>'
+            f'{tr("programme_infobulle_annee")} <b>{int(ligne["annee"])}</b>'),
+    )
+
+
+def carte_programme_inondations(tr, data, hauteur):
+    """Les aménagements de gestion des eaux, situés et datés."""
+
+    programme = analytics.programme_inondations(
+        data["cantons"], data["tde"], data["coso"],
+        cout_unitaire=COUT_RETENU, horizon=HORIZON_INONDATIONS,
+        debut=PREMIERE_ANNEE)
+
+    _carte_programme(
+        tr, programme, "recit_prog_inondations",
+        tr("programme_inondations_map_titre", {
+            "debut": programme["debut"],
+            "fin": programme["debut"] + programme["horizon"] - 1}),
+        tr("programme_inondations_map_sous_titre", {
+            "debut": programme["debut"],
+            "fin": programme["debut"] + programme["horizon"] - 1}),
+        hauteur, data["cantons"],
+        tr("programme_inondations_note_carte", {
+            "cantons": ui.fr_number(programme["cantons"]),
+            "unitaire": ui.compact(programme["unitaire"]),
+            "total": ui.compact(programme["total"]),
+        }),
+        lambda ligne: (
+            f'<b>{ligne["canton"]}</b> · {ligne["prefecture"]}<br>'
+            f'{tr("col_risque")} : {ui.fr_number(ligne["risque_pts"], 1)}<br>'
+            f'{ui.compact(float(ligne["montant"]))} F CFA<br>'
+            f'{tr("programme_infobulle_annee")} <b>{int(ligne["annee"])}</b>'),
+    )
 
 
 def carte_deficit_canton(tr, data, hauteur, norme=1000):
@@ -1321,6 +1536,12 @@ def carte_deficit_canton(tr, data, hauteur, norme=1000):
 # porte le prix d'un tel ouvrage — et couvrent volontairement un ordre de
 # grandeur de 1 à 10, du curage de caniveaux au bassin de rétention.
 COUTS_INONDATION = (50e6, 100e6, 250e6, 500e6)
+
+# Celle des quatre qui sert à DATER le programme. La médiane des hypothèses,
+# et non la plus basse : un calendrier bâti sur l'hypothèse la plus favorable
+# se démentirait dès le premier chantier. Elle reste une hypothèse, et le
+# tableau des quatre reste affiché au-dessus pour qu'on puisse en changer.
+COUT_RETENU = 250e6
 
 
 def proposition_inondations(tr, data, faits, corpus):
@@ -1376,6 +1597,18 @@ def proposition_inondations(tr, data, faits, corpus):
         charts.table_twin(lisible[["hypothese", "cantons", "total"]].rename(
             columns={"hypothese": tr("col_hypothese"),
                      "cantons": tr("col_cantons"), "total": tr("col_cout")}))
+
+    programme = analytics.programme_inondations(
+        data["cantons"], data["tde"], data["coso"],
+        cout_unitaire=COUT_RETENU, horizon=HORIZON_INONDATIONS,
+        debut=PREMIERE_ANNEE)
+
+    _calendrier(tr, programme, "programme_inondations_note", {
+        "cantons": ui.fr_number(programme["cantons"]),
+        "unitaire": ui.compact(programme["unitaire"]),
+    })
+    _chantiers(tr, programme, colonnes=["canton", "prefecture", "region",
+                                        "risque_pts", "montant", "annee"])
 
     with ui.card(tr("proposition_inondations_liste_titre"),
                  tr("proposition_inondations_liste_sous_titre"), "flag"):

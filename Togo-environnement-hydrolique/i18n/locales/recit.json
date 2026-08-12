@@ -1462,5 +1462,101 @@
   "unite_milliards": {
     "fr": "Md F CFA",
     "en": "bn F CFA"
+  },
+  "programme_calendrier_titre": {
+    "fr": "Le calendrier du programme",
+    "en": "Programme schedule"
+  },
+  "programme_calendrier_sous_titre": {
+    "fr": "Dépense annuelle, de {debut} à {fin}",
+    "en": "Annual spend, {debut} to {fin}"
+  },
+  "programme_ouvrages_note": {
+    "fr": "<b>{ouvrages}</b> ouvrages dans <b>{cantons}</b> cantons, au seuil d'un ouvrage pour {norme} habitants, étalés de {debut} à {fin} : <b>{annuel} F CFA</b> par an en moyenne, <b>{total}</b> au total. Le rythme est le BUDGET, non le nombre de chantiers — découper en tranches d'effectif égal aurait mis la même année un canton à un ouvrage et un canton à quarante.",
+    "en": "<b>{ouvrages}</b> facilities across <b>{cantons}</b> cantons, at one per {norme} inhabitants, spread from {debut} to {fin}: <b>{annuel} F CFA</b> a year on average, <b>{total}</b> in total. The pace is set by BUDGET, not by count of sites — equal-sized batches would have put a one-facility canton and a forty-facility canton in the same year."
+  },
+  "programme_inondations_note": {
+    "fr": "<b>{cantons}</b> cantons aménagés de {debut} à {fin}, à {unitaire} F CFA l'aménagement : <b>{annuel} F CFA</b> par an, <b>{total}</b> au total. Le coût unitaire est une HYPOTHÈSE — la médiane des quatre affichées plus haut — et tout le calendrier bouge avec elle.",
+    "en": "<b>{cantons}</b> cantons equipped from {debut} to {fin}, at {unitaire} F CFA per scheme: <b>{annuel} F CFA</b> a year, <b>{total}</b> in total. The unit cost is an ASSUMPTION — the median of the four shown above — and the whole schedule moves with it."
+  },
+  "programme_chantiers_titre": {
+    "fr": "Les chantiers, un par canton",
+    "en": "The sites, one per canton"
+  },
+  "programme_chantiers_sous_titre": {
+    "fr": "Ordre d'urgence, montant et année proposée",
+    "en": "Urgency order, amount and proposed year"
+  },
+  "programme_chantiers_table": {
+    "fr": "Voir le programme",
+    "en": "See the programme"
+  },
+  "programme_chantiers_note": {
+    "fr": "<b>{chantiers}</b> chantiers au total, dont <b>{premiere}</b> dès {debut}. L'ordre est lexicographique et se relit ligne à ligne : exposé ET sans ouvrage d'abord, puis exposé, puis sans ouvrage, et le plus peuplé départage à urgence égale.",
+    "en": "<b>{chantiers}</b> sites in total, <b>{premiere}</b> of them from {debut}. The ordering is lexicographic and can be read back line by line: exposed AND unequipped first, then exposed, then unequipped, with population breaking ties within a class."
+  },
+  "programme_legende": {
+    "fr": "Année proposée",
+    "en": "Proposed year"
+  },
+  "programme_infobulle_annee": {
+    "fr": "Réalisation",
+    "en": "Delivery"
+  },
+  "programme_ouvrages_map_titre": {
+    "fr": "Le programme d'ouvrages, {debut}–{fin}",
+    "en": "Facilities programme, {debut}–{fin}"
+  },
+  "programme_ouvrages_map_sous_titre": {
+    "fr": "Un chantier par canton, coloré par année de réalisation",
+    "en": "One site per canton, coloured by delivery year"
+  },
+  "programme_ouvrages_note_carte": {
+    "fr": "<b>{chantiers}</b> chantiers, <b>{ouvrages}</b> ouvrages, <b>{total} F CFA</b>. Le point est le point représentatif du CANTON, jamais un site réel : le corpus ne porte ni habitat, ni nappe, ni foncier. Il dit dans quel canton construire, et rien de plus fin.",
+    "en": "<b>{chantiers}</b> sites, <b>{ouvrages}</b> facilities, <b>{total} F CFA</b>. The dot is the CANTON's representative point, never an actual site: the corpus carries no settlement, aquifer or land data. It says which canton to build in, and nothing finer."
+  },
+  "programme_inondations_map_titre": {
+    "fr": "Le programme d'aménagement, {debut}–{fin}",
+    "en": "Flood works programme, {debut}–{fin}"
+  },
+  "programme_inondations_map_sous_titre": {
+    "fr": "Un aménagement par canton exposé, coloré par année",
+    "en": "One scheme per exposed canton, coloured by year"
+  },
+  "programme_inondations_note_carte": {
+    "fr": "<b>{cantons}</b> aménagements à {unitaire} F CFA, soit <b>{total} F CFA</b> sur trois ans. Le canton le plus exposé passe d'abord — ici le RISQUE départage, non la population : ce programme traite un aléa, pas une desserte.",
+    "en": "<b>{cantons}</b> schemes at {unitaire} F CFA each, that is <b>{total} F CFA</b> over three years. The most exposed canton goes first — here RISK breaks ties, not population: this programme addresses a hazard, not service coverage."
+  },
+  "urgence_expose_sans_ouvrage": {
+    "fr": "Exposé et sans ouvrage",
+    "en": "Exposed, no facility"
+  },
+  "urgence_expose": {
+    "fr": "Exposé",
+    "en": "Exposed"
+  },
+  "urgence_sans_ouvrage": {
+    "fr": "Sans ouvrage",
+    "en": "No facility"
+  },
+  "urgence_autres": {
+    "fr": "Ni l'un ni l'autre",
+    "en": "Neither"
+  },
+  "col_annee": {
+    "fr": "Année",
+    "en": "Year"
+  },
+  "col_urgence": {
+    "fr": "Urgence",
+    "en": "Urgency"
+  },
+  "col_montant": {
+    "fr": "Montant (F CFA)",
+    "en": "Amount (F CFA)"
+  },
+  "col_cumul": {
+    "fr": "Cumul (F CFA)",
+    "en": "Cumulative (F CFA)"
   }
 }

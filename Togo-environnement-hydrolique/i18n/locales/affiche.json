@@ -366,5 +366,9 @@
   "onglet_exposes": {
     "fr": "Cantons à aménager",
     "en": "Cantons to equip"
+  },
+  "onglet_programme": {
+    "fr": "Le programme",
+    "en": "The programme"
   }
 }

@@ -193,7 +193,8 @@ def bar_h(df, cat, val, unit="", highlight=None, max_rows=None, height=None,
     _show(fig)
 
 
-def column_series(labels, values, unit="", height=260, highlight=None, note_last=None):
+def column_series(labels, values, unit="", height=260, highlight=None,
+                  note_last=None, decimals=0):
     """Colonnes verticales — catégories ORDONNÉES (décennies, paliers).
 
     L'ordre porte du sens : on garde donc l'axe horizontal du temps, et une
@@ -216,7 +217,7 @@ def column_series(labels, values, unit="", height=260, highlight=None, note_last
             x=labels, y=list(values),
             marker=dict(color=colors),
             width=0.6,
-            text=[_fr(v) for v in values],
+            text=[_fr(v, decimals) for v in values],
             textposition="outside",
             textfont=dict(size=11, color=INK["secondary"], family=_FONT),
             cliponaxis=False,
