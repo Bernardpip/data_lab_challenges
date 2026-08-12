@@ -1,0 +1,17 @@
+# Dépendances du dépôt, telles que la plateforme de déploiement les installe.
+#
+# Ce fichier n'existe QUE pour le déploiement. En développement, chacun
+# installe le défi sur lequel il travaille. Ici, la plateforme lit la racine
+# du dépôt : elle a besoin d'un point d'entrée unique.
+#
+# Le SOCLE s'installe en paquet, depuis le dossier voisin, plutôt que d'être
+# recopié dans le défi. Une copie serait une seconde source de vérité : on
+# corrigerait le socle sans que le défi en profite, ou l'inverse — et c'est
+# exactement ce qui arrive quand une copie vendorisée traîne dans un dossier
+# où l'on développe. L'archive livrable, elle, embarque bien une copie : elle
+# part chez quelqu'un qui n'a pas le dépôt.
+-e ./monorepo_folder
+
+# Le défi déployé. Ses versions sont épinglées chez lui, où elles sont
+# vérifiées par `verifier.py`.
+-r Togo-environnement-hydrolique/requirements.txt

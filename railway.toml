@@ -1,0 +1,39 @@
+# Déploiement Railway — service « eau et hydraulique », lu à la racine du dépôt.
+#
+# La racine, et non le dossier du défi : le socle vit dans `monorepo_folder/`,
+# hors de ce dossier. Un service dont la racine serait le défi ne le verrait
+# pas, et il faudrait en recopier une version dans le défi — une seconde
+# source de vérité qui se met à diverger le jour où l'on corrige l'une des
+# deux. Le `requirements.txt` de la racine installe le socle en paquet.
+#
+# Le pilote, lui, garde son propre service : sa racine est son dossier, et il
+# embarque sa copie du socle, figée le jour où il a été archivé.
+
+[build]
+# Nixpacks détecte Python par le requirements.txt de la racine.
+builder = "NIXPACKS"
+
+[deploy]
+# On ENTRE dans le dossier du défi avant de lancer : Streamlit lit son
+# `.streamlit/config.toml` dans le répertoire courant, et c'est lui qui porte
+# le thème et la couleur primaire. Lancé depuis la racine, le tableau de bord
+# s'afficherait avec le thème par défaut — violet — sans que rien ne l'annonce.
+#
+# $PORT est imposé par Railway et change à chaque démarrage : il ne peut pas
+# être figé dans un fichier. L'adresse 0.0.0.0 est indispensable — sur
+# 127.0.0.1, le conteneur ne serait joignable que depuis lui-même.
+startCommand = "cd Togo-environnement-hydrolique && streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.fileWatcherType none"
+
+# Railway interroge cette route avant de basculer le trafic : un déploiement
+# raté ne remplace jamais un déploiement qui marche. Le délai est large — le
+# premier démarrage lit 300 Mo de corpus et construit ses caches.
+healthcheckPath = "/_stcore/health"
+healthcheckTimeout = 300
+
+# Streamlit ne plante pas de lui-même ; ce filet ne sert qu'aux incidents
+# d'infrastructure. Trois tentatives, puis on laisse tomber plutôt que de
+# boucler indéfiniment sur une erreur de code.
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+numReplicas = 1
