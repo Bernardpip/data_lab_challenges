@@ -254,24 +254,42 @@ def oublier_autorisations(config):
 def entrees_visibles(config):
     """Les entrées de menu que l'utilisateur a le droit de voir.
 
+    Une section dont TOUS les onglets sont coupés disparaît avec eux : elle
+    mènerait à une colonne vide, et un onglet de menu qui n'ouvre rien est
+    pire qu'un onglet absent.
+
     Si TOUT est masqué, on rend la liste entière plutôt qu'un écran vide : un
     menu sans entrée n'est pas un menu, et l'utilisateur n'aurait plus aucun
     moyen de rouvrir la fenêtre qui lui rendrait ses sections.
     """
 
     entrees = config.get("menu_items") or []
-    retenues = [e for e in entrees if visible(e)]
+    retenues = []
+
+    for entree in entrees:
+        if not visible(entree):
+            continue
+
+        onglets = entree.get("tab_items") or []
+
+        if onglets and not any(visible(o, entree.get("id")) for o in onglets):
+            continue
+
+        retenues.append(entree)
 
     return retenues or entrees
 
 
 def onglets_visibles(entree):
-    """Les onglets affichables d'une entrée — même repli que ci-dessus."""
+    """Les onglets affichables d'une entrée.
 
-    onglets = entree.get("tab_items") or []
-    retenus = [o for o in onglets if visible(o, entree.get("id"))]
+    Aucun repli ici, à la différence des entrées : une section sans onglet
+    visible a déjà été écartée par `entrees_visibles`, et lui rendre ses
+    onglets la ferait réapparaître par la bande.
+    """
 
-    return retenus or onglets
+    return [o for o in (entree.get("tab_items") or [])
+            if visible(o, entree.get("id"))]
 
 
 def _defaut(elements):

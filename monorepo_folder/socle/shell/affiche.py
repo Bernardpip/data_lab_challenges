@@ -33,6 +33,7 @@ from socle.design.styles import load_styles_affiche
 from socle.shell import menu, utilisateurs
 from socle.i18n import LANGUES
 from socle.i18n.traduction import init_langue, langue, definir_langue
+from socle import ui
 from socle.ui.cards import reset_cards
 from socle.design.icons import icon as icone
 
@@ -828,10 +829,10 @@ def _titre_fenetre(titre, note=None, retour=None, icone_nom="users"):
     )
 
 
-def _carte_utilisateur(personne, fichier, reglages, courant, langue_active):
-    """Une carte de la liste : avatar, identité, profil, activation, réglages.
+def _ligne_utilisateur(tab, personne, fichier, reglages, courant, langue_active):
+    """Une LIGNE de la table des utilisateurs.
 
-    Les deux boutons ne font PAS la même chose, et la carte doit le montrer :
+    Les deux boutons ne font pas la même chose, et la ligne doit le montrer :
     « Activer » change qui regarde et recompose le menu ; l'engrenage ouvre le
     PROFIL de cette personne, donc ce que voient tous ceux qui le portent.
     """
@@ -840,80 +841,55 @@ def _carte_utilisateur(personne, fichier, reglages, courant, langue_active):
     est_courant = courant and courant.get("id") == identifiant
     porteur = utilisateurs.profil(fichier, personne.get("profil"))
 
-    if est_courant:
-        # Streamlit ne laisse pas poser de classe sur un conteneur : la carte
-        # active se vise donc par sa CLÉ, et la règle s'écrit au moment où
-        # l'on sait laquelle l'est.
-        st.markdown(
-            f"<style>"
-            f'[data-testid="stDialog"] .st-key-regcarte_{identifiant} {{'
-            f" background: var(--kg-color-primary-light) !important;"
-            f" border-color: var(--kg-color-primary) !important;"
-            f" box-shadow: inset 3px 0 0 var(--kg-color-primary) !important;"
-            f" }}"
-            f"</style>",
-            unsafe_allow_html=True,
+    identite, action, droits = tab.ligne(identifiant)
+
+    with identite:
+        tab.cellule(
+            f'{utilisateurs.texte_sur(personne.get("prenom"))} '
+            f'{utilisateurs.texte_sur(personne.get("nom"))}',
+            # L'ADRESSE puis le PROFIL, sur la même ligne : l'adresse identifie
+            # la personne, le profil dit ce qu'elle voit — deux registres qui
+            # se lisent mieux côte à côte qu'empilés.
+            sous=(f'{utilisateurs.texte_sur(personne.get("email"))}'
+                  f'{_pastille_profil(porteur, langue_active, avec_marge=True)}'),
+            visuel=utilisateurs.avatar(
+                personne, 34,
+                bordure=("var(--kg-color-primary)" if est_courant else None),
+            ),
         )
 
-    with st.container(key=f"regcarte_{identifiant}", border=False):
-        colonnes = st.columns([1, 6, 3], vertical_alignment="center")
+    with action:
+        if st.button((reglages.get("actif") if est_courant
+                      else reglages.get("activer")) or "",
+                     key=f"reg_actif_{identifiant}", use_container_width=True,
+                     disabled=bool(est_courant),
+                     type="primary" if est_courant else "secondary"):
+            utilisateurs.definir_actif(fichier, identifiant)
+            st.rerun()
 
-        with colonnes[0]:
-            st.markdown(
-                utilisateurs.avatar(
-                    personne, 44,
-                    # L'anneau vert redit l'activité à hauteur d'avatar : le
-                    # bouton est à l'autre bout de la carte, et l'œil qui
-                    # descend la liste ne le suit pas.
-                    bordure=("var(--kg-color-primary)" if est_courant
-                             else "var(--kg-color-border-light,#ECEEF0)"),
-                ),
-                unsafe_allow_html=True,
-            )
+    with droits:
+        if st.button(":material/settings:", key=f"reg_droits_{identifiant}",
+                     help=reglages.get("droits"), type="tertiary"):
+            utilisateurs.aller_a("droits", personne.get("profil"))
+            st.rerun()
 
-        with colonnes[1]:
-            st.markdown(
-                f'<div style="font-size:14.5px;font-weight:650;'
-                f'line-height:1.25;">'
-                f'{utilisateurs.texte_sur(personne.get("prenom"))} '
-                f'{utilisateurs.texte_sur(personne.get("nom"))}</div>'
-                f'<div style="font-size:12px;color:var(--kg-color-text-muted);'
-                f'overflow-wrap:anywhere;line-height:1.4;">'
-                f'{utilisateurs.texte_sur(personne.get("email"))}</div>'
-                # Le PROFIL en PASTILLE : sans lui, deux personnes aux droits
-                # opposés se ressemblent trait pour trait — et en texte nu, il
-                # se confondait avec l'adresse juste au-dessus.
-                f'<span style="display:inline-block;margin-top:5px;'
-                f"padding:1px 9px;border-radius:999px;font-size:10.5px;"
-                f"font-weight:700;letter-spacing:.02em;text-transform:uppercase;"
-                f"background:var(--kg-color-primary-light,#E4F0EB);"
-                f'color:var(--kg-color-primary);">'
-                f'{utilisateurs.texte_sur(menu.texte((porteur or {}).get("nom"), langue_active))}'
-                f'</span>',
-                unsafe_allow_html=True,
-            )
 
-        with colonnes[2]:
-            action, droits = st.columns([3, 1], vertical_alignment="center")
+def _pastille_profil(porteur, langue_active, avec_marge=False):
+    """Le nom du profil, en pastille — ce que la personne voit, d'un coup d'œil."""
 
-            with action:
-                if st.button(
-                    (reglages.get("actif") if est_courant
-                     else reglages.get("activer")) or "",
-                    key=f"reg_actif_{identifiant}",
-                    use_container_width=True,
-                    disabled=bool(est_courant),
-                    type="primary" if est_courant else "secondary",
-                ):
-                    utilisateurs.definir_actif(fichier, identifiant)
-                    st.rerun()
+    if not porteur:
+        return ""
 
-            with droits:
-                if st.button(":material/settings:",
-                             key=f"reg_droits_{identifiant}",
-                             help=reglages.get("droits"), type="tertiary"):
-                    utilisateurs.aller_a("droits", personne.get("profil"))
-                    st.rerun()
+    return (
+        f'<span style="display:inline-block;'
+        f'{"margin-left:8px;" if avec_marge else ""}'
+        f"padding:0 8px;border-radius:999px;font-size:10px;font-weight:700;"
+        f"letter-spacing:.02em;text-transform:uppercase;vertical-align:1px;"
+        f"background:var(--kg-color-primary-light,#E4F0EB);"
+        f'color:var(--kg-color-primary);">'
+        f'{utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))}'
+        f"</span>"
+    )
 
 
 def _accorde(nombre, reglages):
@@ -930,93 +906,141 @@ def _accorde(nombre, reglages):
     return f"{nombre} {mot}"
 
 
-def _carte_profil(porteur, fichier, reglages, langue_active):
-    """Une carte de profil : nom, date de création, porteurs, configuration."""
+def _ligne_profil(tab, porteur, fichier, reglages, langue_active):
+    """Une LIGNE de la table des profils."""
 
     identifiant = porteur.get("id")
     verrouille = bool(porteur.get("verrouille"))
 
-    with st.container(key=f"regprofil_{identifiant}", border=False):
-        marque, gauche, droite = st.columns([1, 6, 3],
-                                            vertical_alignment="center")
+    identite, action = tab.ligne(identifiant)
 
-        with marque:
-            # La même pastille que l'en-tête, en plus petit : les deux objets
-            # de cette fenêtre — une personne, un profil — se distinguent alors
-            # d'un coup d'œil dans une liste.
-            st.markdown(
-                f'<span style="width:38px;height:38px;border-radius:11px;'
-                f"display:inline-flex;align-items:center;justify-content:center;"
+    with identite:
+        tab.cellule(
+            utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))
+            + (f' <span style="font-size:10px;font-weight:700;'
+               f"letter-spacing:.02em;text-transform:uppercase;padding:0 7px;"
+               f"border-radius:999px;background:var(--kg-color-surface-secondary,"
+               f'#F5F6F7);color:var(--kg-color-text-muted);">'
+               f'{reglages.get("verrouille", "")}</span>' if verrouille else ""),
+            sous=(f'{reglages.get("cree_le", "")} '
+                  f'{utilisateurs.texte_sur(porteur.get("cree_le"))} · '
+                  f'{_accorde(utilisateurs.porteurs(fichier, identifiant), reglages)}'),
+            visuel=(
+                f'<span style="width:34px;height:34px;border-radius:10px;'
+                f"flex:none;display:inline-flex;align-items:center;"
+                f"justify-content:center;"
                 f"background:var(--kg-color-surface-secondary,#F5F6F7);"
                 f'color:var(--kg-color-text-secondary);">'
-                f'{icone("shield" if verrouille else "settings", 17)}</span>',
-                unsafe_allow_html=True,
-            )
+                f'{icone("shield" if verrouille else "settings", 16)}</span>'
+            ),
+        )
 
-        with gauche:
-            st.markdown(
-                f'<div style="font-size:14.5px;font-weight:650;'
-                f'line-height:1.25;">'
-                f'{utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))}'
-                + (f' <span style="margin-left:4px;padding:1px 8px;'
-                   f"border-radius:999px;font-size:10px;font-weight:700;"
-                   f"letter-spacing:.02em;text-transform:uppercase;"
-                   f"background:var(--kg-color-surface-secondary,#F5F6F7);"
-                   f'color:var(--kg-color-text-muted);">'
-                   f'{reglages.get("verrouille", "")}</span>'
-                   if verrouille else "")
-                + f'</div>'
-                f'<div style="font-size:12px;color:var(--kg-color-text-muted);'
-                f'line-height:1.4;">'
-                f'{reglages.get("cree_le", "")} '
-                f'{utilisateurs.texte_sur(porteur.get("cree_le"))} · '
-                f'{_accorde(utilisateurs.porteurs(fichier, identifiant), reglages)}'
-                f'</div>',
-                unsafe_allow_html=True,
-            )
+    with action:
+        if st.button(reglages.get("configurer", ""),
+                     key=f"reg_conf_{identifiant}", use_container_width=True,
+                     # Le profil d'origine ne se règle pas : c'est le recours,
+                     # celui qui voit tout quand tous les autres ont été coupés.
+                     disabled=verrouille,
+                     help=(reglages.get("verrouille_note")
+                           if verrouille else None)):
+            utilisateurs.aller_a("droits", identifiant)
+            st.rerun()
 
-        with droite:
-            if st.button(reglages.get("configurer", ""),
-                         key=f"reg_conf_{identifiant}",
-                         use_container_width=True,
-                         # Le profil d'origine ne se règle pas : c'est le
-                         # recours, celui qui voit tout quand tous les autres
-                         # ont été coupés.
-                         disabled=verrouille,
-                         help=(reglages.get("verrouille_note")
-                               if verrouille else None)):
-                utilisateurs.aller_a("droits", identifiant)
-                st.rerun()
+
+def _rang_onglets(reglages, actif, sur_creer):
+    """Les deux onglets, et le bouton « Créer » au bout de leur ligne.
+
+    Le bouton vit AVEC les onglets, non au pied de la liste : c'est l'action
+    de la page, et l'aller chercher sous une liste de vingt lignes demandait
+    de défiler pour créer le vingt-et-unième.
+
+    `st.tabs` ne laisse rien poser sur sa ligne : on gréé donc deux boutons et
+    l'on peint l'actif — la forme segmentée du rail du menu, déjà employée
+    partout ailleurs dans cette page.
+    """
+
+    gauche, droite = st.columns([6, 2], vertical_alignment="center")
+    choisi = actif
+
+    with gauche:
+        with st.container(key="regonglets"):
+            cases = st.columns(len(reglages["onglets"]))
+
+            for colonne, (cle, libelle) in zip(cases, reglages["onglets"]):
+                with colonne:
+                    if st.button(libelle, key=f"reg_onglet_{cle}",
+                                 use_container_width=True,
+                                 type="primary" if cle == actif else "tertiary"):
+                        choisi = cle
+
+    with droite:
+        with st.container(key="regcreer"):
+            if st.button(reglages.get("creer_ligne", ""), key="reg_creer_ligne",
+                         use_container_width=True, type="secondary"):
+                sur_creer(choisi)
+
+    return choisi
+
+
+_CLE_ONGLET_FENETRE = "_kg_fenetre_onglet"
 
 
 def _ecran_accueil(config, fichier, reglages, langue_active):
-    """Écran 1 — deux onglets : qui regarde, et selon quel profil."""
+    """Écran 1 — deux tables : qui regarde, et selon quel profil."""
 
     _titre_fenetre(reglages.get("titre", ""), reglages.get("note"))
 
-    onglet_gens, onglet_profils = st.tabs(
-        [reglages.get("titre", ""), reglages.get("profils", "")])
+    reglages = {**reglages, "onglets": [
+        ("gens", reglages.get("titre", "")),
+        ("profils", reglages.get("profils", "")),
+    ]}
 
-    with onglet_gens:
+    def creer(onglet):
+        utilisateurs.aller_a("creation" if onglet == "gens"
+                             else "profil_creation")
+        st.rerun()
+
+    actif = st.session_state.get(_CLE_ONGLET_FENETRE, "gens")
+    choisi = _rang_onglets(reglages, actif, creer)
+
+    if choisi != actif:
+        st.session_state[_CLE_ONGLET_FENETRE] = choisi
+        st.rerun()
+
+    if choisi == "gens":
         courant = utilisateurs.actif(fichier)
+        gens = utilisateurs.liste(fichier)
 
-        for personne in utilisateurs.liste(fichier):
-            _carte_utilisateur(personne, fichier, reglages, courant,
-                               langue_active)
+        cadre, tab = ui.tableau("reggens", [
+            {"cle": "identite", "libelle": reglages.get("colonne_personne", ""),
+             "poids": 6},
+            {"cle": "action", "libelle": "", "poids": 2},
+            {"cle": "droits", "libelle": "", "poids": 1},
+        ])
 
-        if st.button(reglages.get("ajouter", ""), key="reg_ajouter",
-                     use_container_width=True):
-            utilisateurs.aller_a("creation")
-            st.rerun()
+        with cadre:
+            if not gens:
+                tab.vide(reglages.get("vide", ""))
 
-    with onglet_profils:
-        for porteur in utilisateurs.profils(fichier):
-            _carte_profil(porteur, fichier, reglages, langue_active)
+            for personne in gens:
+                _ligne_utilisateur(tab, personne, fichier, reglages, courant,
+                                   langue_active)
+        return
 
-        if st.button(reglages.get("profil_ajouter", ""), key="reg_ajouter_profil",
-                     use_container_width=True):
-            utilisateurs.aller_a("profil_creation")
-            st.rerun()
+    profils = utilisateurs.profils(fichier)
+
+    cadre, tab = ui.tableau("regprofils", [
+        {"cle": "identite", "libelle": reglages.get("colonne_profil", ""),
+         "poids": 6},
+        {"cle": "action", "libelle": "", "poids": 3},
+    ])
+
+    with cadre:
+        if not profils:
+            tab.vide(reglages.get("profil_vide", ""))
+
+        for porteur in profils:
+            _ligne_profil(tab, porteur, fichier, reglages, langue_active)
 
 
 def _pied(*boutons):
@@ -1199,12 +1223,15 @@ def _ecran_droits(config, fichier, reglages, langue_active, identifiant):
 
     nombre = utilisateurs.porteurs(fichier, identifiant)
 
+    # Aucune NOTE : l'écran s'explique par ce qu'il montre — un nom de profil,
+    # des sections, des interrupteurs. Le paragraphe qui les décrivait était lu
+    # une fois, puis sauté ; il ne reste que le décompte des porteurs, qui, lui,
+    # dit ce que le réglage engage.
     _titre_fenetre(
         f'{reglages.get("droits", "")} — '
         f'{utilisateurs.texte_sur(menu.texte(porteur.get("nom"), langue_active))}',
-        f'{reglages.get("droits_note", "")} '
-        f'({_accorde(nombre, reglages)})',
-        retour=reglages.get("retour"),
+        _accorde(nombre, reglages),
+        retour=reglages.get("retour"), icone_nom="shield",
     )
 
     for entree in config.get("menu_items") or []:
@@ -1359,7 +1386,36 @@ def _styles_fenetre(reglages=None):
 [data-testid="stDialog"] [data-testid="stHorizontalBlock"] { flex-wrap: nowrap; }
 [data-testid="stDialog"] [data-testid="stColumn"] { min-width: 0; }
 
-/* ─── Onglets — la forme segmentée du rail du menu ─────────────────────── */
+/* ─── Onglets grées — même forme segmentée que le rail du menu ─────────── */
+[data-testid="stDialog"] .st-key-regonglets [data-testid="stHorizontalBlock"] {
+  gap: 3px; padding: 3px; border-radius: 10px;
+  background: var(--kg-color-surface-secondary, #F5F6F7);
+  width: fit-content;
+}
+[data-testid="stDialog"] .st-key-regonglets [data-testid="stColumn"] {
+  min-width: 0; flex: 0 0 auto !important; width: auto !important;
+}
+[data-testid="stDialog"] .st-key-regonglets button {
+  border-radius: 8px !important; border: none !important;
+  padding: 0 18px !important; height: 30px !important; min-height: 30px !important;
+  font-size: 13px !important; font-weight: 600 !important;
+  background: transparent !important; color: var(--kg-color-text-muted) !important;
+  width: auto !important;
+}
+[data-testid="stDialog"] .st-key-regonglets button[kind="primary"] {
+  background: #FFFFFF !important; color: var(--kg-color-text) !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .10);
+}
+/* Le « Créer » ferme la ligne des onglets, à droite. */
+[data-testid="stDialog"] .st-key-regcreer button {
+  border: 1px solid var(--kg-color-primary) !important;
+  color: var(--kg-color-primary) !important; background: #FFFFFF !important;
+}
+[data-testid="stDialog"] .st-key-regcreer button:hover {
+  background: var(--kg-color-primary-light, #E4F0EB) !important;
+}
+
+/* ─── Onglets natifs (inutilisés ici, gardés pour les autres pages) ────── */
 [data-testid="stDialog"] [data-baseweb="tab-list"] {
   /* Le bandeau épouse ses deux cases : étiré sur toute la largeur, il
      laissait une bande grise vide sur les deux tiers de la fenêtre. */
@@ -1414,15 +1470,15 @@ def _styles_fenetre(reglages=None):
 }
 /* Le bouton d'ICÔNE est un carré — visé par sa clé, non par son type : le
    type « tertiaire » sert aussi à des boutons de texte, et « Supprimer » s'y
-   coupait en deux dans trente-quatre pixels. Vérifié à l'écran. */
-[data-testid="stDialog"] [class*="st-key-reg_droits_"] > div > button,
-[data-testid="stDialog"] [class*="st-key-reg_conf_"] > div > button {
+   coupait en deux dans trente-quatre pixels. La clé visée est celle de
+   l'ENGRENAGE seul : « Configurer » y était tombé à son tour et s'écrivait
+   « Confi / gurer ». Vérifié à l'écran, deux fois plutôt qu'une. */
+[data-testid="stDialog"] [class*="st-key-reg_droits_"] > div > button {
   width: 34px; padding: 0; border-radius: 9px;
   border: 1px solid var(--kg-color-border-light, #ECEEF0);
   background: #FFFFFF; color: var(--kg-color-text-muted);
 }
-[data-testid="stDialog"] [class*="st-key-reg_droits_"] > div > button:hover,
-[data-testid="stDialog"] [class*="st-key-reg_conf_"] > div > button:hover {
+[data-testid="stDialog"] [class*="st-key-reg_droits_"] > div > button:hover {
   border-color: var(--kg-color-primary); color: var(--kg-color-primary);
   background: var(--kg-color-primary-light, #E4F0EB);
 }
@@ -1521,6 +1577,13 @@ def _styles_fenetre(reglages=None):
 [data-testid="stDialog"] [data-testid="stFileUploaderDropzone"] > span {
   margin: 0 auto;
 }
+/* La vignette « nom-du-fichier.jpg · 0.6 Mo » de Streamlit fait DOUBLON avec
+   l'aperçu rond juste au-dessus : deux confirmations pour un seul choix, et
+   la seconde donne un poids en mégaoctets dont personne n'a que faire ici. */
+[data-testid="stDialog"] [data-testid="stFileUploaderFile"],
+[data-testid="stDialog"] [data-testid="stFileUploaderFileList"] {
+  display: none !important;
+}
 
 /* ─── Formulaires ─────────────────────────────────────────────────────── */
 [data-testid="stDialog"] [data-testid="stFileUploaderDropzone"] {
@@ -1541,6 +1604,23 @@ def _styles_fenetre(reglages=None):
     # ailleurs — le socle continue de n'écrire aucun mot visible.
     depot = (reglages or {}).get("photo_deposer")
     parcourir = (reglages or {}).get("photo_parcourir")
+    aucun = (reglages or {}).get("aucun_resultat")
+
+    if aucun:
+        # « No results » : l'état vide de la liste déroulante, en anglais, quand
+        # ce qu'on tape ne correspond à rien. Elle se peint dans un PORTAIL
+        # accroché au corps du document, hors de la fenêtre : la règle ne peut
+        # donc pas être portée par le sélecteur du dialogue, et vise le portail
+        # lui-même. Vérifié à l'écran — c'est bien un `<li>` unique.
+        st.markdown(
+            "<style>"
+            '[data-baseweb="popover"] li:only-child:not([role="option"])'
+            " { font-size: 0; }"
+            f'[data-baseweb="popover"] li:only-child:not([role="option"])::after'
+            f' {{ content: "{aucun}"; font-size: 13px; }}'
+            "</style>",
+            unsafe_allow_html=True,
+        )
 
     if not (depot or parcourir):
         return

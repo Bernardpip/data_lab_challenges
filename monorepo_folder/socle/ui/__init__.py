@@ -29,8 +29,10 @@ from socle.ui.cards import (
     fr_number,
     compact,
 )
+from socle.ui.tableau import tableau
 
 __all__ = [
+    "tableau",
     "onglets",
     "panneau",
     "stat_centrale",

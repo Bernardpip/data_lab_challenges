@@ -538,5 +538,25 @@
   "reglages_annuler": {
     "fr": "Annuler",
     "en": "Cancel"
+  },
+  "reglages_profil_vide": {
+    "fr": "Aucun profil. Le premier créé pourra être attribué.",
+    "en": "No profile yet. The first one created can be assigned."
+  },
+  "reglages_colonne_personne": {
+    "fr": "Personne",
+    "en": "Person"
+  },
+  "reglages_colonne_profil": {
+    "fr": "Profil",
+    "en": "Profile"
+  },
+  "reglages_creer_ligne": {
+    "fr": "＋ Créer",
+    "en": "＋ Create"
+  },
+  "reglages_aucun_resultat": {
+    "fr": "Aucun profil de ce nom",
+    "en": "No profile by that name"
   }
 }
