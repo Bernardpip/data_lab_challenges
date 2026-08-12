@@ -48,7 +48,15 @@ shapely==2.0.7
 six==1.17.0
 smmap==5.0.3
 streamlit-folium==0.25.3
+# Le VISIONNEUR de PDF est une option de Streamlit, pas un paquet à part :
+# `st.pdf` lève une exception explicite s'il manque. Les quatre planches du
+# corpus s'ouvrent dans l'application grâce à lui — sans quoi elles ne
+# seraient consultables qu'en sortant du tableau de bord.
 streamlit==1.50.0
+# Le visionneur de planches. Épinglé SOUS la version 2 : celle-ci réclame
+# `streamlit.components.v2`, qui n'existe pas en 1.50 — `st.pdf` échouait
+# alors sur un composant pourtant installé.
+streamlit-pdf==1.0.8
 tenacity==9.1.2
 toml==0.10.2
 tornado==6.5.7

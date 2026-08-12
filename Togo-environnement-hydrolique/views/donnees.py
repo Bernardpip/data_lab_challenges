@@ -293,17 +293,36 @@ def render_planches():
             }))
             ui.note(tr(f"planche_{planche['cle']}_lecture"))
 
-            # L'image est MONTRÉE, le PDF seulement situé : un navigateur
-            # n'affiche pas une planche de vingt mégaoctets sans la
-            # télécharger d'abord, et la télécharger d'office pour un onglet
-            # qu'on ne fait que traverser serait le meilleur moyen de le
-            # rendre lent.
+            # L'image est montrée d'emblée, la planche PDF SUR DEMANDE. Les
+            # deux grilles pèsent dix-neuf mégaoctets chacune : les poser
+            # d'office ferait payer à qui traverse l'onglet le prix de ce
+            # qu'il n'a pas demandé. Le poids est écrit au-dessus du bouton,
+            # pour que la demande soit éclairée.
             if planche["genre"] == "image":
                 marque = planche["chemin"].stat()
                 st.image(_apercu(str(planche["chemin"]),
                                  (marque.st_size, marque.st_mtime)),
                          use_container_width=True)
             else:
+                cle_ouverte = f"planche_ouverte_{planche['cle']}"
+                ouverte = st.session_state.get(cle_ouverte, False)
+
+                if st.button(tr("planche_fermer") if ouverte
+                             else tr("planche_ouvrir"),
+                             key=f"bouton_{cle_ouverte}", type="secondary"):
+                    st.session_state[cle_ouverte] = not ouverte
+                    st.rerun()
+
+                if ouverte:
+                    # Le visionneur est une OPTION de Streamlit. Sans elle,
+                    # `st.pdf` lève une exception qui remplirait l'écran d'une
+                    # trace : on dit ce qui manque et comment l'installer, et
+                    # le reste de la page tient debout.
+                    try:
+                        st.pdf(planche["chemin"], height=620)
+                    except Exception:                      # noqa: BLE001
+                        ui.note(tr("planche_visionneur_absent"))
+
                 st.markdown(tr("planche_chemin", {
                     "chemin": f"data/planches/{planche['fichier']}"}))
 

@@ -211,6 +211,10 @@
     "fr": "Que faire",
     "en": "What now"
   },
+  "section_corpus": {
+    "fr": "Le corpus",
+    "en": "The corpus"
+  },
   "section_preuves": {
     "fr": "Preuves",
     "en": "Evidence"

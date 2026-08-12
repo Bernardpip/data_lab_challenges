@@ -512,8 +512,8 @@
     "en": "{genre} · {mo} MB"
   },
   "planche_chemin": {
-    "fr": "Dans l'archive : `{chemin}`",
-    "en": "In the archive: `{chemin}`"
+    "fr": "Fichier de l'archive : `{chemin}`",
+    "en": "File in the archive: `{chemin}`"
   },
   "planche_portail": {
     "fr": "Voir le jeu ISRI-TG sur le portail",
@@ -590,5 +590,17 @@
   "planche_fsi_map_lecture": {
     "fr": "Le raster correspondant pèse 82 Mo, et il est livré deux fois — en `.tif` et zippé. Le tableau de bord ne le charge pas : il montre cette image, qui en dit autant sans immobiliser la mémoire du navigateur.",
     "en": "The matching raster weighs 82 MB, and ships twice — as `.tif` and zipped. The dashboard does not load it: it shows this image, which says as much without tying up the browser's memory."
+  },
+  "planche_ouvrir": {
+    "fr": "Ouvrir la planche",
+    "en": "Open the plate"
+  },
+  "planche_fermer": {
+    "fr": "Fermer la planche",
+    "en": "Close the plate"
+  },
+  "planche_visionneur_absent": {
+    "fr": "Le visionneur de PDF n'est pas installé — `pip install \"streamlit[pdf]\"`. La planche reste lisible depuis le fichier de l'archive.",
+    "en": "The PDF viewer is not installed — `pip install \"streamlit[pdf]\"`. The plate is still readable from the file in the archive."
   }
 }

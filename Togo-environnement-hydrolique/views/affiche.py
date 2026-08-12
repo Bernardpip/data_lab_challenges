@@ -1233,8 +1233,14 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                      annees_extra=recit.annees_du_programme())},
             ]},
 
-            # ── Acte 7 · Ce qu'on sait, ce qu'on ignore ──────────────────
-            {"id": "preuves", "can_view": True, "name": tr("section_preuves"),
+            # ── Acte 7 · Le corpus ───────────────────────────────────────
+            #
+            # Huit onglets tenaient ici, et un rang de huit ne se lit plus :
+            # on n'y cherche pas, on y balaie. La coupe suit celle du défi
+            # pilote — les DONNÉES d'un côté, les ANNEXES de l'autre — parce
+            # qu'elle sépare deux gestes distincts : examiner ce qu'on a lu,
+            # et vérifier comment on l'a lu.
+            {"id": "corpus", "can_view": True, "name": tr("section_corpus"),
              "reference": carte_du_corpus, "tab_items": [
                 {"id": "fichiers", "can_view": True, "name": tr("vue_fichiers"),
                  "is_default": True,
@@ -1248,7 +1254,13 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                  "component": portee(donnees_vue.render_recettes)},
                 {"id": "perimetre", "can_view": True, "name": tr("vue_perimetre"),
                  "component": portee(donnees_vue.render_perimetre)},
+            ]},
+
+            # ── Acte 8 · Preuves ─────────────────────────────────────────
+            {"id": "preuves", "can_view": True, "name": tr("section_preuves"),
+             "reference": carte_du_corpus, "tab_items": [
                 {"id": "preuves", "can_view": True, "name": tr("vue_preuves"),
+                 "is_default": True,
                  "component": portee(annexes_vue.render_preuves)},
                 {"id": "sources", "can_view": True, "name": tr("vue_sources"),
                  "component": portee(annexes_vue.render_sources)},

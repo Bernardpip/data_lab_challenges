@@ -39,6 +39,9 @@ ESSENTIELLES = {
     "scipy": "scipy",
     "numpy": "numpy",
     "python-pptx": "pptx",
+    # Le visionneur de PDF vient avec `streamlit[pdf]` : sans lui, les quatre
+    # planches du corpus ne s'ouvrent pas dans l'application.
+    "streamlit-pdf": "streamlit_pdf",
 }
 
 # Le corpus, ressource par ressource, sous son nom de téléchargement. Ne
