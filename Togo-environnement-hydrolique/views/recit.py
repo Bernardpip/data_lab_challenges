@@ -1207,6 +1207,124 @@ HORIZON_INONDATIONS = 3
 PREMIERE_ANNEE = 2027
 
 
+def annees_du_programme():
+    """Toutes les années que les deux programmes peuvent porter.
+
+    Sert à ÉTENDRE l'amplitude du curseur d'années de la barre de filtres : il
+    est bâti sur les achèvements du COSO, qui s'arrêtent en 2026, et ne pouvait
+    donc désigner aucune des années que la proposition affiche.
+    """
+
+    fin = PREMIERE_ANNEE + max(HORIZON_OUVRAGES, HORIZON_INONDATIONS) - 1
+
+    return tuple(range(PREMIERE_ANNEE, fin + 1))
+
+
+def _annees_retenues():
+    """L'intervalle du curseur d'années, lu dans la session.
+
+    Même mécanique que le périmètre territorial : la barre de filtres se peint
+    en tête de colonne, ses clés sont donc déjà posées quand les blocs qui
+    suivent les lisent. Rien ne transite d'un composant à l'autre.
+    """
+
+    retenu = st.session_state.get("filtre_annee")
+
+    if not retenu:
+        return None
+
+    return int(retenu[0]), int(retenu[-1])
+
+
+def _restreindre(programme):
+    """Ne garde du programme que les chantiers des années retenues.
+
+    Le calendrier, la carte et la liste se recalculent alors sur la même
+    tranche : un utilisateur qui ne veut voir que 2027 doit obtenir un
+    programme de 2027, pas la totalité avec une année surlignée.
+
+    Les TOTAUX suivent la restriction. C'est délibéré : le montant affiché doit
+    être celui des chantiers montrés, sinon la page annonce une facture qui ne
+    correspond à rien de visible.
+    """
+
+    annees = _annees_retenues()
+    cadre = programme.get("cadre")
+
+    if annees is None or cadre is None or cadre.empty:
+        return programme
+
+    debut, fin = annees
+    retenu = cadre[cadre["annee"].between(debut, fin)]
+
+    if len(retenu) == len(cadre):
+        return programme
+
+    colonne = "manquants" if "manquants" in retenu.columns else "montant"
+
+    return {
+        **programme,
+        "cadre": retenu,
+        "annees": analytics._par_annee(retenu, colonne) if len(retenu)
+        else retenu.head(0),
+        "total": float(retenu["montant"].sum()),
+        "ouvrages": int(retenu.get("manquants", pd.Series(dtype=int)).sum()),
+        "cantons": int(len(retenu)),
+    }
+
+
+def _entretien(tr, programme, coso, cle_note):
+    """La prévision d'ENTRETIEN du parc que le programme livre.
+
+    Elle manquait, et son absence répétait exactement ce que l'acte 2 reproche
+    au corpus : 173 microprojets sur 218 n'ont aucun plan de maintenance
+    déclaré. Une proposition qui budgète la construction sans l'entretien
+    construit des ouvrages qui tomberont.
+    """
+
+    observe = analytics.taux_entretien_observe(coso)
+    courbe = analytics.entretien_previsionnel(programme, observe["part_mediane"])
+    scenarios = analytics.entretien_scenarios(programme,
+                                              observe=observe["part_mediane"])
+
+    if courbe.empty:
+        return
+
+    with ui.card(tr("entretien_previsionnel_titre"),
+                 tr("entretien_previsionnel_sous_titre"), "settings"):
+        charts.column_series(
+            courbe["annee"].astype(int).tolist(),
+            (courbe["entretien"] / 1e6).tolist(),
+            unit=tr("unite_millions"), height=240, decimals=0,
+        )
+        ui.note(tr(cle_note, {
+            "provision": ui.compact(observe["provision_mediane"]),
+            "part": ui.fr_number(100 * observe["part_mediane"], 2),
+            "n": ui.fr_number(observe["ouvrages"]),
+            "total": ui.fr_number(observe["total"]),
+            "plateau": ui.compact(float(courbe["entretien"].max())),
+        }))
+
+        lisible = scenarios.assign(
+            libelle=scenarios["taux"].map(
+                lambda taux: tr("entretien_taux",
+                                {"taux": ui.fr_number(100 * taux, 2)})))
+
+        charts.bar_h(lisible.assign(milliards=lisible["cumul"] / 1e9),
+                     "libelle", "milliards", unit=tr("unite_milliards"),
+                     trier=False, decimals=2)
+        ui.note(tr("entretien_previsionnel_note_scenarios", {
+            "bas": ui.fr_number(float(scenarios["part_investissement"].min()), 0),
+            "haut": ui.fr_number(float(scenarios["part_investissement"].max()), 0),
+        }))
+        charts.table_twin(lisible[["libelle", "annuel_plateau", "cumul",
+                                   "part_investissement"]].rename(columns={
+            "libelle": tr("col_taux"),
+            "annuel_plateau": tr("col_entretien_annuel"),
+            "cumul": tr("col_entretien_cumul"),
+            "part_investissement": tr("col_part_investissement")}))
+
+
 def _calendrier(tr, programme, cle_note, parametres=None):
     """Le calendrier du programme — dépense par année, et cumul.
 
@@ -1410,16 +1528,17 @@ def proposition_ouvrages(tr, data, faits, corpus):
             "existants": tr("col_existants"),
             "manquants": tr("col_manquants"), "cout": tr("col_cout")}))
 
-    programme = analytics.programme_ouvrages(
+    programme = _restreindre(analytics.programme_ouvrages(
         data["cantons"], data["tde"], data["coso"],
         norme=NORME_PROGRAMME, horizon=HORIZON_OUVRAGES,
-        debut=PREMIERE_ANNEE)
+        debut=PREMIERE_ANNEE))
 
     _calendrier(tr, programme, "programme_ouvrages_note", {
         "ouvrages": ui.fr_number(programme["ouvrages"]),
         "cantons": ui.fr_number(len(programme["cadre"])),
         "norme": ui.fr_number(programme["norme"]),
     })
+    _entretien(tr, programme, data["coso"], "entretien_ouvrages_note")
     _chantiers(tr, programme)
 
     with ui.card(tr("proposition_carte_nature_titre"),
@@ -1437,10 +1556,10 @@ def proposition_ouvrages(tr, data, faits, corpus):
 def carte_programme_ouvrages(tr, data, hauteur):
     """Les chantiers d'ouvrages, situés dans leur canton et datés."""
 
-    programme = analytics.programme_ouvrages(
+    programme = _restreindre(analytics.programme_ouvrages(
         data["cantons"], data["tde"], data["coso"],
         norme=NORME_PROGRAMME, horizon=HORIZON_OUVRAGES,
-        debut=PREMIERE_ANNEE)
+        debut=PREMIERE_ANNEE))
 
     _carte_programme(
         tr, programme, "recit_prog_ouvrages",
@@ -1468,10 +1587,10 @@ def carte_programme_ouvrages(tr, data, hauteur):
 def carte_programme_inondations(tr, data, hauteur):
     """Les aménagements de gestion des eaux, situés et datés."""
 
-    programme = analytics.programme_inondations(
+    programme = _restreindre(analytics.programme_inondations(
         data["cantons"], data["tde"], data["coso"],
         cout_unitaire=COUT_RETENU, horizon=HORIZON_INONDATIONS,
-        debut=PREMIERE_ANNEE)
+        debut=PREMIERE_ANNEE))
 
     _carte_programme(
         tr, programme, "recit_prog_inondations",
@@ -1598,15 +1717,16 @@ def proposition_inondations(tr, data, faits, corpus):
             columns={"hypothese": tr("col_hypothese"),
                      "cantons": tr("col_cantons"), "total": tr("col_cout")}))
 
-    programme = analytics.programme_inondations(
+    programme = _restreindre(analytics.programme_inondations(
         data["cantons"], data["tde"], data["coso"],
         cout_unitaire=COUT_RETENU, horizon=HORIZON_INONDATIONS,
-        debut=PREMIERE_ANNEE)
+        debut=PREMIERE_ANNEE))
 
     _calendrier(tr, programme, "programme_inondations_note", {
         "cantons": ui.fr_number(programme["cantons"]),
         "unitaire": ui.compact(programme["unitaire"]),
     })
+    _entretien(tr, programme, data["coso"], "entretien_inondations_note")
     _chantiers(tr, programme, colonnes=["canton", "prefecture", "region",
                                         "risque_pts", "montant", "annee"])
 

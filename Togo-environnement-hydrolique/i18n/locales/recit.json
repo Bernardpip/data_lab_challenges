@@ -1558,5 +1558,49 @@
   "col_cumul": {
     "fr": "Cumul (F CFA)",
     "en": "Cumulative (F CFA)"
+  },
+  "entretien_previsionnel_titre": {
+    "fr": "L'entretien de ce qui sera construit",
+    "en": "Upkeep of what will be built"
+  },
+  "entretien_previsionnel_sous_titre": {
+    "fr": "Charge annuelle du parc livré, prolongée cinq ans après le programme",
+    "en": "Annual burden of the delivered stock, projected five years past the programme"
+  },
+  "entretien_taux": {
+    "fr": "{taux} % du coût par an",
+    "en": "{taux} % of cost per year"
+  },
+  "entretien_ouvrages_note": {
+    "fr": "Le COSO provisionne <b>{provision} F CFA</b> par ouvrage — <b>{part} %</b> de son coût, sur {n} ouvrages renseignés sur {total}. Appliqué au parc que ce programme livre, cela fait <b>{plateau} F CFA</b> par an une fois tous les ouvrages en service. C'est une DOTATION à la remise, pas un budget annuel : le corpus ne dit ni sa périodicité ni ce qu'elle couvre, et elle sert ici de plancher.",
+    "en": "COSO provisions <b>{provision} F CFA</b> per facility — <b>{part} %</b> of its cost, across {n} of {total} recorded facilities. Applied to the stock this programme delivers, that is <b>{plateau} F CFA</b> a year once everything is in service. It is an ENDOWMENT at handover, not an annual budget: the corpus states neither its periodicity nor its scope, and it serves here as a floor."
+  },
+  "entretien_inondations_note": {
+    "fr": "Aucun fonds d'entretien n'existe pour un ouvrage de gestion des eaux : le taux appliqué ici est celui, OBSERVÉ, des forages du COSO — <b>{part} %</b> du coût, soit {provision} F CFA par ouvrage sur {n} cas. Un bassin de rétention ne s'entretient pas comme un forage, et ce transfert est la partie la plus fragile de cette page. À ce taux, la charge atteint <b>{plateau} F CFA</b> par an.",
+    "en": "No maintenance fund exists for stormwater works: the rate applied here is the OBSERVED one from COSO boreholes — <b>{part} %</b> of cost, that is {provision} F CFA per facility across {n} cases. A retention basin is not maintained like a borehole, and this transfer is the most fragile part of this page. At that rate the burden reaches <b>{plateau} F CFA</b> a year."
+  },
+  "entretien_previsionnel_note_scenarios": {
+    "fr": "Sur la durée du programme et les cinq années qui suivent, l'entretien pèse de <b>{bas} %</b> à <b>{haut} %</b> de l'investissement selon le taux retenu. C'est la seconde ligne budgétaire du dossier, et c'est celle que le corpus montre non provisionnée : 173 microprojets sur 218 n'ont aucun plan de maintenance déclaré.",
+    "en": "Over the programme and the five years that follow, upkeep weighs <b>{bas} %</b> to <b>{haut} %</b> of the investment depending on the rate. It is the file's second budget line, and the one the corpus shows unprovisioned: 173 of 218 sub-projects have no declared maintenance plan."
+  },
+  "col_taux": {
+    "fr": "Taux d'entretien",
+    "en": "Upkeep rate"
+  },
+  "col_entretien_annuel": {
+    "fr": "Charge annuelle (F CFA)",
+    "en": "Annual burden (F CFA)"
+  },
+  "col_entretien_cumul": {
+    "fr": "Cumul (F CFA)",
+    "en": "Cumulative (F CFA)"
+  },
+  "col_part_investissement": {
+    "fr": "Part de l'investissement (%)",
+    "en": "Share of investment (%)"
+  },
+  "unite_millions": {
+    "fr": "M F CFA",
+    "en": "M F CFA"
   }
 }

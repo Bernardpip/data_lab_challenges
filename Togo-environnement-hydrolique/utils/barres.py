@@ -20,6 +20,8 @@ jamais une liste unifiée qui laisserait choisir une région où le jeu n'a rien
 from contextlib import contextmanager
 
 # pyrefly: ignore [missing-import]
+import pandas as pd
+# pyrefly: ignore [missing-import]
 import streamlit as st
 
 from socle.ui import filters
@@ -167,7 +169,7 @@ def _annee_resserree(coso, cle):
             or float(retenu[-1]) < float(annees.max()))
 
 
-def zone_territoriale(cadre, coso=None, cle="affiche"):
+def zone_territoriale(cadre, coso=None, cle="affiche", annees_extra=None):
     """La barre de l'affiche, posée dans la zone « Filtres » du socle.
 
     Quatre champs : région → préfecture → canton, liés en chaîne, plus
@@ -200,11 +202,25 @@ def zone_territoriale(cadre, coso=None, cle="affiche"):
     ]
 
     intervalle = None
+    porteur = coso
 
-    if coso is not None and coso["annee_achevement"].notna().any():
+    # Les années du PROGRAMME entrent dans l'amplitude du curseur quand la vue
+    # en propose un. Sans elles, une page qui date des chantiers de 2027 à 2031
+    # offrait un curseur arrêté en 2026 : le filtre ne pouvait désigner aucune
+    # des années qu'elle affichait.
+    #
+    # Ce ne sont pas des mesures, seulement des BORNES : on les ajoute au cadre
+    # qui porte la colonne, lequel ne sert qu'à lire un minimum et un maximum.
+    if coso is not None and annees_extra:
+        porteur = pd.concat([
+            coso[["annee_achevement"]],
+            pd.DataFrame({"annee_achevement": list(annees_extra)}),
+        ], ignore_index=True)
+
+    if porteur is not None and porteur["annee_achevement"].notna().any():
         intervalle = {
             "colonne": "annee_achevement",
-            "cadre": coso,
+            "cadre": porteur,
             "cle": "filtre_annee",
             "libelle": tf("annee_achevement"),
             "aide": tf("annee_coso_seule"),

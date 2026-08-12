@@ -92,7 +92,7 @@ def _zone(libelle, detail, hauteur):
         )
 
 
-def _filtrer(data):
+def _filtrer(data, annees_extra=None):
     """Barre de l'affiche, et son effet sur les trois jeux.
 
     Le filtre se PEINT à gauche mais s'applique aux deux colonnes : une région
@@ -113,7 +113,10 @@ def _filtrer(data):
     personne n'ait rien demandé. Un filtre au repos ne doit rien retirer.
     """
 
-    selection = barres.zone_territoriale(data["cantons"], coso=data["coso"])
+    # `annees_extra` étend l'amplitude du curseur aux années d'un PROGRAMME —
+    # les vues de proposition datent des chantiers que le COSO ne connaît pas.
+    selection = barres.zone_territoriale(data["cantons"], coso=data["coso"],
+                                         annees_extra=annees_extra)
 
     territoire = {colonne: valeur for colonne, valeur in selection.items()
                   if colonne != "annee_achevement"}
@@ -797,7 +800,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
 
         return {"gauche": peindre_gauche, "droite": peindre_droite}
 
-    def recit_(gauche, *cartes):
+    def recit_(gauche, *cartes, annees_extra=None):
         """Un onglet du RÉCIT — peintre de gauche, et ses cartes de droite.
 
         Les peintres de carte de `recit` prennent `(tr, data, hauteur)`, sans
@@ -810,7 +813,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
         """
 
         def peindre_gauche():
-            data = _filtrer(brut)
+            data = _filtrer(brut, annees_extra=annees_extra)
             faits = analytics.synthese(data["cantons"], data["tde"],
                                        data["coso"], data["ventes"])
             etat["data"], etat["faits"] = data, faits
@@ -1062,14 +1065,16 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
                      ("programme", tr("onglet_programme"),
                       recit.carte_programme_ouvrages),
                      ("besoin", tr("onglet_besoin"),
-                      recit.carte_deficit_canton))},
+                      recit.carte_deficit_canton),
+                     annees_extra=recit.annees_du_programme())},
                 {"id": "inondations",
                  "name": tr("vue_proposition_inondations"),
                  "component": recit_(
                      recit.proposition_inondations,
                      ("programme", tr("onglet_programme"),
                       recit.carte_programme_inondations),
-                     ("exposes", tr("onglet_exposes"), recit.carte_exposes))},
+                     ("exposes", tr("onglet_exposes"), recit.carte_exposes),
+                     annees_extra=recit.annees_du_programme())},
             ]},
 
             # ── Acte 7 · Ce qu'on sait, ce qu'on ignore ──────────────────

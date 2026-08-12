@@ -1305,6 +1305,114 @@ def _par_annee(cadre, colonne_ouvrages):
     return agrege
 
 
+# ─── L'entretien de ce qu'on construit ───────────────────────────────────────
+#
+# Un programme d'investissement qui ne budgète pas son entretien construit des
+# ouvrages qui tomberont. C'est le sujet de l'acte 2 — 173 microprojets sur 218
+# n'ont aucun plan de maintenance déclaré — et une proposition qui répéterait
+# cette omission ne vaudrait pas mieux que ce qu'elle critique.
+
+# Taux d'entretien annuel, en part du coût d'investissement. Le premier est
+# OBSERVÉ dans le corpus ; les trois autres sont posés, et couvrent la
+# fourchette que la littérature retient pour l'hydraulique rurale.
+TAUX_ENTRETIEN = (0.03, 0.05, 0.08)
+
+
+def taux_entretien_observe(coso):
+    """Ce que le COSO provisionne réellement pour l'entretien d'un ouvrage.
+
+    Le fichier porte deux colonnes rarement lues — `fonds_entretien` et
+    `fonds_entretien_prevu` — et c'est le seul ancrage empirique du corpus sur
+    la question. La médiane des provisions vaut 250 000 F, soit 1,35 % du
+    montant payé.
+
+    Ce que ce chiffre est, et ce qu'il n'est pas : une DOTATION constituée à la
+    remise de l'ouvrage, pas un budget annuel. Le corpus ne dit ni sa
+    périodicité ni ce qu'elle couvre. Le prendre pour un taux d'entretien
+    annuel serait une erreur de lecture — il sert ici de PLANCHER, et le fait
+    qu'il soit très inférieur aux taux usuels est précisément le résultat.
+    """
+
+    provisions = coso.loc[coso["fonds_entretien"] > 0, "fonds_entretien"]
+    ratio = (coso["fonds_entretien"] / coso["montant_paye"]).replace(
+        [np.inf, -np.inf], np.nan).dropna()
+
+    return {
+        "provision_mediane": float(provisions.median()) if len(provisions) else 0.0,
+        "part_mediane": float(ratio.median()) if len(ratio) else 0.0,
+        "ouvrages": int(len(provisions)),
+        "total": int(len(coso)),
+    }
+
+
+def entretien_previsionnel(programme, taux, apres=5):
+    """Coût annuel d'entretien du parc que le programme livre, année par année.
+
+    L'entretien porte sur le parc CUMULÉ : un ouvrage livré en 2027 s'entretient
+    aussi en 2031. La courbe monte donc mécaniquement pendant la construction,
+    puis se stabilise — et c'est ce plateau, non le pic d'investissement, qui
+    engage durablement un budget.
+
+    `apres` prolonge la projection au-delà du programme, à parc constant. Sans
+    ces années-là, le tableau s'arrêterait juste avant de montrer la charge
+    récurrente qu'il crée.
+    """
+
+    annees = programme.get("annees")
+
+    if annees is None or annees.empty:
+        return pd.DataFrame(columns=["annee", "parc", "capex_cumule",
+                                     "entretien"])
+
+    lignes = []
+    parc = capex = 0.0
+
+    derniere = int(annees["annee"].max())
+
+    for _, ligne in annees.iterrows():
+        parc += float(ligne["ouvrages"])
+        capex += float(ligne["montant"])
+        lignes.append({"annee": int(ligne["annee"]), "parc": parc,
+                       "capex_cumule": capex, "entretien": capex * taux})
+
+    for pas in range(1, apres + 1):
+        lignes.append({"annee": derniere + pas, "parc": parc,
+                       "capex_cumule": capex, "entretien": capex * taux})
+
+    return pd.DataFrame(lignes)
+
+
+def entretien_scenarios(programme, taux=TAUX_ENTRETIEN, observe=None, apres=5):
+    """Charge d'entretien à l'horizon, pour chaque taux envisagé.
+
+    Le taux OBSERVÉ ouvre la liste quand il est fourni : la comparaison entre
+    ce que le programme provisionne aujourd'hui et ce qu'un entretien réel
+    coûterait est le seul résultat que cette section produise.
+    """
+
+    total = float(programme.get("total") or 0.0)
+    valeurs = list(taux)
+
+    if observe:
+        valeurs = [observe, *valeurs]
+
+    lignes = []
+
+    for valeur in valeurs:
+        courbe = entretien_previsionnel(programme, valeur, apres=apres)
+        lignes.append({
+            "taux": float(valeur),
+            "annuel_plateau": float(courbe["entretien"].max())
+            if len(courbe) else 0.0,
+            "cumul": float(courbe["entretien"].sum()) if len(courbe) else 0.0,
+            "part_investissement": (
+                100 * float(courbe["entretien"].sum()) / total if total else 0.0
+            ),
+        })
+
+    return pd.DataFrame(lignes)
+
+
 def zeros_composantes(cantons):
     """Combien de cantons portent un zéro, et sur quelle composante.
 
