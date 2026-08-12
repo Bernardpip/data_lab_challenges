@@ -558,5 +558,17 @@
   "reglages_aucun_resultat": {
     "fr": "Aucun profil de ce nom",
     "en": "No profile by that name"
+  },
+  "reglages_colonne_etat": {
+    "fr": "Qui regarde",
+    "en": "Who is looking"
+  },
+  "reglages_colonne_droits": {
+    "fr": "Droits",
+    "en": "Rights"
+  },
+  "reglages_colonne_acces": {
+    "fr": "Ce qu'il montre",
+    "en": "What it shows"
   }
 }

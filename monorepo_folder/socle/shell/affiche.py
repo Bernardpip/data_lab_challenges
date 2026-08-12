@@ -1011,11 +1011,16 @@ def _ecran_accueil(config, fichier, reglages, langue_active):
         courant = utilisateurs.actif(fichier)
         gens = utilisateurs.liste(fichier)
 
+        # CHAQUE colonne porte un intitulé, y compris celles d'action : une
+        # bande d'en-tête avec un seul mot et deux tiers vides se lit comme un
+        # tableau inachevé. Les deux dernières sont centrées sur leur bouton.
         cadre, tab = ui.tableau("reggens", [
             {"cle": "identite", "libelle": reglages.get("colonne_personne", ""),
              "poids": 6},
-            {"cle": "action", "libelle": "", "poids": 2},
-            {"cle": "droits", "libelle": "", "poids": 1},
+            {"cle": "action", "libelle": reglages.get("colonne_etat", ""),
+             "poids": 2, "align": "center"},
+            {"cle": "droits", "libelle": reglages.get("colonne_droits", ""),
+             "poids": 1, "align": "center"},
         ])
 
         with cadre:
@@ -1032,7 +1037,8 @@ def _ecran_accueil(config, fichier, reglages, langue_active):
     cadre, tab = ui.tableau("regprofils", [
         {"cle": "identite", "libelle": reglages.get("colonne_profil", ""),
          "poids": 6},
-        {"cle": "action", "libelle": "", "poids": 3},
+        {"cle": "action", "libelle": reglages.get("colonne_acces", ""),
+         "poids": 3, "align": "center"},
     ])
 
     with cadre:
