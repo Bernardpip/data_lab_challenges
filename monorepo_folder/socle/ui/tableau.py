@@ -49,15 +49,27 @@ def _styles(nom, hauteur_ligne):
         f".st-key-{nom} {{"
         f" border: 1px solid {COLORS['borderLight']}; border-radius: 12px;"
         f" background: {COLORS['surface']}; overflow: hidden; }}"
-        # L'EN-TÊTE de colonnes.
+        # L'EN-TÊTE est une SEULE rangée en flex, écrite d'un bloc — et non une
+        # rangée de colonnes Streamlit. Mesuré : entre la colonne et le libellé,
+        # Streamlit intercale trois conteneurs dont l'un tombait à 2,75 px de
+        # haut ; le texte, lui, en fait seize, et débordait par le bas d'une
+        # bande qui semblait le couper. Aucun réglage de centrage n'y pouvait
+        # rien — c'est la chaîne qu'il fallait retirer.
+        #
+        # L'alignement sur les lignes tient à trois nombres partagés : le
+        # rembourrage horizontal, l'écart entre colonnes, et les poids. Les
+        # mêmes ici et dans `st.columns`, qui répartit lui aussi l'espace
+        # restant au prorata.
         f".st-key-{nom}entete {{"
         f" background: {COLORS['surfaceSecondary']};"
         f" border-bottom: 1px solid {COLORS['border']};"
-        f" padding: 7px 14px !important; }}"
-        f".st-key-{nom}entete p {{"
-        f" font-size: 10.5px !important; font-weight: 700; letter-spacing: .04em;"
-        f" text-transform: uppercase; color: {COLORS['textMuted']};"
-        f" margin: 0 !important; }}"
+        f" display: flex; align-items: center; gap: 10px;"
+        f" min-height: 34px; padding: 0 14px; }}"
+        f".st-key-{nom}entete span {{"
+        f" font-size: 10.5px; font-weight: 700; letter-spacing: .04em;"
+        f" line-height: 1.4; text-transform: uppercase;"
+        f" color: {COLORS['textMuted']}; min-width: 0;"
+        f" overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}"
         # Les LIGNES : filet en bas, sauf la dernière, et survol.
         f'.st-key-{nom} [class*="st-key-{nom}ligne"] {{'
         f" border-bottom: 1px solid {COLORS['borderLight']};"
@@ -147,16 +159,20 @@ def tableau(cle, colonnes, hauteur_ligne=48, entete=True):
 
     with boite:
         if entete and any(c.get("libelle") for c in colonnes):
-            with st.container(key=f"{nom}entete"):
-                for colonne, definition in zip(
-                    st.columns([c.get("poids", 1) for c in colonnes]), colonnes
-                ):
-                    with colonne:
-                        aligne = definition.get("align", "left")
-                        st.markdown(
-                            f'<p style="text-align:{aligne};">'
-                            f'{definition.get("libelle", "")}</p>',
-                            unsafe_allow_html=True,
-                        )
+            # La BASE de chaque case reprend celle que Streamlit donne à ses
+            # colonnes — mesuré dans le navigateur : `1 1 calc(P% - 13px)`, où
+            # les treize pixels sont sa constante d'écart. Répartir au simple
+            # prorata décalait les en-têtes de sept pixels sur leur colonne,
+            # parce que le reste d'espace, lui, se partage à parts égales.
+            total = sum(c.get("poids", 1) for c in colonnes) or 1
+            cases = "".join(
+                f'<span style="flex:1 1 calc('
+                f'{c.get("poids", 1) / total * 100:.4f}% - 13px);'
+                f'text-align:{c.get("align", "left")};">'
+                f'{c.get("libelle", "")}</span>'
+                for c in colonnes
+            )
+            st.markdown(f'<div class="st-key-{nom}entete">{cases}</div>',
+                        unsafe_allow_html=True)
 
     return boite, Tableau(nom, colonnes, hauteur_ligne)
