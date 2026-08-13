@@ -99,12 +99,20 @@ def profils():
 
 
 def citees():
-    """Les ressources non chargées, avec leur poids réel."""
+    """Les ressources non chargées, avec leur poids réel et leur présence.
+
+    `presente` est faux quand le fichier n'est pas là. L'archive livrée écarte
+    les plus lourdes — deux cent vingt-trois mégaoctets que rien n'ouvre — et
+    sans ce drapeau la vue les annonçait à « 0 Mo », ce qui se lit comme un
+    fichier vide plutôt que comme un fichier absent. Un poids nul est une
+    mesure ; une absence est une autre chose, et elle se dit.
+    """
 
     tailles = poids()
 
     return [
-        {**fiche, "cle": cle, "octets": tailles.get(cle, 0)}
+        {**fiche, "cle": cle, "octets": tailles.get(cle, 0),
+         "presente": tailles.get(cle, 0) > 0}
         for cle, fiche in CITEES.items()
     ]
 

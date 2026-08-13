@@ -44,8 +44,12 @@ def render_fichiers():
         {"value": ui.fr_number(len(fiches)), "label": tr("tuile_charges"),
          "delta": tr("tuile_charges_detail"), "good": None, "icon": "table-2"},
         {"value": ui.fr_number(len(citees)), "label": tr("tuile_citees"),
-         "delta": tr("tuile_citees_detail", {
-             "mo": ui.fr_number(sum(_mega(c["octets"]) for c in citees), 0)}),
+         "delta": (tr("tuile_citees_detail", {
+             "mo": ui.fr_number(sum(_mega(c["octets"]) for c in citees), 0)})
+             if all(c["presente"] for c in citees)
+             else tr("tuile_citees_absentes", {
+                 "absentes": sum(1 for c in citees if not c["presente"]),
+                 "total": len(citees)})),
          "good": None, "icon": "search"},
         {"value": ui.fr_number(sum(f["lignes"] for f in fiches)),
          "label": tr("tuile_lignes"), "delta": tr("tuile_lignes_detail"),
@@ -80,17 +84,31 @@ def render_fichiers():
                 }))
 
     with ui.card(tr("carte_citees_titre"), tr("carte_citees_sous_titre"), "search"):
-        cadre = pd.DataFrame([
-            {"ressource": tr(f"citee_{c['cle']}"),
-             "mo": round(_mega(c["octets"]), 1),
-             "entites": c["entites"] or 0}
-            for c in citees
-        ])
-        charts.bar_h(cadre, "ressource", "mo", unit=" Mo")
-        ui.note(tr("note_citees", {
-            "mo": ui.fr_number(cadre["mo"].sum(), 0),
-            "mailles": ui.fr_number(int(cadre["entites"].max())),
-        }))
+        presentes = [c for c in citees if c["presente"]]
+        absentes = [c for c in citees if not c["presente"]]
+
+        # Le graphe ne montre que ce qui est LÀ : une barre à zéro pour un
+        # fichier absent se lit comme un fichier vide.
+        if presentes:
+            cadre = pd.DataFrame([
+                {"ressource": tr(f"citee_{c['cle']}"),
+                 "mo": round(_mega(c["octets"]), 1),
+                 "entites": c["entites"] or 0}
+                for c in presentes
+            ])
+            charts.bar_h(cadre, "ressource", "mo", unit=" Mo")
+            ui.note(tr("note_citees", {
+                "mo": ui.fr_number(cadre["mo"].sum(), 0),
+                "mailles": ui.fr_number(int(cadre["entites"].max())),
+            }))
+        else:
+            cadre = pd.DataFrame(columns=["ressource", "mo", "entites"])
+
+        if absentes:
+            ui.note(tr("note_citees_absentes", {
+                "nombre": len(absentes),
+                "liste": ", ".join(tr(f"citee_{c['cle']}") for c in absentes),
+            }))
 
         if doublon["identique"]:
             ui.note(tr("note_doublon", {

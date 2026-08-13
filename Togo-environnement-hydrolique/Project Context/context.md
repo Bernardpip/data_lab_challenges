@@ -210,3 +210,9 @@ Résilience économique	Relative Wealth Index (RWI)	Meta Relative Wealth Index	~
 
 - csv : flood-susceptibility -index-map.pdf
 - https://opendata.gouv.tg/fr/datasets/indices-de-susceptibilite-fsi-et-de-risque-dinondation-fri-au-togo/#/resources/40c0912d-949e-4de4-9c03-f5a6717ff4ba
+
+
+
+
+http://localhost:8502/?s=affiche&lang=fr&h=980
+

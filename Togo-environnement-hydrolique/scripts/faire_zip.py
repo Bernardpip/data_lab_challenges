@@ -53,6 +53,75 @@ EN_TETE = "README.md"
 # en ligne, ce qui fait partie du travail.
 EXCLUS = (".vscode/", ".playwright-mcp/")
 
+# Ce que l'archive NE PORTE PAS, et pourquoi.
+#
+# Quatre pièces du corpus pesaient 186 des 197 Mo de l'archive — et aucune
+# n'est jamais ouverte : elles sont trop lourdes pour un navigateur, le
+# tableau de bord les cite dans ses sources sans les charger. Pire, deux
+# d'entre elles sont la MÊME donnée, que le portail publie dans deux
+# emballages : le GeoTIFF nu et le même zippé.
+#
+# Les garder revenait à faire télécharger cent quatre-vingt-six mégaoctets
+# pour un fichier que personne n'ouvrira, dans une archive que beaucoup de
+# plateformes de dépôt refuseraient. Elles sont donc remplacées par une note
+# qui dit leur poids, leur rôle et où les reprendre — et le diagnostic, lui,
+# les déclare « citées, absentes » sans échouer : c'est exactement le cas
+# qu'il distingue.
+#
+# Ce qui RESTE : tout ce que l'application lit ou montre, planches PDF et
+# cartes image comprises — l'onglet « Planches » les affiche.
+CORPUS_CITE = {
+    "fsi_brut.tif": "le raster de susceptibilité, au pixel de 30 m",
+    "fsi-brut-geotiff.zip": "le MÊME raster, dans son emballage d'origine",
+    "fri-grid-500m.gpkg": "la grille du risque à 500 m — 228 953 mailles",
+    "fri-grid-1km.gpkg": "la grille du risque à 1 km — 57 738 mailles",
+}
+
+NOTE_CORPUS = "data/RESSOURCES-CITEES.md"
+
+URL_ISRI = ("https://opendata.gouv.tg/fr/datasets/"
+            "indices-de-susceptibilite-fsi-et-de-risque-dinondation-fri-au-togo/")
+
+
+def note_du_corpus(retirees):
+    """Le texte qui remplace les pièces retirées, écrit dans `data/`.
+
+    À l'endroit où on les cherchera : quelqu'un qui ouvre `data/` et n'y
+    trouve pas le raster doit lire, là, pourquoi et où le prendre.
+    """
+
+    lignes = [
+        "# Ressources citées, non incluses",
+        "",
+        "Quatre pièces du corpus ne sont pas dans cette archive. Elles ne sont",
+        "jamais chargées par le tableau de bord — trop lourdes pour un",
+        "navigateur — et pesaient à elles seules 186 des 197 Mo de l'archive.",
+        "Deux d'entre elles sont la même donnée, publiée dans deux emballages.",
+        "",
+        "Le diagnostic (`python3 verifier.py`) les signale comme « citées,",
+        "absentes » : il n'échoue pas, et le tableau de bord s'ouvre sans elles.",
+        "",
+        "| Fichier | Poids | Ce que c'est |",
+        "|---|---|---|",
+    ]
+
+    for nom, poids, quoi in retirees:
+        lignes.append(f"| `{nom}` | {poids/1048576:.0f} Mo | {quoi} |")
+
+    lignes += [
+        "",
+        "Toutes proviennent du même jeu, ISRI-TG :",
+        "",
+        f"  {URL_ISRI}",
+        "",
+        "Reprenez-les là et déposez-les dans `data/map/` : le tableau de bord",
+        "les retrouve où qu'elles soient rangées sous `data/`, et l'onglet",
+        "« Le corpus › Fichiers » les recompte aussitôt.",
+        "",
+    ]
+
+    return "\n".join(lignes)
+
 
 def fichiers_suivis():
     sortie = subprocess.run(
@@ -149,9 +218,22 @@ def main():
         return (f"{NOM}/{EN_TETE}" if chemin == EN_TETE
                 else f"{NOM}/{PROJET}/{chemin}")
 
+    retirees = []
+
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
         for chemin in chemins:
+            nom = Path(chemin).name
+
+            if nom in CORPUS_CITE:
+                retirees.append((nom, (RACINE / chemin).stat().st_size,
+                                 CORPUS_CITE[nom]))
+                continue
+
             z.write(RACINE / chemin, destination(chemin))
+
+        if retirees:
+            z.writestr(f"{NOM}/{PROJET}/{NOTE_CORPUS}",
+                       note_du_corpus(sorted(retirees, key=lambda r: -r[1])))
 
         # Le socle rejoint le projet À CÔTÉ d'app.py : décompressé, il est
         # importable sans réglage de chemin.
@@ -164,13 +246,23 @@ def main():
         if marque:
             z.writestr(f"{NOM}/{PROJET}/socle/VENDORISE", marque)
 
-    poids = archive.stat().st_size / 1024
-    total = len(chemins) + len(fichiers_socle)
+    poids = archive.stat().st_size / 1048576
+    total = len(chemins) + len(fichiers_socle) - len(retirees)
 
-    print(f"\n{archive.name} · {total} fichiers · {poids:.0f} Ko")
+    print(f"\n{archive.name} · {total} fichiers · {poids:.0f} Mo")
     print(f"  {NOM}/{EN_TETE}")
-    print(f"  {NOM}/{PROJET}/  ({len(chemins) - 1} fichiers du défi"
-          f" + {len(fichiers_socle)} du socle)")
+    print(f"  {NOM}/{PROJET}/  ({len(chemins) - 1 - len(retirees)} fichiers du"
+          f" défi + {len(fichiers_socle)} du socle)")
+
+    # Ce qui MANQUE se dit à voix haute. Une archive allégée sans qu'on le
+    # sache est un corpus amputé — le défaut qu'on a déjà corrigé deux fois.
+    if retirees:
+        ecarte = sum(poids for _, poids, _ in retirees) / 1048576
+        print(f"\n  {len(retirees)} ressources CITÉES écartées ({ecarte:.0f} Mo),"
+              f" listées dans {NOTE_CORPUS} :")
+
+        for nom, octets, _ in sorted(retirees, key=lambda r: -r[1]):
+            print(f"    − {nom:26} {octets / 1048576:5.0f} Mo")
 
     return archive, chemins
 

@@ -602,5 +602,13 @@
   "planche_visionneur_absent": {
     "fr": "Le visionneur de PDF n'est pas installé — `pip install \"streamlit[pdf]\"`. La planche reste lisible depuis le fichier de l'archive.",
     "en": "The PDF viewer is not installed — `pip install \"streamlit[pdf]\"`. The plate is still readable from the file in the archive."
+  },
+  "tuile_citees_absentes": {
+    "fr": "{absentes} des {total} ne sont pas dans cette copie",
+    "en": "{absentes} of {total} are not in this copy"
+  },
+  "note_citees_absentes": {
+    "fr": "{nombre} de ces ressources ne sont pas jointes à cette copie — {liste}. Elles ne sont jamais chargées par le tableau de bord, et pesaient à elles seules l'essentiel de l'archive ; `data/RESSOURCES-CITEES.md` dit où les reprendre.",
+    "en": "{nombre} of these resources are not shipped with this copy — {liste}. They are never loaded by the dashboard, and accounted for most of the archive's weight; `data/RESSOURCES-CITEES.md` says where to get them."
   }
 }
