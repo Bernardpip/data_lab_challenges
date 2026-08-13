@@ -1191,21 +1191,18 @@ _CSS_AFFICHE = """
 .st-key-kgaffsections [data-testid="stBaseButton-segmented_controlActive"] {
   background: transparent;
   border: none;
-  border-radius: 8px;
-  /* Le premier niveau porte le RÉCIT : ses cases sont plus hautes et plus
-     écrites que celles du second. Les deux rangs avaient le même corps, la
-     même graisse et la même hauteur — mesuré à 11,4 px et 22 px pour l'un
-     comme pour l'autre : rien ne disait lequel commandait l'autre, et le
-     lecteur lisait deux barres d'outils au lieu de deux niveaux. */
-  padding: 6px 12px;
-  min-height: 30px;
+  border-radius: 7px;
+  /* 11 px : mesuré, les deux groupes réclamaient 806 px pour 792
+     disponibles une fois le rail décalé sous le bloc de titres —
+     quatorze de trop, et le menu passait à deux lignes. */
+  padding: 5px 9px;
+  min-height: 0;
 }
 
 .st-key-kgaffsections [data-testid="stBaseButton-segmented_control"] p {
   color: var(--kg-color-text-secondary);
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -.005em;
+  font-size: 12.5px;
+  font-weight: 500;
 }
 
 .st-key-kgaffsections [data-testid="stBaseButton-segmented_control"]:hover {
@@ -1219,9 +1216,8 @@ _CSS_AFFICHE = """
 
 .st-key-kgaffsections [data-testid="stBaseButton-segmented_controlActive"] p {
   color: #FFFFFF;
-  font-size: 15px;
+  font-size: 12.5px;
   font-weight: 600;
-  letter-spacing: -.005em;
 }
 
 /* ── Second rang : les VUES, même groupe segmenté, autre teinte ────────────
@@ -1414,13 +1410,16 @@ a.kg-aff-logo:hover { opacity: .8; }
   background: transparent;
   border: none;
   border-radius: 7px;
-  padding: 4px 10px;
-  min-height: 26px;
+  /* 11 px : mesuré, les deux groupes réclamaient 806 px pour 792
+     disponibles une fois le rail décalé sous le bloc de titres —
+     quatorze de trop, et le menu passait à deux lignes. */
+  padding: 5px 9px;
+  min-height: 0;
 }
 
 .st-key-kgaffvues [data-testid="stBaseButton-segmented_control"] p {
   color: var(--kg-color-text-secondary);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
 }
 
@@ -1428,21 +1427,15 @@ a.kg-aff-logo:hover { opacity: .8; }
   background: var(--kg-color-surface-hover);
 }
 
-/* L'onglet actif se marque d'un FILET, non d'une pastille pleine. Le rang du
-   dessus prend déjà la pastille : deux pastilles, l'une verte et l'autre
-   blanche, faisaient deux codes pour un même état, que le lecteur devait
-   apprendre séparément. Le filet est plus léger, et cette légèreté même dit
-   la subordination. */
 .st-key-kgaffvues [data-testid="stBaseButton-segmented_controlActive"] {
-  background: transparent;
-  box-shadow: inset 0 -2px 0 var(--kg-togo-green);
-  border-radius: 0;
+  background: var(--kg-color-surface);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .10);
 }
 
 .st-key-kgaffvues [data-testid="stBaseButton-segmented_controlActive"] p {
   color: var(--kg-togo-green);
-  font-size: 13px;
-  font-weight: 650;
+  font-size: 12.5px;
+  font-weight: 600;
 }
 
 /* La dernière case du groupe est une SORTIE — elle quitte l'affiche au lieu

@@ -1055,12 +1055,7 @@ def configuration(tr, trs, trr, brut, corpus, hauteur_carte):
         },
         "menu_active_color": VERT_TOGO,
         "menu_inactive_color": "transparent",
-        # L'onglet actif n'a plus de FOND : il se marque d'un filet vert sous
-        # son libellé. Le rang du dessus prend déjà la pastille pleine, et deux
-        # pastilles — l'une verte, l'autre blanche — faisaient deux codes pour
-        # un même état. Le filet, plus léger, dit la subordination sans qu'on
-        # ait à l'apprendre.
-        "tab_active_color": "transparent",
+        "tab_active_color": FOND,
         "tab_inactive_color": "transparent",
         "menu_items": [
             # ── Acte 0 · Le constat ──────────────────────────────────────
@@ -1375,7 +1370,7 @@ def render():
         # puisque c'est lui qui réserve la place sous un bandeau en `fixed`.
         # À 144 — la valeur d'avant la coupe — la première carte passait
         # dix-huit pixels dessous.
-        hauteur_menu=194,
+        hauteur_menu=190,
         # La silhouette vient de la MÊME couche que les cartes de la page :
         # un logo dessiné à part pourrait montrer des frontières que les
         # données ne connaissent pas.
