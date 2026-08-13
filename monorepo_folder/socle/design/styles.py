@@ -1180,7 +1180,13 @@ _CSS_AFFICHE = """
 
 .st-key-kgaffsections [data-baseweb="button-group"] {
   gap: 0;
-  background: var(--kg-color-background);
+  /* Le gris du GROUPE, pas celui de la page : `--kg-color-background` est le
+     gris neutre du fond général, et posé sur un bandeau blanc il pesait comme
+     un bloc rapporté. Celui-ci est plus clair et légèrement froid — il tient
+     les cases ensemble sans se faire remarquer. Le rang des onglets prend le
+     même : deux groupes jumeaux, dont l'un serait plus foncé, se liraient
+     comme deux choses de nature différente. */
+  background: var(--kg-color-surface-secondary);
   border: 1px solid var(--kg-color-border-light);
   border-radius: 10px;
   padding: 3px;
@@ -1398,7 +1404,9 @@ a.kg-aff-logo:hover { opacity: .8; }
 
 .st-key-kgaffvues [data-baseweb="button-group"] {
   gap: 2px;
-  background: var(--kg-color-background);
+  /* Même gris que le rang du dessus : les deux groupes sont des jumeaux, et
+     l'un plus foncé que l'autre se lirait comme une différence de nature. */
+  background: var(--kg-color-surface-secondary);
   border: 1px solid var(--kg-color-border-light);
   border-radius: 10px;
   padding: 3px;
