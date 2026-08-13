@@ -1180,13 +1180,15 @@ _CSS_AFFICHE = """
 
 .st-key-kgaffsections [data-baseweb="button-group"] {
   gap: 0;
-  /* Le gris du GROUPE, pas celui de la page : `--kg-color-background` est le
-     gris neutre du fond général, et posé sur un bandeau blanc il pesait comme
-     un bloc rapporté. Celui-ci est plus clair et légèrement froid — il tient
-     les cases ensemble sans se faire remarquer. Le rang des onglets prend le
-     même : deux groupes jumeaux, dont l'un serait plus foncé, se liraient
+  /* Le fond du GROUPE prend la teinte du défi, éclaircie — et non un gris
+     neutre. Le gris de la page pesait comme un bloc rapporté sur un bandeau
+     blanc ; cette teinte-ci rattache la navigation à la couleur qui court
+     déjà dans les cartes, les pastilles et la bande du bas.
+     C'est la VARIABLE qui est employée, pas la couleur : un défi qui change
+     de teinte emmène son rail avec lui. Le rang des onglets prend la même —
+     deux groupes jumeaux, dont l'un serait d'une autre couleur, se liraient
      comme deux choses de nature différente. */
-  background: var(--kg-color-surface-secondary);
+  background: var(--kg-color-primary-light, #E6F0ED);
   border: 1px solid var(--kg-color-border-light);
   border-radius: 10px;
   padding: 3px;
@@ -1404,9 +1406,8 @@ a.kg-aff-logo:hover { opacity: .8; }
 
 .st-key-kgaffvues [data-baseweb="button-group"] {
   gap: 2px;
-  /* Même gris que le rang du dessus : les deux groupes sont des jumeaux, et
-     l'un plus foncé que l'autre se lirait comme une différence de nature. */
-  background: var(--kg-color-surface-secondary);
+  /* Même teinte que le rang du dessus, pour la même raison. */
+  background: var(--kg-color-primary-light, #E6F0ED);
   border: 1px solid var(--kg-color-border-light);
   border-radius: 10px;
   padding: 3px;
