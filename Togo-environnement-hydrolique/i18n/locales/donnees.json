@@ -610,5 +610,9 @@
   "note_citees_absentes": {
     "fr": "{nombre} de ces ressources ne sont pas jointes à cette copie — {liste}. Elles ne sont jamais chargées par le tableau de bord, et pesaient à elles seules l'essentiel de l'archive ; `data/RESSOURCES-CITEES.md` dit où les reprendre.",
     "en": "{nombre} of these resources are not shipped with this copy — {liste}. They are never loaded by the dashboard, and accounted for most of the archive's weight; `data/RESSOURCES-CITEES.md` says where to get them."
+  },
+  "planches_absentes": {
+    "fr": "{nombre} des {total} planches ne sont pas jointes à cette copie — {liste}. Trop lourdes pour l'archive, elles se reprennent sur le portail ; `data/RESSOURCES-CITEES.md` donne l'adresse.",
+    "en": "{nombre} of the {total} plates are not shipped with this copy — {liste}. Too heavy for the archive, they can be fetched from the portal; `data/RESSOURCES-CITEES.md` gives the address."
   }
 }

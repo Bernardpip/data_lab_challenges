@@ -75,6 +75,17 @@ CORPUS_CITE = {
     "fsi-brut-geotiff.zip": "le MÊME raster, dans son emballage d'origine",
     "fri-grid-500m.gpkg": "la grille du risque à 500 m — 228 953 mailles",
     "fri-grid-1km.gpkg": "la grille du risque à 1 km — 57 738 mailles",
+    # Les planches des DEUX GRILLES suivent les grilles qu'elles impriment :
+    # les garder sans elles n'aurait aucun sens, et elles pesaient treize
+    # mégaoctets à elles deux.
+    "fri-500m.pdf": "l'impression de la grille à 500 m",
+    "fri-1km.pdf": "l'impression de la grille à 1 km",
+    # Les deux cartes image sont le rendu de référence du producteur. Sept
+    # mille pixels de côté, quinze mégaoctets à elles deux — pour un onglet
+    # qui les réduit à mille quatre cents avant de les montrer. Le portail les
+    # sert mieux que nous.
+    "fri-map.png": "la carte de référence du FRI, 7 086 px de côté",
+    "fsi-map.png": "la carte de référence du FSI, 4 724 px de côté",
 }
 
 NOTE_CORPUS = "data/RESSOURCES-CITEES.md"

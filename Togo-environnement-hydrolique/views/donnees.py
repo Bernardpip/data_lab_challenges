@@ -294,6 +294,19 @@ def render_planches():
          "delta": tr("tuile_seuils_detail"), "good": False, "icon": "search"},
     ])
 
+    # Ce qui n'est PAS dans cette copie se dit. L'archive livrée écarte les
+    # planches les plus lourdes — le serveur de dépôt refusait la requête —, et
+    # une liste qui se contente d'être plus courte laisse croire que le corpus
+    # n'en comptait pas davantage.
+    absentes = [p for p in PLANCHES
+                if p["cle"] not in {x["cle"] for x in presentes}]
+
+    if absentes:
+        ui.note(tr("planches_absentes", {
+            "nombre": len(absentes), "total": len(PLANCHES),
+            "liste": ", ".join(f"`{p['fichier']}`" for p in absentes),
+        }))
+
     for planche in presentes:
         libelle_genre = tr(f"genre_{planche['genre']}")
 
