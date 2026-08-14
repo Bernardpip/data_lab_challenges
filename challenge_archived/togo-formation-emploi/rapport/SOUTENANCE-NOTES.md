@@ -50,37 +50,53 @@ Troisième, la plus inconfortable : les résultats non significatifs sont affich
 
 Quatrième : le contexte externe — les enquêtes nationales — est sourcé et séparé. Il éclaire, il ne se mélange pas.
 
-## Planche 6 — 6 · Méthode, temps 1 — lire vraiment les fichiers
+## Planche 6 — 6 · Méthode, temps 1 — identifier les données
 
-Premier temps de la méthode : lire réellement les fichiers. Cela paraît évident, c'est pourtant l'étape qu'on saute le plus souvent.
+La méthode se déroule en trois temps. Le premier : identifier les données.
 
-Le jeu des formations techniques est livré avec son dictionnaire de métadonnées. Le dictionnaire décrit deux cent seize champs ; le fichier diffusé en publie seize.
+Cela veut dire ouvrir réellement chaque fichier — pas lire son intitulé. Compter les lignes, regarder les colonnes, repérer les vides.
 
-Deux cent un champs ont donc été collectés et ne sont pas ouverts — dont le nombre d'élèves et le nombre d'enseignants. C'est le dictionnaire lui-même qui le prouve, et c'est pour ça qu'il faut l'ouvrir.
+Et surtout : situer sa MAILLE et sa PÉRIODE. C'est la maille qui décide de ce qu'on aura le droit de croiser ensuite, et la période qui décide de ce qu'on pourra comparer.
 
-Deuxième point : le fichier du supérieur se contredit. Sa ligne de total dit quatorze établissements privés, le détail par ville en compte soixante-cinq. J'ai retenu le détail. C'est un choix, il est écrit, et je peux en discuter.
+Deux découvertes de cette étape. D'abord le dictionnaire du fichier technique : il décrit deux cent seize champs, le fichier en publie seize. Deux cent un champs collectés ne sont pas ouverts.
 
-## Planche 7 — 7 · Méthode, temps 2 — les outils statistiques
+Ensuite, le fichier du supérieur se contredit lui-même : quatorze établissements privés sur la ligne de total, soixante-cinq dans le détail par ville. J'ai retenu le détail, c'est écrit, et je peux en discuter.
 
-Deuxième temps : les outils. Il y en a sept, et chacun a été choisi pour ce qu'il peut établir.
+## Planche 7 — 7 · Méthode, temps 2 — croiser les données
 
-Les régressions ne sont jamais publiées avec la seule pente : toujours avec le R carré, la p-value et l'intervalle de confiance. C'est ce qui permet de dire « ce résultat ne conclut pas ».
+Deuxième temps : croiser. Il y a six croisements, et j'ai emprunté au vocabulaire de la cuisine — chacun est une recette qui déclare ses ingrédients.
 
-Je mesure la corrélation deux fois, en Pearson et en Spearman. Quand les deux s'écartent, c'est que la relation existe mais n'est pas linéaire — et cet écart est une information, pas un défaut.
+Concrètement, quand vous ouvrez un croisement dans le tableau de bord, il vous dit : voici les deux fichiers, voici la clé de jointure — presque toujours l'année —, et voici le nombre d'observations qui restent après la jointure.
 
-Pour la concentration territoriale j'utilise deux indices, Herfindahl et Gini, parce qu'ils ne disent pas la même chose : l'un est sensible aux gros, l'autre à toute la distribution.
+Pourquoi c'est capital : deux séries qui se recouvrent sur cinq ans ne permettent pas les mêmes affirmations que deux séries qui se recouvrent sur vingt.
 
-## Planche 8 — 8 · Méthode, temps 3 — les croisements
+Le croisement central est le premier, accès contre moyens. C'est lui qui produit l'effet ciseaux, et c'est sur lui que je vais montrer les outils.
 
-Troisième temps : les croisements. Il y en a six, et j'ai emprunté au vocabulaire de la cuisine : chacun est une recette qui déclare ses ingrédients.
+## Planche 8 — 8 · Méthode, temps 3 — les outils, et ce qu'ils font
 
-Concrètement, quand vous ouvrez un croisement dans le tableau de bord, il vous dit : voici les deux fichiers utilisés, voici la clé de jointure — presque toujours l'année —, et voici le nombre d'observations qui survivent à cette jointure.
+Troisième temps : les outils. Je vais les expliquer, parce qu'un nom d'outil ne prouve rien — c'est ce qu'il fait qui compte.
 
-Pourquoi c'est important : deux séries qui se recouvrent sur cinq ans ne permettent pas les mêmes affirmations que deux séries qui se recouvrent sur vingt. Le lecteur doit voir ce nombre.
+La régression linéaire, d'abord. On cherche la droite qui passe au plus près du nuage de points. Sa pente répond à : quand x augmente d'une unité, de combien bouge y ?
 
-Le croisement le plus parlant est le premier : accès contre moyens. Je vous le montre sur la planche suivante.
+Mais une pente toute seule ne vaut rien. Je publie toujours trois garde-fous avec elle. Le R carré : quelle part de la variation la droite explique-t-elle. La p-value : quelle est la probabilité d'observer ça par pur hasard. Et l'intervalle de confiance : dans quelle fourchette se trouve la vraie pente.
 
-## Planche 9 — 9 · Ce que la méthode produit
+La tendance temporelle, c'est la même chose avec les années en abscisse. Elle donne un rythme — tant par an — et c'est ce qui se retient.
+
+L'élasticité, enfin. Le problème : comment comparer un nombre d'étudiants avec un pourcentage de PIB ? On passe les deux au logarithme, et la pente devient un pourcentage. Ici : quand l'accès monte de un pour cent, la dépense par étudiant recule de zéro virgule quatre-vingt-six pour cent.
+
+## Planche 9 — 9 · Méthode, temps 3 — les outils (suite)
+
+Quatre outils encore, plus rapidement.
+
+La corrélation, je la mesure deux fois. Pearson demande si les points s'alignent sur une droite ; Spearman demande seulement s'ils montent et descendent ensemble. Quand les deux s'écartent, la relation existe mais n'est pas droite — et c'est une information.
+
+Le test de rupture : on coupe la série à une année charnière et on compare les deux pentes. Sur l'accès au supérieur, la rupture est en deux mille : zéro virgule zéro neuf point par an avant, zéro virgule soixante-trois après. Ce n'est pas une continuation, c'est un changement de régime.
+
+Les deux indices de concentration. Herfindahl additionne les carrés des parts : il s'envole dès qu'un acteur domine. Gini décrit toute la distribution. Je donne les deux parce qu'ils ne disent pas la même chose.
+
+Et le dernier, que je garde pour montrer une honnêteté : la régression du taux d'exécution sur le montant voté. Elle ne conclut pas. Je la publie quand même.
+
+## Planche 10 — 10 · Ce que la méthode produit
 
 Voici trois résultats, et je les donne surtout pour montrer le lien avec les outils.
 
@@ -92,7 +108,7 @@ L'élasticité vaut moins zéro virgule quatre-vingt-six : quand l'accès augmen
 
 Et à droite, le contre-exemple que je tiens à montrer : le lien entre taille de l'enveloppe et taux d'exécution. La pente va dans le sens attendu, mais l'intervalle de confiance traverse zéro. Six années, c'est trop peu. Je publie le résultat en disant qu'il ne conclut pas.
 
-## Planche 10 — 10 · Ce que la méthode refuse d'établir
+## Planche 11 — 11 · Ce que la méthode refuse d'établir
 
 Cette planche est celle à laquelle je tiens le plus.
 
@@ -106,7 +122,7 @@ Le troisième : il n'existe aucune nomenclature des métiers ni des disciplines.
 
 Et la phrase du bas est ma règle : un indicateur absent est absent DU CORPUS, jamais inexistant. Je n'ai pas le droit de dire que le Togo ne sait pas ; je peux dire que le portail ne publie pas.
 
-## Planche 11 — 11 · Comment tout cela se vérifie
+## Planche 12 — 12 · Comment tout cela se vérifie
 
 Un mot sur la vérifiabilité, parce qu'une méthode qu'on ne peut pas rejouer n'est pas une méthode.
 
@@ -118,7 +134,7 @@ L'archive contient les fichiers du portail non modifiés, et un script de diagno
 
 Et surtout : le tableau de bord est en ligne. Vous n'avez rien à installer pour le contredire.
 
-## Planche 12 — 12 · Des constats aux recommandations
+## Planche 13 — 13 · Des constats aux recommandations
 
 Les recommandations, maintenant. Il y en a vingt-six, réparties en cinq axes.
 
@@ -128,7 +144,7 @@ Et je veux insister sur la première recommandation, parce qu'elle surprend : el
 
 Tant qu'ils ne le sont pas, personne — ni le ministère, ni un chercheur, ni moi — ne peut calculer un taux d'encadrement par établissement. On pilote à l'aveugle sur une donnée qui existe déjà.
 
-## Planche 13 — 13 · Ce qui est réutilisable
+## Planche 14 — 14 · Ce qui est réutilisable
 
 Un point qui dépasse ce défi : ce qui a été construit ici est réutilisable.
 
@@ -138,7 +154,7 @@ Ce n'est pas une promesse : le défi Environnement, sur l'eau et l'hydraulique, 
 
 Et les règles de rigueur voyagent avec le socle. C'est le point important : ce n'est pas un gabarit graphique, c'est une méthode outillée.
 
-## Planche 14 — 14 · Conclusion
+## Planche 15 — 15 · Conclusion
 
 Pour conclure.
 

@@ -348,130 +348,241 @@ def page_5_postulats(prs, c):
     ])
 
 
-def page_6_lecture(prs, c):
-    slide = _slide(prs, 6, "Méthode, temps 1 — lire vraiment les fichiers",
-                   "Avant toute analyse : ouvrir, compter, comparer au "
-                   "dictionnaire")
+def page_6_identifier(prs, c):
+    """Temps 1 — savoir ce que chaque fichier peut, et ne peut pas, mesurer."""
+
+    slide = _slide(prs, 6, "Méthode, temps 1 — identifier les données",
+                   "Avant tout calcul : ouvrir chaque fichier, le compter, et "
+                   "décider ce qu'il a le droit de dire")
+
+    _puces(slide, Inches(0.7), Inches(1.9), Inches(6.0), Inches(4.4), [
+        ("Ouvrir, pas supposer", "chaque fichier est lu ligne à ligne : "
+         "combien d'observations, quelles colonnes, quelles valeurs "
+         "manquantes"),
+        ("Situer sa maille", "national, régional, ponctuel — c'est elle qui "
+         "décide des croisements possibles"),
+        ("Situer sa période", "1971-2022 pour les séries, 2018 pour le "
+         "supérieur, 2025 pour le technique"),
+        ("Comparer au dictionnaire", "le fichier tient-il ce que ses "
+         "métadonnées annoncent ?"),
+    ], taille=12.5)
 
     charte.bloc_constat(
-        slide, Inches(0.7), Inches(1.9), Inches(5.7), Inches(1.5),
+        slide, Inches(7.1), Inches(2.0), Inches(5.5), Inches(1.5),
         valeur="16 / 216", libelle="Champs publiés, sur ceux décrits",
-        detail="le dictionnaire du jeu technique en décrit 216",
+        detail="201 champs collectés ne sont pas diffusés",
         couleur=charte.ROUGE)
 
-    charte.bloc_constat(
-        slide, Inches(6.9), Inches(1.9), Inches(5.7), Inches(1.5),
-        valeur="201", libelle="Champs collectés, non diffusés",
-        detail="dont les effectifs d'élèves et le nombre d'enseignants",
-        couleur=charte.ROUGE)
-
-    _puces(slide, Inches(0.7), Inches(3.7), Inches(11.9), Inches(2.6), [
-        ("Le geste", "comparer le fichier diffusé à son propre dictionnaire "
-         "de métadonnées — c'est lui qui prouve ce qui manque"),
-        ("Le nettoyage est documenté champ par champ", "chaque correction est "
-         "écrite et justifiée dans les annexes, pas enfouie dans le code"),
-        ("Une contradiction assumée", "le fichier du supérieur se contredit "
-         "lui-même : total national à 14, détail des villes à 65. J'ai retenu "
-         "le détail — c'est un CHOIX, et tous les chiffres du supérieur en "
-         "dépendent"),
-    ])
+    charte.bloc_analyse(
+        slide, Inches(7.1), Inches(3.7), Inches(5.5), Inches(2.4),
+        nom="Ce que cette étape a trouvé",
+        question="Un fichier peut-il se contredire ?",
+        resultat="Oui — et il fallait trancher",
+        lecture="Le fichier du supérieur inscrit 14 établissements privés sur "
+                "sa ligne de total, quand le détail par ville en compte 65. "
+                "J'ai retenu le détail : c'est un CHOIX, il est écrit dans les "
+                "annexes, et tous les chiffres du supérieur en dépendent.")
 
     _pied(slide, 6)
     _notes(slide, [
-        "Premier temps de la méthode : lire réellement les fichiers. Cela "
-        "paraît évident, c'est pourtant l'étape qu'on saute le plus souvent.",
-        "Le jeu des formations techniques est livré avec son dictionnaire de "
-        "métadonnées. Le dictionnaire décrit deux cent seize champs ; le "
-        "fichier diffusé en publie seize.",
-        "Deux cent un champs ont donc été collectés et ne sont pas ouverts — "
-        "dont le nombre d'élèves et le nombre d'enseignants. C'est le "
-        "dictionnaire lui-même qui le prouve, et c'est pour ça qu'il faut "
-        "l'ouvrir.",
-        "Deuxième point : le fichier du supérieur se contredit. Sa ligne de "
-        "total dit quatorze établissements privés, le détail par ville en "
-        "compte soixante-cinq. J'ai retenu le détail. C'est un choix, il est "
-        "écrit, et je peux en discuter.",
+        "La méthode se déroule en trois temps. Le premier : identifier les "
+        "données.",
+        "Cela veut dire ouvrir réellement chaque fichier — pas lire son "
+        "intitulé. Compter les lignes, regarder les colonnes, repérer les "
+        "vides.",
+        "Et surtout : situer sa MAILLE et sa PÉRIODE. C'est la maille qui "
+        "décide de ce qu'on aura le droit de croiser ensuite, et la période "
+        "qui décide de ce qu'on pourra comparer.",
+        "Deux découvertes de cette étape. D'abord le dictionnaire du fichier "
+        "technique : il décrit deux cent seize champs, le fichier en publie "
+        "seize. Deux cent un champs collectés ne sont pas ouverts.",
+        "Ensuite, le fichier du supérieur se contredit lui-même : quatorze "
+        "établissements privés sur la ligne de total, soixante-cinq dans le "
+        "détail par ville. J'ai retenu le détail, c'est écrit, et je peux en "
+        "discuter.",
     ])
 
 
-def page_7_outils(prs, c):
-    slide = _slide(prs, 7, "Méthode, temps 2 — les outils statistiques",
-                   "Sept outils, choisis pour ce que chacun peut établir — et "
-                   "pas au-delà")
+def page_7_croiser(prs, c):
+    """Temps 2 — croiser, et déclarer ce que la jointure autorise."""
 
-    _puces(slide, Inches(0.7), Inches(1.9), Inches(5.9), Inches(4.6), [
-        ("Régression linéaire", "avec pente, R², p-value et intervalle de "
-         "confiance — jamais la pente seule"),
-        ("Tendance temporelle", "combien d'unités par an, sur les années "
-         "réellement observées"),
-        ("Élasticité log-log", "de combien varie y quand x varie de 1 %"),
-        ("Corrélation double", "Pearson pour le linéaire, Spearman pour le "
-         "monotone : leur écart est une information"),
-    ], taille=12.5)
+    slide = _slide(prs, 7, "Méthode, temps 2 — croiser les données",
+                   "Six croisements, chacun déclarant sa clé, ses ingrédients "
+                   "et son nombre d'observations")
 
-    _puces(slide, Inches(6.9), Inches(1.9), Inches(5.7), Inches(4.6), [
-        ("Test de rupture", "on compare la tendance avant et après une année "
-         "charnière"),
-        ("Concentration", "Herfindahl-Hirschman et Gini — deux mesures d'une "
-         "même inégalité territoriale"),
-        ("Exécution vs enveloppe", "le taux d'exécution baisse-t-il quand le "
-         "montant monte ?"),
-    ], taille=12.5)
-
-    _pied(slide, 7)
-    _notes(slide, [
-        "Deuxième temps : les outils. Il y en a sept, et chacun a été choisi "
-        "pour ce qu'il peut établir.",
-        "Les régressions ne sont jamais publiées avec la seule pente : "
-        "toujours avec le R carré, la p-value et l'intervalle de confiance. "
-        "C'est ce qui permet de dire « ce résultat ne conclut pas ».",
-        "Je mesure la corrélation deux fois, en Pearson et en Spearman. Quand "
-        "les deux s'écartent, c'est que la relation existe mais n'est pas "
-        "linéaire — et cet écart est une information, pas un défaut.",
-        "Pour la concentration territoriale j'utilise deux indices, "
-        "Herfindahl et Gini, parce qu'ils ne disent pas la même chose : l'un "
-        "est sensible aux gros, l'autre à toute la distribution.",
-    ])
-
-
-def page_8_croisements(prs, c):
-    slide = _slide(prs, 8, "Méthode, temps 3 — les croisements",
-                   "Six recettes, chacune déclarant sa clé, ses ingrédients "
-                   "et ses observations")
-
-    _puces(slide, Inches(0.7), Inches(1.9), Inches(11.9), Inches(4.4), [
+    _puces(slide, Inches(0.7), Inches(1.9), Inches(6.4), Inches(4.4), [
         ("Accès × moyens", "inscriptions au supérieur contre dépense par "
-         "étudiant — l'effet ciseaux"),
+         "étudiant"),
         ("Budget × accès", "l'enveloppe votée suit-elle le nombre "
          "d'étudiants ?"),
         ("Cohérence du financement", "budget exécuté contre dépense par "
-         "étudiant — deux sources qui doivent se répondre"),
-        ("Réseaux par région", "établissements techniques et supérieurs sur "
-         "le même territoire"),
+         "étudiant"),
+        ("Réseaux par région", "technique et supérieur sur le même "
+         "territoire"),
         ("Accès × insertion", "inscriptions contre chômage des diplômés"),
-        ("Accès × effectifs", "inscriptions contre féminisation et filières "
-         "scientifiques"),
+        ("Accès × effectifs", "féminisation et filières scientifiques"),
     ], taille=12.5)
 
-    _pied(slide, 8)
+    charte.bloc_analyse(
+        slide, Inches(7.5), Inches(2.0), Inches(5.1), Inches(2.7),
+        nom="La règle du croisement",
+        question="Qu'est-ce qui rend une jointure honnête ?",
+        resultat="Dire sur combien elle porte",
+        lecture="Chaque croisement affiche ses deux fichiers, sa clé — presque "
+                "toujours l'année — et le nombre d'observations qui survivent "
+                "à la jointure. Deux séries qui se recouvrent sur cinq ans "
+                "n'autorisent pas les conclusions de vingt, et le lecteur doit "
+                "voir ce nombre avant de lire le résultat.")
+
+    _pied(slide, 7)
     _notes(slide, [
-        "Troisième temps : les croisements. Il y en a six, et j'ai emprunté "
-        "au vocabulaire de la cuisine : chacun est une recette qui déclare "
-        "ses ingrédients.",
+        "Deuxième temps : croiser. Il y a six croisements, et j'ai emprunté au "
+        "vocabulaire de la cuisine — chacun est une recette qui déclare ses "
+        "ingrédients.",
         "Concrètement, quand vous ouvrez un croisement dans le tableau de "
-        "bord, il vous dit : voici les deux fichiers utilisés, voici la clé "
-        "de jointure — presque toujours l'année —, et voici le nombre "
-        "d'observations qui survivent à cette jointure.",
-        "Pourquoi c'est important : deux séries qui se recouvrent sur cinq "
-        "ans ne permettent pas les mêmes affirmations que deux séries qui se "
-        "recouvrent sur vingt. Le lecteur doit voir ce nombre.",
-        "Le croisement le plus parlant est le premier : accès contre moyens. "
-        "Je vous le montre sur la planche suivante.",
+        "bord, il vous dit : voici les deux fichiers, voici la clé de "
+        "jointure — presque toujours l'année —, et voici le nombre "
+        "d'observations qui restent après la jointure.",
+        "Pourquoi c'est capital : deux séries qui se recouvrent sur cinq ans "
+        "ne permettent pas les mêmes affirmations que deux séries qui se "
+        "recouvrent sur vingt.",
+        "Le croisement central est le premier, accès contre moyens. C'est lui "
+        "qui produit l'effet ciseaux, et c'est sur lui que je vais montrer "
+        "les outils.",
     ])
 
 
-def page_9_resultats(prs, c):
-    slide = _slide(prs, 9, "Ce que la méthode produit",
+def page_8_outils_relation(prs, c):
+    """Temps 3, premier volet — mesurer une relation entre deux séries."""
+
+    slide = _slide(prs, 8, "Méthode, temps 3 — les outils, et ce qu'ils font",
+                   "Trois outils pour mesurer une relation entre deux séries")
+
+    for index, (nom, question, resultat, lecture) in enumerate([
+        ("La régression linéaire",
+         "Que fait-elle, concrètement ?",
+         "Elle trace la droite la plus proche des points",
+         "Sa pente dit : « quand x augmente d'une unité, y bouge de tant ». "
+         "Je ne publie jamais la pente seule, mais avec trois garde-fous — le "
+         "R², part de la variation expliquée ; la p-value, probabilité que le "
+         "hasard suffise ; l'intervalle de confiance, la fourchette où se "
+         "trouve la vraie pente."),
+        ("La tendance temporelle",
+         "Et quand x est le temps ?",
+         "Elle donne un rythme : tant par an",
+         "C'est la même régression, avec les années en abscisse. Elle répond "
+         "à « de combien cela bouge-t-il chaque année », ce qui se dit et se "
+         "retient mieux qu'un coefficient abstrait."),
+        ("L'élasticité",
+         "Comment comparer des grandeurs sans unité commune ?",
+         "En passant les deux au logarithme",
+         "La pente devient alors un pourcentage : ici, quand l'accès augmente "
+         "de 1 %, la dépense par étudiant recule de "
+         f"{_nb(abs(c['elasticite']['pente']))} %. Un nombre d'étudiants et "
+         "un pourcentage de PIB deviennent comparables."),
+    ]):
+        charte.bloc_analyse(
+            slide, Inches(0.7 + index * 4.15), Inches(1.9), Inches(3.9),
+            Inches(3.9), nom=nom, question=question, resultat=resultat,
+            lecture=lecture)
+
+    _pied(slide, 8)
+    _notes(slide, [
+        "Troisième temps : les outils. Je vais les expliquer, parce qu'un "
+        "nom d'outil ne prouve rien — c'est ce qu'il fait qui compte.",
+        "La régression linéaire, d'abord. On cherche la droite qui passe au "
+        "plus près du nuage de points. Sa pente répond à : quand x augmente "
+        "d'une unité, de combien bouge y ?",
+        "Mais une pente toute seule ne vaut rien. Je publie toujours trois "
+        "garde-fous avec elle. Le R carré : quelle part de la variation la "
+        "droite explique-t-elle. La p-value : quelle est la probabilité "
+        "d'observer ça par pur hasard. Et l'intervalle de confiance : dans "
+        "quelle fourchette se trouve la vraie pente.",
+        "La tendance temporelle, c'est la même chose avec les années en "
+        "abscisse. Elle donne un rythme — tant par an — et c'est ce qui se "
+        "retient.",
+        "L'élasticité, enfin. Le problème : comment comparer un nombre "
+        "d'étudiants avec un pourcentage de PIB ? On passe les deux au "
+        "logarithme, et la pente devient un pourcentage. Ici : quand l'accès "
+        "monte de un pour cent, la dépense par étudiant recule de zéro "
+        "virgule quatre-vingt-six pour cent.",
+    ])
+
+
+def page_9_outils_forme(prs, c):
+    """Temps 3, second volet — la forme de la relation, et la répartition."""
+
+    slide = _slide(prs, 9, "Méthode, temps 3 — les outils (suite)",
+                   "Un outil pour la forme d'une relation, deux pour une "
+                   "répartition")
+
+    for index, (nom, question, resultat, lecture) in enumerate([
+        ("La corrélation, mesurée deux fois",
+         "Pourquoi Pearson ET Spearman ?",
+         "Ils ne demandent pas la même chose",
+         "Pearson demande si les points s'alignent sur une droite. Spearman "
+         "demande seulement s'ils montent et descendent ensemble. Quand les "
+         "deux s'écartent, la relation existe mais n'est pas linéaire — et "
+         "cet écart est une information, pas un défaut."),
+        ("Le test de rupture",
+         "Une tendance peut-elle changer en cours de route ?",
+         "On coupe la série et on compare",
+         "On calcule la pente avant une année charnière, puis après. Sur "
+         f"l'accès au supérieur, la rupture est en {c['rupture']['annee_rupture']} : "
+         f"{_nb(c['rupture']['avant']['pente'])} point par an avant, "
+         f"{_nb(c['rupture']['apres']['pente'])} après. La progression a "
+         "changé de régime, elle n'a pas seulement continué."),
+    ]):
+        charte.bloc_analyse(
+            slide, Inches(0.7 + index * 6.15), Inches(1.9), Inches(5.9),
+            Inches(2.2), nom=nom, question=question, resultat=resultat,
+            lecture=lecture)
+
+    for index, (nom, question, resultat, lecture) in enumerate([
+        ("Les deux indices de concentration",
+         "Comment chiffrer un déséquilibre territorial ?",
+         "Herfindahl et Gini, ensemble",
+         "Herfindahl additionne les carrés des parts : il s'envole dès qu'un "
+         "acteur domine. Gini décrit toute la distribution : zéro si tout le "
+         f"monde a la même chose, un si tout est chez un seul. Ici "
+         f"{_nb(c['concentration']['hhi'])} et "
+         f"{_nb(c['concentration']['gini'])}."),
+        ("Exécution contre enveloppe",
+         "Les grosses enveloppes se dépensent-elles moins bien ?",
+         "Question posée, réponse non concluante",
+         "Une régression du taux d'exécution sur le montant voté. La pente va "
+         "dans le sens attendu, mais l'intervalle de confiance traverse zéro : "
+         "sur six années, on ne peut pas conclure — et c'est publié ainsi."),
+    ]):
+        charte.bloc_analyse(
+            slide, Inches(0.7 + index * 6.15), Inches(4.3), Inches(5.9),
+            Inches(2.2), nom=nom, question=question, resultat=resultat,
+            lecture=lecture)
+
+    _pied(slide, 9)
+    _notes(slide, [
+        "Quatre outils encore, plus rapidement.",
+        "La corrélation, je la mesure deux fois. Pearson demande si les "
+        "points s'alignent sur une droite ; Spearman demande seulement s'ils "
+        "montent et descendent ensemble. Quand les deux s'écartent, la "
+        "relation existe mais n'est pas droite — et c'est une information.",
+        "Le test de rupture : on coupe la série à une année charnière et on "
+        "compare les deux pentes. Sur l'accès au supérieur, la rupture est en "
+        "deux mille : zéro virgule zéro neuf point par an avant, zéro virgule "
+        "soixante-trois après. Ce n'est pas une continuation, c'est un "
+        "changement de régime.",
+        "Les deux indices de concentration. Herfindahl additionne les carrés "
+        "des parts : il s'envole dès qu'un acteur domine. Gini décrit toute "
+        "la distribution. Je donne les deux parce qu'ils ne disent pas la "
+        "même chose.",
+        "Et le dernier, que je garde pour montrer une honnêteté : la "
+        "régression du taux d'exécution sur le montant voté. Elle ne conclut "
+        "pas. Je la publie quand même.",
+    ])
+
+
+def page_10_resultats(prs, c):
+    slide = _slide(prs, 10, "Ce que la méthode produit",
                    "Trois résultats, chacun rattaché à l'outil qui l'établit")
 
     charte.bloc_constat(
@@ -513,7 +624,7 @@ def page_9_resultats(prs, c):
                 "de confiance traverse zéro : sur six années, on ne peut pas "
                 "conclure. C'est publié tel quel.")
 
-    _pied(slide, 9)
+    _pied(slide, 10)
     _notes(slide, [
         "Voici trois résultats, et je les donne surtout pour montrer le lien "
         "avec les outils.",
@@ -537,8 +648,8 @@ def page_9_resultats(prs, c):
     ])
 
 
-def page_10_limites(prs, c):
-    slide = _slide(prs, 10, "Ce que la méthode refuse d'établir",
+def page_11_limites(prs, c):
+    slide = _slide(prs, 11, "Ce que la méthode refuse d'établir",
                    "Trois manques, trois causes différentes — et trois "
                    "remèdes différents")
 
@@ -569,7 +680,7 @@ def page_10_limites(prs, c):
          "jamais inexistant — la nuance change la recommandation"),
     ])
 
-    _pied(slide, 10)
+    _pied(slide, 11)
     _notes(slide, [
         "Cette planche est celle à laquelle je tiens le plus.",
         "Il y a trois manques dans ce travail, et ils ont trois causes "
@@ -588,8 +699,8 @@ def page_10_limites(prs, c):
     ])
 
 
-def page_11_verifiabilite(prs, c):
-    slide = _slide(prs, 11, "Comment tout cela se vérifie",
+def page_12_verifiabilite(prs, c):
+    slide = _slide(prs, 12, "Comment tout cela se vérifie",
                    "Le travail est fait pour être contredit — encore faut-il "
                    "pouvoir le refaire")
 
@@ -607,7 +718,7 @@ def page_11_verifiabilite(prs, c):
          "bernardpip.com — rien à installer pour le juger"),
     ], taille=12.5)
 
-    _pied(slide, 11)
+    _pied(slide, 12)
     _notes(slide, [
         "Un mot sur la vérifiabilité, parce qu'une méthode qu'on ne peut pas "
         "rejouer n'est pas une méthode.",
@@ -625,8 +736,8 @@ def page_11_verifiabilite(prs, c):
     ])
 
 
-def page_12_recommandations(prs, c):
-    slide = _slide(prs, 12, "Des constats aux recommandations",
+def page_13_recommandations(prs, c):
+    slide = _slide(prs, 13, "Des constats aux recommandations",
                    "26 leviers, 5 axes — chacun part d'un chiffre, aucun "
                    "d'une opinion")
 
@@ -653,7 +764,7 @@ def page_12_recommandations(prs, c):
                 "c'est de publier les 201 champs déjà collectés — parce que "
                 "sans eux, on pilote à l'aveugle.")
 
-    _pied(slide, 12)
+    _pied(slide, 13)
     _notes(slide, [
         "Les recommandations, maintenant. Il y en a vingt-six, réparties en "
         "cinq axes.",
@@ -670,8 +781,8 @@ def page_12_recommandations(prs, c):
     ])
 
 
-def page_13_reutilisable(prs, c):
-    slide = _slide(prs, 13, "Ce qui est réutilisable",
+def page_14_reutilisable(prs, c):
+    slide = _slide(prs, 14, "Ce qui est réutilisable",
                    "La méthode a été rejouée sur un second défi, en quelques "
                    "jours")
 
@@ -686,7 +797,7 @@ def page_13_reutilisable(prs, c):
          "a été construit sur ce socle, avec ses propres analyses"),
     ], taille=12.5)
 
-    _pied(slide, 13)
+    _pied(slide, 14)
     _notes(slide, [
         "Un point qui dépasse ce défi : ce qui a été construit ici est "
         "réutilisable.",
@@ -702,8 +813,8 @@ def page_13_reutilisable(prs, c):
     ])
 
 
-def page_14_conclusion(prs, c):
-    slide = _slide(prs, 14, "Conclusion",
+def page_15_conclusion(prs, c):
+    slide = _slide(prs, 15, "Conclusion",
                    "Ce que ce travail établit, et ce qu'il laisse ouvert")
 
     charte.bloc_analyse(
@@ -733,7 +844,7 @@ def page_14_conclusion(prs, c):
          "qu'il n'a rien inventé"),
     ])
 
-    _pied(slide, 14)
+    _pied(slide, 15)
     _notes(slide, [
         "Pour conclure.",
         "L'alignement n'est pas réalisé, et je peux le dire sur deux des "
@@ -754,9 +865,15 @@ def page_14_conclusion(prs, c):
 
 PAGES = [
     page_1_couverture, page_2_enonce, page_3_attendus, page_4_corpus,
-    page_5_postulats, page_6_lecture, page_7_outils, page_8_croisements,
-    page_9_resultats, page_10_limites, page_11_verifiabilite,
-    page_12_recommandations, page_13_reutilisable, page_14_conclusion,
+    page_5_postulats,
+    # Les trois temps de la méthode, dans l'ordre où on les vit : identifier
+    # ce qu'on a, croiser ce qui peut l'être, puis seulement mesurer. Les
+    # outils venaient AVANT les croisements : on expliquait comment mesurer
+    # avant d'avoir dit sur quoi.
+    page_6_identifier, page_7_croiser,
+    page_8_outils_relation, page_9_outils_forme,
+    page_10_resultats, page_11_limites, page_12_verifiabilite,
+    page_13_recommandations, page_14_reutilisable, page_15_conclusion,
 ]
 
 
