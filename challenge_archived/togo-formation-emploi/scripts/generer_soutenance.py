@@ -595,8 +595,14 @@ def page_10_resultats(prs, c):
 
     charte.bloc_constat(
         slide, Inches(4.8), Inches(1.9), Inches(3.9), Inches(1.6),
-        valeur="×4,7 / ÷3,6", libelle="Accès et dépense, depuis 1998",
-        detail="l'accès quadruple, la dépense par étudiant s'effondre",
+        valeur="×4,7 / ÷3,6", libelle="Accès et dépense, base 100 en 1998",
+        # Les DEUX PÉRIODES sont écrites : les séries ne s'arrêtent pas la
+        # même année — l'accès va jusqu'en 2020, la dépense s'arrête en 2017.
+        # Un « depuis 1998 » sans borne de fin laisserait croire à deux
+        # trajectoires mesurées jusqu'au même jour, et c'est la première chose
+        # qu'un lecteur attentif viendrait contester.
+        detail="accès jusqu'en 2020, dépense jusqu'en 2017 — le calcul de "
+               "l'élasticité, lui, ne porte que sur leurs 10 années communes",
         couleur=charte.ROUGE)
 
     charte.bloc_constat(
@@ -608,7 +614,7 @@ def page_10_resultats(prs, c):
     charte.bloc_analyse(
         slide, Inches(0.7), Inches(3.8), Inches(5.9), Inches(2.4),
         nom="Le résultat le plus solide",
-        question="L'effet ciseaux tient-il statistiquement ?",
+        question="log(dépense/étudiant) contre log(accès), 10 années",
         resultat=f'Élasticité {_nb(c["elasticite"]["pente"])}',
         lecture=f'R² de {_nb(c["elasticite"]["r2"])}, p-value sous 0,001, '
                 f'intervalle de confiance entièrement négatif. Quand l\'accès '
@@ -618,7 +624,7 @@ def page_10_resultats(prs, c):
     charte.bloc_analyse(
         slide, Inches(6.9), Inches(3.8), Inches(5.7), Inches(2.4),
         nom="Le résultat qui NE conclut pas",
-        question="Le taux d'exécution baisse-t-il quand l'enveloppe monte ?",
+        question="taux d'exécution contre montant voté, 6 années",
         resultat=f'p = {_nb(c["execution"]["p_value"])}',
         lecture="La pente est négative et le R² correct, mais l'intervalle "
                 "de confiance traverse zéro : sur six années, on ne peut pas "
@@ -640,6 +646,17 @@ def page_10_resultats(prs, c):
         "l'accès augmente d'un pour cent, la dépense par étudiant recule de "
         "presque un pour cent. R carré de zéro virgule quatre-vingt-trois, "
         "p-value sous un pour mille.",
+        "Un mot sur ce que cela VEUT DIRE, parce que c'est là qu'est "
+        "l'argument. La dépense par étudiant, c'est un budget divisé par un "
+        "nombre d'étudiants. Une élasticité de moins zéro virgule "
+        "quatre-vingt-six, presque moins un, dit que le dénominateur a "
+        "explosé pendant que le numérateur bougeait à peine. Le pays a "
+        "multiplié ses étudiants sans multiplier l'argent. Ce n'est pas une "
+        "corrélation mystérieuse, c'est arithmétique.",
+        "Si on m'objecte « corrélation n'est pas causalité », la réponse est "
+        "là : le lien est mécanique, les deux grandeurs partagent leur "
+        "dénominateur. Je ne prétends pas que l'accès CAUSE la baisse ; je "
+        "constate que l'argent n'a pas suivi le nombre.",
         "Et à droite, le contre-exemple que je tiens à montrer : le lien "
         "entre taille de l'enveloppe et taux d'exécution. La pente va dans le "
         "sens attendu, mais l'intervalle de confiance traverse zéro. Six "

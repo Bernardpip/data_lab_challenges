@@ -106,6 +106,10 @@ Le deuxième est le plus important. Depuis 1998, l'accès au supérieur a été 
 
 L'élasticité vaut moins zéro virgule quatre-vingt-six : quand l'accès augmente d'un pour cent, la dépense par étudiant recule de presque un pour cent. R carré de zéro virgule quatre-vingt-trois, p-value sous un pour mille.
 
+Un mot sur ce que cela VEUT DIRE, parce que c'est là qu'est l'argument. La dépense par étudiant, c'est un budget divisé par un nombre d'étudiants. Une élasticité de moins zéro virgule quatre-vingt-six, presque moins un, dit que le dénominateur a explosé pendant que le numérateur bougeait à peine. Le pays a multiplié ses étudiants sans multiplier l'argent. Ce n'est pas une corrélation mystérieuse, c'est arithmétique.
+
+Si on m'objecte « corrélation n'est pas causalité », la réponse est là : le lien est mécanique, les deux grandeurs partagent leur dénominateur. Je ne prétends pas que l'accès CAUSE la baisse ; je constate que l'argent n'a pas suivi le nombre.
+
 Et à droite, le contre-exemple que je tiens à montrer : le lien entre taille de l'enveloppe et taux d'exécution. La pente va dans le sens attendu, mais l'intervalle de confiance traverse zéro. Six années, c'est trop peu. Je publie le résultat en disant qu'il ne conclut pas.
 
 ## Planche 11 — 11 · Ce que la méthode refuse d'établir
